@@ -1154,6 +1154,9 @@ def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
         plot_df['Baseline'] = plot_df['Baseline'].apply(lambda x: x*100 if isinstance(x,(int,float)) else 0)
         plot_df['Midline'] = plot_df['Midline'].apply(lambda x: x*100 if isinstance(x,(int,float)) else 0)
     if orientation == 'h':
+        # Sort so longest bars appear at top (Plotly renders bottom-to-top)
+        plot_df['_sort'] = plot_df[['Baseline', 'Midline']].max(axis=1)
+        plot_df = plot_df.sort_values('_sort', ascending=True).drop(columns='_sort')
         fig = go.Figure()
         fig.add_trace(go.Bar(y=plot_df[cat_col], x=plot_df['Baseline'], name='Baseline',
                              orientation='h', marker_color=cb,
@@ -1162,7 +1165,8 @@ def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
                              orientation='h', marker_color=cm,
                              text=plot_df['Midline'].apply(lambda x: f"{x:.1f}%"), textposition='auto'))
         fig.update_layout(title=title, barmode='group', height=height,
-                          xaxis_title=y_label, legend=dict(orientation='h', yanchor='bottom', y=1.02))
+                          xaxis_title=y_label, legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                          yaxis=dict(categoryorder='trace'))
     else:
         fig = go.Figure()
         fig.add_trace(go.Bar(x=plot_df[cat_col], y=plot_df['Baseline'], name='Baseline',
@@ -1222,6 +1226,7 @@ def make_delta_bar(df, cat_col, title, multiply=True, height=400):
                          marker_color=colors,
                          text=plot_df['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
     fig.update_layout(title=title, height=height, xaxis_title="Change (pp)",
+                      yaxis=dict(categoryorder='trace'),
                       font=dict(size=13, color='#333'),
                       title_font=dict(size=16, color='#222'),
                       plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
@@ -1231,6 +1236,11 @@ def make_delta_bar(df, cat_col, title, multiply=True, height=400):
 
 def make_two_col_bar(df1, df2, col1_name, col2_name, cat_col, title, height=450):
     """Side-by-side comparison of two related dataframes (e.g., norms vs experience)."""
+    # Sort so longest bars appear at top (Plotly renders bottom-to-top)
+    sort_vals = (df1[['Baseline','Midline']].max(axis=1)*100 + df2[['Baseline','Midline']].max(axis=1)*100) / 2
+    sort_order = sort_vals.sort_values(ascending=True).index
+    df1 = df1.loc[sort_order]
+    df2 = df2.loc[sort_order]
     fig = go.Figure()
     fig.add_trace(go.Bar(y=df1[cat_col], x=df1['Baseline']*100, name=f'{col1_name} (BL)',
                          orientation='h', marker_color=COLORS['baseline_light'],
@@ -1246,6 +1256,7 @@ def make_two_col_bar(df1, df2, col1_name, col2_name, cat_col, title, height=450)
                          text=df2['Midline'].apply(lambda x: f"{x*100:.0f}%"), textposition='auto'))
     fig.update_layout(title=title, barmode='group', height=height, xaxis_title='%',
                       legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                      yaxis=dict(categoryorder='trace'),
                       font=dict(size=13, color='#333'),
                       title_font=dict(size=16, color='#222'),
                       plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
