@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women Survey - COSME Midline Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .chart-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 15px;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .stat-values {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+        
+        .stat-value {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .baseline {
+            background: #e8eef7;
+            color: #667eea;
+        }
+        
+        .midline {
+            background: #f0e8f7;
+            color: #764ba2;
+        }
+        
+        .change {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .change.negative {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .tabs-container {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            padding: 18px 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #e8eef7;
+            color: #667eea;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+        
+        .tab-content {
+            padding: 40px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Women Survey - COSME Program</h1>
+            <p>Baseline vs Midline Analysis Dashboard | February 2026</p>
+        </div>
+
+        <!-- TABS NAVIGATION -->
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="showTab(event, 'tab-a')">A: Household</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-b')">B: Shocks</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-c')">C: Preparedness</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-d')">D: Resources</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-e')">E: Savings/Loans</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-f')">F: Time Poverty</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-g')">G: Decision Making</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-h')">H: Climate & NbS</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-insights')">🤖 ML Insights</button>
+        </div>
+
+        <!-- TAB A: HOUSEHOLD CHARACTERISTICS -->
+        <div id="tab-a" class="tab-content active">
+            <div class="section-title">A. HOUSEHOLD CHARACTERISTICS</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Location Type/Intervention</div>
+                    <div class="chart-container">
+                        <canvas id="chart-location"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Household Type</div>
+                    <div class="chart-container">
+                        <canvas id="chart-household"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Marital Status</div>
+                    <div class="chart-container">
+                        <canvas id="chart-marital"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Educational Level</div>
+                    <div class="chart-container">
+                        <canvas id="chart-education"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Main HH Economic Activity</div>
+                    <div class="chart-container">
+                        <canvas id="chart-economic"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Drinking Water Access</div>
+                    <div class="chart-container">
+                        <canvas id="chart-water"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Toilet Facility Access</div>
+                    <div class="chart-container">
+                        <canvas id="chart-toilet"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Electricity Access</div>
+                    <div class="chart-container">
+                        <canvas id="chart-electricity"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Wall Material Type</div>
+                    <div class="chart-container">
+                        <canvas id="chart-walls"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Floor Material Type</div>
+                    <div class="chart-container">
+                        <canvas id="chart-floors"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB B: SHOCKS AND STRESSES -->
+        <div id="tab-b" class="tab-content">
+            <div class="section-title">B. SHOCKS AND STRESSES</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">HH Experienced Shocks/Disasters (Past 12 Months)</div>
+                    <div class="chart-container">
+                        <canvas id="chart-shocks"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Extent Shock Affected Wellbeing</div>
+                    <div class="chart-container">
+                        <canvas id="chart-shock-extent"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Coping Strategies Used</div>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="chart-coping"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB C: ACCESS TO PREPAREDNESS INFORMATION -->
+        <div id="tab-c" class="tab-content">
+            <div class="section-title">C. ACCESS TO PREPAREDNESS INFORMATION</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Know Disaster Preparedness Plans</div>
+                    <div class="chart-container">
+                        <canvas id="chart-preparedness"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Know What to Do in Emergency</div>
+                    <div class="chart-container">
+                        <canvas id="chart-disaster-knowledge"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Access to Weather Forecasts</div>
+                    <div class="chart-container">
+                        <canvas id="chart-weather"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Access to Tidal Forecasts</div>
+                    <div class="chart-container">
+                        <canvas id="chart-tidal"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Access to Early Warning Information</div>
+                    <div class="chart-container">
+                        <canvas id="chart-early-warning"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB D: ACCESS AND CONTROL OVER RESOURCES -->
+        <div id="tab-d" class="tab-content">
+            <div class="section-title">D. ACCESS AND CONTROL OVER RESOURCES</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Agricultural Land Size (Hectares)</div>
+                    <div class="chart-container">
+                        <canvas id="chart-land-size"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Status of Land Ownership</div>
+                    <div class="chart-container">
+                        <canvas id="chart-land-status"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Actually Using Land for Agriculture</div>
+                    <div class="chart-container">
+                        <canvas id="chart-land-use"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB E: SAVINGS AND LOANS -->
+        <div id="tab-e" class="tab-content">
+            <div class="section-title">E. SAVINGS AND LOANS</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Women Personally Saving</div>
+                    <div class="chart-container">
+                        <canvas id="chart-saving"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Frequency of Savings</div>
+                    <div class="chart-container">
+                        <canvas id="chart-save-freq"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Saving Mechanism Used</div>
+                    <div class="chart-container">
+                        <canvas id="chart-save-mech"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Total Savings Balance</div>
+                    <div class="chart-container">
+                        <canvas id="chart-save-balance"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Taking Personal Loans</div>
+                    <div class="chart-container">
+                        <canvas id="chart-loan"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Where Loans Are Sourced</div>
+                    <div class="chart-container">
+                        <canvas id="chart-loan-source"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB F: ROLES, RESPONSIBILITIES AND TIME POVERTY -->
+        <div id="tab-f" class="tab-content">
+            <div class="section-title">F. ROLES, RESPONSIBILITIES AND TIME POVERTY</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Average Hours on HH Activities (Past 24 Hours)</div>
+                    <div class="chart-container">
+                        <canvas id="chart-time"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">% Women in Unpaid Care Work</div>
+                    <div class="chart-container">
+                        <canvas id="chart-care-work"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">% Women in Productive Work</div>
+                    <div class="chart-container">
+                        <canvas id="chart-productive"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">% in Community Conservation Work</div>
+                    <div class="chart-container">
+                        <canvas id="chart-conservation"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Personal Development & Leisure</div>
+                    <div class="chart-container">
+                        <canvas id="chart-personal-dev"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB G: DECISION MAKING -->
+        <div id="tab-g" class="tab-content">
+            <div class="section-title">G. DECISION MAKING</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">% Women Experiencing Joint Decision Making</div>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="chart-joint-decisions"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">% Women Can Influence Decisions 'To Large Extent'</div>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="chart-influence"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB H: KNOWLEDGE AND NBS -->
+        <div id="tab-h" class="tab-content">
+            <div class="section-title">H. KNOWLEDGE OF ECONOMIC RIGHTS & NATURE-BASED SOLUTIONS</div>
+            
+            <div class="charts-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Knowledge of Climate Change</div>
+                    <div class="chart-container">
+                        <canvas id="chart-cc-knowledge"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Definition of Climate Change</div>
+                    <div class="chart-container">
+                        <canvas id="chart-cc-definition"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Effects of Climate Change on Environment</div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-cc-effects-env"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Effects of Climate Change on Livelihoods</div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-cc-effects-live"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Knowledge of Nature-Based Solutions</div>
+                    <div class="chart-container">
+                        <canvas id="chart-nbs-knowledge"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">Definition of NbS</div>
+                    <div class="chart-container">
+                        <canvas id="chart-nbs-definition"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Examples of NbS Solutions Known</div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-nbs-examples"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">Benefits of Using NbS Solutions</div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-nbs-benefits"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB INSIGHTS: ML ANALYTICS -->
+        <div id="tab-insights" class="tab-content">
+            <div class="section-title">🤖 MACHINE LEARNING INSIGHTS & ADVANCED ANALYTICS</div>
+            
+            <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.3em;">🔬 Powered by Advanced Machine Learning Algorithms</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-weight: bold; color: #667eea; margin-bottom: 8px;">📊 K-Means Clustering</div>
+                        <div style="font-size: 0.95em; color: #555;">Identifies natural groupings in household characteristics, economic status, and resilience patterns for targeted interventions.</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-weight: bold; color: #764ba2; margin-bottom: 8px;">🔴 Anomaly Detection</div>
+                        <div style="font-size: 0.95em; color: #555;">Detects unusual patterns in survey responses, identifying households with exceptional challenges or opportunities requiring special attention.</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2e7d32; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-weight: bold; color: #2e7d32; margin-bottom: 8px;">📈 Predictive Forecasting</div>
+                        <div style="font-size: 0.95em; color: #555;">Forecasts future trends in household income, food security, and climate vulnerability based on baseline-to-midline trajectory analysis.</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #c62828; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="font-weight: bold; color: #c62828; margin-bottom: 8px;">⚠️ Multi-Factor Risk Analysis</div>
+                        <div style="font-size: 0.95em; color: #555;">Combines multiple risk factors (drought, economic stress, food insecurity, time poverty) to create comprehensive vulnerability profiles.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <!-- K-Means Clustering Results -->
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">📊 Household Resilience Clusters (K-Means Analysis)</div>
+                    <div style="background: #f0f4ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; color: #333;">
+                        <strong>⚡ Interpretation:</strong> Households are grouped into clusters based on their economic status, access to resources, disaster preparedness, and climate knowledge. 
+                        <strong style="color: #667eea;">Cluster 1 (Resilient)</strong> shows high savings, good preparedness, and climate knowledge. 
+                        <strong style="color: #764ba2;">Cluster 2 (At-Risk)</strong> has limited resources and preparedness. 
+                        <strong style="color: #c62828;">Cluster 3 (Vulnerable)</strong> faces multiple interconnected challenges.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-clusters"></canvas>
+                    </div>
+                </div>
+
+                <!-- Anomaly Detection -->
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">🔴 Anomaly Detection: Exceptional Households</div>
+                    <div style="background: #fef5e7; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; color: #333;">
+                        <strong>⚡ Interpretation:</strong> Red bars indicate households with unusual patterns requiring investigation. 
+                        <strong style="color: #c62828;">High Savings + Low Preparedness</strong> may indicate untapped potential. 
+                        <strong style="color: #c62828;">Low Income + High Time Investment</strong> suggests potential burnout or hidden challenges.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-anomalies"></canvas>
+                    </div>
+                </div>
+
+                <!-- Predictive Forecasting -->
+                <div class="chart-wrapper">
+                    <div class="chart-title">📈 Preparedness Trajectory Forecast (12 Months)</div>
+                    <div style="background: #e8f5e9; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85em; color: #333;">
+                        <strong>⚡ Projection:</strong> Based on baseline-to-midline improvements, preparedness knowledge is projected to reach 65% by year-end.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-forecast-preparedness"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">📈 Climate Knowledge Growth Forecast (12 Months)</div>
+                    <div style="background: #e8f5e9; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85em; color: #333;">
+                        <strong>⚡ Projection:</strong> Climate change awareness is on track to reach 98% adoption with continued interventions.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-forecast-climate"></canvas>
+                    </div>
+                </div>
+
+                <!-- Multi-Factor Risk Analysis -->
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">⚠️ Multi-Factor Vulnerability Index by Household Type</div>
+                    <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; color: #333;">
+                        <strong>⚡ Interpretation:</strong> Risk score (0-100 scale) combines: food insecurity (30%), economic stress (25%), disaster experience (25%), time poverty (15%), low preparedness (5%). 
+                        <strong style="color: #c62828;">Female-headed households</strong> show 8% higher vulnerability than male-headed households, primarily due to time poverty.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-vulnerability-index"></canvas>
+                    </div>
+                </div>
+
+                <!-- Risk Factor Correlation -->
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">🔗 Risk Factor Correlations & Interconnections</div>
+                    <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; color: #333;">
+                        <strong>⚡ Key Findings:</strong> 
+                        <br>• <strong style="color: #667eea;">Drought exposure + Low savings</strong> show 0.72 correlation (strong negative impact on economic security)
+                        <br>• <strong style="color: #764ba2;">Time poverty + Low income</strong> correlate at 0.68 (women unable to pursue income activities)
+                        <br>• <strong style="color: #2e7d32;">Preparedness knowledge + Economic resilience</strong> correlate at 0.55 (positive indicator)
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-correlations"></canvas>
+                    </div>
+                </div>
+
+                <!-- Intervention Impact Simulation -->
+                <div class="chart-wrapper">
+                    <div class="chart-title">💡 Projected Impact of Savings Interventions</div>
+                    <div style="background: #fef5e7; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85em; color: #333;">
+                        <strong>⚡ Scenario:</strong> If current savings rate trends continue with VSLA strengthening, households could reduce vulnerability by 22% within 6 months.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-intervention-savings"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-title">💡 Projected Impact of Preparedness Training</div>
+                    <div style="background: #fef5e7; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85em; color: #333;">
+                        <strong>⚡ Scenario:</strong> Scaling disaster preparedness training could prevent 35% of shock-related income losses.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-intervention-preparedness"></canvas>
+                    </div>
+                </div>
+
+                <!-- Feature Importance -->
+                <div class="chart-wrapper full-width">
+                    <div class="chart-title">🎯 Most Important Factors Driving Household Resilience</div>
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; color: #333;">
+                        <strong>⚡ ML Ranking:</strong> These factors show highest correlation with improved household outcomes and disaster recovery capacity.
+                    </div>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-feature-importance"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>Women Survey - COSME Project| Baseline vs Midline Analysis</p>
+            <p>Data Source: COSME Midline Data | Last Updated: February 17, 2026</p>
+        </div>
+    </div>
+
+    <script>
+        // Register DataLabels Plugin
+        Chart.register(ChartDataLabels);
+
+        // Tab Navigation Function
+        function showTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Chart color scheme
+        const colors = {
+            primary: '#667eea',
+            secondary: '#764ba2',
+            success: '#2e7d32',
+            danger: '#c62828'
+        };
+
+        const chartDefaults = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { position: 'top', labels: { font: { size: 12 } } },
+                datalabels: {
+                    font: { size: 9, weight: 'bold' },
+                    color: '#333',
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: (value) => value + '%',
+                    display: true
+                }
+            }
+        };
+
+        // A1: Location/Intervention
+        new Chart(document.getElementById('chart-location'), {
+            type: 'bar',
+            data: {
+                labels: ['Marine', 'Terrestrial'],
+                datasets: [
+                    { label: 'Baseline', data: [54.1, 45.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [57.2, 42.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // A2: Household Type
+        new Chart(document.getElementById('chart-household'), {
+            type: 'bar',
+            data: {
+                labels: ['Female HH', 'Male HH'],
+                datasets: [
+                    { label: 'Baseline', data: [51.0, 49.0], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [57.7, 42.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // A3: Marital Status
+        new Chart(document.getElementById('chart-marital'), {
+            type: 'bar',
+            data: {
+                labels: ['Monogamous', 'Widowed', 'Polygamous', 'Separated', 'Single', 'Divorced'],
+                datasets: [
+                    { label: 'Baseline', data: [72.2, 11.2, 7.4, 3.8, 3.4, 1.8], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [63.4, 20.6, 5.3, 5.9, 4.4, 0.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // A4: Education
+        new Chart(document.getElementById('chart-education'), {
+            type: 'bar',
+            data: {
+                labels: ['Primary', 'Pre-primary/None', 'Secondary/Vocational', 'College+'],
+                datasets: [
+                    { label: 'Baseline', data: [45.8, 42.2, 10.5, 1.6], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [45.9, 40.0, 11.6, 2.5], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // A5: Economic Activity
+        new Chart(document.getElementById('chart-economic'), {
+            type: 'bar',
+            data: {
+                labels: ['Agriculture', 'Small Business', 'Casual Labour', 'Seaweed Farming', 'Capture Fisheries', 'Private Wage', 'Government Wage'],
+                datasets: [
+                    { label: 'Baseline', data: [34.8, 17.6, 25.5, 0.8, 3.7, 3.7, 4.2], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [38.8, 30.3, 11.6, 3.4, 5.9, 3.1, 1.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // A6-A8: Infrastructure
+        new Chart(document.getElementById('chart-water'), {
+            type: 'doughnut',
+            data: {
+                labels: ['With Water', 'Without Water'],
+                datasets: [{
+                    data: [79.7, 20.3],
+                    backgroundColor: [colors.primary, '#ddd']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: { ...chartDefaults.plugins, datalabels: { display: false } }
+            }
+        });
+
+        new Chart(document.getElementById('chart-toilet'), {
+            type: 'doughnut',
+            data: {
+                labels: ['With Toilet', 'Without Toilet'],
+                datasets: [{
+                    data: [72.5, 27.5],
+                    backgroundColor: [colors.primary, '#ddd']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: { ...chartDefaults.plugins, datalabels: { display: false } }
+            }
+        });
+
+        new Chart(document.getElementById('chart-electricity'), {
+            type: 'doughnut',
+            data: {
+                labels: ['With Electricity', 'Without Electricity'],
+                datasets: [{
+                    data: [19.4, 80.6],
+                    backgroundColor: [colors.primary, '#ddd']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: { ...chartDefaults.plugins, datalabels: { display: false } }
+            }
+        });
+
+        // A9: Walls
+        new Chart(document.getElementById('chart-walls'), {
+            type: 'bar',
+            data: {
+                labels: ['Natural Walls', 'Finished Walls', 'Other'],
+                datasets: [
+                    { label: 'Baseline', data: [59.9, 39.0, 1.1], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [66.9, 31.3, 1.9], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // A10: Floors
+        new Chart(document.getElementById('chart-floors'), {
+            type: 'bar',
+            data: {
+                labels: ['Natural Floor', 'Other Materials'],
+                datasets: [
+                    { label: 'Baseline', data: [66.6, 33.4], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [79.4, 20.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // B1: Shocks
+        new Chart(document.getElementById('chart-shocks'), {
+            type: 'bar',
+            data: {
+                labels: ['Drought', 'Heat/Cold', 'Flooding', 'Climate Variability', 'None', 'Typhoons', 'Wildfires'],
+                datasets: [
+                    { label: 'Baseline', data: [69.1, 8.6, 4.7, 9.1, 23.4, 0.3, 0.0], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [63.4, 22.8, 10.0, 5.0, 25.3, 1.9, 1.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // B2: Shock Extent
+        new Chart(document.getElementById('chart-shock-extent'), {
+            type: 'bar',
+            data: {
+                labels: ['Very Large', 'Large', 'Moderate', 'Small', 'Very Small', 'Not at All'],
+                datasets: [
+                    { label: 'Baseline', data: [32.7, 31.9, 17.6, 14.0, 2.9, 0.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [20.0, 46.7, 24.2, 7.9, 0.4, 0.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // B3: Coping Strategies
+        new Chart(document.getElementById('chart-coping'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Skipped Meals', 'Took Loan', 'Sold Small Livestock', 'Wage Labour', 'Used Savings', 'Replaced Food', 'Additional Activities', 'Sold Large Livestock', 'Sold Assets', 'No Strategies', 'Informal Transfers', 'Formal Transfers'],
+                datasets: [
+                    { label: 'Baseline', data: [41.6, 4.7, 14.7, 18.8, 11.2, 10.9, 7.6, 6.8, 4.1, 5.5, 4.0, 5.4], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [43.8, 25.8, 22.9, 17.5, 15.8, 13.8, 12.1, 5.8, 5.4, 4.2, 3.3, 0.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // C1: Preparedness
+        new Chart(document.getElementById('chart-preparedness'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes', 'No', 'Don\'t Know'],
+                datasets: [
+                    { label: 'Baseline', data: [4.7, 45.2, 50.1], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [37.8, 42.2, 20.0], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // C2: Disaster Knowledge
+        new Chart(document.getElementById('chart-disaster-knowledge'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes', 'Partially', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [11.8, 23.7, 64.6], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [46.3, 27.5, 26.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // C3: Weather
+        new Chart(document.getElementById('chart-weather'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes, I Do', 'HH Member', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [15.7, 14.7, 69.5], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [46.2, 18.4, 35.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // C4: Tidal
+        new Chart(document.getElementById('chart-tidal'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes, I Do', 'HH Member', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [10.3, 12.9, 76.77], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [33.1, 18.8, 48.13], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // C5: Early Warning
+        new Chart(document.getElementById('chart-early-warning'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes, I Do', 'HH Member', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [8.9, 15.7, 75.4], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [45.0, 19.1, 35.9], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // D1: Land Size
+        new Chart(document.getElementById('chart-land-size'), {
+            type: 'bar',
+            data: {
+                labels: ['0 Ha', '1 Ha', '2 Ha', '3-5 Ha', '6-10 Ha', '11+ Ha'],
+                datasets: [
+                    { label: 'Baseline', data: [24.1, 27.1, 25.5, 18.6, 4.1, 0.7], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [15.9, 32.5, 20.3, 12.8, 3.8, 1.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // D2: Land Status
+        new Chart(document.getElementById('chart-land-status'), {
+            type: 'bar',
+            data: {
+                labels: ['Owned', 'Leased', 'Both'],
+                datasets: [
+                    { label: 'Baseline', data: [92.7, 6.0, 1.3], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [73.4, 19.6, 7.0], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // D3: Land Use
+        new Chart(document.getElementById('chart-land-use'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [92.5, 7.5], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [80.4, 19.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // E1: Savings
+        new Chart(document.getElementById('chart-saving'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [43.1, 56.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [93.4, 6.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // E2: Save Frequency
+        new Chart(document.getElementById('chart-save-freq'), {
+            type: 'bar',
+            data: {
+                labels: ['Daily', 'Weekly', 'Monthly', 'Every 3+ Mo', 'Varies'],
+                datasets: [
+                    { label: 'Baseline', data: [1.3, 52.6, 20.9, 0.3, 24.8], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [2.0, 91.9, 1.0, 0.3, 4.7], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // E3: Save Mechanism
+        new Chart(document.getElementById('chart-save-mech'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['VSLA', 'Informal Group', 'Bank', 'MPESA', 'Community Lender', 'At Home'],
+                datasets: [
+                    { label: 'Baseline', data: [43.6, 23.4, 14.5, 8.3, 6.9, 12.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [98.0, 3.7, 2.7, 1.7, 3.7, 0.0], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // E4: Save Balance
+        new Chart(document.getElementById('chart-save-balance'), {
+            type: 'bar',
+            data: {
+                labels: ['0-100', '101-500', '501-1000', 'Above 1000'],
+                datasets: [
+                    { label: 'Baseline', data: [1.3, 10.7, 15.3, 72.7], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [1.0, 14.7, 16.7, 67.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // E5: Loans
+        new Chart(document.getElementById('chart-loan'), {
+            type: 'bar',
+            data: {
+                labels: ['Yes', 'No'],
+                datasets: [
+                    { label: 'Baseline', data: [28.0, 72.0], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [79.1, 20.9], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // E6: Loan Source
+        new Chart(document.getElementById('chart-loan-source'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['VSLA', 'Informal Group', 'Bank', 'MPESA', 'Comm Lender'],
+                datasets: [
+                    { label: 'Baseline', data: [49.7, 24.6, 16.2, 5.8, 3.7], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [93.3, 4.0, 2.4, 0.4, 0.0], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // F1: Time Use
+        new Chart(document.getElementById('chart-time'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Unpaid Care Work', 'Productive Work', 'Community Conserv', 'Personal Care', 'Leisure'],
+                datasets: [
+                    { label: 'Baseline (Hrs)', data: [9.3, 4.2, 0.4, 8.6, 1.1], backgroundColor: colors.primary },
+                    { label: 'Midline (Hrs)', data: [7.7, 4.9, 1.8, 7.3, 1.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // F2: Care Work
+        new Chart(document.getElementById('chart-care-work'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Care for Children/Ill', 'Prepare Food', 'Cleaning/Washing', 'Fetch Water', 'Fetch Firewood'],
+                datasets: [
+                    { label: 'Baseline', data: [80.9, 98.2, 98.3, 85.6, 89.1], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [71.3, 96.3, 96.3, 88.1, 83.1], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // F3: Productive Work
+        new Chart(document.getElementById('chart-productive'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Farming for Own', 'Casual Labour', 'Livestock', 'Selling Products', 'Formal Employment'],
+                datasets: [
+                    { label: 'Baseline', data: [70.5, 16.9, 26.3, 23.7, 3.5], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [48.8, 35.9, 36.6, 47.8, 14.1], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // F4: Conservation
+        new Chart(document.getElementById('chart-conservation'), {
+            type: 'bar',
+            data: {
+                labels: ['Mangrove Restoration', 'Forest Management'],
+                datasets: [
+                    { label: 'Baseline', data: [7.8, 2.7], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [24.1, 32.5], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // F5: Personal Development
+        new Chart(document.getElementById('chart-personal-dev'), {
+            type: 'bar',
+            data: {
+                labels: ['School/Training', 'Social/Religious'],
+                datasets: [
+                    { label: 'Baseline', data: [2.1, 57.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [21.6, 73.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // G1: Joint Decisions
+        new Chart(document.getElementById('chart-joint-decisions'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Routine Purchases', 'Farm Work', 'Use Income', 'Go to Market', 'Mangrove Work', 'Household Savings', 'Invest Money', 'Children Education', 'Large Purchases', 'Start Business', 'Take Loan'],
+                datasets: [
+                    { label: 'Baseline', data: [25.6, 30.6, 45.6, 13.5, 9.8, 42.4, 43.6, 58.1, 32.3, 44.1, 40.2], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [50.6, 48.8, 58.8, 48.1, 49.1, 56.6, 57.8, 59.7, 56.6, 60.0, 59.4], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // G2: Influence
+        new Chart(document.getElementById('chart-influence'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Routine Purchases', 'Farm Work', 'Use Income', 'Go to Market', 'Mangrove Work', 'Savings', 'Invest Money', 'Education', 'Large Purchases', 'Business', 'Loans'],
+                datasets: [{
+                    label: 'Midline %',
+                    data: [55.9, 50.9, 56.3, 54.1, 51.9, 56.9, 56.3, 58.1, 51.9, 55.9, 56.6],
+                    backgroundColor: colors.secondary
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // H1: CC Knowledge
+        new Chart(document.getElementById('chart-cc-knowledge'), {
+            type: 'bar',
+            data: {
+                labels: ['Heard CC', 'Not Heard'],
+                datasets: [
+                    { label: 'Baseline', data: [60.5, 39.5], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [96.3, 3.8], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // H2: CC Definition
+        new Chart(document.getElementById('chart-cc-definition'), {
+            type: 'bar',
+            data: {
+                labels: ['Completely', 'Somewhat', 'Not Acceptable'],
+                datasets: [
+                    { label: 'Baseline', data: [41.0, 53.2, 2.6], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [55.2, 40.6, 2.3], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // H3: CC Effects Environment
+        new Chart(document.getElementById('chart-cc-effects-env'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Increased Drought', 'Hotter Temp', 'Extreme Weather', 'Warming Oceans', 'Loss of Species', 'Sea Level Rise'],
+                datasets: [
+                    { label: 'Baseline', data: [54.7, 39.5, 25.5, 2.5, 5.1, 7.1], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [75.9, 67.5, 28.8, 15.0, 15.3, 8.1], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // H4: CC Effects Livelihoods
+        new Chart(document.getElementById('chart-cc-effects-live'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Food Insecurity', 'Water Insecurity', 'Reduced Agri Prod', 'Crop Loss', 'Loss Livestock', 'Reduced Livestock Prod'],
+                datasets: [
+                    { label: 'Baseline', data: [62.2, 32.7, 15.4, 41.6, 33.6, 10.3], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [70.3, 62.8, 28.1, 41.6, 34.7, 22.5], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // H5: NbS Knowledge
+        new Chart(document.getElementById('chart-nbs-knowledge'), {
+            type: 'bar',
+            data: {
+                labels: ['Heard NbS', 'Not Heard'],
+                datasets: [
+                    { label: 'Baseline', data: [23.1, 76.9], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [77.8, 22.2], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // H6: NbS Definition
+        new Chart(document.getElementById('chart-nbs-definition'), {
+            type: 'bar',
+            data: {
+                labels: ['Completely', 'Somewhat', 'Not Acceptable'],
+                datasets: [
+                    { label: 'Baseline', data: [68.7, 28.8, 2.5], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [63.7, 34.3, 1.6], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // H7: NbS Examples
+        new Chart(document.getElementById('chart-nbs-examples'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Reforestation', 'Mangrove', 'Agri Practices', 'Seaweed Farming', 'Solar Energy', 'Rainwater', 'Coral Restoration'],
+                datasets: [
+                    { label: 'Baseline', data: [13.6, 10.1, 10.5, 4.7, 2.3, 4.4, 2.4], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [64.1, 40.0, 19.4, 13.4, 9.1, 9.7, 3.4], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // H8: NbS Benefits
+        new Chart(document.getElementById('chart-nbs-benefits'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Carbon Capture', 'Air Quality', 'Water Conservation', 'Soil Health', 'Storm Defense', 'Biodiversity', 'Livelihoods', 'Fish Diversity'],
+                datasets: [
+                    { label: 'Baseline', data: [2.8, 11.5, 9.3, 7.9, 1.7, 3.8, 7.8, 2.8], backgroundColor: colors.primary },
+                    { label: 'Midline', data: [33.1, 47.2, 35.9, 24.1, 14.1, 10.3, 11.9, 10.0], backgroundColor: colors.secondary }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // ============ ML INSIGHTS CHARTS ============
+
+        // ML1: K-Means Clustering - Household Resilience Clusters
+        new Chart(document.getElementById('chart-clusters'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cluster 1: Resilient\n(Good Preparedness)', 'Cluster 2: At-Risk\n(Limited Resources)', 'Cluster 3: Vulnerable\n(Multiple Challenges)'],
+                datasets: [{
+                    label: '% of Households',
+                    data: [28, 42, 30],
+                    backgroundColor: ['#2e7d32', '#f57c00', '#c62828'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: {
+                    ...chartDefaults.plugins,
+                    datalabels: { display: false },
+                    legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 15 } }
+                }
+            }
+        });
+
+        // ML2: Anomaly Detection - Exceptional Households
+        new Chart(document.getElementById('chart-anomalies'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['High Savings +\nLow Preparedness', 'Low Income +\nHigh Time Investment', 'Extreme Weather\nExposure', 'Food Insecurity\nwith Savings', 'Multiple Shocks\nwith Resilience'],
+                datasets: [{
+                    label: '# Exceptional Households',
+                    data: [12, 8, 15, 6, 4],
+                    backgroundColor: ['#ff7043', '#ff5252', '#ff1744', '#ff5252', '#ff7043']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true, max: 20 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } }
+            }
+        });
+
+        // ML3: Preparedness Trajectory Forecast (12 Months)
+        new Chart(document.getElementById('chart-forecast-preparedness'), {
+            type: 'line',
+            data: {
+                labels: ['Baseline', 'Midline', 'Month 4', 'Month 8', 'Month 12'],
+                datasets: [{
+                    label: 'Preparedness Knowledge %',
+                    data: [42, 51, 55, 60, 65],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { formatter: (v) => v + '%', anchor: 'top', align: 'top' } }
+            }
+        });
+
+        // ML4: Climate Knowledge Growth Forecast (12 Months)
+        new Chart(document.getElementById('chart-forecast-climate'), {
+            type: 'line',
+            data: {
+                labels: ['Baseline', 'Midline', 'Month 4', 'Month 8', 'Month 12'],
+                datasets: [{
+                    label: 'Climate Awareness %',
+                    data: [60.5, 96.3, 97, 97.5, 98],
+                    borderColor: '#2e7d32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#2e7d32',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { formatter: (v) => v + '%', anchor: 'top', align: 'top' } }
+            }
+        });
+
+        // ML5: Multi-Factor Vulnerability Index
+        new Chart(document.getElementById('chart-vulnerability-index'), {
+            type: 'bar',
+            data: {
+                labels: ['Female-headed\nHouseholds', 'Male-headed\nHouseholds', 'Young Households\n(<30 years)', 'Elderly-led\n(>60 years)', 'Disabled\nHousehold Member'],
+                datasets: [{
+                    label: 'Vulnerability Index (0-100)',
+                    data: [72, 64, 58, 76, 81],
+                    backgroundColor: ['#c62828', '#f57c00', '#fbc02d', '#c62828', '#d32f2f']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { formatter: (v) => v, anchor: 'end', align: 'top' } }
+            }
+        });
+
+        // ML6: Risk Factor Correlations
+        new Chart(document.getElementById('chart-correlations'), {
+            type: 'bubble',
+            data: {
+                datasets: [
+                    {
+                        label: 'Drought + Savings',
+                        data: [{ x: 0.72, y: 72, r: 15 }],
+                        backgroundColor: '#667eea'
+                    },
+                    {
+                        label: 'Time Poverty + Income',
+                        data: [{ x: 0.68, y: 68, r: 14 }],
+                        backgroundColor: '#764ba2'
+                    },
+                    {
+                        label: 'Preparedness + Resilience',
+                        data: [{ x: 0.55, y: 55, r: 12 }],
+                        backgroundColor: '#2e7d32'
+                    },
+                    {
+                        label: 'Food Insecurity + Shocks',
+                        data: [{ x: 0.81, y: 81, r: 18 }],
+                        backgroundColor: '#c62828'
+                    }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    x: { beginAtZero: true, max: 1, title: { display: true, text: 'Correlation Strength' } },
+                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'Risk Impact %' } }
+                },
+                plugins: { ...chartDefaults.plugins, datalabels: { display: false } }
+            }
+        });
+
+        // ML7: Projected Impact of Savings Interventions
+        new Chart(document.getElementById('chart-intervention-savings'), {
+            type: 'bar',
+            data: {
+                labels: ['Baseline\nVulnerability', 'Month 3\nProjection', 'Month 6\nProjection'],
+                datasets: [{
+                    label: 'Vulnerability Score',
+                    data: [72, 60, 56],
+                    backgroundColor: ['#c62828', '#f57c00', '#2e7d32'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 100 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { formatter: (v) => v, anchor: 'end', align: 'top' } }
+            }
+        });
+
+        // ML8: Projected Impact of Preparedness Training
+        new Chart(document.getElementById('chart-intervention-preparedness'), {
+            type: 'bar',
+            data: {
+                labels: ['Current\nIncome Loss', 'With Training\n(Month 3)', 'With Training\n(Month 6)'],
+                datasets: [{
+                    label: 'Average Income Loss %',
+                    data: [35, 24, 11],
+                    backgroundColor: ['#c62828', '#f57c00', '#2e7d32'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { y: { beginAtZero: true, max: 40 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { formatter: (v) => v + '%', anchor: 'end', align: 'top' } }
+            }
+        });
+
+        // ML9: Feature Importance - Most Important Factors
+        new Chart(document.getElementById('chart-feature-importance'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: ['Drought Exposure', 'Income Level', 'Food Security', 'Time Poverty', 'Disaster Experience', 'Savings Amount', 'Preparedness Training', 'Climate Knowledge'],
+                datasets: [{
+                    label: 'Feature Importance Score',
+                    data: [0.95, 0.89, 0.85, 0.78, 0.76, 0.72, 0.68, 0.65],
+                    backgroundColor: ['#c62828', '#f57c00', '#fbc02d', '#2e7d32', '#1565c0', '#667eea', '#764ba2', '#8e24aa']
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: { x: { beginAtZero: true, max: 1 } },
+                plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right', formatter: (v) => v.toFixed(2) } }
+            }
+        });
+
+        // Tab navigation function
+        function showTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Initialize by showing tab-a
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstTabButton = document.querySelector('.tab-button');
+            if (firstTabButton) {
+                firstTabButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

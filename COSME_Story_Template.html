@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COSME Story of Change - Collection Template</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { color: #2c3e50; text-align: center; margin-bottom: 10px; font-size: 1.8rem; }
+    .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 0.9rem; }
+    .section { margin-bottom: 30px; padding: 20px; border-radius: 8px; border-left: 4px solid; }
+    .section-a { background: #e3f2fd; border-left-color: #2196f3; }
+    .section-b { background: #f3e5f5; border-left-color: #9c27b0; }
+    .section-c { background: #fff3e0; border-left-color: #ff9800; }
+    .section-d { background: #e8f5e9; border-left-color: #4caf50; }
+    .section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 15px; }
+    .section-a .section-title { color: #1976d2; }
+    .section-b .section-title { color: #7b1fa2; }
+    .section-c .section-title { color: #f57c00; }
+    .section-d .section-title { color: #388e3c; }
+    .form-row { display: grid; grid-template-columns: 200px 1fr; gap: 15px; margin-bottom: 12px; align-items: start; }
+    .form-label { font-weight: 600; color: #2c3e50; padding-top: 8px; }
+    .form-input, .form-textarea, .form-select { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-family: inherit; font-size: 0.95rem; transition: border-color 0.3s; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: #3498db; }
+    .form-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+    .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; }
+    .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #2c3e50; cursor: pointer; }
+    .checkbox-label input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .photo-upload { width: 100%; height: 250px; border: 3px dashed #bdbdbd; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #fafafa; transition: all 0.3s; }
+    .photo-upload:hover { background: #f0f0f0; border-color: #3498db; transform: scale(1.02); }
+    .photo-icon { font-size: 4rem; margin-bottom: 15px; }
+    .photo-text { font-size: 1.1rem; font-weight: 600; color: #7f8c8d; }
+    .photo-subtext { font-size: 0.85rem; color: #95a5a6; margin-top: 5px; }
+    .button-primary { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(46,204,113,0.3); transition: transform 0.2s; }
+    .button-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(46,204,113,0.4); }
+    .button-secondary { background: #3498db; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin: 5px; }
+    .action-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+    .guidance-box { background: #fff9c4; border-left: 4px solid #fbc02d; padding: 15px; border-radius: 6px; margin-top: 20px; }
+    .guidance-title { font-weight: 700; color: #f57f17; margin-bottom: 10px; }
+    .guidance-list { margin-left: 20px; color: #5d4037; line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📋 COSME Project – Story of Change / Impact Collection Tool</h1>
+    <p class="subtitle">Structured impact stories for MERL and Communications</p>
+
+    <!-- SECTION A: Basic Information -->
+    <div class="section section-a">
+      <div class="section-title">SECTION A: Basic Information</div>
+      
+      <div class="form-row">
+        <label class="form-label">Date of Interview:</label>
+        <input type="date" class="form-input" id="interviewDate" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Interviewer Name:</label>
+        <input type="text" class="form-input" id="interviewerName" placeholder="Enter interviewer name" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Location:</label>
+        <input type="text" class="form-input" id="location" placeholder="County / Sub-County / Ward / Village" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Group / Individual Name:</label>
+        <input type="text" class="form-input" id="participantName" placeholder="Name of participant or group" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Gender:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="gender" value="Female" /> Female</label>
+          <label class="checkbox-label"><input type="checkbox" name="gender" value="Male" /> Male</label>
+          <label class="checkbox-label"><input type="checkbox" name="gender" value="Other" /> Other</label>
+          <label class="checkbox-label"><input type="checkbox" name="gender" value="PreferNot" /> Prefer not to say</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Age (approx.):</label>
+        <input type="number" class="form-input" id="age" placeholder="e.g., 35" style="max-width: 150px;" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Disability Status:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="radio" name="disability" value="Yes" /> Yes</label>
+          <label class="checkbox-label"><input type="radio" name="disability" value="No" /> No</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Youth (15–35):</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="radio" name="youth" value="Yes" /> Yes</label>
+          <label class="checkbox-label"><input type="radio" name="youth" value="No" /> No</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Category:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="category" value="Seaweed" /> Seaweed</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="Mangrove" /> Mangrove</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="Forest" /> Forest</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="VSLA" /> VSLA</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="Gender" /> Gender Justice Journey</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="School" /> School</label>
+          <label class="checkbox-label"><input type="checkbox" name="category" value="Other" /> Other</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">GPS Location (optional):</label>
+        <input type="text" class="form-input" id="gpsLocation" placeholder="Latitude, Longitude" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Photo (with consent):</label>
+        <div>
+          <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+            <div class="photo-icon">📷</div>
+            <div class="photo-text">Click to upload photo</div>
+            <div class="photo-subtext">Ensure participant consent is obtained</div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display: none;" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION B: Story of Change -->
+    <div class="section section-b">
+      <div class="section-title">SECTION B: Story of Change (Guided Conversation)</div>
+      
+      <div class="form-row">
+        <label class="form-label">1. Background:</label>
+        <textarea class="form-textarea" id="question1" placeholder="Before the COSME project, what was your situation or main challenges related to livelihoods, environment, or gender equality?"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">2. Trigger for change:</label>
+        <textarea class="form-textarea" id="question2" placeholder="What COSME activity or support brought change? (e.g. training, access to tools, group strengthening, NbS intervention, VSLA, or awareness sessions)"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">3. Description of change:</label>
+        <textarea class="form-textarea" id="question3" placeholder="What has changed in your life, household, group, or environment since then?"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">4. How do you feel:</label>
+        <textarea class="form-textarea" id="question4" placeholder="Describe any improvement in confidence, decision-making, wellbeing, or relationships"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">5. Evidence of change:</label>
+        <textarea class="form-textarea" id="question5" placeholder="What can you show or point to as evidence? (e.g. more seaweed ropes, savings group book, new mangroves, leadership role)"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">6. Broader influence:</label>
+        <textarea class="form-textarea" id="question6" placeholder="How has this change affected others in your group, family, or community?"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">7. Sustainability:</label>
+        <textarea class="form-textarea" id="question7" placeholder="How are you keeping this change going? (e.g. continued savings, regular replanting, mentoring others)"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">8. Lessons/challenges:</label>
+        <textarea class="form-textarea" id="question8" placeholder="What have you learned, and what challenges do you still face?"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">9. Future aspiration:</label>
+        <textarea class="form-textarea" id="question9" placeholder="What would help you or your group to continue or expand this progress?"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION C: Validation and Consent -->
+    <div class="section section-c">
+      <div class="section-title">SECTION C: Validation and Consent</div>
+      
+      <div class="form-row">
+        <label class="form-label">Participant consent:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="radio" name="consent" value="Yes" /> Yes</label>
+          <label class="checkbox-label"><input type="radio" name="consent" value="No" /> No</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Signature/Thumbprint:</label>
+        <input type="text" class="form-input" id="signature" placeholder="Optional: describe signature or thumbprint obtained" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Validated by:</label>
+        <input type="text" class="form-input" id="validator" placeholder="Staff name & date" />
+      </div>
+    </div>
+
+    <!-- SECTION D: Staff Summary -->
+    <div class="section section-d">
+      <div class="section-title">SECTION D: Staff Summary (for MERL / Communication Teams)</div>
+      
+      <div class="form-row">
+        <label class="form-label">Key theme(s):</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Livelihoods" /> Livelihoods</label>
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Gender" /> Gender equality</label>
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Environment" /> Environmental restoration</label>
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Climate" /> Climate resilience</label>
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Governance" /> Governance & Advocacy</label>
+          <label class="checkbox-label"><input type="checkbox" name="theme" value="Youth" /> Youth engagement</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">PMF Result Area:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1110" /> 1110 Mangrove</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1120" /> 1120 Seaweed</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1130" /> 1130 Forest</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1210" /> 1210 Women's knowledge</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1220" /> 1220 Access to assets</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1230" /> 1230 Men's engagement</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1310" /> 1310 Schools</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1320" /> 1320 Governance</label>
+          <label class="checkbox-label"><input type="checkbox" name="pmf" value="1330" /> 1330 Advocacy</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Level of Change:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="level" value="Individual" /> Individual</label>
+          <label class="checkbox-label"><input type="checkbox" name="level" value="Household" /> Household</label>
+          <label class="checkbox-label"><input type="checkbox" name="level" value="Group" /> Group</label>
+          <label class="checkbox-label"><input type="checkbox" name="level" value="Community" /> Community</label>
+          <label class="checkbox-label"><input type="checkbox" name="level" value="Ecosystem" /> Ecosystem</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Type of Change:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="type" value="Economic" /> Economic</label>
+          <label class="checkbox-label"><input type="checkbox" name="type" value="Social" /> Social</label>
+          <label class="checkbox-label"><input type="checkbox" name="type" value="Environmental" /> Environmental</label>
+          <label class="checkbox-label"><input type="checkbox" name="type" value="Institutional" /> Institutional</label>
+          <label class="checkbox-label"><input type="checkbox" name="type" value="Behavioural" /> Behavioural</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Suggested Story Title:</label>
+        <input type="text" class="form-input" id="storyTitle" placeholder="Enter a compelling title for this story" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Significance of Change:</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="radio" name="significance" value="Low" /> Low</label>
+          <label class="checkbox-label"><input type="radio" name="significance" value="Medium" /> Medium</label>
+          <label class="checkbox-label"><input type="radio" name="significance" value="High" /> High</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Follow-up Action:</label>
+        <textarea class="form-textarea" id="followup" placeholder="Any required follow-up actions?" style="min-height: 60px;"></textarea>
+      </div>
+    </div>
+
+    <!-- Guidance Box -->
+    <div class="guidance-box">
+      <div class="guidance-title">📝 Guidance for Facilitators/Staff Collecting the Story</div>
+      <ol class="guidance-list">
+        <li>Use conversational interviewing - let the respondent tell their story in their own words</li>
+        <li>Probe gently for what changed, why, and how the project contributed</li>
+        <li>Capture direct quotes and visible results (photos, observations)</li>
+        <li>Choose 1–2 stories per group/area that best represent progress toward PMF outcomes</li>
+        <li>Submit stories monthly or quarterly for review by the M&E/COMMs team</li>
+      </ol>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="button-primary" onclick="saveStory()">💾 Save Story</button>
+      <button class="button-secondary" onclick="exportStory()">📤 Export to PDF</button>
+      <button class="button-secondary" onclick="clearForm()">🔄 Clear Form</button>
+    </div>
+  </div>
+
+  <script>
+    function saveStory() {
+      // Collect all form data
+      const storyData = {
+        sectionA: {
+          interviewDate: document.getElementById('interviewDate').value,
+          interviewerName: document.getElementById('interviewerName').value,
+          location: document.getElementById('location').value,
+          participantName: document.getElementById('participantName').value,
+          age: document.getElementById('age').value,
+          gpsLocation: document.getElementById('gpsLocation').value,
+          gender: Array.from(document.querySelectorAll('input[name="gender"]:checked')).map(cb => cb.value),
+          disability: document.querySelector('input[name="disability"]:checked')?.value,
+          youth: document.querySelector('input[name="youth"]:checked')?.value,
+          category: Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value)
+        },
+        sectionB: {
+          question1: document.getElementById('question1').value,
+          question2: document.getElementById('question2').value,
+          question3: document.getElementById('question3').value,
+          question4: document.getElementById('question4').value,
+          question5: document.getElementById('question5').value,
+          question6: document.getElementById('question6').value,
+          question7: document.getElementById('question7').value,
+          question8: document.getElementById('question8').value,
+          question9: document.getElementById('question9').value
+        },
+        sectionC: {
+          consent: document.querySelector('input[name="consent"]:checked')?.value,
+          signature: document.getElementById('signature').value,
+          validator: document.getElementById('validator').value
+        },
+        sectionD: {
+          theme: Array.from(document.querySelectorAll('input[name="theme"]:checked')).map(cb => cb.value),
+          pmf: Array.from(document.querySelectorAll('input[name="pmf"]:checked')).map(cb => cb.value),
+          level: Array.from(document.querySelectorAll('input[name="level"]:checked')).map(cb => cb.value),
+          type: Array.from(document.querySelectorAll('input[name="type"]:checked')).map(cb => cb.value),
+          storyTitle: document.getElementById('storyTitle').value,
+          significance: document.querySelector('input[name="significance"]:checked')?.value,
+          followup: document.getElementById('followup').value
+        }
+      };
+
+      // Save to localStorage
+      const stories = JSON.parse(localStorage.getItem('cosmeStories') || '[]');
+      stories.push({
+        ...storyData,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('cosmeStories', JSON.stringify(stories));
+
+      alert('✅ Story saved successfully to localStorage!\n\nTotal stories collected: ' + stories.length);
+    }
+
+    function exportStory() {
+      alert('📤 Export functionality would generate a PDF report with all story details.');
+    }
+
+    function clearForm() {
+      if (confirm('⚠️ Are you sure you want to clear all fields?')) {
+        document.querySelectorAll('input, textarea').forEach(field => {
+          if (field.type === 'checkbox' || field.type === 'radio') {
+            field.checked = false;
+          } else {
+            field.value = '';
+          }
+        });
+      }
+    }
+
+    // Photo upload preview
+    document.getElementById('photoInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const photoUpload = document.querySelector('.photo-upload');
+          photoUpload.style.backgroundImage = `url('${event.target.result}')`;
+          photoUpload.style.backgroundSize = 'cover';
+          photoUpload.style.backgroundPosition = 'center';
+          photoUpload.innerHTML = '<div style="background: rgba(255,255,255,0.9); padding: 8px 16px; border-radius: 6px; font-weight: 600; color: #27ae60;">✓ Photo Uploaded</div>';
+          localStorage.setItem('currentStoryPhoto', event.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Auto-save drafts every 30 seconds
+    setInterval(() => {
+      const draftData = {
+        interviewDate: document.getElementById('interviewDate').value,
+        location: document.getElementById('location').value,
+        // ... collect all fields
+      };
+      localStorage.setItem('cosmeStoryDraft', JSON.stringify(draftData));
+      console.log('💾 Draft auto-saved');
+    }, 30000);
+  </script>
+</body>
+</html>

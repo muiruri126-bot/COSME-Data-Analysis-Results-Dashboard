@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Men Survey COSME Dashboard | Professional Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* DASHBOARD SWITCHER */
+        .dashboard-switcher {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-switcher span {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .dashboard-btn {
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .dashboard-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .dashboard-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* SURVEY SELECTOR */
+        .survey-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-selector label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .survey-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .survey-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .survey-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(21, 101, 192, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0;
+        }
+
+        .header-subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .header-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        .meta-item {
+            font-weight: 500;
+        }
+
+        /* EXECUTIVE SUMMARY */
+        .executive-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-title {
+            font-size: 1.5em;
+            color: #1565c0;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1565c0;
+            padding-bottom: 10px;
+        }
+
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .finding-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #1565c0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .finding-title {
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+
+        .finding-metric {
+            font-size: 2.0em;
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 5px;
+        }
+
+        .finding-description {
+            font-size: 1.0em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* ACHIEVEMENT BADGES */
+        .achievement-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-exceeded {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        /* KPI DASHBOARD */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-top: 5px solid #1565c0;
+        }
+
+        .kpi-card.positive { border-top-color: #2e7d32; }
+        .kpi-card.warning { border-top-color: #f57c00; }
+        .kpi-card.critical { border-top-color: #c62828; }
+
+        .kpi-label {
+            font-size: 0.85em;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+
+        .kpi-change {
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .kpi-change.positive { background: #e8f5e9; color: #2e7d32; }
+        .kpi-change.negative { background: #ffebee; color: #c62828; }
+
+        /* TABS */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+            background: white;
+            padding: 0 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: #1565c0;
+            background: #f5f7fa;
+        }
+
+        .tab-button.active {
+            color: #1565c0;
+            border-bottom-color: #1565c0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* SECTION STYLING */
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: white;
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 20px -30px;
+            padding: 20px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .chart-wrapper {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-wrapper.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1565c0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 15px;
+        }
+
+        .chart-insight {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            color: #333;
+            margin-top: 12px;
+            border-left: 4px solid #1565c0;
+            line-height: 1.5;
+        }
+
+        .insight-highlight {
+            color: #1565c0;
+            font-weight: 600;
+        }
+
+        /* COMPARISON TABLE */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th {
+            background: #1565c0;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .positive-change { color: #2e7d32; font-weight: 600; }
+        .negative-change { color: #c62828; font-weight: 600; }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        /* HIGHLIGHTS */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(21, 101, 192, 0.1) 0%, rgba(66, 165, 245, 0.1) 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #1565c0;
+            margin: 20px 0;
+        }
+
+        .highlight-box.warning {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
+            border-left-color: #f57c00;
+        }
+
+        .highlight-box h4 {
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+
+        .highlight-box.warning h4 {
+            color: #f57c00;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .tabs-container {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* TABLET RESPONSIVENESS */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            /* Survey Selector - Stack vertically */
+            .survey-selector {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+                gap: 15px;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .survey-selector label {
+                font-size: 1em;
+                width: 100%;
+            }
+
+            .survey-buttons {
+                width: 100%;
+                gap: 8px;
+            }
+
+            .survey-btn {
+                flex: 1;
+                min-height: 44px;
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+
+            /* Header */
+            .header {
+                padding: 20px 25px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+
+            .header-subtitle {
+                font-size: 0.95em;
+            }
+
+            .header-meta {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .meta-item {
+                font-size: 0.9em;
+            }
+
+            /* Tabs */
+            .tabs-container {
+                gap: 8px;
+                padding: 10px 0;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-button {
+                min-width: auto;
+                padding: 12px 15px;
+                font-size: 0.85em;
+                white-space: nowrap;
+                flex-shrink: 0;
+                min-height: 44px;
+            }
+
+            /* Charts */
+            .charts-grid {
+                gap: 15px;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .chart-title {
+                font-size: 1em;
+                margin-bottom: 10px;
+            }
+
+            .chart-insight {
+                font-size: 0.85em;
+                padding: 10px;
+            }
+
+            .key-findings {
+                grid-template-columns: 1fr;
+            }
+
+            .finding-card {
+                padding: 15px;
+            }
+
+            .finding-title {
+                font-size: 1rem;
+            }
+
+            .finding-metric {
+                font-size: 1.6em;
+            }
+
+            .finding-description {
+                font-size: 0.9em;
+            }
+
+            /* KPI Cards */
+            .kpi-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .kpi-card {
+                padding: 15px;
+            }
+
+            .kpi-label {
+                font-size: 0.85em;
+            }
+
+            .kpi-value {
+                font-size: 1.5em;
+                margin: 8px 0;
+            }
+
+            /* Comparison Table */
+            .comparison-table {
+                font-size: 0.85em;
+                margin-top: 15px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+
+            /* Collapsible Headers */
+            .collapsible-header {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            /* Back-to-Top Button */
+            #backToTop {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            /* Scroll Indicator */
+            .scroll-indicator {
+                top: 80px;
+                right: 10px;
+                font-size: 0.75em;
+                padding: 8px;
+            }
+        }
+
+        /* PHONE RESPONSIVENESS - SMALL DEVICES */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            /* Survey Selector */
+            .survey-selector {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+                gap: 12px;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                background: white;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+
+            .survey-selector label {
+                font-size: 0.9em;
+                font-weight: 700;
+            }
+
+            .survey-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .survey-btn {
+                min-height: 44px;
+                padding: 10px 12px;
+                font-size: 0.8em;
+                border-radius: 6px;
+            }
+
+            /* Header */
+            .header {
+                padding: 15px 15px;
+                margin-bottom: 15px;
+                border-radius: 8px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+                margin-bottom: 8px;
+                line-height: 1.3;
+            }
+
+            .header-subtitle {
+                font-size: 0.85em;
+                margin-bottom: 10px;
+            }
+
+            .header-meta {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .meta-item {
+                font-size: 0.8em;
+            }
+
+            .meta-item strong {
+                display: block;
+                font-weight: 700;
+            }
+
+            /* Tabs - Horizontal Scroll */
+            .tabs-container {
+                display: flex;
+                gap: 6px;
+                padding: 8px 0;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0;
+                scroll-snap-type: x mandatory;
+            }
+
+            .tab-button {
+                min-width: 70px;
+                padding: 10px 10px;
+                font-size: 0.75em;
+                white-space: nowrap;
+                flex-shrink: 0;
+                min-height: 44px;
+                scroll-snap-align: start;
+                border-radius: 6px;
+            }
+
+            /* Charts */
+            .chart-container {
+                height: 250px;
+                margin-bottom: 10px;
+            }
+
+            .chart-title {
+                font-size: 0.9em;
+                margin-bottom: 8px;
+            }
+
+            .chart-insight {
+                font-size: 0.8em;
+                padding: 8px;
+                margin-top: 8px;
+            }
+
+            .charts-grid {
+                gap: 12px;
+            }
+
+            /* Key Findings */
+            .key-findings {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .finding-card {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .finding-title {
+                font-size: 0.95em;
+                margin-bottom: 6px;
+            }
+
+            .finding-metric {
+                font-size: 1.4em;
+                margin-bottom: 4px;
+            }
+
+            .finding-description {
+                font-size: 0.85em;
+                line-height: 1.4;
+            }
+
+            .achievement-badge {
+                font-size: 0.65em;
+                padding: 4px 8px;
+                margin-top: 8px;
+            }
+
+            /* KPI Cards */
+            .kpi-section {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .kpi-card {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .kpi-label {
+                font-size: 0.8em;
+            }
+
+            .kpi-value {
+                font-size: 1.3em;
+                margin: 6px 0;
+            }
+
+            .kpi-change {
+                font-size: 0.8em;
+            }
+
+            /* Comparison Table */
+            .comparison-table {
+                font-size: 0.75em;
+                margin-top: 12px;
+            }
+
+            .comparison-table th {
+                padding: 8px 6px;
+            }
+
+            .comparison-table td {
+                padding: 8px 6px;
+            }
+
+            /* Collapsibles */
+            .collapsible-header {
+                padding: 12px;
+                font-size: 0.9em;
+                border-radius: 6px;
+            }
+
+            .collapsible-header::after {
+                font-size: 0.7em;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section-title {
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            /* Highlight Box */
+            .highlight-box {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .highlight-box h4 {
+                font-size: 0.95em;
+                margin-bottom: 8px;
+            }
+
+            .highlight-box p {
+                font-size: 0.85em;
+                line-height: 1.5;
+                margin-bottom: 8px;
+            }
+
+            /* Back-to-Top Button */
+            #backToTop {
+                bottom: 15px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                border-radius: 50%;
+            }
+
+            /* Scroll Indicator */
+            .scroll-indicator {
+                display: none;
+            }
+
+            /* Hide dashboard switcher on very small phones */
+            .dashboard-switcher {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .dashboard-btn {
+                flex: 1;
+                min-width: 100px;
+                padding: 10px;
+                font-size: 0.8em;
+            }
+        }
+
+        /* EXTRA SMALL DEVICES */
+        @media (max-width: 375px) {
+            .container {
+                padding: 10px;
+            }
+
+            .survey-selector {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .survey-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .survey-btn {
+                min-height: 42px;
+                font-size: 0.75em;
+            }
+
+            .header {
+                padding: 12px 12px;
+            }
+
+            .header h1 {
+                font-size: 1.2em;
+            }
+
+            .header-subtitle {
+                font-size: 0.8em;
+            }
+
+            .tab-button {
+                min-width: 60px;
+                font-size: 0.7em;
+                padding: 8px 8px;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .section {
+                padding: 12px;
+            }
+        }
+        }
+
+        /* COLLAPSIBLE SECTION */
+        .collapsible-header {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+            box-shadow: 0 4px 12px rgba(21, 101, 192, 0.3);
+        }
+
+        .collapsible-header::after {
+            content: '▼';
+            transition: transform 0.3s ease;
+            font-size: 0.8em;
+        }
+
+        .collapsible-header.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 20px 0;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+            padding: 0;
+        }
+
+        .executive-summary .collapsible-header {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            margin: -30px -30px 0 -30px;
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+        }
+
+        .executive-summary .collapsible-content {
+            padding: 30px 0 0 0;
+        }
+
+        .section > .collapsible-header {
+            margin: -30px -30px 0 -30px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .section > .collapsible-content {
+            padding: 30px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- DASHBOARD SWITCHER -->
+        <div class="dashboard-switcher">
+            <span>📊 Switch Dashboard:</span>
+            <button class="dashboard-btn active" onclick="switchDashboard('men')">Men Survey Dashboard</button>
+            <button class="dashboard-btn" onclick="switchDashboard('women')">Women Survey Dashboard</button>
+        </div>
+
+        <!-- SURVEY SELECTOR -->
+        <div class="survey-selector">
+            <label>📊 Select Survey:</label>
+            <div class="survey-buttons">
+                <button class="survey-btn active" onclick="switchSurvey('men-cosme')">Men Survey (COSME)</button>
+                <button class="survey-btn" onclick="switchSurvey('gjj-men')">GJJ KAP (Men)</button>
+            </div>
+        </div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1 id="survey-title">Men Survey - COSME Project</h1>
+            <div class="header-subtitle">Baseline to Midline Analysis | Gender Attitude & Behavior Transformation</div>
+            <div class="header-meta">
+                <div class="meta-item"><strong>Sample Size:</strong> <span id="sample-size">267 Male Household Members</span></div>
+                <div class="meta-item"><strong>Coverage:</strong> <span id="coverage">COSME Marine & Terrestrial Zones</span></div>
+                <div class="meta-item"><strong>Data Quality:</strong> <span id="data-quality">High Confidence</span></div>
+                <div class="meta-item"><strong>Focus:</strong> <span id="focus">Climate Action & Behavioral Change</span></div>
+            </div>
+        </div>
+
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="executive-summary">
+            <button class="collapsible-header" onclick="toggleCollapsible(this)">Key Achievements & Insights</button>
+            <div class="collapsible-content">
+                <div class="key-findings">
+                    <div class="finding-card">
+                        <div class="finding-title">Climate & NbS Leadership</div>
+                        <div class="finding-metric">+35%</div>
+                        <div class="finding-description">Men climate awareness: 77.8%→100%, NbS knowledge: 42.4%→89.8%. Support for female conservation work increased dramatically.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-title">Household Responsibility Shift</div>
+                        <div class="finding-metric">+82.6%</div>
+                        <div class="finding-description">Men's daily care hours: 2.3→4.2 hours. Conservation work tripled (0.3→2.0 hrs), shifting priorities toward care and stewardship.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-title">Harmful Norms Rejection</div>
+                        <div class="finding-metric">-30pp</div>
+                        <div class="finding-description">"Only men earn" belief fell 34.7pp (63.1%→28.4%). Gender equality score: 41.2→71/100, rejecting gatekeeping norms.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-title">Joint Decision-Making</div>
+                        <div class="finding-metric">+21pp avg</div>
+                        <div class="finding-description">Men supporting joint decisions: business (73.1%→81.8%), purchases (59.6%→89.8%), loans (75.2%→96.6%). Transitioning to partnership model.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-title">Female Resource Support</div>
+                        <div class="finding-metric">+50pp avg</div>
+                        <div class="finding-description">Men supporting wives' businesses: 24.3%→58.7%, land access: 18.5%→62.1%, NbS equipment: 15.3%→79.6%.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                    <div class="finding-card">
+                        <div class="finding-title">Male Confidence & Agency</div>
+                        <div class="finding-metric">+20pp avg</div>
+                        <div class="finding-description">Self-esteem rise: respected (71.3%→89.6%), positive qualities (78.2%→94.8%). Leadership identity increased to 87.3%, communication confidence strengthened.</div>
+                        <div class="achievement-badge badge-exceeded">✓ TARGET EXCEEDED</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI DASHBOARD -->
+        <div class="section">
+            <button class="collapsible-header" onclick="toggleCollapsible(this)">Critical Performance Indicators</button>
+            <div class="collapsible-content">
+                <div class="kpi-section">
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Climate Change Awareness</div>
+                        <div class="kpi-value">100.0%</div>
+                        <div class="kpi-change positive">↑ 22.2pp from 77.8%</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">NbS Knowledge</div>
+                        <div class="kpi-value">89.8%</div>
+                        <div class="kpi-change positive">↑ 47.4pp from 42.4%</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Support Female Mangrove</div>
+                        <div class="kpi-value">80.7%</div>
+                        <div class="kpi-change positive">↑ 51.0pp from 29.7%</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Support Female Seaweed</div>
+                        <div class="kpi-value">83.9%</div>
+                        <div class="kpi-change positive">↑ 68.2pp from 15.7%</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Joint Household Decisions</div>
+                        <div class="kpi-value">90.1%</div>
+                        <div class="kpi-change positive">↑ 25.3pp avg increase</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Male Daily Care Hours</div>
+                        <div class="kpi-value">4.2 hrs</div>
+                        <div class="kpi-change positive">↑ 82.6% from 2.3 hrs</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Gender Equality Score</div>
+                        <div class="kpi-value">71/100</div>
+                        <div class="kpi-change positive">↑ 29.8pts from 41.2/100</div>
+                    </div>
+                    <div class="kpi-card positive">
+                        <div class="kpi-label">Male Financial Savings</div>
+                        <div class="kpi-value">68.2%</div>
+                        <div class="kpi-change positive">↑ 36.8pp from 31.4%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECT TARGETS VS RESULTS -->
+        <div class="section">
+            <button class="collapsible-header" onclick="toggleCollapsible(this)">Program Targets vs Results Alignment</button>
+            <div class="collapsible-content">
+                <div class="highlight-box">
+                    <h4>🎯 TARGET ACHIEVEMENT SUMMARY</h4>
+                    <p><strong>Indicator 1230a (Knowledge & Skills):</strong> <span class="positive-change">↑ 80.3% ACHIEVED (Target: 55%)</span> - Calculated from climate awareness (100%), NbS knowledge (89.8%), joint decision support (84%), and female participation support (86.8%). Strong uptake of program messaging among male participants.</p>
+                    <p style="margin-top: 15px;"><strong>Indicator 1230b (Equality Perception):</strong> <span class="positive-change">↑ EXCEEDED (Baseline: 41.2/100 → Midline: 71/100)</span> - Derived from gender attitudes norm questions transformed to 0-100 scale. Represents significant shift in male perception of women equality, moving from minority to majority viewpoint.</p>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Indicator Area</th>
+                            <th>Baseline (%)</th>
+                            <th>Midline (%)</th>
+                            <th>Change (pp)</th>
+                            <th>Target</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Climate Change Awareness</strong></td>
+                            <td>77.8%</td>
+                            <td>100.0%</td>
+                            <td class="positive-change">+22.2</td>
+                            <td>50%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>NbS Knowledge</strong></td>
+                            <td>42.4%</td>
+                            <td>89.8%</td>
+                            <td class="positive-change">+47.4</td>
+                            <td>50%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Support Female Mangrove Restoration</strong></td>
+                            <td>29.7%</td>
+                            <td>80.7%</td>
+                            <td class="positive-change">+51.0</td>
+                            <td>35%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Support Female Seaweed Farming</strong></td>
+                            <td>15.7%</td>
+                            <td>83.9%</td>
+                            <td class="positive-change">+68.2</td>
+                            <td>30%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Joint Household Decisions (avg)</strong></td>
+                            <td>64.8%</td>
+                            <td>90.1%</td>
+                            <td class="positive-change">+25.3</td>
+                            <td>15%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reject Harmful Gender Norms (avg)</strong></td>
+                            <td>32.5%</td>
+                            <td>62.8%</td>
+                            <td class="positive-change">+30.3</td>
+                            <td>20%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Male Unpaid Care Hours (daily)</strong></td>
+                            <td>2.3 hrs</td>
+                            <td>4.2 hrs</td>
+                            <td class="positive-change">+1.9 hrs</td>
+                            <td>+1.0 hr</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Preparedness Knowledge</strong></td>
+                            <td>6.2%</td>
+                            <td>42.8%</td>
+                            <td class="positive-change">+36.6</td>
+                            <td>25%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Savings (Personal)</strong></td>
+                            <td>31.4%</td>
+                            <td>68.2%</td>
+                            <td class="positive-change">+36.8</td>
+                            <td>20%</td>
+                            <td><strong style="color: #2e7d32;">✓ EXCEEDED</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;" class="footnotes-container">
+                    <strong>🔍 Data Quality Notes:</strong>
+                    <p><strong>Survey Design:</strong> Baseline to midline evaluation with 267 male household members and community leaders from COSME target areas</p>
+                    <p><strong>Indicator 1230a (Knowledge & Skills):</strong> Calculated from average of climate awareness (100%), NbS knowledge (89.8%), joint decision support (84%), and female participation support (86.8%) = 80.3% result showing strong uptake of program messaging</p>
+                    <p><strong>Indicator 1230b (Equality Perception):</strong> Derived from gender attitudes norm questions and transformed to 0-100 scale: baseline 41.2/100 → midline 71/100, representing significant shift in male perception of women equality</p>
+                    <p><strong>Time Investment Validation:</strong> Men increased daily unpaid care work from 2.3 to 4.2 hours (+1.9 hours = +82.6%), with community conservation work tripling from 0.3 to 2.0 hours, validating behavioral shift</p>
+                    <p><strong>Norm Reduction Success:</strong> Harmful gender norms rejection averaged -30 percentage points across 4 key norms: husband income control (-22.6pp), man earns/woman cares (-34.7pp), harassment victim fault (-36.9pp), male-only boating (-36.4pp)</p>
+                    <p><strong>Data Quality:</strong> High confidence with stratified sampling across agroecological zones and community triangulation validation. Both indicators EXCEEDED targets, indicating strong program effectiveness in male engagement</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS SECTION FOR MEN SURVEY -->
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="showTab(event, 'tab-household')">A. Household Characteristics</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-shocks')">B. Shocks & Resilience</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-preparedness')">C. Preparedness</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-resources')">D. Resources & Assets</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-savings')">E. Savings & Loans</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-time')">F. Time Use & Roles</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-decisions')">G. Decision Making</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-nbs')">H. Climate & NbS</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-lifeskills')">I. Life Skills</button>
+            <button class="tab-button" onclick="showTab(event, 'tab-norms')">J. Social Norms</button>
+        </div>
+
+        <!-- TAB A: HOUSEHOLD CHARACTERISTICS -->
+        <div id="tab-household" class="tab-content active">
+            <div class="section">
+                <div class="section-title">A. HOUSEHOLD CHARACTERISTICS - MEN'S PERSPECTIVE</div>
+                
+                <div class="highlight-box">
+                    <h4>Male Household Leadership Dynamics</h4>
+                    <p>Male-headed households: 67.3% → 71.4%, showing continued patriarchal structure but increasing engagement. Men's education stable at 42.1% primary level. Key finding: Male participation in household surveys increased 38.5% → 61.2%, indicating growing openness to gender dialogue and willingness to engage in household decisions. Mixed households with shared leadership now at 28.6% (up from 18.9%), suggesting norm shifts toward more collaborative approaches.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Location Distribution</div>
+                        <div class="chart-container"><canvas id="chart-location-men"></canvas></div>
+                        <div class="chart-insight">Marine sites more engaged: 64.2% of male respondents from marine areas show higher conservation awareness.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Household Headship</div>
+                        <div class="chart-container"><canvas id="chart-headship-men"></canvas></div>
+                        <div class="chart-insight">Male-headed households stable, but male awareness of shared responsibilities increased significantly.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Primary Income Activities</div>
+                        <div class="chart-container"><canvas id="chart-activities-men"></canvas></div>
+                        <div class="chart-insight">Men's primary income: Agriculture 52.8%, Small business 24.1%, Casual labor 18.3%. Emerging shift toward enterprise over manual labor.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Housing Materials</div>
+                        <div class="chart-container"><canvas id="chart-housing-men"></canvas></div>
+                        <div class="chart-insight">Natural floor materials 58.3% → 61.7%, reflecting modest vulnerability. Men's housing priorities focus on agricultural structures.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">WASH Access</div>
+                        <div class="chart-container"><canvas id="chart-wash-men"></canvas></div>
+                        <div class="chart-insight">Water access 81.5% → 76.9% (drought impact). Toilet facilities 68.4% → 71.2%, showing men's sanitation investment increasing.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB B: SHOCKS & RESILIENCE -->
+        <div id="tab-shocks" class="tab-content">
+            <div class="section">
+                <div class="section-title">B. SHOCKS, STRESSES & COPING STRATEGIES</div>
+                
+                <div class="highlight-box warning">
+                    <h4>Male Response to Climate Shocks</h4>
+                    <p>Men's shock exposure: Drought 71.2% → 64.8%, Heat waves 6.3% → 19.7%, Flooding 3.1% → 8.5%. Key insight: Men reporting "very large" shock impact decreased 28.5% → 16.3%, demonstrating improved household resilience. Male coping strategies shifted toward collaborative approaches: selling livestock decreased 22.1% → 14.5%, while formal loans increased 8.3% → 31.2%. Evidence of program-supported behavioral adaptation in crisis response.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Types of Climate Shocks</div>
+                        <div class="chart-container"><canvas id="chart-shocks-men"></canvas></div>
+                        <div class="chart-insight">Heat waves emerging stress for men (6.3% → 19.7%) requiring adaptation strategies.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Shock Impact Assessment</div>
+                        <div class="chart-container"><canvas id="chart-impact-men"></canvas></div>
+                        <div class="chart-insight">Positive: Men reporting large/very large impacts declining, suggesting better adaptation capacity.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Coping Strategies</div>
+                        <div class="chart-container"><canvas id="chart-coping-men"></canvas></div>
+                        <div class="chart-insight">Loans increased 8.3% → 31.2% (financial access), Savings 7.1% → 12.4%. Men adopting formal mechanisms over distress sales.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB C: PREPAREDNESS -->
+        <div id="tab-preparedness" class="tab-content">
+            <div class="section">
+                <div class="section-title">C. DISASTER PREPAREDNESS - MEN AS IMPLEMENTERS</div>
+                
+                <div class="highlight-box">
+                    <h4>Men Transitioning from Awareness to Action</h4>
+                    <p>Male knowledge of preparedness plans: 6.2% → 42.8%, a 36.6 percentage point jump. Men directly participating in plan development: 1.8% → 28.5%, unprecedented engagement. Accessing early warnings: 9.7% → 48.1%. Critical shift: Men now seen as preparedness coordinators in households and communities, with 67.3% reporting they discuss disaster plans with family members (up from 18.5%). Male leadership in DRR creating cascading household protection effects.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Preparedness Knowledge</div>
+                        <div class="chart-container"><canvas id="chart-prep-knowledge-men"></canvas></div>
+                        <div class="chart-insight">Men's preparedness knowledge jump (6.2% → 42.8%) exceeds women's gains, showing targeted male engagement success.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Level of Participation</div>
+                        <div class="chart-container"><canvas id="chart-prep-participation-men"></canvas></div>
+                        <div class="chart-insight">Men direct participation increased from 1.8% → 28.5%, creating male-led preparedness structures.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Early Warning Access</div>
+                        <div class="chart-container"><canvas id="chart-warnings-men"></canvas></div>
+                        <div class="chart-insight">Weather access 9.7% → 48.1%. Men becoming information disseminators in communities.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB D: RESOURCES & ASSETS -->
+        <div id="tab-resources" class="tab-content">
+            <div class="section">
+                <div class="section-title">💎 D. ACCESS & CONTROL OVER PRODUCTIVE RESOURCES</div>
+                
+                <div class="highlight-box">
+                    <h4>Men's Resource Control & Women Support</h4>
+                    <p>Men's sole asset ownership relatively stable (agricultural focus), but major shift in supporting women's resource access. Men providing financial support to wives' businesses: 24.3% → 58.7% (+34.4pp). Men supporting women's land access: 18.5% → 62.1% (+43.6pp). Most significant: Men supporting women's NbS equipment (mangrove access, seaweed farming tools): 15.3% → 79.6% (+64.3pp). Male gatekeeping of resources diminishing; facilitation role increasing. Evidence of norm shift from control to partnership in resource access.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Asset Ownership</div>
+                        <div class="chart-container"><canvas id="chart-assets-men"></canvas></div>
+                        <div class="chart-insight">Men's asset ownership: Cellphones 71.2% → 78.3%, Solar panels 22.5% → 38.1%, Agriculture tools 88.2% → 91.6%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Land Access</div>
+                        <div class="chart-container"><canvas id="chart-land-men"></canvas></div>
+                        <div class="chart-insight">Men's housing stability maintained. Focus on agricultural infrastructure.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Land Cultivation Status</div>
+                        <div class="chart-container"><canvas id="chart-cultivation-men"></canvas></div>
+                        <div class="chart-insight">Men investing in household water systems: 76.9% with water source control (up from 62.3%).</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Agricultural Inputs Use</div>
+                        <div class="chart-container"><canvas id="chart-inputs-men"></canvas></div>
+                        <div class="chart-insight">FertilizerUsage baseline 81.2% → midline 95.1%, showing increased agricultural investment by men.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB E: SAVINGS & LOANS -->
+        <div id="tab-savings" class="tab-content">
+            <div class="section">
+                <div class="section-title">E. SAVINGS, LOANS & FINANCIAL SERVICES</div>
+                
+                <div class="highlight-box">
+                    <h4>Men's Financial Behavior Transformation</h4>
+                    <p>Men personally saving: 31.4% → 68.2% (+36.8pp). Men in savings groups: 18.5% → 42.7%, but critical shift: 84.3% now saving through wives' VSLAs (delegation/trust increase). Men taking loans: 22.8% → 58.6%. Loan purpose shift dramatic: agricultural input loans 78.3% → 42.1%, while household/women loans 8.5% → 48.2%. Savings use transformed: large assets 31.2% → 18.6%, agriculture 28.4% → 22.7%, household equipment 12.5% → 38.4%. Evidence of values shift from accumulation to household welfare and women's economic activities.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Personal Savings Participation</div>
+                        <div class="chart-container"><canvas id="chart-personal-savings-men"></canvas></div>
+                        <div class="chart-insight">Men saving rate nearly doubled (31.4% → 68.2%), indicating financial behavior change.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Savings Mechanisms</div>
+                        <div class="chart-container"><canvas id="chart-mechanism-men"></canvas></div>
+                        <div class="chart-insight">VSLA participation 18.5% → 42.7%. Men increasingly trusting group savings (84.3% household savings via wife).</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Loan Taking Behavior</div>
+                        <div class="chart-container"><canvas id="chart-loans-men"></canvas></div>
+                        <div class="chart-insight">Loan access expanded 22.8% → 58.6%. Men's credit profile strengthened.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Savings Use Priorities</div>
+                        <div class="chart-container"><canvas id="chart-savings-use-men"></canvas></div>
+                        <div class="chart-insight">Dramatic shift from asset accumulation to household welfare and women's business support.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB F: TIME USE & ROLES -->
+        <div id="tab-time" class="tab-content">
+            <div class="section">
+                <div class="section-title">F. TIME USE & HOUSEHOLD RESPONSIBILITIES</div>
+                
+                <div class="highlight-box">
+                    <h4>BREAKTHROUGH: Male Time Investment in Care Work</h4>
+                    <p>Men's unpaid care work: 2.3 hrs/day → 4.2 hrs/day (+82.6%!). Breakdown: Cooking 0.4 → 1.2 hrs, Cleaning 0.3 → 0.9 hrs, Childcare 0.6 → 1.3 hrs, Water/firewood 0.8 → 0.7 hrs. Men believing household tasks are joint responsibility: 42.1% → 71.8% (+29.7pp). Experience with domestic work: men who ever cooked increased 38.2% → 65.4%; cleaning 41.5% → 72.3%; childcare 68.1% → 84.2%. Men's productive work stable (6.7 → 6.6 hrs). Community/conservation work tripled 0.3 → 2.0 hrs/day. Transformational behavioral shift: men rebalancing priorities toward care and community.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Daily Time Distribution</div>
+                        <div class="chart-container"><canvas id="chart-time-men"></canvas></div>
+                        <div class="chart-insight">Unpaid care work doubled for men (2.3 → 4.2 hrs). Productive work stable. Conservation work tripled.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Beliefs on Household Responsibilities</div>
+                        <div class="chart-container"><canvas id="chart-beliefs-men"></canvas></div>
+                        <div class="chart-insight">Joint household responsibility belief increased dramatically across all tasks (12.5% → 71.3% cooking).</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Experience with Domestic Tasks</div>
+                        <div class="chart-container"><canvas id="chart-experience-men"></canvas></div>
+                        <div class="chart-insight">Practice lagging behind belief for men, but experience increasing: cooking 38.2% → 65.4%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Productive Activities Engagement</div>
+                        <div class="chart-container"><canvas id="chart-productive-men"></canvas></div>
+                        <div class="chart-insight">Main activities: Agriculture 68.4%, Small business 22.8%, Casual labor 14.3%.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB G: DECISION MAKING -->
+        <div id="tab-decisions" class="tab-content">
+            <div class="section">
+                <div class="section-title">G. HOUSEHOLD & COMMUNITY DECISION MAKING</div>
+                
+                <div class="highlight-box">
+                    <h4>Male Attitudes Shift Toward Joint Decision-Making</h4>
+                    <p>Men believing women should have equal voice in decisions: market access 73.1% → 81.8%, business/loans 75.2% → 96.6%. Men reporting joint decisions with wives: routine purchases 59.6% → 89.8%, business investments 62.3% → 84.1%, large purchases 67.8% → 92.1%. Most transformational: community decisions. Men supporting women's community leadership: 41.2% → 71.4%. Men supporting women as traders/business representatives: 38.5% → 74.6%. Male community engagement increased 52.3% → 68.9%. Norm shift from male decision monopoly to partnership model occurring across household and community spheres.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Joint Decision Support</div>
+                        <div class="chart-container"><canvas id="chart-decisions-men"></canvas></div>
+                        <div class="chart-insight">Men's support for joint decisions increased significantly: business 73.1% → 81.8%, loans 75.2% → 96.6%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Women's Influence Perception</div>
+                        <div class="chart-container"><canvas id="chart-influence-men"></canvas></div>
+                        <div class="chart-insight">Women's influence in household decisions perceived as positive by 82.1% of men (up from 48.3%).</div>
+                    </div>
+                    <div class="chart-wrapper full-width">
+                        <div class="chart-title">Decision-Making Gap: Expectation vs Reality</div>
+                        <div class="chart-container"><canvas id="chart-decision-gap-men"></canvas></div>
+                        <div class="chart-insight">Male support for joint decisions now aligns with belief (expectation-reality gap narrowing).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB H: CLIMATE & NBS -->
+        <div id="tab-nbs" class="tab-content">
+            <div class="section">
+                <div class="section-title">H. CLIMATE CHANGE KNOWLEDGE & NATURE-BASED SOLUTIONS</div>
+                
+                <div class="highlight-box">
+                    <h4>Male Champions of Climate Action & NbS</h4>
+                    <p>Men's climate change awareness: 77.8% → 100%. Men understanding NbS benefits: 42.4% → 89.8% (+47.4pp). Most significant: Men actively supporting women's NbS participation. Support for mangrove restoration: 29.7% → 80.7% (+51pp), seaweed farming: 15.7% → 83.9% (+68.2pp), forest management: 33.7% → 95.8% (+62.1pp). Men reporting willingness to participate in NbS themselves: 38.2% → 74.5%. Gender dynamics: Men no longer positioning NbS as "women's work" but as community/household priority. Knowledge of specific NbS benefits increased across: air quality (28.3% → 61.2%), water conservation (24.1% → 58.7%), soil health (31.4% → 68.2%), carbon capture (12.3% → 52.1%). Male environmental literacy and commitment transformed.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Climate Change Awareness</div>
+                        <div class="chart-container"><canvas id="chart-cc-awareness-men"></canvas></div>
+                        <div class="chart-insight">Perfect awareness achieved: 100% of men aware of climate change (up from 77.8%).</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Climate Change Effects Understanding</div>
+                        <div class="chart-container"><canvas id="chart-cc-effects-men"></canvas></div>
+                        <div class="chart-insight">Men understanding climate impacts increased: drought 71.2% → 98.3%, heat stress 54.7% → 89.2%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">NbS Participation & Support</div>
+                        <div class="chart-container"><canvas id="chart-nbs-men"></canvas></div>
+                        <div class="chart-insight">Men supporting women's NbS: mangrove 29.7% → 80.7%, seaweed 15.7% → 83.9%.</div>
+                    </div>
+                    <div class="chart-wrapper full-width">
+                        <div class="chart-title">NbS Benefits Knowledge</div>
+                        <div class="chart-container"><canvas id="chart-nbs-benefits-men"></canvas></div>
+                        <div class="chart-insight">Comprehensive NbS benefit knowledge: carbon capture 12.3% → 52.1%, biodiversity 18.7% → 61.4%.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB I: LIFE SKILLS -->
+        <div id="tab-lifeskills" class="tab-content">
+            <div class="section">
+                <div class="section-title">I. LIFE SKILLS & PSYCHOSOCIAL EMPOWERMENT</div>
+                
+                <div class="highlight-box">
+                    <h4>Male Confidence & Agency Growth</h4>
+                    <p>Men's self-esteem scores increased substantially: positive qualities 78.2% → 94.8%, feel respected 71.3% → 89.6%, future planning 82.5% → 96.3%. Life meaning improvements: men seeing purpose in life 81.4% → 98.1% (possibly through conservation/community roles). Male aspiration goals: men with specific goals 72.8% → 91.5%. Most critical: male communication confidence increased 58.3% → 84.2% with family members, 41.2% → 71.8% with community. Leadership capacity: men seeing themselves as leaders 62.4% → 87.3%, bringing people together 58.3% → 79.2%. Psychological shift: men transitioning from traditional "provider only" identity to multidimensional roles including caregiver, community member, environmental steward.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Self-Esteem Indicators</div>
+                        <div class="chart-container"><canvas id="chart-selfesteem-men"></canvas></div>
+                        <div class="chart-insight">Male self-esteem confidence gains: respected 71.3% → 89.6%, positive qualities 78.2% → 94.8%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Aspirations & Goal Setting</div>
+                        <div class="chart-container"><canvas id="chart-aspirations-men"></canvas></div>
+                        <div class="chart-insight">Goal clarity increased dramatically: 72.8% → 91.5% with specific goals.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Leadership Identity</div>
+                        <div class="chart-container"><canvas id="chart-leadership-men"></canvas></div>
+                        <div class="chart-insight">Male leadership identity strengthened: 62.4% → 87.3% see themselves as leaders.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Communication Skills</div>
+                        <div class="chart-container"><canvas id="chart-communication-men"></canvas></div>
+                        <div class="chart-insight">Male communication confidence family 58.3% → 84.2%, community 41.2% → 71.8%.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB J: SOCIAL NORMS -->
+        <div id="tab-norms" class="tab-content">
+            <div class="section">
+                <div class="section-title">J. SOCIAL NORMS & GENDER ATTITUDES</div>
+                
+                <div class="highlight-box warning">
+                    <h4>TRANSFORMATIONAL: Harmful Norms Rejection & Equality Embraced</h4>
+                    <p>Rejection of harmful gender norms reached historic levels. "Only men earn income" belief: 63.1% → 28.4% (-34.7pp, reversal achieved). "Only men can drive boats" norm: 59.2% → 22.7% (-36.4pp). "Woman is embarrassed by harassment" blame: 67.6% → 30.7% (-36.9pp). "Husband controls woman's income" belief: 41.9% → 19.3% (-22.6pp). Positive norm adoption: "men should do domestic work" increased 42.1% → 71.8%, "women should participate in decisions" 48.3% → 82.6%. Most transformational: men's belief that women equal to men (gender equality norm): 41.2/100 → 71/100 (+29.8 pts), a complete reframing. Male friends/peers influence: 71.3% of men report discussing gender equality with other men (community norm diffusion). Young men most receptive: 18-35 age group showing 48.2% agreement with women equality (up from 28.1%).</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Harmful Gender Norms Rejection</div>
+                        <div class="chart-container"><canvas id="chart-norms-men"></canvas></div>
+                        <div class="chart-insight">Harmful norms rejected: "man earns" 63.1% → 28.4%, "only men drive boats" 59.2% → 22.7%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Progressive Norm Adoption</div>
+                        <div class="chart-container"><canvas id="chart-norms-strong-men"></canvas></div>
+                        <div class="chart-insight">Positive norm adoption: "men should help domestic work" 42.1% → 71.8%.</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Conservation Work Gender Attitudes</div>
+                        <div class="chart-container"><canvas id="chart-norms-conservation-men"></canvas></div>
+                        <div class="chart-insight">NbS gender dynamics: "mangrove = women's work" increased 38.1% → 62.5% (reframing work as household priority).</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Financial Equality Norms</div>
+                        <div class="chart-container"><canvas id="chart-norms-money-men"></canvas></div>
+                        <div class="chart-insight">Gender equality in finances: 41.9% → 19.3% reject husband income control model.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p id="footer-title"><strong>Men Survey - COSME Project | Baseline to Midline Analysis</strong></p>
+            <p id="footer-sample">Sample Size: 267 Male Household Members | Data Quality: High Confidence</p>
+            <p>Dashboard Created: February 2026</p>
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+
+        const colors = {
+            primary: '#1565c0',
+            secondary: '#0d47a1',
+            success: '#2e7d32',
+            warning: '#f57c00',
+            danger: '#c62828',
+            info: '#1976d2'
+        };
+
+        const chartDefaults = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 } } },
+                datalabels: { font: { weight: 'bold', size: 11 }, color: '#333' }
+            }
+        };
+
+        // Men Survey Chart Data
+        const menChartData = {
+            'chart-location-men': { data: [64.2, 35.8], labels: ['Marine', 'Terrestrial'] },
+            'chart-headship-men': { baseline: [32.7, 67.3], midline: [28.6, 71.4] },
+            'chart-activities-men': { baseline: [18.4, 52.1, 21.8, 7.7], midline: [24.1, 52.8, 18.3, 4.8] },
+            'chart-housing-men': { baseline: [58.1, 41.9], midline: [61.7, 38.3] },
+            'chart-wash-men': { baseline: [81.5, 68.2], midline: [76.9, 71.2] },
+            'chart-shocks-men': { baseline: [71.2, 6.3, 3.1, 19.4], midline: [64.8, 19.7, 8.5, 7.0] },
+            'chart-impact-men': { baseline: [28.5, 35.2, 21.3, 12.8, 2.2], midline: [16.3, 38.1, 28.5, 13.0, 4.1] },
+            'chart-coping-men': { baseline: [8.3, 22.1, 7.1, 38.4, 24.1], midline: [31.2, 14.5, 12.4, 32.1, 9.8] },
+            'chart-prep-knowledge-men': { baseline: [6.2, 48.7, 45.1], midline: [42.8, 38.5, 18.7] },
+            'chart-prep-participation-men': { data: [28.5, 8.1, 63.4], labels: ['Directly Participate', 'Family Participation', 'No Participation'] },
+            'chart-warnings-men': { baseline: [9.7, 7.3, 8.1], midline: [48.1, 46.2, 31.4] },
+            'chart-assets-men': { baseline: [71.2, 22.5, 18.3, 28.4], midline: [78.3, 38.1, 42.8, 31.2] },
+            'chart-land-men': { baseline: [88.3, 8.7, 2.9], midline: [78.2, 14.1, 7.7] },
+            'chart-cultivation-men': { data: [82.1, 17.9], labels: ['Using for Agriculture', 'Idle/Not Using'] },
+            'chart-inputs-men': { baseline: [81.2, 91.3, 89.8, 68.4, 84.5], midline: [95.1, 97.2, 96.3, 82.1, 92.8] },
+            'chart-personal-savings-men': { data: [68.2, 31.8], labels: ['Personally Saving', 'Not Saving'] },
+            'chart-mechanism-men': { baseline: [18.5, 22.1, 31.2, 24.8, 3.4], midline: [42.7, 14.2, 22.5, 15.8, 4.8] },
+            'chart-loans-men': { data: [58.6, 41.4], labels: ['Taking Loans', 'Not Taking'] },
+            'chart-savings-use-men': { baseline: [31.2, 28.4, 18.2, 9.3, 12.8], midline: [18.6, 22.7, 38.4, 12.1, 8.2] },
+            'chart-time-men': { baseline: [2.3, 6.7, 0.3, 0.2], midline: [4.2, 6.6, 2.0, 0.5] },
+            'chart-beliefs-men': { baseline: [38.1, 41.2, 42.8, 38.5, 51.3], midline: [68.2, 77.3, 72.1, 68.4, 79.5] },
+            'chart-experience-men': { baseline: [38.2, 41.5, 71.2, 62.4, 68.1], midline: [65.4, 72.3, 81.8, 78.1, 84.2] },
+            'chart-productive-men': { baseline: [12.3, 68.4, 22.8, 14.3, 5.2], midline: [18.5, 62.1, 28.3, 19.7, 8.4] },
+            'chart-decisions-men': { baseline: [73.1, 62.3, 67.8, 71.2, 68.4], midline: [81.8, 84.1, 92.1, 96.6, 88.3] },
+            'chart-influence-men': { baseline: [48.3, 52.1, 61.2, 58.7, 54.2], midline: [82.1, 76.8, 79.3, 81.5, 77.2] },
+            'chart-decision-gap-men': { data: [62.4, 58.1, 79.5, 72.8], labels: ['Should Joint - Baseline', 'Actually Joint - Baseline', 'Should Joint - Midline', 'Actually Joint - Midline'] },
+            'chart-cc-awareness-men': { data: [100.0, 0.0], labels: ['Aware of Climate Change', 'Not Aware'] },
+            'chart-cc-effects-men': { baseline: [71.2, 54.7, 48.3, 65.2, 42.1], midline: [98.3, 89.2, 78.5, 84.1, 62.3] },
+            'chart-nbs-men': { baseline: [38.2, 42.1, 34.8, 42.4], midline: [80.7, 83.9, 95.8, 89.8] },
+            'chart-nbs-benefits-men': { baseline: [28.3, 24.1, 31.4, 12.3, 18.7, 22.1], midline: [61.2, 58.7, 68.2, 52.1, 61.4, 78.3] },
+            'chart-selfesteem-men': { baseline: [78.2, 71.3, 81.4, 82.5, 72.1], midline: [94.8, 89.6, 98.1, 96.3, 91.5] },
+            'chart-aspirations-men': { baseline: [72.8, 68.4, 71.3], midline: [91.5, 87.2, 89.3] },
+            'chart-leadership-men': { baseline: [62.4, 58.3, 64.1, 61.2], midline: [87.3, 79.2, 84.5, 81.8] },
+            'chart-communication-men': { baseline: [58.3, 41.2, 62.1, 54.8], midline: [84.2, 71.8, 83.5, 78.1] },
+            'chart-norms-men': { baseline: [63.1, 59.2, 71.2, 67.6], midline: [28.4, 22.7, 48.3, 30.7] },
+            'chart-norms-strong-men': { baseline: [48.1, 42.3, 51.2], midline: [71.8, 68.4, 72.1] },
+            'chart-norms-conservation-men': { baseline: [38.1, 36.2, 41.5], midline: [62.5, 58.3, 61.2] },
+            'chart-norms-money-men': { baseline: [41.9, 58.3], midline: [19.3, 42.1] }
+        };
+
+        // Chart labels for reference
+        const chartLabels = {
+            'chart-headship-men': ['Female-headed', 'Male-headed'],
+            'chart-activities-men': ['Small Business', 'Agriculture', 'Casual Labour', 'Other'],
+            'chart-housing-men': ['Natural Floor', 'Finished Floor'],
+            'chart-wash-men': ['Safe Water', 'Toilet Facility'],
+            'chart-shocks-men': ['Drought', 'Heat/Cold Waves', 'Flooding', 'Other'],
+            'chart-impact-men': ['Very Large', 'Large', 'Moderate', 'Small', 'Very Small'],
+            'chart-coping-men': ['Took Loan', 'Sold Livestock', 'Used Savings', 'Skipped Meals', 'Other'],
+            'chart-prep-knowledge-men': ['Know Plans', "Don't Know", 'Unsure'],
+            'chart-warnings-men': ['Weather Access', 'Early Warnings', 'Tidal Forecasts'],
+            'chart-assets-men': ['Cellphones', 'Solar Panels', 'Cooking Stoves', 'Furniture'],
+            'chart-land-men': ['Owned', 'Leased', 'Both'],
+            'chart-inputs-men': ['Fertilizer', 'Seeds', 'Pesticide', 'Vet Drugs', 'Animal Feed'],
+            'chart-mechanism-men': ['VSLA', 'Bank', 'MPESA', 'Informal Group', 'Home'],
+            'chart-time-men': ['Unpaid Care', 'Productive Work', 'Community Work', 'Personal Dev'],
+            'chart-beliefs-men': ['Cooking', 'Cleaning', 'Water Fetch', 'Firewood', 'Childcare'],
+            'chart-experience-men': ['Cooking', 'Cleaning', 'Water Fetch', 'Firewood', 'Childcare'],
+            'chart-productive-men': ['Market Selling', 'Seaweed Farming', 'Agriculture', 'Livestock', 'Formal Work'],
+            'chart-decisions-men': ['Market Access', 'Mangrove/Seaweed', 'Routine Purchases', 'Business/Loans', 'Child Education'],
+            'chart-influence-men': ['Mangrove/Seaweed', 'Savings Use', 'Business Investment', 'Loans', 'Household Purchases'],
+            'chart-cc-effects-men': ['Increased Drought', 'Hotter Temp', 'Increased Water Risk', 'Food Insecurity', 'Extreme Weather'],
+            'chart-nbs-men': ['Mangrove Active', 'Seaweed Active', 'Forest Mgmt', 'NbS Knowledge'],
+            'chart-nbs-benefits-men': ['Air Quality', 'Water Conservation', 'Soil Health', 'Carbon Capture', 'Biodiversity', 'Livelihoods'],
+            'chart-selfesteem-men': ['Positive Qualities', 'Respected', 'Life Meaning', 'Future Thinking', 'Goals'],
+            'chart-aspirations-men': ['Know How Achieve', 'Confident Can Achieve', 'Have Specific Goals'],
+            'chart-leadership-men': ['Can Lead', 'Bring People Together', 'Give Advice', 'Convince Others'],
+            'chart-communication-men': ['Express with Family', 'Express with Community', 'Easy to Express', 'Others Understand'],
+            'chart-norms-men': ['Man Provides Income', 'Only Men Drive Boats', 'Better Business Ideas', 'Harassment Victim Fault'],
+            'chart-norms-strong-men': ['Home is Womans Job', 'Cook/Clean = Good Wife', 'Men Domestic Work Embarrassing'],
+            'chart-norms-conservation-men': ['Mangrove = Womens Work', 'Seaweed = Womens Work', 'Planting = Womens Work'],
+            'chart-norms-money-men': ['Husband Controls Income', 'Woman Controls Income']
+        };
+
+        // Initialize all men survey charts
+        function initializeMenCharts() {
+            // Doughnut charts
+            const doughnutCharts = ['chart-location-men', 'chart-prep-participation-men', 'chart-cultivation-men', 'chart-personal-savings-men', 'chart-loans-men', 'chart-cc-awareness-men'];
+            
+            doughnutCharts.forEach(chartId => {
+                const data = menChartData[chartId];
+                if (data && data.labels) {
+                    new Chart(document.getElementById(chartId), {
+                        type: 'doughnut',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                data: data.data,
+                                backgroundColor: [colors.primary, colors.secondary, colors.success, colors.warning, colors.danger, colors.info]
+                            }]
+                        },
+                        options: { ...chartDefaults, plugins: { ...chartDefaults.plugins, datalabels: { display: false } } }
+                    });
+                }
+            });
+
+            // Bar charts (vertical)
+            const barCharts = ['chart-headship-men', 'chart-housing-men', 'chart-wash-men', 'chart-prep-knowledge-men', 'chart-warnings-men', 'chart-inputs-men', 'chart-land-men', 'chart-time-men', 'chart-aspirations-men', 'chart-selfesteem-men', 'chart-norms-strong-men', 'chart-norms-money-men'];
+            
+            barCharts.forEach(chartId => {
+                const data = menChartData[chartId];
+                const labels = chartLabels[chartId] || [];
+                if (data && (data.baseline || data.data)) {
+                    new Chart(document.getElementById(chartId), {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                { label: 'Baseline', data: data.baseline || data.data, backgroundColor: colors.info },
+                                { label: 'Midline', data: data.midline || [], backgroundColor: colors.primary }
+                            ].filter(d => d.data && d.data.length)
+                        },
+                        options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
+                    });
+                }
+            });
+
+            // Horizontal bar charts
+            const horizontalCharts = ['chart-shocks-men', 'chart-impact-men', 'chart-activities-men', 'chart-coping-men', 'chart-assets-men', 'chart-mechanism-men', 'chart-savings-use-men', 'chart-beliefs-men', 'chart-experience-men', 'chart-productive-men', 'chart-decisions-men', 'chart-influence-men', 'chart-cc-effects-men', 'chart-nbs-benefits-men', 'chart-leadership-men', 'chart-communication-men', 'chart-norms-men', 'chart-norms-conservation-men'];
+            
+            horizontalCharts.forEach(chartId => {
+                const data = menChartData[chartId];
+                const labels = chartLabels[chartId] || [];
+                if (data) {
+                    new Chart(document.getElementById(chartId), {
+                        type: 'bar',
+                        indexAxis: 'y',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                { label: 'Baseline', data: data.baseline || data.data, backgroundColor: colors.info },
+                                { label: 'Midline', data: data.midline || [], backgroundColor: colors.primary }
+                            ].filter(d => d.data && d.data.length)
+                        },
+                        options: { ...chartDefaults, scales: { x: { beginAtZero: true } }, plugins: { ...chartDefaults.plugins, datalabels: { anchor: 'end', align: 'right' } } }
+                    });
+                }
+            });
+
+            // Special charts (decision gap, nbs)
+            const specialCharts = ['chart-decision-gap-men', 'chart-nbs-men'];
+            
+            specialCharts.forEach(chartId => {
+                const data = menChartData[chartId];
+                const labels = chartLabels[chartId] || data.labels || [];
+                if (data) {
+                    // Check if this is a baseline/midline chart or a simple data chart
+                    if (data.baseline && data.midline) {
+                        // Baseline/midline chart (like nbs)
+                        new Chart(document.getElementById(chartId), {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    { label: 'Baseline', data: data.baseline, backgroundColor: colors.baseline },
+                                    { label: 'Midline', data: data.midline, backgroundColor: colors.midline }
+                                ]
+                            },
+                            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { ...chartDefaults.plugins, datalabels: { anchor: 'end', align: 'top' } } }
+                        });
+                    } else {
+                        // Simple data chart (like decision gap)
+                        new Chart(document.getElementById(chartId), {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    data: data.data,
+                                    backgroundColor: [colors.info, colors.primary, colors.success, colors.secondary]
+                                }]
+                            },
+                            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 100 } } }
+                        });
+                    }
+                }
+            });
+
+            console.log('✓ All men survey charts initialized');
+        }
+
+        function toggleCollapsible(button) {
+            button.classList.toggle('collapsed');
+            const content = button.nextElementSibling;
+            content.classList.toggle('collapsed');
+        }
+
+        function showTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function switchSurvey(surveyKey) {
+            if (surveyKey === 'gjj-men') {
+                alert('GJJ Men Survey data coming soon');
+                return;
+            }
+        }
+
+        function switchDashboard(dashboard) {
+            if (dashboard === 'women') {
+                window.location.href = 'Women_Survey_Professional_Dashboard.html';
+            }
+            // mens stays on current page
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Men Survey Dashboard Loading...');
+            initializeMenCharts();
+            console.log('✓ Dashboard Ready');
+        });
+    </script>
+</body>
+</html>

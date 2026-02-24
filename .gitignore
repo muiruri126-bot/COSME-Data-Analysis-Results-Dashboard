@@ -1,9 +1,41 @@
-# Forestry Conservation Dashboard
+# COSME Data Analysis & Results Dashboard
 
-## Ignore
+# Python
 .venv/
+venv/
+env/
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
 *.tmp
+
+# IDE / Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files (large CSVs/Excel - uncomment if you don't want to track them)
+# *.csv
+# *.xlsx
+
+# Logs
+*.log
+
+# Backup files
+*_backup_*.html
+*_BACKUP_*.html
+*_restore.html
+
+# Streamlit
+.streamlit/secrets.toml

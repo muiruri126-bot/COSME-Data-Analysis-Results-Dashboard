@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+</head>
+<body>
+    <h1>Testing Men Survey Tab Content Update</h1>
+    <p>Open browser console and run:</p>
+    <code>
+        // First click Men Survey button, then run in console:
+        console.log('surveyData keys:', Object.keys(surveyData));
+        console.log('men-cosme tabContent:', surveyData['men-cosme'].tabContent);
+        console.log('tab-household:', surveyData['men-cosme'].tabContent['tab-household']);
+        
+        // Check if highlight box exists:
+        console.log('tab-household div:', document.getElementById('tab-household'));
+        console.log('highlight-box:', document.querySelector('#tab-household .highlight-box'));
+    </code>
+    <p><a href="Women_Survey_Professional_Dashboard.html" target="_blank">Open Dashboard</a></p>
+</body>
+</html>
