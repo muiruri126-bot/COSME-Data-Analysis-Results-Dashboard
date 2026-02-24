@@ -3311,6 +3311,39 @@
 
         // Survey Switching Function
         function switchSurvey(surveyKey) {
+            // Handle Project Outputs FIRST (no surveyData entry needed)
+            if (surveyKey === 'project-outputs') {
+                // Update buttons
+                document.querySelectorAll('.survey-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if ((btn.getAttribute('onclick') || '').includes('project-outputs')) btn.classList.add('active');
+                });
+                // Hide shared sections
+                const execSummary = document.querySelector('.executive-summary');
+                const kpiWrapper = document.getElementById('kpi-wrapper-section');
+                const logframeWrapper = document.getElementById('logframe-section');
+                if (execSummary) execSummary.style.display = 'none';
+                if (kpiWrapper) kpiWrapper.style.display = 'none';
+                if (logframeWrapper) logframeWrapper.style.display = 'none';
+                // Hide all survey sections, show output section
+                const sections = ['women-survey-section', 'men-survey-section', 'forestry-section', 'prepost-section'];
+                sections.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+                const outputSection = document.getElementById('output-section');
+                if (outputSection) outputSection.style.display = 'block';
+                // Show/hide sub-selectors
+                const prepostTypeSelector = document.getElementById('prepost-type-selector');
+                const outputTypeSelector = document.getElementById('output-type-selector');
+                if (prepostTypeSelector) prepostTypeSelector.style.display = 'none';
+                if (outputTypeSelector) outputTypeSelector.style.display = 'flex';
+                // Update header & footer
+                document.getElementById('survey-title').textContent = 'Project Output Dashboard';
+                document.getElementById('footer-title').innerHTML = '<strong>Project Output Dashboard - Mangrove</strong>';
+                document.getElementById('footer-sample').textContent = 'COSME Project Outputs and Deliverables Tracker';
+                // Render output charts
+                renderOutputCharts();
+                return;
+            }
+
             const data = window.surveyData[surveyKey];
             if (!data) {
                 console.error('No survey data for key:', surveyKey);
@@ -3410,39 +3443,17 @@
             const prepostTypeSelector = document.getElementById('prepost-type-selector');
             const outputTypeSelector = document.getElementById('output-type-selector');
             if (prepostTypeSelector) prepostTypeSelector.style.display = surveyKey.startsWith('prepost-') ? 'flex' : 'none';
-            if (outputTypeSelector) outputTypeSelector.style.display = surveyKey === 'project-outputs' ? 'flex' : 'none';
+            if (outputTypeSelector) outputTypeSelector.style.display = 'none';
 
-            // Show/hide shared sections for project-outputs
+            // Restore shared sections (hidden when output tab was active)
             const execSummary = document.querySelector('.executive-summary');
             const kpiWrapper = document.getElementById('kpi-wrapper-section');
-            const logframeWrapper = document.getElementById('logframe-section');
-            if (surveyKey === 'project-outputs') {
-                if (execSummary) execSummary.style.display = 'none';
-                if (kpiWrapper) kpiWrapper.style.display = 'none';
-                if (logframeWrapper) logframeWrapper.style.display = 'none';
-            } else {
-                if (execSummary) execSummary.style.display = '';
-                if (kpiWrapper) kpiWrapper.style.display = '';
-                if (logframeWrapper) logframeWrapper.style.display = '';
-            }
+            if (execSummary) execSummary.style.display = '';
+            if (kpiWrapper) kpiWrapper.style.display = '';
 
-            if (surveyKey === 'project-outputs') {
-                console.log('Showing PROJECT OUTPUTS');
-                if (womenSection) womenSection.style.display = 'none';
-                if (menSection) menSection.style.display = 'none';
-                if (forestrySection) forestrySection.style.display = 'none';
-                if (prepostSection) prepostSection.style.display = 'none';
-                if (outputSection) outputSection.style.display = 'block';
-                // Update header & footer
-                document.getElementById('survey-title').textContent = 'Project Output Dashboard';
-                document.getElementById('footer-title').innerHTML = '<strong>Project Output Dashboard - Mangrove</strong>';
-                document.getElementById('footer-sample').textContent = 'COSME Project Outputs and Deliverables Tracker';
-                // Render output charts
-                renderOutputCharts();
-                return; // Skip the rest of survey-specific logic
-            } else {
-                if (outputSection) outputSection.style.display = 'none';
-            }
+            // Hide output section, show appropriate survey section
+            const outputSection = document.getElementById('output-section');
+            if (outputSection) outputSection.style.display = 'none';
 
             if (surveyKey === 'prepost-forest' || surveyKey === 'prepost-mangrove') {
                 console.log('Showing PRE & POST TEST survey only');
