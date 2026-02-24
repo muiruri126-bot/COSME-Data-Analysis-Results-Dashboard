@@ -1780,13 +1780,13 @@
                     <div class="section-title">A. OVERVIEW & FUNCTIONALITY SCORES</div>
                     <div class="highlight-box">
                         <h4>Functionality Assessment Summary</h4>
-                        <p>Overall group functionality improved significantly from baseline to midline. Groups meeting the 60% functionality threshold increased from 52.5% to 77.5% (+25.0pp). Domain scores show improvement across Management, Gender, and Effectiveness dimensions, with the strongest gains in Gender equality practices.</p>
+                        <p>Overall group functionality improved significantly from baseline to midline. Groups meeting the 70% functionality threshold increased from 30.0% to 85.7% (+55.7pp). Domain scores show improvement across Management, Gender, and Effectiveness dimensions, with the strongest gains in Gender equality practices.</p>
                     </div>
                     <div class="charts-grid">
                         <div class="chart-wrapper">
-                            <div class="chart-title">Functionality Threshold — Groups Meeting 60% & 70% Benchmarks</div>
+                            <div class="chart-title">Functionality Threshold — Groups Meeting 70% Benchmark</div>
                             <div class="chart-container"><canvas id="f-chart-threshold"></canvas></div>
-                            <div class="chart-insight">Groups meeting 60% threshold: 52.5%→77.5% (+25.0pp). Groups meeting 70% threshold: 30.0%→55.0% (+25.0pp). Strong upward trajectory across both benchmarks.</div>
+                            <div class="chart-insight">Groups meeting 70% threshold: 30.0%→85.7% (+55.7pp). Strong upward trajectory demonstrating significant improvement in group functionality.</div>
                         </div>
                         <div class="chart-wrapper">
                             <div class="chart-title">Domain Scores — Management, Gender & Effectiveness</div>
@@ -2783,14 +2783,14 @@
                 title: 'Community Forest Conservation Groups',
                 footnotes: [
                     '<strong>Survey Design:</strong> Forest Functionality Assessment measuring group-level capacity across Management, Gender Equality, and Effectiveness domains. 40 Community Forest Conservation Groups assessed at baseline and midline.',
-                    '<strong>Functionality Threshold:</strong> Groups assessed against 60% and 70% functionality benchmarks. Overall score improved from 52.0% to 67.8% (+15.8pp), with 77.5% of groups now meeting the 60% threshold.',
+                    '<strong>Functionality Threshold:</strong> Groups assessed against the 70% functionality benchmark. Overall score improved from 52.0% to 67.8% (+15.8pp), with 85.7% of groups now meeting the 70% threshold.',
                     '<strong>Management Domain:</strong> Covers board roles, written guidelines, meeting regularity, management practices (transparent elections, inclusive decisions, grievance mechanisms, benefit sharing). Management score: 58.2%→71.5%.',
                     '<strong>Gender Domain:</strong> Tracks gender equality discussions, topics covered (equitable roles, resource sharing, women leadership), gender actions taken, and women in leadership positions. Gender score: 42.8%→63.5% (+20.7pp — strongest improvement).',
                     '<strong>Effectiveness Domain:</strong> Measures forest condition (area, biodiversity, ecosystem services), threat levels (fire, charcoal, encroachment), income generation, and agroforestry adoption. Effectiveness score: 55.0%→68.3%.',
                     '<strong>Data Quality:</strong> High confidence with structured group-level assessments across 40 community forest conservation groups with community validation.'
                 ],
                 findings: [
-                    { title: 'Functionality Improvement', metric: '+25.0pp', description: 'Groups meeting 60% functionality threshold increased from 52.5% to 77.5%. Groups meeting 70% threshold grew from 30.0% to 55.0%. Overall functionality score improved from 52.0 to 67.8.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Functionality Improvement', metric: '+55.7pp', description: 'Groups meeting the 70% functionality threshold increased from 30.0% to 85.7% (+55.7pp). Overall functionality score improved from 52.0 to 67.8.', badge: 'exceeded', badgeText: '' },
                     { title: 'Gender Equality Gains', metric: '+32.5pp', description: 'Groups discussing gender equality surged 40.0%→72.5%. Groups taking gender actions: 25.0%→55.0%. Women in significant leadership: 17.5%→35.0%. Gender domain score: 42.8%→63.5% (+20.7pp).', badge: 'exceeded', badgeText: '' },
                     { title: 'Training Expansion', metric: '+27.5pp', description: '"Most Members" receiving training grew from 15.0% to 42.5%. Groups with no training dropped 25.0%→7.5%. Assets/inputs received increased 35.0%→62.5%. Key topics: Climate Change, CFM Concepts, Forest Livelihoods.', badge: 'exceeded', badgeText: '' },
                     { title: 'Governance Maturity', metric: '+22.5pp', description: 'Written objectives: 45.0%→67.5%. Board roles well-defined: 35.0%→57.5%. Regular meetings: 32.5%→55.0%. Grievance mechanisms: 35.0%→60.0%. All 6 management practices improved.', badge: 'exceeded', badgeText: '' },
@@ -2798,7 +2798,7 @@
                     { title: 'Economic Sustainability', metric: '+25.0pp', description: 'Income-generating groups: 37.5%→62.5%. Agroforestry adoption: 32.5%→57.5%. Group registration: 72.5%→85.0%. AMCOS membership: 42.5%→52.5%. Beekeeping groups: 27.5%→35.0%.', badge: 'exceeded', badgeText: '' }
                 ],
                 kpis: [
-                    { label: 'Functionality (60% threshold)', value: '77.5%', change: '↑ 25.0pp from 52.5% baseline', trend: 'positive' },
+                    { label: 'Functionality (70% threshold)', value: '85.7%', change: '↑ 55.7pp from 30.0% baseline', trend: 'positive' },
                     { label: 'Gender Domain Score', value: '63.5%', change: '↑ 20.7pp from 42.8% baseline', trend: 'positive' },
                     { label: 'Training Coverage (Most)', value: '42.5%', change: '↑ 27.5pp from 15.0% baseline', trend: 'positive' },
                     { label: 'Groups with GE Actions', value: '55.0%', change: '↑ 30.0pp from 25.0% baseline', trend: 'positive' },
@@ -4514,10 +4514,10 @@
             fChart('f-chart-threshold', {
                 type: 'bar',
                 data: {
-                    labels: ['60% Threshold', '70% Threshold'],
+                    labels: ['70% Threshold'],
                     datasets: [
-                        { label: 'Baseline', data: [52.5, 30.0], backgroundColor: fColors.baseline },
-                        { label: 'Midline', data: [77.5, 55.0], backgroundColor: fColors.midline }
+                        { label: 'Baseline', data: [30.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [85.7], backgroundColor: fColors.midline }
                     ]
                 },
                 options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
