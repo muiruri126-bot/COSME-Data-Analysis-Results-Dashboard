@@ -1235,19 +1235,7 @@
                 </tbody>
             </table>
 
-                <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;" class="footnotes-container" id="footnotes-container">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h4 style="margin: 0; color: #333;">Footnotes & Data Notes:</h4>
-                        <button onclick="toggleFootnotes()" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: 500;">Hide</button>
-                    </div>
-                    <p><strong>Logframe Hierarchy Levels:</strong> Indicators organized by three results chain levels: IMPACT (1000-level) → INTERMEDIATE OUTCOME (1200-level) → IMMEDIATE OUTCOME (1210/1220-level)</p>
-                    <p>1000a RI estimated from composite resilience indicators across income smoothing, asset accumulation, social capital, and adaptive capacity dimensions</p>
-                    <p>1000b WGEI estimated from composite life skills improvements: self-esteem +15%, aspirations +10%, leadership +35%, communication +25% = average 21% improvement on 51.2 baseline ≈ 68%</p>
-                    <p>1200c estimated from asset control data: Cellphones (sole) 62.5% + Solar panels (sole) 31.6% + Cooking stoves (sole) 39.7% = average 49%</p>
-                    <p>1210a represented by NbS knowledge and understanding: Climate awareness 96.3% + NbS solutions 77.8% = average 77.8%</p>
-                    <p>1210b represented by communication and leadership skills: Expression with family 95.6% + community 87.2% + leadership 94.1% = average 92%, midline reported as 87.2%</p>
-                    <p>1220b combines sole ownership of clean energy tools: Cellphones 62.5% + Solar panels 31.6% + Cooking stoves 39.7% = average 44.6%, plus joint ownership increases = combined 54.4%</p>
-                </div>
+
             </div>
         </div>
 
@@ -1256,17 +1244,6 @@
                 button.classList.toggle('collapsed');
                 const content = button.nextElementSibling;
                 content.classList.toggle('collapsed');
-            }
-
-            // Toggle footnotes visibility
-            function toggleFootnotes() {
-                const footnoteContent = document.querySelector('.footnotes-container');
-                const btn = document.querySelector('.footnotes-container button');
-                if (!footnoteContent) return;
-                
-                const isHidden = footnoteContent.style.display === 'none';
-                footnoteContent.style.display = isHidden ? 'block' : 'none';
-                btn.textContent = isHidden ? 'Hide' : 'Show';
             }
         </script>
         
@@ -3392,7 +3369,6 @@
                         
                         updateSurveyCharts(surveyKey);
                         updateAllTabCharts('women-cosme');
-                        updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                         
                         // Restore tab visibility
@@ -3405,7 +3381,6 @@
                             console.log('  → Rendering men survey charts');
                             updateMenSurveyCharts('men-cosme');
                         }, 250);
-                        updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                     } else if (surveyKey === 'forestry') {
                         console.log('  → Updating Forestry survey charts');
@@ -3417,7 +3392,6 @@
                         void (forestrySec && forestrySec.offsetHeight);
                         
                         updateForestryCharts();
-                        updateFootnotes(surveyKey);
                         
                         // Restore tab visibility
                         forestryTabs.forEach(tab => tab.style.display = '');
@@ -3437,7 +3411,6 @@
                         document.getElementById('pp-mangrove-content').style.display = 'none';
                         
                         updatePrePostCharts();
-                        updateFootnotes(surveyKey);
                         
                         // Restore tab visibility
                         prepostTabs.forEach(tab => tab.style.display = '');
@@ -3457,7 +3430,6 @@
                         void (prepostSec && prepostSec.offsetHeight);
                         
                         updateMangrovePrePostCharts();
-                        updateFootnotes(surveyKey);
                         
                         // Update header meta
                         document.getElementById('pp-meta-pre').textContent = 'Kilifi & Kwale';
@@ -3478,7 +3450,6 @@
                         
                         updateSurveyCharts(surveyKey);
                         updateGJJTabCharts(surveyKey);
-                        updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                         
                         // Restore tab visibility: only active tab visible via CSS class
@@ -3692,23 +3663,6 @@
                     tbody.appendChild(row);
                 });
             });
-        }
-
-        // Update Footnotes & Data Notes Dynamically
-        function updateFootnotes(surveyKey) {
-            const footnotesContainer = document.querySelector('.footnotes-container');
-            if (!footnotesContainer) return;
-
-            const surveyFootnotes = window.surveyData[surveyKey].footnotes;
-            if (!surveyFootnotes) return;
-
-            footnotesContainer.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h4 style="margin: 0; color: #333;">Footnotes & Data Notes:</h4>
-                    <button onclick="toggleFootnotes()" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: 500;">Hide</button>
-                </div>
-                ${surveyFootnotes.map(footnote => `<p>${footnote}</p>`).join('')}
-            `;
         }
 
         // Update Tab Content Dynamically
@@ -5407,8 +5361,6 @@
                 card.innerHTML = '<div class="kpi-label">' + kpi.label + '</div><div class="kpi-value">' + kpi.value + '</div><div class="kpi-change ' + kpi.trend + '">' + kpi.change + '</div>';
                 kpiContainer.appendChild(card);
             });
-            // Update footnotes
-            updateFootnotes(surveyKey);
         }
 
         // Pre & Post Test Charts Rendering
