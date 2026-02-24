@@ -2072,7 +2072,7 @@
             <div class="tabs-container" id="prepost-type-selector" style="margin-bottom: 20px;">
                 <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">🌲 Forest Conservation</button>
                 <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌊 Seaweed Farming</button>
-                <button class="tab-button" onclick="showPrePostType(event, 'mangrove')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌿 Mangrove Restoration</button>
+                <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">🌿 Mangrove Restoration</button>
             </div>
 
             <!-- FOREST PRE & POST TEST CONTENT -->
@@ -2157,6 +2157,29 @@
                                 <div class="chart-container" style="height: 450px;"><canvas id="pp-chart-q3"></canvas></div>
                                 <div class="chart-insight">Forest Policy: 65.6%→95.3% (+29.7pp). Climate Adaptation: 74.7%→96.6% (+21.9pp). Community Governance: 96.9%→99.6% (+2.7pp). Benefit Sharing: 89.6%→98.6% (+9.0pp). Ecosystem Services: 88.5%→99.7% (+11.2pp). Agroforestry: 77.7%→97.9% (+20.2pp). Monitoring & Evaluation: 76.7%→97.4% (+20.7pp).</div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANGROVE PRE & POST TEST CONTENT -->
+            <div id="pp-mangrove-content" style="display: none;">
+                <div class="section">
+                    <div class="section-title">ADEQUATE KNOWLEDGE — BY LOCATION & GENDER</div>
+                    <div class="highlight-box">
+                        <h4>Knowledge Assessment Summary — Mangrove Restoration Training</h4>
+                        <p>Overall adequate knowledge improved dramatically from 36.9% to 81.5% (+44.6pp). By location, Kilifi showed the strongest gain (+59.0pp, from 21.1% to 80.1%), while Kwale improved from 53.7% to 83.1% (+29.4pp). By gender, females outperformed males at post-test (87.4% vs 80.2%), with females gaining +52.7pp compared to males' +42.0pp — demonstrating particularly strong knowledge uptake among women participants.</p>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Adequate Knowledge by Location — Pre-Test vs Post-Test (%)</div>
+                            <div class="chart-container"><canvas id="pp-mgv-chart-location"></canvas></div>
+                            <div class="chart-insight">Kilifi: 21.1%→80.1% (+59.0pp — strongest location gain). Kwale: 53.7%→83.1% (+29.4pp). Overall: 36.9%→81.5% (+44.6pp). Kilifi closed the gap with Kwale significantly.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Adequate Knowledge by Gender — Pre-Test vs Post-Test (%)</div>
+                            <div class="chart-container"><canvas id="pp-mgv-chart-gender"></canvas></div>
+                            <div class="chart-insight">Male: 38.2%→80.2% (+42.0pp). Female: 34.7%→87.4% (+52.7pp — strongest gender gain). Overall: 36.9%→81.9% (+45.0pp). Women outperformed men at post-test by 7.2pp.</div>
                         </div>
                     </div>
                 </div>
@@ -3009,6 +3032,34 @@
                     { label: 'Topics ≥95% Post', value: '17/21', change: '81% of topics exceed 95%', trend: 'positive' }
                 ],
                 hasLogframe: false
+            },
+            'prepost-mangrove': {
+                title: 'Pre & Post Test — Mangrove Restoration Knowledge',
+                footnotes: [
+                    '<strong>Assessment Design:</strong> Pre-training and post-training knowledge assessment for mangrove restoration participants across Kilifi and Kwale counties. Measures percentage of participants achieving adequate knowledge.',
+                    '<strong>Adequate Knowledge:</strong> Overall adequate knowledge improved from 36.9% to 81.5% (+44.6pp by location) and 36.9% to 81.9% (+45.0pp by gender). Both breakdowns confirm strong training effectiveness.',
+                    '<strong>Location Analysis:</strong> Kilifi showed the strongest improvement (+59.0pp, from 21.1% to 80.1%), substantially closing the gap with Kwale (53.7%→83.1%, +29.4pp). Both counties exceeded 80% post-test.',
+                    '<strong>Gender Analysis:</strong> Female participants outperformed males at post-test (87.4% vs 80.2%), despite starting from a lower baseline (34.7% vs 38.2%). Female gain of +52.7pp exceeded male gain of +42.0pp by 10.7pp.',
+                    '<strong>Key Insight:</strong> Training was particularly effective for groups with lower baseline knowledge (Kilifi, females), demonstrating the program\'s ability to close knowledge gaps and promote equitable learning outcomes.',
+                    '<strong>Data Quality:</strong> High confidence with structured pre/post assessment design across two counties with gender-disaggregated results.'
+                ],
+                findings: [
+                    { title: 'Overall Knowledge Gain', metric: '+44.6pp', description: 'Adequate knowledge surged from 36.9% to 81.5% overall. Both Kilifi and Kwale counties exceeded 80% post-test, confirming training effectiveness across locations.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Kilifi County Transformation', metric: '+59.0pp', description: 'Kilifi showed the strongest improvement: 21.1%→80.1%. Starting from the lowest baseline, Kilifi nearly closed the gap with Kwale, demonstrating effective knowledge transfer.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Kwale County Progress', metric: '+29.4pp', description: 'Kwale improved from 53.7% to 83.1%. Although gains were smaller than Kilifi, post-test scores were the highest across both locations.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Female Knowledge Uptake', metric: '+52.7pp', description: 'Female participants gained most: 34.7%→87.4% (+52.7pp). Women outperformed men at post-test by 7.2pp, demonstrating particularly strong knowledge retention.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Male Knowledge Gain', metric: '+42.0pp', description: 'Male participants improved from 38.2% to 80.2% (+42.0pp). All male participants exceeded the 80% adequate knowledge threshold at post-test.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Gender Equity Achievement', metric: '87.4% vs 80.2%', description: 'Training closed the gender gap: females started 3.5pp below males but ended 7.2pp above. Program design effectively supported equitable knowledge outcomes.', badge: 'exceeded', badgeText: '' }
+                ],
+                kpis: [
+                    { label: 'Overall Adequate Knowledge', value: '81.5%', change: '↑ 44.6pp from 36.9% pre-test', trend: 'positive' },
+                    { label: 'Kilifi County', value: '80.1%', change: '↑ 59.0pp from 21.1% pre-test', trend: 'positive' },
+                    { label: 'Kwale County', value: '83.1%', change: '↑ 29.4pp from 53.7% pre-test', trend: 'positive' },
+                    { label: 'Female Post-Test', value: '87.4%', change: '↑ 52.7pp from 34.7% pre-test', trend: 'positive' },
+                    { label: 'Male Post-Test', value: '80.2%', change: '↑ 42.0pp from 38.2% pre-test', trend: 'positive' },
+                    { label: 'Gender Gain Difference', value: '+10.7pp', change: 'Female gain exceeded male gain', trend: 'positive' }
+                ],
+                hasLogframe: false
             }
         };
 
@@ -3023,7 +3074,11 @@
             // Update buttons - find matching button by surveyKey instead of relying on event.target
             document.querySelectorAll('.survey-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(surveyKey)) {
+                const onclick = btn.getAttribute('onclick') || '';
+                // For prepost-* variants, match the main Pre & Post Test button
+                if (surveyKey.startsWith('prepost-') && onclick.includes('prepost-')) {
+                    btn.classList.add('active');
+                } else if (onclick.includes(surveyKey)) {
                     btn.classList.add('active');
                 }
             });
@@ -3038,7 +3093,8 @@
                 'gjj-women': 'Sample Size: 312 Women | Data Quality: High',
                 'gjj-men': 'Sample Size: 289 Men | Data Quality: High',
                 'forestry': '28 Community Forest Conservation Groups | Data Quality: High',
-                'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%'
+                'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%',
+                'prepost-mangrove': 'Mangrove Restoration Training | Kilifi & Kwale Counties | Data Quality: High'
             };
             const titleText = {
                 'women-cosme': 'Women Survey - COSME Project | Baseline to Midline Analysis',
@@ -3046,7 +3102,8 @@
                 'gjj-women': 'GJJ KAP Survey - Women | Knowledge, Attitudes & Practices',
                 'gjj-men': 'GJJ KAP Survey - Men | Knowledge, Attitudes & Practices',
                 'forestry': 'Community Forest Conservation Groups | Baseline to Midline Assessment',
-                'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment'
+                'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment',
+                'prepost-mangrove': 'Pre & Post Test — Mangrove Restoration Knowledge Assessment'
             };
             document.getElementById('footer-title').innerHTML = `<strong>${titleText[surveyKey]}</strong>`;
             document.getElementById('footer-sample').textContent = sampleText[surveyKey];
@@ -3097,7 +3154,7 @@
             
             console.log('🔄 Toggling survey sections...');
             
-            if (surveyKey === 'prepost-forest') {
+            if (surveyKey === 'prepost-forest' || surveyKey === 'prepost-mangrove') {
                 console.log('📝 Showing PRE & POST TEST survey only');
                 if (womenSection) womenSection.style.display = 'none';
                 if (menSection) menSection.style.display = 'none';
@@ -3309,7 +3366,7 @@
             destroyAllCharts();
 
             // Force reflow so the section is fully visible before rendering charts
-            const activeSection = surveyKey === 'prepost-forest' ? prepostSection : (surveyKey === 'forestry' ? forestrySection : (surveyKey === 'men-cosme' ? menSection : womenSection));
+            const activeSection = surveyKey.startsWith('prepost-') ? prepostSection : (surveyKey === 'forestry' ? forestrySection : (surveyKey === 'men-cosme' ? menSection : womenSection));
             if (activeSection) void activeSection.offsetHeight;
 
             // Use requestAnimationFrame + setTimeout to ensure DOM/layout is fully ready
@@ -3371,6 +3428,10 @@
                         prepostTabs.forEach(tab => tab.style.display = 'block');
                         void (prepostSec && prepostSec.offsetHeight);
                         
+                        // Show forest content, hide mangrove
+                        document.getElementById('pp-forest-content').style.display = 'block';
+                        document.getElementById('pp-mangrove-content').style.display = 'none';
+                        
                         updatePrePostCharts();
                         updateFootnotes(surveyKey);
                         
@@ -3378,6 +3439,28 @@
                         prepostTabs.forEach(tab => tab.style.display = '');
                         // Make sure first tab is active
                         if (prepostTabs.length > 0) prepostTabs[0].style.display = 'block';
+                        
+                        // Activate forest sub-selector button
+                        activatePrePostTypeButton('forest');
+                    } else if (surveyKey === 'prepost-mangrove') {
+                        console.log('  → Updating Mangrove Pre & Post Test charts');
+                        
+                        const prepostSec = document.getElementById('prepost-section');
+                        
+                        // Show mangrove content, hide forest
+                        document.getElementById('pp-forest-content').style.display = 'none';
+                        document.getElementById('pp-mangrove-content').style.display = 'block';
+                        void (prepostSec && prepostSec.offsetHeight);
+                        
+                        updateMangrovePrePostCharts();
+                        updateFootnotes(surveyKey);
+                        
+                        // Update header meta
+                        document.getElementById('pp-meta-pre').textContent = 'Kilifi & Kwale';
+                        document.getElementById('pp-meta-post').textContent = 'Counties';
+                        
+                        // Activate mangrove sub-selector button
+                        activatePrePostTypeButton('mangrove');
                     } else {
                         console.log('  → Updating GJJ survey charts');
                         
@@ -5229,9 +5312,25 @@
             });
         }
 
+        // Helper to activate a sub-type button in Pre & Post Test selector
+        function activatePrePostTypeButton(typeName) {
+            const typeButtons = document.getElementById('prepost-type-selector').querySelectorAll('.tab-button');
+            typeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = '';
+                btn.style.color = '';
+            });
+            typeButtons.forEach(btn => {
+                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + typeName + "'")) {
+                    btn.classList.add('active');
+                    btn.style.background = '#0D47A1';
+                    btn.style.color = '#fff';
+                }
+            });
+        }
+
         // Pre & Post Test Type Selector (Forest / Seaweed / Mangrove)
         function showPrePostType(evt, typeName) {
-            // For now, only 'forest' is available
             const typeButtons = document.getElementById('prepost-type-selector').querySelectorAll('.tab-button');
             typeButtons.forEach(btn => {
                 btn.classList.remove('active');
@@ -5242,12 +5341,70 @@
             evt.currentTarget.style.background = '#0D47A1';
             evt.currentTarget.style.color = '#fff';
 
+            // Hide all sub-type content
+            document.getElementById('pp-forest-content').style.display = 'none';
+            document.getElementById('pp-mangrove-content').style.display = 'none';
+
             if (typeName === 'forest') {
                 document.getElementById('pp-forest-content').style.display = 'block';
-                // Re-render charts
+                // Update shared sections from surveyData
+                const data = window.surveyData['prepost-forest'];
+                updateSharedSections(data, 'prepost-forest');
+                document.getElementById('pp-meta-pre').textContent = '546';
+                document.getElementById('pp-meta-post').textContent = '909';
+                // Temporarily show all tabs for chart rendering
+                const prepostTabs = document.querySelectorAll('.prepost-tab-content');
+                prepostTabs.forEach(tab => tab.style.display = 'block');
                 updatePrePostCharts();
+                prepostTabs.forEach(tab => tab.style.display = '');
+                if (prepostTabs.length > 0) prepostTabs[0].style.display = 'block';
+            } else if (typeName === 'mangrove') {
+                document.getElementById('pp-mangrove-content').style.display = 'block';
+                // Update shared sections from surveyData
+                const data = window.surveyData['prepost-mangrove'];
+                updateSharedSections(data, 'prepost-mangrove');
+                document.getElementById('pp-meta-pre').textContent = 'Kilifi & Kwale';
+                document.getElementById('pp-meta-post').textContent = 'Counties';
+                updateMangrovePrePostCharts();
             }
-            // Future: seaweed and mangrove content divs
+        }
+
+        // Helper to update shared sections (findings, KPIs, footnotes) without full switchSurvey
+        function updateSharedSections(data, surveyKey) {
+            if (!data) return;
+            // Update title
+            document.getElementById('survey-title').textContent = data.title;
+            // Update footer
+            const sampleText = {
+                'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%',
+                'prepost-mangrove': 'Mangrove Restoration Training | Kilifi & Kwale Counties | Data Quality: High'
+            };
+            const titleText = {
+                'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment',
+                'prepost-mangrove': 'Pre & Post Test — Mangrove Restoration Knowledge Assessment'
+            };
+            document.getElementById('footer-title').innerHTML = '<strong>' + (titleText[surveyKey] || '') + '</strong>';
+            document.getElementById('footer-sample').textContent = sampleText[surveyKey] || '';
+            // Update findings
+            const findingsContainer = document.querySelector('.key-findings');
+            findingsContainer.innerHTML = '';
+            data.findings.forEach(finding => {
+                const card = document.createElement('div');
+                card.className = finding.badge === 'drop' ? 'finding-card negative' : 'finding-card';
+                card.innerHTML = '<div class="finding-title">' + finding.title + '</div><div class="finding-metric">' + finding.metric + '</div><div class="finding-description">' + finding.description + '</div>';
+                findingsContainer.appendChild(card);
+            });
+            // Update KPIs
+            const kpiContainer = document.querySelector('.kpi-section');
+            kpiContainer.innerHTML = '';
+            data.kpis.forEach(kpi => {
+                const card = document.createElement('div');
+                card.className = 'kpi-card ' + kpi.trend;
+                card.innerHTML = '<div class="kpi-label">' + kpi.label + '</div><div class="kpi-value">' + kpi.value + '</div><div class="kpi-change ' + kpi.trend + '">' + kpi.change + '</div>';
+                kpiContainer.appendChild(card);
+            });
+            // Update footnotes
+            updateFootnotes(surveyKey);
         }
 
         // Pre & Post Test Charts Rendering
@@ -5346,6 +5503,65 @@
             });
 
             console.log('📝 Pre & Post Test charts rendered successfully');
+        }
+
+        // Mangrove Pre & Post Test Charts Rendering
+        function updateMangrovePrePostCharts() {
+            console.log('🌿 Rendering Mangrove Pre & Post Test Charts...');
+            const mgvColors = { pre: colors.baseline, post: colors.midline };
+            const mgvDefaults = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: {
+                        font: { size: 14, weight: 'bold' },
+                        color: '#fff',
+                        backgroundColor: '#333',
+                        borderRadius: 6,
+                        padding: 6,
+                        formatter: (value) => value.toFixed(1) + '%',
+                        display: true
+                    }
+                }
+            };
+
+            function mgvChart(id, config) {
+                const canvas = document.getElementById(id);
+                if (!canvas) { console.warn('Canvas not found:', id); return; }
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const ctx = canvas.getContext('2d');
+                return new Chart(ctx, config);
+            }
+
+            // Chart 1: Adequate Knowledge by Location
+            mgvChart('pp-mgv-chart-location', {
+                type: 'bar',
+                data: {
+                    labels: ['Kilifi', 'Kwale', 'All'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [21.1, 53.7, 36.9], backgroundColor: mgvColors.pre },
+                        { label: 'Post-Test', data: [80.1, 83.1, 81.5], backgroundColor: mgvColors.post }
+                    ]
+                },
+                options: { ...mgvDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% with Adequate Knowledge' } } } }
+            });
+
+            // Chart 2: Adequate Knowledge by Gender
+            mgvChart('pp-mgv-chart-gender', {
+                type: 'bar',
+                data: {
+                    labels: ['Male', 'Female', 'All'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [38.2, 34.7, 36.9], backgroundColor: mgvColors.pre },
+                        { label: 'Post-Test', data: [80.2, 87.4, 81.9], backgroundColor: mgvColors.post }
+                    ]
+                },
+                options: { ...mgvDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% with Adequate Knowledge' } } } }
+            });
+
+            console.log('🌿 Mangrove Pre & Post Test charts rendered successfully');
         }
 
         // Tab Navigation (Updated)
