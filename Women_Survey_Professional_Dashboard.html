@@ -1048,6 +1048,13 @@
             <h1 id="survey-title">Women Survey - COSME Project</h1>
         </div>
 
+        <!-- PRE & POST TEST SUB-SELECTOR (Forest / Seaweed / Mangrove) -->
+        <div class="tabs-container" id="prepost-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
+            <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">🌲 Forest Conservation</button>
+            <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌊 Seaweed Farming</button>
+            <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">🌿 Mangrove Restoration</button>
+        </div>
+
         <!-- EXECUTIVE SUMMARY -->
         <div class="executive-summary">
             <button class="collapsible-header" onclick="toggleCollapsible(this)">Key Achievements & Insights</button>
@@ -2066,13 +2073,6 @@
                         <div class="meta-value">≥70%</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- SUB-SELECTOR: Forest / Seaweed / Mangrove -->
-            <div class="tabs-container" id="prepost-type-selector" style="margin-bottom: 20px;">
-                <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">🌲 Forest Conservation</button>
-                <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌊 Seaweed Farming</button>
-                <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">🌿 Mangrove Restoration</button>
             </div>
 
             <!-- FOREST PRE & POST TEST CONTENT -->
@@ -3154,6 +3154,10 @@
             
             console.log('🔄 Toggling survey sections...');
             
+            // Show/hide Pre & Post Test sub-selector
+            const prepostTypeSelector = document.getElementById('prepost-type-selector');
+            if (prepostTypeSelector) prepostTypeSelector.style.display = surveyKey.startsWith('prepost-') ? 'flex' : 'none';
+
             if (surveyKey === 'prepost-forest' || surveyKey === 'prepost-mangrove') {
                 console.log('📝 Showing PRE & POST TEST survey only');
                 if (womenSection) womenSection.style.display = 'none';

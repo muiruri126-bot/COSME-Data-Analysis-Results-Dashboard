@@ -1925,6 +1925,508 @@ def render_forestry_tabs(data, show_change):
 # ============================================================================
 
 # ============================================================================
+# INSIGHTS TAB — Automated insights across both datasets
+# ============================================================================
+
+def _insight_card(title, body, trend="neutral"):
+    """Render a styled insight card with optional trend indicator."""
+    color_map = {"positive": "#2E7D32", "negative": "#C62828", "neutral": "#37474F", "warning": "#E65100"}
+    bg_map = {"positive": "#E8F5E9", "negative": "#FFEBEE", "neutral": "#ECEFF1", "warning": "#FFF3E0"}
+    border = color_map.get(trend, color_map["neutral"])
+    bg = bg_map.get(trend, bg_map["neutral"])
+    st.markdown(f"""
+    <div style="background:{bg}; border-left:5px solid {border}; border-radius:0 10px 10px 0;
+                padding:1.2rem 1.5rem; margin-bottom:1rem; box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+        <h4 style="margin:0 0 0.4rem; color:{border}; font-size:1.05rem; font-weight:700;">{title}</h4>
+        <p style="margin:0; color:#333; font-size:0.93rem; line-height:1.6;">{body}</p>
+    </div>""", unsafe_allow_html=True)
+
+
+def _pp(bl, ml, multiply=True):
+    """Calculate percentage-point change."""
+    factor = 100 if multiply else 1
+    if isinstance(bl, (int, float)) and isinstance(ml, (int, float)):
+        return round((ml - bl) * factor, 1)
+    return 0.0
+
+
+def _generate_forestry_insights(data):
+    """Generate automated insights from forestry data."""
+    insights = []
+
+    # 1. Functionality threshold
+    ft = data['functionality_threshold']
+    bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
+    ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
+    change_60 = _pp(bl_60, ml_60, multiply=isinstance(bl_60, float) and bl_60 <= 1)
+    if change_60 > 0:
+        insights.append(("Functionality Threshold Improved",
+                         f"Groups meeting the 60% functionality threshold increased by {change_60:+.1f} pp "
+                         f"(Baseline: {bl_60*100 if bl_60 <= 1 else bl_60:.1f}% to Midline: {ml_60*100 if ml_60 <= 1 else ml_60:.1f}%). "
+                         f"This signals stronger institutional capacity at community level.",
+                         "positive"))
+    elif change_60 < 0:
+        insights.append(("Functionality Threshold Declined",
+                         f"Groups meeting the 60% functionality threshold dropped by {change_60:+.1f} pp. "
+                         f"This may require targeted institutional strengthening.",
+                         "negative"))
+
+    # 2. Domain scores
+    fd = data['functionality_domain']
+    for domain in ['Management', 'Gender', 'Effectiveness']:
+        bl_d = fd.loc[fd['Timepoint'] == 'Baseline', domain].values[0]
+        ml_d = fd.loc[fd['Timepoint'] == 'Midline', domain].values[0]
+        change_d = round(ml_d - bl_d, 1) if isinstance(bl_d, (int, float)) and isinstance(ml_d, (int, float)) else 0
+        if abs(change_d) >= 3:
+            trend = "positive" if change_d > 0 else "negative"
+            insights.append((f"{domain} Domain: {change_d:+.1f} Points",
+                             f"The {domain} domain score moved from {bl_d:.1f} to {ml_d:.1f} "
+                             f"({change_d:+.1f} pts). "
+                             f"{'This is a meaningful improvement.' if change_d > 0 else 'This decline warrants attention.'}",
+                             trend))
+
+    # 3. Women leadership
+    wl = data['women_leadership']
+    sig_bl = wl.loc[wl['Category'] == 'Significant Leadership', 'Baseline'].values[0]
+    sig_ml = wl.loc[wl['Category'] == 'Significant Leadership', 'Midline'].values[0]
+    wl_change = _pp(sig_bl, sig_ml, multiply=isinstance(sig_bl, float) and sig_bl <= 1)
+    if abs(wl_change) >= 2:
+        trend = "positive" if wl_change > 0 else "warning"
+        insights.append(("Women in Significant Leadership",
+                         f"The share of groups with significant women's leadership changed by {wl_change:+.1f} pp "
+                         f"({sig_bl*100 if sig_bl <= 1 else sig_bl:.1f}% to {sig_ml*100 if sig_ml <= 1 else sig_ml:.1f}%). "
+                         f"Gender equity in forest governance is {'advancing' if wl_change > 0 else 'a continuing challenge'}.",
+                         trend))
+
+    # 4. Training coverage
+    tc = data['training_coverage']
+    most_bl = tc.loc[tc['Category'] == 'Most Members', 'Baseline'].values[0]
+    most_ml = tc.loc[tc['Category'] == 'Most Members', 'Midline'].values[0]
+    tc_change = _pp(most_bl, most_ml, multiply=isinstance(most_bl, float) and most_bl <= 1)
+    insights.append(("Training Coverage (Most Members)",
+                     f"Groups where most members received training: "
+                     f"{most_bl*100 if most_bl <= 1 else most_bl:.1f}% (BL) to {most_ml*100 if most_ml <= 1 else most_ml:.1f}% (ML), "
+                     f"a change of {tc_change:+.1f} pp. "
+                     f"{'Capacity building is expanding.' if tc_change > 0 else 'Training outreach needs scaling up.'}",
+                     "positive" if tc_change > 0 else "warning"))
+
+    # 5. Income generation
+    ig = data['income_gen']
+    yes_bl = ig.loc[ig['Category'] == 'Yes', 'Baseline'].values[0]
+    yes_ml = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
+    ig_change = _pp(yes_bl, yes_ml, multiply=isinstance(yes_bl, float) and yes_bl <= 1)
+    insights.append(("Forest-Based Income Generation",
+                     f"Groups generating income from forests: "
+                     f"{yes_bl*100 if yes_bl <= 1 else yes_bl:.1f}% (BL) to {yes_ml*100 if yes_ml <= 1 else yes_ml:.1f}% (ML) "
+                     f"({ig_change:+.1f} pp). "
+                     f"{'Economic sustainability is strengthening.' if ig_change > 0 else 'Livelihood diversification needs attention.'}",
+                     "positive" if ig_change > 0 else "warning"))
+
+    # 6. Forest condition — good rated
+    fc = data['forest_condition']
+    good_cols_bl = [c for c in fc.columns if 'Good' in c and 'Baseline' in c]
+    good_cols_ml = [c for c in fc.columns if 'Good' in c and 'Midline' in c]
+    if good_cols_bl and good_cols_ml:
+        avg_good_bl = fc[good_cols_bl[0]].mean()
+        avg_good_ml = fc[good_cols_ml[0]].mean()
+        fc_change = _pp(avg_good_bl, avg_good_ml, multiply=isinstance(avg_good_bl, float) and avg_good_bl <= 1)
+        insights.append(("Forest Condition (Good Rating)",
+                         f"Average 'Good' forest condition rating across all characteristics: "
+                         f"{avg_good_bl*100 if avg_good_bl <= 1 else avg_good_bl:.1f}% (BL) to "
+                         f"{avg_good_ml*100 if avg_good_ml <= 1 else avg_good_ml:.1f}% (ML) ({fc_change:+.1f} pp). "
+                         f"{'Forests are perceived as healthier.' if fc_change > 0 else 'Forest health perceptions have not improved.'}",
+                         "positive" if fc_change > 0 else "warning"))
+
+    # 7. Agroforestry adoption
+    af = data['agroforestry']
+    af_yes_bl = af.loc[af['Category'] == 'Yes', 'Baseline'].values[0]
+    af_yes_ml = af.loc[af['Category'] == 'Yes', 'Midline'].values[0]
+    af_change = _pp(af_yes_bl, af_yes_ml, multiply=isinstance(af_yes_bl, float) and af_yes_bl <= 1)
+    insights.append(("Agroforestry Adoption",
+                     f"Groups practicing agroforestry: "
+                     f"{af_yes_bl*100 if af_yes_bl <= 1 else af_yes_bl:.1f}% (BL) to "
+                     f"{af_yes_ml*100 if af_yes_ml <= 1 else af_yes_ml:.1f}% (ML) ({af_change:+.1f} pp). "
+                     f"{'Adoption is growing, supporting landscape restoration.' if af_change > 0 else 'More incentives may be needed to drive adoption.'}",
+                     "positive" if af_change > 0 else "neutral"))
+
+    return insights
+
+
+def _generate_women_insights(w):
+    """Generate automated insights from women survey data."""
+    insights = []
+
+    # 1. Climate change awareness
+    cc = w['cc_heard']
+    cc_yes_bl = cc.loc[cc['Response'] == 'Yes', 'Baseline'].values[0]
+    cc_yes_ml = cc.loc[cc['Response'] == 'Yes', 'Midline'].values[0]
+    cc_change = _pp(cc_yes_bl, cc_yes_ml)
+    insights.append(("Climate Change Awareness",
+                     f"Women who have heard of climate change: "
+                     f"{cc_yes_bl*100:.1f}% (BL) to {cc_yes_ml*100:.1f}% (ML) ({cc_change:+.1f} pp). "
+                     f"{'Awareness is growing across communities.' if cc_change > 0 else 'Additional outreach on climate literacy is needed.'}",
+                     "positive" if cc_change > 0 else "warning"))
+
+    # 2. NbS awareness
+    nbs = w['nbs_heard']
+    nbs_yes_bl = nbs.loc[nbs['Response'] == 'Yes', 'Baseline'].values[0]
+    nbs_yes_ml = nbs.loc[nbs['Response'] == 'Yes', 'Midline'].values[0]
+    nbs_change = _pp(nbs_yes_bl, nbs_yes_ml)
+    insights.append(("Nature-based Solutions Awareness",
+                     f"Women aware of NbS: {nbs_yes_bl*100:.1f}% (BL) to {nbs_yes_ml*100:.1f}% (ML) "
+                     f"({nbs_change:+.1f} pp). "
+                     f"{'NbS concepts are reaching more women.' if nbs_change > 0 else 'NbS messaging needs strengthening.'}",
+                     "positive" if nbs_change > 0 else "warning"))
+
+    # 3. Savings behavior
+    ps = w['personal_saving']
+    ps_yes_bl = ps.loc[ps['Response'] == 'Yes', 'Baseline'].values[0]
+    ps_yes_ml = ps.loc[ps['Response'] == 'Yes', 'Midline'].values[0]
+    ps_change = _pp(ps_yes_bl, ps_yes_ml)
+    insights.append(("Personal Savings",
+                     f"Women with personal savings: {ps_yes_bl*100:.1f}% (BL) to {ps_yes_ml*100:.1f}% (ML) "
+                     f"({ps_change:+.1f} pp). "
+                     f"Financial resilience is {'building' if ps_change > 0 else 'a key area for intervention'}.",
+                     "positive" if ps_change > 0 else "warning"))
+
+    # 4. Decision-making influence — average across all decisions
+    di = w['decision_influence']
+    avg_bl = di['Baseline'].mean()
+    avg_ml = di['Midline'].mean()
+    di_change = _pp(avg_bl, avg_ml)
+    insights.append(("Decision-Making Influence",
+                     f"Average share of women reporting 'large extent' influence on HH decisions: "
+                     f"{avg_bl*100:.1f}% (BL) to {avg_ml*100:.1f}% (ML) ({di_change:+.1f} pp). "
+                     + ("Women's agency is strengthening." if di_change > 0 else "Empowerment efforts need scaling."),
+                     "positive" if di_change > 0 else "warning"))
+
+    # 5. Life skills — average agree/strongly agree
+    ls = w['lifeskills_agree']
+    ls_avg_bl = ls['Baseline'].mean()
+    ls_avg_ml = ls['Midline'].mean()
+    ls_change = _pp(ls_avg_bl, ls_avg_ml)
+    insights.append(("Life Skills Confidence",
+                     f"Average agree/strongly agree on life skills statements: "
+                     f"{ls_avg_bl*100:.1f}% (BL) to {ls_avg_ml*100:.1f}% (ML) ({ls_change:+.1f} pp). "
+                     f"{'Self-esteem and leadership confidence are growing.' if ls_change > 0 else 'Soft skills programming needs reinforcement.'}",
+                     "positive" if ls_change > 0 else "neutral"))
+
+    # 6. Social norms — want DECREASES (lower = better for harmful norms)
+    sn = w['socialnorms_agree']
+    harmful_norms = sn[~sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+    sn_avg_bl = harmful_norms['Baseline'].mean()
+    sn_avg_ml = harmful_norms['Midline'].mean()
+    sn_change = _pp(sn_avg_bl, sn_avg_ml)
+    trend = "positive" if sn_change < 0 else ("negative" if sn_change > 2 else "neutral")
+    insights.append(("Harmful Social Norms",
+                     f"Average agreement with harmful gender norms: "
+                     f"{sn_avg_bl*100:.1f}% (BL) to {sn_avg_ml*100:.1f}% (ML) ({sn_change:+.1f} pp). "
+                     f"{'Positive shift — harmful norms are weakening.' if sn_change < 0 else 'Norms remain entrenched; continued dialogue is critical.'}",
+                     trend))
+
+    # 7. Coping strategies — top 3 most used at midline
+    cop = w['coping'].copy()
+    cop['ML_pct'] = cop['Midline'].apply(lambda x: x * 100 if isinstance(x, (int, float)) and x <= 1 else x)
+    top3 = cop.nlargest(3, 'ML_pct')
+    top3_text = ', '.join([f"{row['Strategy']} ({row['ML_pct']:.1f}%)" for _, row in top3.iterrows()])
+    insights.append(("Top Coping Strategies (Midline)",
+                     f"The three most common coping strategies at midline are: {top3_text}. "
+                     f"High reliance on meal-skipping or asset sales signals food insecurity concerns.",
+                     "warning"))
+
+    # 8. Time use
+    ts = w['time_summary']
+    unpaid_bl = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Baseline'].values[0]
+    unpaid_ml = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Midline'].values[0]
+    unpaid_diff = round(unpaid_ml - unpaid_bl, 2) if isinstance(unpaid_bl, (int, float)) else 0
+    insights.append(("Women's Unpaid Care Work",
+                     f"Average daily unpaid care work: {unpaid_bl:.1f}h (BL) to {unpaid_ml:.1f}h (ML) "
+                     f"({unpaid_diff:+.1f}h change). "
+                     f"{'Care burden is decreasing — more time for productive activities.' if unpaid_diff < 0 else 'Care burden persists; labour-sharing interventions may help.'}",
+                     "positive" if unpaid_diff < 0 else "warning"))
+
+    # 9. Disaster preparedness
+    pk = w['prep_knowledge']
+    pk_yes_bl = pk.loc[pk['Response'] == 'Yes', 'Baseline'].values[0]
+    pk_yes_ml = pk.loc[pk['Response'] == 'Yes', 'Midline'].values[0]
+    pk_change = _pp(pk_yes_bl, pk_yes_ml)
+    insights.append(("Disaster Preparedness Knowledge",
+                     f"Women aware of disaster preparedness plans: "
+                     f"{pk_yes_bl*100:.1f}% (BL) to {pk_yes_ml*100:.1f}% (ML) ({pk_change:+.1f} pp). "
+                     f"{'Communities are becoming better prepared.' if pk_change > 0 else 'DRR awareness remains a gap.'}",
+                     "positive" if pk_change > 0 else "warning"))
+
+    return insights
+
+
+def _generate_cross_cutting_insights(f_data, w_data):
+    """Generate insights that span both datasets."""
+    insights = []
+
+    # 1. Governance + Empowerment linkage
+    fd = f_data['functionality_domain']
+    gender_bl = fd.loc[fd['Timepoint'] == 'Baseline', 'Gender'].values[0]
+    gender_ml = fd.loc[fd['Timepoint'] == 'Midline', 'Gender'].values[0]
+    gender_change = round(gender_ml - gender_bl, 1)
+
+    di = w_data['decision_influence']
+    avg_infl_bl = di['Baseline'].mean() * 100
+    avg_infl_ml = di['Midline'].mean() * 100
+    infl_change = round(avg_infl_ml - avg_infl_bl, 1)
+
+    insights.append(("Governance & Empowerment Linkage",
+                     f"Forestry gender domain score changed by {gender_change:+.1f} pts while women's "
+                     f"decision-making influence shifted by {infl_change:+.1f} pp. "
+                     f"{'Both are moving in the right direction — community and household empowerment reinforce each other.' if gender_change > 0 and infl_change > 0 else 'Progress at one level has not fully translated to the other — integrated programming may help.'}",
+                     "positive" if gender_change > 0 and infl_change > 0 else "neutral"))
+
+    # 2. Environment + NbS
+    nbs_yes_ml = w_data['nbs_heard'].loc[w_data['nbs_heard']['Response'] == 'Yes', 'Midline'].values[0] * 100
+    fc = f_data['forest_condition']
+    avg_good_ml = fc['Midline_Good'].mean()
+    avg_good_ml_pct = avg_good_ml * 100 if avg_good_ml <= 1 else avg_good_ml
+    insights.append(("Environmental Knowledge & Forest Health",
+                     f"At midline, {nbs_yes_ml:.1f}% of women know about NbS, while {avg_good_ml_pct:.1f}% "
+                     f"of forests are rated 'Good' condition. Growing environmental literacy can translate "
+                     f"into better community-based conservation outcomes.",
+                     "neutral"))
+
+    # 3. Training + Life Skills
+    tc = f_data['training_coverage']
+    most_ml = tc.loc[tc['Category'] == 'Most Members', 'Midline'].values[0]
+    most_ml_pct = most_ml * 100 if most_ml <= 1 else most_ml
+
+    ls = w_data['lifeskills_agree']
+    ls_avg_ml = ls['Midline'].mean() * 100
+    insights.append(("Training Reach & Life Skills",
+                     f"Groups where most members are trained: {most_ml_pct:.1f}%. "
+                     f"Average women's life skills confidence: {ls_avg_ml:.1f}%. "
+                     f"Investing in both community-level training and individual skills development "
+                     f"creates compounding empowerment effects.",
+                     "positive" if most_ml_pct > 30 and ls_avg_ml > 50 else "neutral"))
+
+    # 4. Economic resilience
+    ig = f_data['income_gen']
+    ig_yes_ml = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
+    ig_yes_ml_pct = ig_yes_ml * 100 if ig_yes_ml <= 1 else ig_yes_ml
+
+    ps = w_data['personal_saving']
+    ps_yes_ml = ps.loc[ps['Response'] == 'Yes', 'Midline'].values[0] * 100
+    insights.append(("Economic Resilience Snapshot",
+                     f"At midline, {ig_yes_ml_pct:.1f}% of forestry groups generate income and "
+                     f"{ps_yes_ml:.1f}% of women have personal savings. Linking group-level income "
+                     f"activities with individual savings programs can strengthen household resilience.",
+                     "positive" if ig_yes_ml_pct > 50 and ps_yes_ml > 40 else "neutral"))
+
+    return insights
+
+
+def render_insights_tab(f_data, w_data):
+    """Render the Insights tab with automated analysis across both datasets."""
+
+    st.markdown("""<div class="section-narrative">
+    <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
+    trends, changes, and patterns across both the Forestry Conservation Groups and Women's Survey
+    datasets. Insights are automatically derived from Baseline-to-Midline comparisons.
+    </div>""", unsafe_allow_html=True)
+
+    # Summary counters
+    f_insights = _generate_forestry_insights(f_data)
+    w_insights = _generate_women_insights(w_data)
+    cc_insights = _generate_cross_cutting_insights(f_data, w_data)
+
+    positive_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "positive")
+    warning_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t in ("warning", "negative"))
+    total = len(f_insights) + len(w_insights) + len(cc_insights)
+
+    # KPI summary
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Total Insights", total)
+    c2.metric("Positive Trends", positive_count)
+    c3.metric("Areas of Concern", warning_count)
+    c4.metric("Cross-cutting", len(cc_insights))
+
+    st.markdown("---")
+    _quick_nav_pills(['Forestry Insights', 'Women Survey Insights', 'Cross-Cutting Insights', 'Recommendations'])
+
+    # ---- FORESTRY INSIGHTS ----
+    _section_header('', 'Forestry Conservation Insights', 'Community Level')
+    for title, body, trend in f_insights:
+        _insight_card(title, body, trend)
+
+    st.markdown("---")
+
+    # ---- WOMEN SURVEY INSIGHTS ----
+    _section_header('', "Women's Survey Insights", 'Household Level')
+    for title, body, trend in w_insights:
+        _insight_card(title, body, trend)
+
+    st.markdown("---")
+
+    # ---- CROSS-CUTTING INSIGHTS ----
+    _section_header('', 'Cross-Cutting Insights', 'Integrated')
+    for title, body, trend in cc_insights:
+        _insight_card(title, body, trend)
+
+    st.markdown("---")
+
+    # ---- CHANGE HEATMAP ----
+    _section_header('', 'Indicator Change Heatmap', 'Overview')
+    st.markdown("""<div class="section-narrative">
+    A visual summary of percentage-point changes across key indicators from both datasets.
+    Green cells indicate positive change; red cells indicate areas that declined.
+    </div>""", unsafe_allow_html=True)
+
+    # Build heatmap data
+    heatmap_rows = []
+
+    # Forestry indicators
+    ft = f_data['functionality_threshold']
+    bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
+    ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
+    heatmap_rows.append({'Indicator': 'Functionality >=60%', 'Dataset': 'Forestry',
+                         'Baseline': bl_60 * 100 if bl_60 <= 1 else bl_60,
+                         'Midline': ml_60 * 100 if ml_60 <= 1 else ml_60})
+
+    for domain in ['Management', 'Gender', 'Effectiveness', 'Overall']:
+        fd = f_data['functionality_domain']
+        b = fd.loc[fd['Timepoint'] == 'Baseline', domain].values[0]
+        m = fd.loc[fd['Timepoint'] == 'Midline', domain].values[0]
+        heatmap_rows.append({'Indicator': f'{domain} Score', 'Dataset': 'Forestry',
+                             'Baseline': b, 'Midline': m})
+
+    ig = f_data['income_gen']
+    b_ig = ig.loc[ig['Category'] == 'Yes', 'Baseline'].values[0]
+    m_ig = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
+    heatmap_rows.append({'Indicator': 'Income Generation', 'Dataset': 'Forestry',
+                         'Baseline': b_ig * 100 if b_ig <= 1 else b_ig,
+                         'Midline': m_ig * 100 if m_ig <= 1 else m_ig})
+
+    af = f_data['agroforestry']
+    b_af = af.loc[af['Category'] == 'Yes', 'Baseline'].values[0]
+    m_af = af.loc[af['Category'] == 'Yes', 'Midline'].values[0]
+    heatmap_rows.append({'Indicator': 'Agroforestry', 'Dataset': 'Forestry',
+                         'Baseline': b_af * 100 if b_af <= 1 else b_af,
+                         'Midline': m_af * 100 if m_af <= 1 else m_af})
+
+    # Women indicators
+    for label, df_key, resp_col, resp_val in [
+        ('CC Awareness', 'cc_heard', 'Response', 'Yes'),
+        ('NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
+        ('Personal Savings', 'personal_saving', 'Response', 'Yes'),
+        ('Prep Knowledge', 'prep_knowledge', 'Response', 'Yes'),
+    ]:
+        df = w_data[df_key]
+        b_w = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0]
+        m_w = df.loc[df[resp_col] == resp_val, 'Midline'].values[0]
+        heatmap_rows.append({'Indicator': label, 'Dataset': 'Women',
+                             'Baseline': b_w * 100, 'Midline': m_w * 100})
+
+    # Life skills avg
+    ls = w_data['lifeskills_agree']
+    heatmap_rows.append({'Indicator': 'Life Skills (avg)', 'Dataset': 'Women',
+                         'Baseline': ls['Baseline'].mean() * 100,
+                         'Midline': ls['Midline'].mean() * 100})
+
+    # Decision influence avg
+    di = w_data['decision_influence']
+    heatmap_rows.append({'Indicator': 'Decision Influence (avg)', 'Dataset': 'Women',
+                         'Baseline': di['Baseline'].mean() * 100,
+                         'Midline': di['Midline'].mean() * 100})
+
+    heatmap_df = pd.DataFrame(heatmap_rows)
+    heatmap_df['Change (pp)'] = round(heatmap_df['Midline'] - heatmap_df['Baseline'], 1)
+    heatmap_df['Baseline'] = heatmap_df['Baseline'].round(1)
+    heatmap_df['Midline'] = heatmap_df['Midline'].round(1)
+
+    # Display as a styled bar chart
+    heatmap_sorted = heatmap_df.sort_values('Change (pp)')
+    colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in heatmap_sorted['Change (pp)']]
+    fig_hm = go.Figure()
+    fig_hm.add_trace(go.Bar(
+        y=heatmap_sorted['Indicator'] + ' (' + heatmap_sorted['Dataset'] + ')',
+        x=heatmap_sorted['Change (pp)'],
+        orientation='h',
+        marker_color=colors,
+        text=heatmap_sorted['Change (pp)'].apply(lambda x: f"{x:+.1f} pp"),
+        textposition='auto'
+    ))
+    fig_hm.update_layout(
+        title="Baseline-to-Midline Change Across Key Indicators",
+        height=max(400, len(heatmap_rows) * 32),
+        xaxis_title="Change (pp)",
+        yaxis=dict(categoryorder='trace'),
+        font=dict(size=13, color='#333'),
+        title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+    st.plotly_chart(fig_hm, use_container_width=True)
+
+    # Data table
+    with st.expander("View Full Indicator Change Table"):
+        st.dataframe(
+            heatmap_df[['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change (pp)']].style.applymap(
+                lambda v: 'color: #2E7D32; font-weight: 700' if isinstance(v, (int, float)) and v > 0
+                else ('color: #C62828; font-weight: 700' if isinstance(v, (int, float)) and v < 0 else ''),
+                subset=['Change (pp)']
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    st.markdown("---")
+
+    # ---- KEY RECOMMENDATIONS ----
+    _section_header('', 'Key Recommendations', 'Action Items')
+
+    # Auto-generate recommendations based on the insights
+    recs = []
+    # Check for negative trends
+    all_insights = f_insights + w_insights + cc_insights
+    neg_areas = [title for title, _, trend in all_insights if trend in ('negative', 'warning')]
+    pos_areas = [title for title, _, trend in all_insights if trend == 'positive']
+
+    if any('Functionality' in a for a in neg_areas):
+        recs.append(("Strengthen Institutional Capacity",
+                     "Targeted support for groups below the functionality threshold — mentorship, "
+                     "refresher training on governance, and structured follow-up visits."))
+    if any('Leadership' in a or 'Gender' in a for a in neg_areas):
+        recs.append(("Accelerate Gender Mainstreaming",
+                     "Prioritize women's leadership development within forestry groups, and ensure "
+                     "gender considerations are embedded in all planning processes."))
+    if any('Savings' in a or 'Income' in a or 'Economic' in a for a in neg_areas):
+        recs.append(("Expand Financial Inclusion",
+                     "Link VSLA/savings groups to the forest-income value chain. Support women's "
+                     "personal savings through financial literacy training and digital payment platforms."))
+    if any('Norm' in a for a in neg_areas):
+        recs.append(("Address Harmful Social Norms",
+                     "Continue community dialogues on gender norms, using evidence from this dashboard "
+                     "to show how norms affect women's participation and community outcomes."))
+    if any('Care Work' in a or 'Time' in a for a in neg_areas):
+        recs.append(("Reduce Women's Time Poverty",
+                     "Invest in time-saving technologies (water access, energy-efficient stoves) "
+                     "and promote equitable household labour-sharing norms."))
+    if any('Prepared' in a or 'Climate' in a or 'NbS' in a for a in neg_areas):
+        recs.append(("Scale Climate & DRR Programming",
+                     "Expand community-based disaster preparedness planning and integrate NbS training "
+                     "into both forestry group activities and women's empowerment programs."))
+
+    # Always add these broad recommendations
+    recs.append(("Leverage Positive Trends",
+                 f"Build on the {len(pos_areas)} positive trends identified — use these as evidence for "
+                 f"donor reporting and community motivation. Document success stories in areas "
+                 f"showing clear improvement."))
+    recs.append(("Integrated M&E Approach",
+                 "Continue tracking both community-level (forestry) and household-level (women) indicators "
+                 "together. The cross-cutting insights show that progress at one level supports the other."))
+
+    for title, body in recs:
+        _insight_card(title, body, "neutral")
+
+
+# ============================================================================
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
@@ -2356,7 +2858,7 @@ def main():
     # Dataset selector
     dataset = st.sidebar.radio(
         "Dataset View",
-        ["Combined Overview", "Forestry Groups", "Women Survey"],
+        ["Combined Overview", "Forestry Groups", "Women Survey", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from both datasets side by side."
     )
@@ -2389,6 +2891,17 @@ def main():
             <span class="sidebar-nav-link">Roles & Decisions</span>
             <span class="sidebar-nav-link">Climate & NbS</span>
             <span class="sidebar-nav-link">Life Skills & Norms</span>
+        </div>
+        """, unsafe_allow_html=True)
+    elif dataset == "Insights":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Forestry Insights</span>
+            <span class="sidebar-nav-link">Women Survey Insights</span>
+            <span class="sidebar-nav-link">Cross-Cutting Insights</span>
+            <span class="sidebar-nav-link">Indicator Change Heatmap</span>
+            <span class="sidebar-nav-link">Recommendations</span>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -2489,6 +3002,29 @@ def main():
         with wt4: render_women_tab4(w)
         with wt5: render_women_tab5(w)
         with wt6: render_women_tab6(w)
+
+    elif dataset == "Insights":
+        st.markdown("""<div class="main-header">
+            <h1>COSME Dashboard Insights</h1>
+            <p>Automated Data-Driven Insights | Forestry Conservation &amp; Women's Survey Analysis</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
+                    '<span class="active">Insights</span></div>', unsafe_allow_html=True)
+
+        f_data = load_forestry_data(forestry_path)
+        w_data = load_women_data(women_path)
+
+        st.sidebar.markdown("**Datasets Loaded**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <div style="margin-bottom:0.3rem;">Forestry Groups (analysis)</div>
+            <div>Women Survey (analysis)</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        render_insights_tab(f_data, w_data)
 
     else:
         # Combined Overview
