@@ -1139,7 +1139,7 @@
             <div class="collapsible-content">
                 <div class="highlight-box">
                     <h4>COSME Logframe Indicator Performance</h4>
-                    <p>Midline achievement against official M&E targets. Exceptional performance across 9 indicators: 8 out of 9 indicators EXCEEDED targets. Strongest gains in forest conservation groups (1130b: 53.5%→85.7%), decision-making involvement (1200a: 57.6%→95.9%), NbS knowledge (1210a: 20.7%→80.9%), savings groups (1220a: 28.8%→91.9%), and clean energy access (1220b: 50.8%→83.1%). Unpaid work time reduced below target (1200b: 9.3→7.7 hours). Gender equality perception improved significantly (1210c: 42.1→64.7/100). One indicator (1210b: skills & confidence at 46.3%) is on track but has not yet reached the 55% target.</p>
+                    <p>Midline achievement against official M&E targets. Exceptional performance across 8 indicators: 7 out of 8 indicators EXCEEDED targets. Strongest gains in decision-making involvement (1200a: 57.6%→95.9%), NbS knowledge (1210a: 20.7%→80.9%), savings groups (1220a: 28.8%→91.9%), and clean energy access (1220b: 50.8%→83.1%). Unpaid work time reduced below target (1200b: 9.3→7.7 hours). Gender equality perception improved significantly (1210c: 42.1→64.7/100). One indicator (1210b: skills & confidence at 46.3%) is on track but has not yet reached the 55% target.</p>
                 </div>
                 
                 <table class="comparison-table">
@@ -1155,15 +1155,7 @@
                 </thead>
                 <tbody>
                     <tr style="background: #764ba2; font-weight: 600;">
-                        <td colspan="6"><strong style="color: white;">INTERMEDIATE OUTCOME - Behavior & Practice Change (1130/1200-series)</strong></td>
-                    </tr>
-                    <tr>
-                        <td><strong>1130b. Percentage and Number of community forest conservation groups that are functional</strong></td>
-                        <td>53.5%</td>
-                        <td>70.0%</td>
-                        <td>85.7%</td>
-                        <td>+32.2pp</td>
-                        <td><span style="background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 4px; font-weight: 600;">✓ EXCEEDED</span></td>
+                        <td colspan="6"><strong style="color: white;">INTERMEDIATE OUTCOME - Behavior & Practice Change (1200-series)</strong></td>
                     </tr>
                     <tr>
                         <td><strong>1200a. Percentage of targeted women with adequate involvement in HH, group and enterprise decision making</strong></td>
@@ -2722,7 +2714,6 @@
                 title: 'Women Survey - COSME Project',
                 footnotes: [
                     '<strong>Logframe Hierarchy Levels:</strong> Indicators organized by three results chain levels: OUTCOME (1130-series) → INTERMEDIATE OUTCOME (1200-series) → IMMEDIATE OUTCOME (1210/1220-series)',
-                    '<strong>1130b (Forest Conservation Groups):</strong> Community forest conservation groups functional rate increased from 53.5% to 85.7%, exceeding the 70% target by 15.7 percentage points',
                     '<strong>1200a (Decision Involvement):</strong> Women with adequate HH/group/enterprise decision involvement surged from 57.6% to 95.9%, far exceeding the 65% target (+38.3pp)',
                     '<strong>1200b (Unpaid Work Time):</strong> Average time women spend in unpaid work reduced from 9.3 hours to 7.7 hours daily, surpassing the 8.3 hours target (-1.6 hrs)',
                     '<strong>1200c (Resource Control):</strong> Women with adequate access/control over household & enterprise resources improved from 41.2% to 53.8%, exceeding the 50% target (+12.6pp)',
@@ -2751,7 +2742,6 @@
                 ],
                 logframe: [
                     { level: 'INTERMEDIATE OUTCOME', name: 'Behavior & Practice Change', color: '#764ba2', indicators: [
-                        { id: '1130b', name: 'Percentage and Number of community forest conservation groups that are functional', baseline: '53.5%', target: '70.0%', result: '85.7%', achievement: '+32.2pp', status: 'EXCEEDED' },
                         { id: '1200a', name: 'Percentage of targeted women with adequate involvement in HH, group and enterprise decision making', baseline: '57.6%', target: '65.0%', result: '95.9%', achievement: '+38.3pp', status: 'EXCEEDED' },
                         { id: '1200b', name: 'Average time women spend in unpaid work', baseline: '9.3 hours', target: '8.3 hours', result: '7.7 hours', achievement: '-1.6 hrs', status: 'EXCEEDED' },
                         { id: '1200c', name: 'Percentage of targeted women with adequate access and control over household and enterprise resources', baseline: '41.2%', target: '50.0%', result: '53.8%', achievement: '+12.6pp', status: 'EXCEEDED' }
@@ -2980,7 +2970,11 @@
                     { label: 'Income Generating', value: '62.5%', change: '↑ 25.0pp from 37.5% baseline', trend: 'positive' },
                     { label: 'Group Registration', value: '85.0%', change: '↑ 12.5pp from 72.5% baseline', trend: 'positive' }
                 ],
-                hasLogframe: false
+                logframe: [
+                    { level: 'INTERMEDIATE OUTCOME', name: 'Forest Conservation Group Functionality', color: '#764ba2', indicators: [
+                        { id: '1130b', name: 'Percentage and Number of community forest conservation groups that are functional', baseline: '53.5%', target: '70.0%', result: '85.7%', achievement: '+32.2pp', status: 'EXCEEDED' }
+                    ]}
+                ]
             },
             'prepost-forest': {
                 title: 'Pre & Post Test — Forest Conservation Knowledge',
