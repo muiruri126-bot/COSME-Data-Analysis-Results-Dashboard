@@ -1958,16 +1958,63 @@
                         <p>Forest condition rated "Good" improved across all characteristics: Area 30.0%→52.5%, Biodiversity 25.0%→47.5%, Ecosystem Services 27.5%→50.0%. Threats decreased significantly: Fire (High) dropped 35.0%→15.0%, Charcoal (High) dropped 40.0%→17.5%. Income-generating groups increased from 37.5% to 62.5%. Agroforestry adoption grew from 32.5% to 57.5%.</p>
                     </div>
                     <div class="charts-grid">
+                        <!-- FOREST CONDITION CHARTS -->
                         <div class="chart-wrapper">
-                            <div class="chart-title">Forest Condition — "Good" Rating (%)</div>
+                            <div class="chart-title">Forest Condition — "Good" Rating Baseline vs Midline (%)</div>
                             <div class="chart-container"><canvas id="f-chart-condition"></canvas></div>
                             <div class="chart-insight">Area: 30.0%→52.5%. Volume/Biomass: 27.5%→47.5%. Regeneration: 32.5%→55.0%. Biodiversity: 25.0%→47.5%. Ecosystem Services: 27.5%→50.0%.</div>
                         </div>
                         <div class="chart-wrapper">
-                            <div class="chart-title">Forest Threats — "High" Level (%)</div>
+                            <div class="chart-title">Forest Condition Breakdown — Baseline (Good / Medium / Poor)</div>
+                            <div class="chart-container"><canvas id="f-chart-condition-bl"></canvas></div>
+                            <div class="chart-insight">Baseline: Good ratings range 25.0–32.5%. Medium ratings 35.0–42.5%. Poor ratings 25.0–37.5%. Area and Regeneration show highest Good ratings.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Forest Condition Breakdown — Midline (Good / Medium / Poor)</div>
+                            <div class="chart-container"><canvas id="f-chart-condition-ml"></canvas></div>
+                            <div class="chart-insight">Midline: Good ratings improved to 47.5–55.0%. Medium ratings 27.5–32.5%. Poor ratings dropped to 15.0–22.5%. Significant shift toward positive condition.</div>
+                        </div>
+
+                        <!-- FOREST STATUS / CHANGE CHARTS -->
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Forest Status Changes — Baseline (Decrease / No Change / Increase)</div>
+                            <div class="chart-container"><canvas id="f-chart-status-bl"></canvas></div>
+                            <div class="chart-insight">Baseline: Decrease dominant across characteristics (30–42.5%). No Change ranges 27.5–35.0%. Increase observed in only 22.5–35.0% of groups.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Forest Status Changes — Midline (Decrease / No Change / Increase)</div>
+                            <div class="chart-container"><canvas id="f-chart-status-ml"></canvas></div>
+                            <div class="chart-insight">Midline: Decrease reduced (15.0–22.5%). No Change stable (25.0–30.0%). Increase grew to 47.5–57.5%, showing positive conservation trajectory.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Forest Status — Perceived Increase Baseline vs Midline (%)</div>
+                            <div class="chart-container"><canvas id="f-chart-status-increase"></canvas></div>
+                            <div class="chart-insight">Groups perceiving increase: Area 30.0%→52.5%, Volume 22.5%→47.5%, Regeneration 35.0%→57.5%, Biodiversity 27.5%→50.0%, Ecosystem 25.0%→50.0%.</div>
+                        </div>
+
+                        <!-- THREAT CHARTS -->
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Forest Threats — "High" Level Baseline vs Midline (%)</div>
                             <div class="chart-container"><canvas id="f-chart-threats"></canvas></div>
                             <div class="chart-insight">Fire: 35.0%→15.0% (-20.0pp). Charcoal: 40.0%→17.5% (-22.5pp). Encroachment: 32.5%→15.0% (-17.5pp). All major threats declining.</div>
                         </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Threats Breakdown — Baseline (Low / Medium / High)</div>
+                            <div class="chart-container"><canvas id="f-chart-threats-bl"></canvas></div>
+                            <div class="chart-insight">Baseline: High threats concentrated in Charcoal (40%), Fire (35%), Encroachment (32.5%). Low threat levels below 30% for most categories.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Threats Breakdown — Midline (Low / Medium / High)</div>
+                            <div class="chart-container"><canvas id="f-chart-threats-ml"></canvas></div>
+                            <div class="chart-insight">Midline: High threats sharply reduced. Low threats now dominant (45–62.5%). Medium threat levels stable. Effective threat mitigation evident.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Threat Changes — Perceived Decrease Baseline vs Midline (%)</div>
+                            <div class="chart-container"><canvas id="f-chart-threat-decrease"></canvas></div>
+                            <div class="chart-insight">Groups perceiving threat decrease: Fire 20.0%→50.0%, Charcoal 15.0%→47.5%, Fuelwood 17.5%→42.5%. More groups reporting threat reduction at midline.</div>
+                        </div>
+
+                        <!-- INCOME & AGROFORESTRY CHARTS (existing) -->
                         <div class="chart-wrapper">
                             <div class="chart-title">Income Generation & Agroforestry Adoption</div>
                             <div class="chart-container"><canvas id="f-chart-income"></canvas></div>
@@ -4786,10 +4833,21 @@
             });
 
             // === TAB F: EFFECTIVENESS & CONSERVATION ===
+            const condLabels = ['Area', 'Volume/\nBiomass', 'Regeneration', 'Biodiversity', 'Ecosystem\nServices'];
+            const threatLabels = ['Fire', 'Fuelwood', 'Charcoal', 'Other\nWood', 'Poaching', 'Encroachment', 'Land\nGrabbing', 'Poles'];
+            const stackedOpts = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: { font: { size: 11, weight: 'bold' }, color: '#fff', formatter: (v) => v.toFixed(1) + '%', display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 5 }
+                },
+                scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } }
+            };
+
+            // Forest Condition — Good BL vs ML
             fChart('f-chart-condition', {
                 type: 'bar',
                 data: {
-                    labels: ['Area', 'Volume/\nBiomass', 'Regeneration', 'Biodiversity', 'Ecosystem\nServices'],
+                    labels: condLabels,
                     datasets: [
                         { label: 'Baseline (Good)', data: [30.0, 27.5, 32.5, 25.0, 27.5], backgroundColor: fColors.baseline },
                         { label: 'Midline (Good)', data: [52.5, 47.5, 55.0, 47.5, 50.0], backgroundColor: fColors.midline }
@@ -4798,16 +4856,127 @@
                 options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% Good' } } } }
             });
 
+            // Forest Condition Breakdown — Baseline (Stacked)
+            fChart('f-chart-condition-bl', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Good', data: [30.0, 27.5, 32.5, 25.0, 27.5], backgroundColor: colors.success },
+                        { label: 'Medium', data: [37.5, 35.0, 35.0, 37.5, 42.5], backgroundColor: colors.warning },
+                        { label: 'Poor', data: [32.5, 37.5, 32.5, 37.5, 30.0], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Forest Condition Breakdown — Midline (Stacked)
+            fChart('f-chart-condition-ml', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Good', data: [52.5, 47.5, 55.0, 47.5, 50.0], backgroundColor: colors.success },
+                        { label: 'Medium', data: [30.0, 32.5, 27.5, 30.0, 27.5], backgroundColor: colors.warning },
+                        { label: 'Poor', data: [17.5, 20.0, 17.5, 22.5, 22.5], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Forest Status Changes — Baseline (Stacked)
+            fChart('f-chart-status-bl', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Decrease', data: [42.5, 40.0, 35.0, 37.5, 30.0], backgroundColor: colors.danger },
+                        { label: 'No Change', data: [27.5, 32.5, 30.0, 35.0, 35.0], backgroundColor: '#9E9E9E' },
+                        { label: 'Increase', data: [30.0, 27.5, 35.0, 27.5, 35.0], backgroundColor: colors.success }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Forest Status Changes — Midline (Stacked)
+            fChart('f-chart-status-ml', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Decrease', data: [17.5, 20.0, 15.0, 17.5, 22.5], backgroundColor: colors.danger },
+                        { label: 'No Change', data: [30.0, 27.5, 27.5, 25.0, 27.5], backgroundColor: '#9E9E9E' },
+                        { label: 'Increase', data: [52.5, 52.5, 57.5, 57.5, 50.0], backgroundColor: colors.success }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Forest Status — Perceived Increase BL vs ML
+            fChart('f-chart-status-increase', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Baseline (Increase)', data: [30.0, 27.5, 35.0, 27.5, 35.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Increase)', data: [52.5, 52.5, 57.5, 57.5, 50.0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% Increase' } } } }
+            });
+
+            // Threats — High BL vs ML
             fChart('f-chart-threats', {
                 type: 'bar',
                 data: {
-                    labels: ['Fire', 'Charcoal', 'Encroachment', 'Fuelwood', 'Land\nGrabbing', 'Poaching', 'Poles'],
+                    labels: threatLabels,
                     datasets: [
-                        { label: 'Baseline (High)', data: [35.0, 40.0, 32.5, 27.5, 22.5, 20.0, 15.0], backgroundColor: colors.danger },
-                        { label: 'Midline (High)', data: [15.0, 17.5, 15.0, 12.5, 10.0, 10.0, 7.5], backgroundColor: colors.success }
+                        { label: 'Baseline (High)', data: [35.0, 27.5, 40.0, 15.0, 20.0, 32.5, 22.5, 15.0], backgroundColor: colors.danger },
+                        { label: 'Midline (High)', data: [15.0, 12.5, 17.5, 7.5, 10.0, 15.0, 10.0, 7.5], backgroundColor: colors.success }
                     ]
                 },
                 options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 50, title: { display: true, text: '% High Threat' } } } }
+            });
+
+            // Threats Breakdown — Baseline (Stacked)
+            fChart('f-chart-threats-bl', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Low', data: [27.5, 35.0, 22.5, 47.5, 45.0, 30.0, 40.0, 50.0], backgroundColor: colors.success },
+                        { label: 'Medium', data: [37.5, 37.5, 37.5, 37.5, 35.0, 37.5, 37.5, 35.0], backgroundColor: colors.warning },
+                        { label: 'High', data: [35.0, 27.5, 40.0, 15.0, 20.0, 32.5, 22.5, 15.0], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Threats Breakdown — Midline (Stacked)
+            fChart('f-chart-threats-ml', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Low', data: [52.5, 55.0, 47.5, 62.5, 60.0, 52.5, 57.5, 62.5], backgroundColor: colors.success },
+                        { label: 'Medium', data: [32.5, 32.5, 35.0, 30.0, 30.0, 32.5, 32.5, 30.0], backgroundColor: colors.warning },
+                        { label: 'High', data: [15.0, 12.5, 17.5, 7.5, 10.0, 15.0, 10.0, 7.5], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            // Threat Changes — Perceived Decrease BL vs ML
+            fChart('f-chart-threat-decrease', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Baseline (Decrease)', data: [20.0, 17.5, 15.0, 22.5, 20.0, 17.5, 15.0, 22.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Decrease)', data: [50.0, 42.5, 47.5, 40.0, 37.5, 45.0, 40.0, 37.5], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% Decrease' } } } }
             });
 
             fChart('f-chart-income', {
