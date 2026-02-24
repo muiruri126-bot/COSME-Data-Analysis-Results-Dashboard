@@ -2850,10 +2850,20 @@
                     
                     if (surveyKey === 'women-cosme') {
                         console.log('  → Updating women survey charts');
+                        
+                        // Temporarily show all tabs so Chart.js can measure canvas dimensions
+                        const womenTabsAll = document.getElementById('women-survey-section');
+                        const cosmeTabs = womenTabsAll ? womenTabsAll.querySelectorAll('.tab-content') : [];
+                        cosmeTabs.forEach(tab => tab.style.display = 'block');
+                        void (womenTabsAll && womenTabsAll.offsetHeight);
+                        
                         updateSurveyCharts(surveyKey);
                         updateAllTabCharts('women-cosme');
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
+                        
+                        // Restore tab visibility
+                        cosmeTabs.forEach(tab => tab.style.display = '');
                     } else if (surveyKey === 'men-cosme') {
                         console.log('  → Initializing men survey tabs and charts');
                         updateSurveyCharts(surveyKey);
@@ -2866,10 +2876,24 @@
                         updateTabContent(surveyKey);
                     } else {
                         console.log('  → Updating GJJ survey charts');
+                        
+                        // Temporarily show ALL GJJ tabs so Chart.js can measure canvas dimensions
+                        const womenSec = document.getElementById('women-survey-section');
+                        const gjjTabs = womenSec ? womenSec.querySelectorAll('.tab-content') : [];
+                        gjjTabs.forEach((tab, i) => {
+                            if (i < 5) tab.style.display = 'block';
+                        });
+                        void (womenSec && womenSec.offsetHeight); // force reflow
+                        
                         updateSurveyCharts(surveyKey);
                         updateGJJTabCharts(surveyKey);
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
+                        
+                        // Restore tab visibility: only active tab visible via CSS class
+                        gjjTabs.forEach((tab, i) => {
+                            if (i < 5) tab.style.display = '';
+                        });
                     }
                 }, 200);
             });
@@ -4171,6 +4195,17 @@
             tabButtons.forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             evt.currentTarget.classList.add('active');
+
+            // Resize charts in newly visible tab so hidden-tab charts render correctly
+            requestAnimationFrame(() => {
+                const activeTab = document.getElementById(tabName);
+                if (activeTab) {
+                    activeTab.querySelectorAll('canvas').forEach(canvas => {
+                        const chart = Chart.getChart(canvas);
+                        if (chart) chart.resize();
+                    });
+                }
+            });
         }
 
         // Initialize Men Survey Tabs with dynamic content
