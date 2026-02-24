@@ -2662,6 +2662,122 @@
                 if (womenTabButtons.length > 0) womenTabButtons[0].classList.add('active');
             }
 
+            // === GJJ / COSME TAB REWRITING ===
+            if (womenSection) {
+                const tabButtons = womenSection.querySelectorAll('.tab-button');
+                const isGJJ = surveyKey === 'gjj-women' || surveyKey === 'gjj-men';
+                
+                // Original COSME tab labels
+                const cosmeLabels = [
+                    'A. Household Characteristics', 'B. Shocks & Resilience', 'C. Preparedness',
+                    'D. Resources & Assets', 'E. Savings & Loans', 'F. Roles & Time Poverty',
+                    'G. Decision Making', 'H. Climate & NbS', 'I. Life Skills', 'J. Social Norms'
+                ];
+                // GJJ section labels (map to first 5 tabs, hide rest)
+                const gjjLabels = [
+                    '1. SELF', '2. RELATIONAL', '3. Shared Responsibility',
+                    '4. Shared Power', '5. Autonomy & Leadership'
+                ];
+
+                tabButtons.forEach((btn, i) => {
+                    if (isGJJ) {
+                        if (i < gjjLabels.length) {
+                            btn.textContent = gjjLabels[i];
+                            btn.style.display = '';
+                        } else {
+                            btn.style.display = 'none';
+                        }
+                    } else {
+                        // Restore COSME labels
+                        if (i < cosmeLabels.length) {
+                            btn.textContent = cosmeLabels[i];
+                        }
+                        btn.style.display = '';
+                    }
+                });
+
+                // Also show/hide tab content divs
+                const tabContents = womenSection.querySelectorAll('.tab-content');
+                tabContents.forEach((tab, i) => {
+                    if (isGJJ) {
+                        tab.style.display = i < gjjLabels.length ? '' : 'none';
+                    } else {
+                        tab.style.display = '';
+                    }
+                });
+
+                // Update section titles and chart titles inside GJJ tabs
+                if (isGJJ) {
+                    const gjjSectionConfig = [
+                        { // Tab 0: SELF (was Household)
+                            sectionTitle: '1. SELF — Self-Esteem & Self-Perception',
+                            chartTitles: {
+                                'chart-location': 'Self-Esteem: "I have many strengths & qualities" (% Strongly Agree)',
+                                'chart-headship': 'Self-Perception: "I see myself as equal to opposite gender" (% Strongly Agree)',
+                                'chart-activities': 'SELF Domain: "My feelings and opinions are important" (% Agreement)',
+                                'chart-housing': '"I can voice my opinions in my community" (% Agreement)',
+                                'chart-wash': 'SELF Domain: Overall Indicators (Strongly Agree %)'
+                            }
+                        },
+                        { // Tab 1: RELATIONAL (was Shocks)
+                            sectionTitle: '2. RELATIONAL — Relationship Quality & Communication',
+                            chartTitles: {
+                                'chart-shocks': 'Positive Interactions: Laughing Together, Feeling Respected, Voicing Disagreement',
+                                'chart-impact': 'Communication Quality: Sharing Feelings, Consent Respect, Shared Responsibility Discussions',
+                                'chart-coping': 'RELATIONAL Domain: Frequency of Positive Relationship Behaviors'
+                            }
+                        },
+                        { // Tab 2: Shared Responsibility (was Preparedness)
+                            sectionTitle: '3. GENDER TRANSFORMATION: Shared Responsibility',
+                            chartTitles: {
+                                'chart-prep-knowledge': 'Husband Support for Household Chores (% Yes)',
+                                'chart-prep-participation': 'Husband Frequency of Carrying Out Care/Chores',
+                                'chart-warnings': 'Conversations About Sharing Unpaid Household & Care Work'
+                            }
+                        },
+                        { // Tab 3: Shared Power (was Resources)
+                            sectionTitle: '4. GENDER TRANSFORMATION: Shared Power',
+                            chartTitles: {
+                                'chart-assets': 'Household Decision Conversations in Past 6 Months',
+                                'chart-land': 'Who Has Final Say on Important Household Decisions',
+                                'chart-cultivation': 'Frequency of Important Decision Discussions',
+                                'chart-inputs': 'Types of Decisions: Assets, Land, Business, Children, Health'
+                            }
+                        },
+                        { // Tab 4: Autonomy & Leadership (was Savings)
+                            sectionTitle: '5. GENDER TRANSFORMATION: Autonomy & Leadership',
+                            chartTitles: {
+                                'chart-personal-savings': 'Women Hiding Money from Husbands (% Always)',
+                                'chart-mechanism': 'Support for Women in Community Leadership (% Definitely)',
+                                'chart-loans': 'Support for Women Starting Own Business (% Definitely)',
+                                'chart-savings-use': 'Autonomy Indicators: Overall Trends'
+                            }
+                        }
+                    ];
+
+                    tabContents.forEach((tab, i) => {
+                        if (i >= gjjSectionConfig.length) return;
+                        const config = gjjSectionConfig[i];
+                        
+                        // Update section title
+                        const sectionTitle = tab.querySelector('.section-title');
+                        if (sectionTitle) sectionTitle.textContent = config.sectionTitle;
+
+                        // Update chart titles
+                        Object.keys(config.chartTitles).forEach(chartId => {
+                            const canvas = tab.querySelector(`#${chartId}`);
+                            if (canvas) {
+                                const wrapper = canvas.closest('.chart-wrapper');
+                                if (wrapper) {
+                                    const titleEl = wrapper.querySelector('.chart-title');
+                                    if (titleEl) titleEl.textContent = config.chartTitles[chartId];
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+
             // Destroy ALL existing Chart.js instances to prevent stale renders
             function destroyAllCharts() {
                 // Get all canvas elements and destroy any Chart.js instances
@@ -2933,10 +3049,30 @@
                             const tab = document.getElementById(tabId);
                             if (!tab) return;
                             const saved = window.originalWomenContent[tabId];
+                            // Restore section title
+                            const sectionTitleEl = tab.querySelector('.section-title');
+                            if (sectionTitleEl && saved.sectionTitle) {
+                                sectionTitleEl.textContent = saved.sectionTitle;
+                            }
                             // Restore highlight box
                             const highlightBox = tab.querySelector('.highlight-box');
                             if (highlightBox && saved.highlight) {
                                 highlightBox.innerHTML = saved.highlight;
+                            }
+                            // Restore chart titles
+                            if (saved.chartTitles) {
+                                Object.keys(saved.chartTitles).forEach(chartId => {
+                                    const canvas = document.getElementById(chartId);
+                                    if (canvas) {
+                                        const wrapper = canvas.closest('.chart-wrapper');
+                                        if (wrapper) {
+                                            const titleEl = wrapper.querySelector('.chart-title');
+                                            if (titleEl) {
+                                                titleEl.textContent = saved.chartTitles[chartId];
+                                            }
+                                        }
+                                    }
+                                });
                             }
                             // Restore chart insights
                             if (saved.insights) {
@@ -2954,7 +3090,7 @@
                                 });
                             }
                         });
-                        console.log('✓ Restored original women survey content');
+                        console.log('✓ Restored original women survey content (titles, highlights, insights)');
                     }
                 }
                 return;
@@ -3007,44 +3143,57 @@
                 const womenSection = document.getElementById('women-survey-section');
                 if (!womenSection) return;
                 const surveyLabel = surveyKey === 'gjj-women' ? 'GJJ KAP Women' : 'GJJ KAP Men';
-                const sampleSize = surveyKey === 'gjj-women' ? '312 Women' : '289 Men';
 
-                // GJJ-specific highlight & insight content per tab
+                // GJJ tabs: tab-household=SELF, tab-shocks=RELATIONAL, tab-preparedness=Shared Responsibility,
+                // tab-resources=Shared Power, tab-savings=Autonomy & Leadership
                 const gjjTabContent = {
                     'tab-household': {
-                        highlight: `<h4>${surveyLabel} - Shared Responsibility</h4><p>Husband support for household chores increased from <strong>41.4% to 64.7%</strong> (+23.3pp). Weekly discussions about sharing unpaid care work rose from <strong>63.7% to 94.5%</strong>. However, husbands "always" doing chores remained low at <strong>13.1%</strong> (from 13.7% baseline), suggesting attitudinal support outpaces behavioral change.</p>`,
+                        highlight: `<h4>${surveyLabel} — 1. SELF: Self-Esteem & Self-Perception</h4>
+                            <p>"I have many strengths and qualities" (Strongly Agree) improved from <strong>33.5% to 52.6%</strong> (+19.1pp). "My feelings and opinions are important" grew <strong>28.9%→49.4%</strong> (+20.5pp). Self-perception as equal to opposite gender surged <strong>20.4%→48.2%</strong> (+27.8pp). "I voice my opinions in my community" increased <strong>26.7%→65.9%</strong> (+39.2pp) — the single largest gain across all SELF statements.</p>`,
                         chartInsights: {
-                            'chart-savings': `<strong>Shared Responsibility:</strong> Husband supports chores grew +23.3pp (41.4%→64.7%). Weekly chore discussion jumped +30.8pp to 94.5%. "Always does chores" is stable (~13%), indicating room for deeper behavioral shifts.`
+                            'chart-location': `<strong>Strengths & Qualities:</strong> "I have many strengths and qualities" (Strongly Agree) improved +19.1pp (33.5%→52.6%). Growing self-worth and confidence among women participants.`,
+                            'chart-headship': `<strong>Equal Self-Perception:</strong> "I see myself as equal to the opposite gender" (Strongly Agree) surged +27.8pp (20.4%→48.2%). The second-largest SELF domain improvement.`,
+                            'chart-activities': `<strong>Feelings Important:</strong> "My feelings and opinions are important" increased +20.5pp (28.9%→49.4%). Nearly half of women now strongly agree with this statement.`,
+                            'chart-housing': `<strong>Voice Opinions:</strong> "I voice my opinions in my community" surged +39.2pp (26.7%→65.9%). The single largest improvement across all SELF domain indicators.`,
+                            'chart-wash': `<strong>SELF Domain Summary:</strong> All four SELF indicators show strong positive trajectories from baseline to endline, with voice/opinions showing the most dramatic shift.`
                         }
                     },
-                    'tab-food': {
-                        highlight: `<h4>${surveyLabel} - Shared Power & Decision-Making</h4><p>Households having decision conversations in past 6 months surged from <strong>60.2% to 81.7%</strong> (+21.5pp). Husband making decisions alone dropped to <strong>2.0%</strong> (from 8.8%). Joint final say on important decisions reached <strong>94.5%</strong>, reflecting meaningful power-sharing improvements.</p>`,
+                    'tab-shocks': {
+                        highlight: `<h4>${surveyLabel} — 2. RELATIONAL: Relationship Quality & Communication</h4>
+                            <p>Relationship quality indicators show mixed results. Women feeling respected by husband/partner (Always) <span style="color:#c62828;font-weight:600;">declined from 43.1% to 39.1%</span> (-4.0pp). Voicing disagreement comfortably (Always) remained stable at 26.9%→27.1%. Laughing together (Always) and emotional communication show varied patterns. Consent respect and shared responsibility discussions provide more encouraging trends.</p>`,
                         chartInsights: {
-                            'chart-preparedness': `<strong>Shared Power:</strong> Decision conversations increased +21.5pp (60.2%→81.7%). Husband-alone decisions dropped from 8.8% to 2.0%. Joint final say reached 4.8%, showing significant shifts toward shared household governance.`
+                            'chart-shocks': `<strong>Positive Interactions:</strong> Laughing together, feeling respected, and voicing disagreement frequencies. Respect declined slightly (-4.0pp), while disagreement comfort remained stable. <span style="color:#c62828;">⚠ Mixed progress.</span>`,
+                            'chart-impact': `<strong>Communication Quality:</strong> Sharing feelings openly, consent respect, and discussions about shared responsibility. Consent respect is a key indicator of relationship health.`,
+                            'chart-coping': `<strong>RELATIONAL Summary:</strong> Overall, the relational domain shows more gradual shifts than SELF, suggesting deeper behavioral norms are slower to change. Continued focused dialogue sessions recommended.`
                         }
                     },
-                    'tab-climate': {
-                        highlight: `<h4>${surveyLabel} - SELF Domain (Self-Esteem)</h4><p>"I have many strengths and qualities" (Strongly Agree) improved from <strong>33.5% to 52.6%</strong> (+19.1pp). Self-perception as equal to opposite gender grew from <strong>20.4% to 48.2%</strong> (+27.8pp). These are among the strongest gains across all GJJ domains, reflecting deepening self-worth.</p>`,
+                    'tab-preparedness': {
+                        highlight: `<h4>${surveyLabel} — 3. GENDER TRANSFORMATION: Shared Responsibility</h4>
+                            <p>Husband support for household chores increased from <strong>41.4% to 64.7%</strong> (+23.3pp). Weekly discussions about sharing unpaid care work surged from <strong>63.7% to 94.5%</strong> (+30.8pp). However, husbands "always" doing chores <span style="color:#c62828;font-weight:600;">remained low at 13.1%</span> (from 13.7%), suggesting attitudinal support outpaces actual behavioral change.</p>`,
                         chartInsights: {
-                            'chart-climate': `<strong>Self-Esteem:</strong> "I have strengths & qualities" (Strongly Agree) rose +19.1pp (33.5%→52.6%). Equal gender perception surged +27.8pp (20.4%→48.2%), the largest improvement across all SELF indicators.`
+                            'chart-prep-knowledge': `<strong>Husband Supports Chores:</strong> "Does your husband support you with chores?" rose +23.3pp (41.4%→64.7%). A strong positive shift in male engagement with household work.`,
+                            'chart-prep-participation': `<strong>Frequency of Chores:</strong> Husband "Always" carrying out chores dropped slightly from 13.7% to 13.1%. <span style="color:#c62828;">⚠ Attitudinal support not yet translating to consistent behavior.</span>`,
+                            'chart-warnings': `<strong>Chore Discussion:</strong> Weekly conversations about sharing unpaid care work surged +30.8pp (63.7%→94.5%). Nearly universal engagement in household responsibility dialogue.`
                         }
                     },
-                    'tab-decisions': {
-                        highlight: `<h4>${surveyLabel} - Household Decision Types</h4><p>Key decision areas where women participate: Purchase household assets <strong>17.6%→22.0%</strong>, send/remove child from school <strong>39.8%→50.6%</strong> (+10.8pp), invest in business <strong>18.4%→22.1%</strong>, seek healthcare <strong>6.6%→20.3%</strong> (+13.7pp). Healthcare-seeking saw the largest gain.</p>`,
+                    'tab-resources': {
+                        highlight: `<h4>${surveyLabel} — 4. GENDER TRANSFORMATION: Shared Power</h4>
+                            <p>Households having decision conversations in past 6 months surged from <strong>60.2% to 81.7%</strong> (+21.5pp). Husband making decisions alone <strong>dropped to 2.0%</strong> (from 8.8%, -6.8pp). Key decision types: Purchase household assets 17.6%→22.0%, send/remove child from school 39.8%→50.6% (+10.8pp), invest in business 18.4%→22.1%, seek healthcare 6.6%→20.3% (+13.7pp).</p>`,
                         chartInsights: {
-                            'chart-decisions': `<strong>Decision Types:</strong> Biggest gains in seek healthcare (+13.7pp) and child schooling (+10.8pp). Purchase assets and business investment showed moderate gains. Build on land decreased 36.4%→28.3%, suggesting shifting priorities.`
+                            'chart-assets': `<strong>Decision Conversations:</strong> Households discussing important decisions increased +21.5pp (60.2%→81.7%). Decision-making is becoming more consultative and inclusive.`,
+                            'chart-land': `<strong>Final Say:</strong> Husband alone making decisions dropped from 8.8% to 2.0% (-6.8pp). Joint final say patterns improving, reflecting genuine power-sharing.`,
+                            'chart-cultivation': `<strong>Decision Frequency:</strong> How often important decisions are discussed by couples. More frequent discussions indicate healthier shared governance patterns.`,
+                            'chart-inputs': `<strong>Decision Types:</strong> Biggest gains in seek healthcare (+13.7pp, 6.6%→20.3%) and child schooling (+10.8pp, 39.8%→50.6%). <span style="color:#c62828;">Build on land decreased 36.4%→28.3%.</span>`
                         }
                     },
-                    'tab-nbs': {
-                        highlight: `<h4>${surveyLabel} - Autonomy & Leadership</h4><p>Women hiding money from husbands (Always) decreased from <strong>12.0% to 3.3%</strong> (-8.7pp), reflecting growing financial transparency. Support for community leadership (Definitely) stands at <strong>84.4%</strong>. Support for starting own business (Definitely) is at <strong>64.2%</strong>. While overall support remains high, some indicators show slight dips.</p>`,
+                    'tab-savings': {
+                        highlight: `<h4>${surveyLabel} — 5. GENDER TRANSFORMATION: Autonomy & Leadership</h4>
+                            <p>Women hiding money from husbands (Always) decreased from <strong>12.0% to 3.3%</strong> (-8.7pp), reflecting growing financial transparency. Support for community leadership (Definitely) <span style="color:#c62828;font-weight:600;">dipped slightly 87.1%→84.4%</span> (-2.7pp). Support for starting own business (Definitely) <span style="color:#c62828;font-weight:600;">declined 84.9%→64.2%</span> (-20.7pp). While financial transparency improved, leadership and business support indicators need monitoring.</p>`,
                         chartInsights: {
-                            'chart-nbs': `<strong>Autonomy & Leadership:</strong> Money hiding dropped -8.7pp (12.0%→3.3%), indicating improved financial openness. Leadership support stable at 84.4%. Business support at 64.2% needs monitoring.`
-                        }
-                    },
-                    'tab-skills': {
-                        highlight: `<h4>${surveyLabel} - SELF Statements (Strongly Agree)</h4><p>"I have many strengths and qualities" improved <strong>33.5%→52.6%</strong>. "My feelings and opinions are important" grew <strong>28.9%→49.4%</strong> (+20.5pp). "I see myself as equal" surged <strong>20.4%→48.2%</strong> (+27.8pp). "I voice my opinions" improved <strong>26.7%→65.9%</strong> (+39.2pp) — the single largest gain across all SELF statements.</p>`,
-                        chartInsights: {
-                            'chart-skills': `<strong>SELF Statements:</strong> Voice opinions surged +39.2pp (26.7%→65.9%), the single largest improvement. Equal self-perception grew +27.8pp. All four SELF indicators show strong positive trajectories from baseline to endline.`
+                            'chart-personal-savings': `<strong>Money Hiding:</strong> Women hiding money "Always" dropped -8.7pp (12.0%→3.3%). A positive indicator of improved financial openness and trust within households.`,
+                            'chart-mechanism': `<strong>Community Leadership:</strong> Support for women in community leadership (Definitely) <span style="color:#c62828;">dipped slightly -2.7pp (87.1%→84.4%).</span> Still high overall but worth monitoring for trends.`,
+                            'chart-loans': `<strong>Business Support:</strong> Support for women starting own business (Definitely) <span style="color:#c62828;">declined significantly -20.7pp (84.9%→64.2%).</span> Requires investigation into underlying barriers.`,
+                            'chart-savings-use': `<strong>Autonomy Summary:</strong> Mixed picture — financial transparency improved markedly, but external-facing autonomy indicators (leadership, business) declined. Focus on economic enablement needed.`
                         }
                     }
                 };
@@ -3059,7 +3208,7 @@
                     if (highlightBox && tabInfo.highlight) {
                         highlightBox.innerHTML = tabInfo.highlight;
                     }
-                    // Update chart insights
+                    // Update ALL chart insights within this tab
                     if (tabInfo.chartInsights) {
                         Object.keys(tabInfo.chartInsights).forEach(chartId => {
                             const canvasElement = document.getElementById(chartId);
@@ -3844,16 +3993,22 @@
                     const tabId = tab.id;
                     if (!tabId) return;
                     const highlightBox = tab.querySelector('.highlight-box');
+                    const sectionTitleEl = tab.querySelector('.section-title');
                     const insights = {};
+                    const chartTitles = {};
                     tab.querySelectorAll('.chart-wrapper').forEach(wrapper => {
                         const canvas = wrapper.querySelector('canvas');
                         const insightEl = wrapper.querySelector('.chart-insight');
-                        if (canvas && insightEl) {
-                            insights[canvas.id] = insightEl.innerHTML;
+                        const titleEl = wrapper.querySelector('.chart-title');
+                        if (canvas) {
+                            if (insightEl) insights[canvas.id] = insightEl.innerHTML;
+                            if (titleEl) chartTitles[canvas.id] = titleEl.textContent;
                         }
                     });
                     window.originalWomenContent[tabId] = {
                         highlight: highlightBox ? highlightBox.innerHTML : '',
+                        sectionTitle: sectionTitleEl ? sectionTitleEl.textContent : '',
+                        chartTitles: chartTitles,
                         insights: insights
                     };
                 });
