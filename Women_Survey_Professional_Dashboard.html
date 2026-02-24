@@ -191,6 +191,12 @@
             border-left: 3px solid #f57c00;
         }
 
+        .badge-drop {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 3px solid #c62828;
+        }
+
         /* KPI DASHBOARD */
         .kpi-section {
             display: grid;
@@ -2508,10 +2514,10 @@
                 ],
                 findings: [
                     { title: 'Self-Esteem Growth', metric: '+19.1pp', description: '"I have many strengths and qualities" (Strongly Agree) improved from 33.5% to 52.6%. Self-perception as equal to opposite gender (Strongly Agree) grew 20.4% → 48.2%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
-                    { title: 'Relational Quality', metric: 'Mixed', description: 'Women feeling respected by husband/partner (Always) slightly declined from 43.1% to 39.1%. Voicing disagreement comfortably (Always) stable at 26.9% → 27.1%. Some gains in emotional communication and consent respect.', badge: 'near', badgeText: '⚠ Mixed Progress' },
+                    { title: 'Relational Quality', metric: '-4.0pp', description: 'Women feeling respected by husband/partner (Always) declined from 43.1% to 39.1% (-4.0pp). Voicing disagreement comfortably (Always) stable at 26.9% → 27.1%. Some gains in emotional communication and consent respect.', badge: 'drop', badgeText: '✗ Drop from Baseline' },
                     { title: 'Shared Responsibility', metric: '+23.3pp', description: 'Husbands supporting household chores increased from 41.4% to 64.7%. Husbands "Always" doing chores stable at ~13%. Weekly chore discussion surged 63.7% → 94.5%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
                     { title: 'Shared Power', metric: '+21.5pp', description: 'Households having decision conversations in past 6 months: 60.2% → 81.7%. Joint decision-making increased. Husband alone making decisions dropped from 8.8% to 2.0%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
-                    { title: 'Autonomy & Leadership', metric: 'Mixed', description: 'Women hiding money from husbands decreased (Always 12.0% → 3.3%) indicating improved financial transparency. Support for community leadership (Definitely) dipped slightly 87.1% → 84.4%. Business support (Definitely) declined 84.9% → 64.2%.', badge: 'near', badgeText: '⚠ Mixed Progress' },
+                    { title: 'Autonomy & Leadership', metric: '-20.7pp', description: 'Support for starting own business (Definitely) declined significantly 84.9% → 64.2% (-20.7pp). Community leadership support dipped 87.1% → 84.4% (-2.7pp). Positive: Women hiding money from husbands decreased (Always 12.0% → 3.3%) indicating improved financial transparency.', badge: 'drop', badgeText: '✗ Drop from Baseline' },
                     { title: 'Household Decision Types', metric: '+8pp', description: 'Key decisions: Purchase household assets 17.6% → 22.0%, send/remove child from school 39.8% → 50.6% (+10.8pp), invest in business 18.4% → 22.1%, seek healthcare 6.6% → 20.3% (+13.7pp).', badge: 'exceeded', badgeText: '✓ Target Exceeded' }
                 ],
                 kpis: [
@@ -2519,8 +2525,8 @@
                     { label: 'Equal Perception (Strongly Agree)', value: '48.2%', change: '↑ 27.8pp from 20.4% baseline', trend: 'positive' },
                     { label: 'Husband Supports Chores', value: '64.7%', change: '↑ 23.3pp from 41.4% baseline', trend: 'positive' },
                     { label: 'Decision Conversations', value: '81.7%', change: '↑ 21.5pp from 60.2% baseline', trend: 'positive' },
-                    { label: 'Joint Final Decisions', value: '94.5%', change: '↑ based on endline data', trend: 'positive' },
-                    { label: 'Husband Alone Decides', value: '2.0%', change: '↓ 6.8pp from 8.8% baseline', trend: 'positive' }
+                    { label: 'Business Support (Definitely)', value: '64.2%', change: '↓ 20.7pp from 84.9% baseline', trend: 'negative' },
+                    { label: 'Community Leadership (Definitely)', value: '84.4%', change: '↓ 2.7pp from 87.1% baseline', trend: 'negative' }
                 ],
                 hasLogframe: false
             },
@@ -2593,7 +2599,7 @@
             const findingsContainer = document.querySelector('.key-findings');
             findingsContainer.innerHTML = '';
             data.findings.forEach(finding => {
-                const badgeClass = finding.badge === 'exceeded' ? 'badge-exceeded' : finding.badge === 'near' ? 'badge-near' : 'badge-met';
+                const badgeClass = finding.badge === 'exceeded' ? 'badge-exceeded' : finding.badge === 'drop' ? 'badge-drop' : finding.badge === 'near' ? 'badge-near' : 'badge-met';
                 const card = document.createElement('div');
                 card.className = 'finding-card';
                 card.innerHTML = `
@@ -2773,6 +2779,12 @@
                 ? ['Strengths & Qualities', 'Feelings Important', 'Equal Perception', 'Voice Opinions']
                 : ['Self-Esteem', 'Aspirations', 'Leadership', 'Communication'];
 
+            // Helper: per-bar coloring — red for drops from baseline, normal color otherwise
+            function getBarColors(baselineArr, midlineArr, normalColor) {
+                if (!isGJJ) return normalColor;
+                return midlineArr.map((val, i) => val < baselineArr[i] ? colors.danger : normalColor);
+            }
+
             // Update Savings / Shared Responsibility Chart
             window.savingsChart = createChartIfExists('chart-savings', {
                 type: 'bar',
@@ -2780,7 +2792,7 @@
                     labels: savingsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.savings.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.savings.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.savings.midline, backgroundColor: getBarColors(data.savings.baseline, data.savings.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
@@ -2793,7 +2805,7 @@
                     labels: preparednessLabels,
                     datasets: [
                         { label: 'Baseline', data: data.preparedness.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.preparedness.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.preparedness.midline, backgroundColor: getBarColors(data.preparedness.baseline, data.preparedness.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
@@ -2806,7 +2818,7 @@
                     labels: climateLabels,
                     datasets: [
                         { label: 'Baseline', data: data.climate.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.climate.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.climate.midline, backgroundColor: getBarColors(data.climate.baseline, data.climate.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
@@ -2819,7 +2831,7 @@
                     labels: decisionsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.decisions.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.decisions.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.decisions.midline, backgroundColor: getBarColors(data.decisions.baseline, data.decisions.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
@@ -2832,7 +2844,7 @@
                     labels: nbsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.nbs.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.nbs.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.nbs.midline, backgroundColor: getBarColors(data.nbs.baseline, data.nbs.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
@@ -2845,7 +2857,7 @@
                     labels: skillsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.skills.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.skills.midline, backgroundColor: colors.midline }
+                        { label: endlineLabel, data: data.skills.midline, backgroundColor: getBarColors(data.skills.baseline, data.skills.midline, colors.midline) }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
