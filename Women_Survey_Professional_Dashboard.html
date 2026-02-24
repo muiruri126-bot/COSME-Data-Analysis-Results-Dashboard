@@ -395,6 +395,136 @@
         .positive-change { color: #2e7d32; font-weight: 600; }
         .negative-change { color: #c62828; font-weight: 600; }
 
+        /* PROJECT OUTPUT STYLES */
+        .output-header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        .output-header h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.5em;
+        }
+        .output-header p {
+            margin: 0;
+            opacity: 0.85;
+            font-size: 0.95em;
+        }
+        .output-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .output-card h3 {
+            color: #1a237e;
+            margin: 0 0 15px 0;
+            font-size: 1.2em;
+            border-bottom: 2px solid #e8eaf6;
+            padding-bottom: 10px;
+        }
+        .output-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.92em;
+        }
+        .output-table th {
+            background: #283593;
+            color: white;
+            padding: 10px 14px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .output-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        .output-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .output-table tr:hover {
+            background: #e8eaf6;
+        }
+        .output-table .total-row {
+            background: #e8eaf6 !important;
+            font-weight: 700;
+        }
+        .output-table .total-row td {
+            border-top: 2px solid #283593;
+        }
+        .output-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .output-kpi {
+            background: linear-gradient(135deg, #e8eaf6 0%, #f5f5f5 100%);
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #283593;
+        }
+        .output-kpi .kpi-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .output-kpi .kpi-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .output-kpi .kpi-sub {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 3px;
+        }
+        .output-kpi.green { border-left-color: #2e7d32; }
+        .output-kpi.green .kpi-value { color: #2e7d32; }
+        .output-kpi.orange { border-left-color: #e65100; }
+        .output-kpi.orange .kpi-value { color: #e65100; }
+        .output-charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .output-chart-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+        .output-chart-box h4 {
+            color: #283593;
+            margin: 0 0 15px 0;
+            font-size: 1em;
+        }
+        .output-chart-box canvas {
+            max-height: 320px;
+        }
+        .output-placeholder {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8eaf6 100%);
+            padding: 60px 30px;
+            border-radius: 12px;
+            text-align: center;
+            color: #666;
+        }
+        .output-placeholder h3 {
+            color: #283593;
+            margin-bottom: 10px;
+            border: none;
+        }
+
         /* FOOTER */
         .footer {
             text-align: center;
@@ -1034,6 +1164,7 @@
         <div class="survey-selector">
             <label>Select Survey:</label>
             <div class="survey-buttons">
+                <button class="survey-btn" onclick="switchSurvey('project-outputs')">Project Outputs</button>
                 <button class="survey-btn active" onclick="switchSurvey('women-cosme')">Women Survey (COSME)</button>
                 <button class="survey-btn" onclick="switchSurvey('men-cosme')">Men Survey (COSME)</button>
                 <button class="survey-btn" onclick="switchSurvey('gjj-women')">GJJ KAP (Women)</button>
@@ -1053,6 +1184,198 @@
             <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">Forest Conservation</button>
             <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">Seaweed Farming</button>
             <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">Mangrove Restoration</button>
+        </div>
+
+        <!-- PROJECT OUTPUTS SUB-SELECTOR -->
+        <div class="tabs-container" id="output-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
+            <button class="tab-button active" onclick="showOutputType(event, 'mangrove')" style="background: #283593; color: #fff;">Mangrove</button>
+            <button class="tab-button" onclick="showOutputType(event, 'forestry')">Forestry</button>
+            <button class="tab-button" onclick="showOutputType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">Seaweed</button>
+            <button class="tab-button" onclick="showOutputType(event, 'gjj')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">GJJ</button>
+            <button class="tab-button" onclick="showOutputType(event, 'vsla')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">VSLA</button>
+            <button class="tab-button" onclick="showOutputType(event, 'schools')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">Schools</button>
+        </div>
+
+        <!-- PROJECT OUTPUT SECTION -->
+        <div id="output-section" style="display: none;">
+
+            <!-- MANGROVE OUTPUT -->
+            <div id="output-mangrove">
+                <div class="output-header">
+                    <h2>Output 1112: Mangrove Restoration Training & Coaching</h2>
+                    <p>Members of mangrove groups trained and coached in mangrove restoration and conservation</p>
+                </div>
+
+                <!-- Registration KPIs -->
+                <div class="output-card">
+                    <h3>Registration Summary</h3>
+                    <div class="output-kpi-grid">
+                        <div class="output-kpi green">
+                            <div class="kpi-label">Groups Registered</div>
+                            <div class="kpi-value">42</div>
+                            <div class="kpi-sub">Target: 40 | 105% Achieved</div>
+                        </div>
+                        <div class="output-kpi">
+                            <div class="kpi-label">Members Registered</div>
+                            <div class="kpi-value">1,344</div>
+                            <div class="kpi-sub">Target: 1,200 | 112%</div>
+                        </div>
+                        <div class="output-kpi">
+                            <div class="kpi-label">Female Members</div>
+                            <div class="kpi-value">973</div>
+                            <div class="kpi-sub">Target: 840 | 72% of total</div>
+                        </div>
+                        <div class="output-kpi">
+                            <div class="kpi-label">Male Members</div>
+                            <div class="kpi-value">371</div>
+                            <div class="kpi-sub">Target: 360 | 28% of total</div>
+                        </div>
+                        <div class="output-kpi">
+                            <div class="kpi-label">Modules Imparted</div>
+                            <div class="kpi-value">4</div>
+                            <div class="kpi-sub">Target: 5 | 80%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Completion - All -->
+                <div class="output-card">
+                    <h3>Training Completion by Module - All Participants</h3>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Module</th>
+                                <th>Target</th>
+                                <th>Registered</th>
+                                <th>Completed</th>
+                                <th>Target(%)</th>
+                                <th>Reg(%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">Module 1</td><td>1,200</td><td>1,344</td><td>899</td><td>75%</td><td>67%</td></tr>
+                            <tr><td style="text-align:left;">Module 2</td><td>1,200</td><td>1,344</td><td>791</td><td>66%</td><td>59%</td></tr>
+                            <tr><td style="text-align:left;">Module 3</td><td>1,200</td><td>1,344</td><td>798</td><td>67%</td><td>59%</td></tr>
+                            <tr><td style="text-align:left;">Module 4</td><td>1,200</td><td>1,344</td><td>881</td><td>73%</td><td>66%</td></tr>
+                            <tr><td style="text-align:left;">Module 5</td><td>1,200</td><td>1,344</td><td>816</td><td>68%</td><td>61%</td></tr>
+                            <tr class="total-row"><td style="text-align:left;"><strong>Grand Total</strong></td><td><strong>1,200</strong></td><td><strong>1,344</strong></td><td><strong>842</strong></td><td><strong>70%</strong></td><td><strong>63%</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Training Completion - Male -->
+                <div class="output-card">
+                    <h3>Training Completion by Module - Male Participants</h3>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Module</th>
+                                <th>Target</th>
+                                <th>Registered</th>
+                                <th>Completed</th>
+                                <th>Target(%)</th>
+                                <th>Reg(%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">Module 1</td><td>360</td><td>371</td><td>216</td><td>60%</td><td>58%</td></tr>
+                            <tr><td style="text-align:left;">Module 2</td><td>360</td><td>371</td><td>195</td><td>54%</td><td>53%</td></tr>
+                            <tr><td style="text-align:left;">Module 3</td><td>360</td><td>371</td><td>166</td><td>46%</td><td>45%</td></tr>
+                            <tr><td style="text-align:left;">Module 4</td><td>360</td><td>371</td><td>198</td><td>55%</td><td>53%</td></tr>
+                            <tr><td style="text-align:left;">Module 5</td><td>360</td><td>371</td><td>177</td><td>49%</td><td>48%</td></tr>
+                            <tr class="total-row"><td style="text-align:left;"><strong>Grand Total</strong></td><td><strong>360</strong></td><td><strong>371</strong></td><td><strong>194</strong></td><td><strong>54%</strong></td><td><strong>52%</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Training Completion - Female -->
+                <div class="output-card">
+                    <h3>Training Completion by Module - Female Participants</h3>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Module</th>
+                                <th>Target</th>
+                                <th>Registered</th>
+                                <th>Completed</th>
+                                <th>Target(%)</th>
+                                <th>Reg(%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">Module 1</td><td>840</td><td>973</td><td>683</td><td>81%</td><td>70%</td></tr>
+                            <tr><td style="text-align:left;">Module 2</td><td>840</td><td>973</td><td>596</td><td>71%</td><td>61%</td></tr>
+                            <tr><td style="text-align:left;">Module 3</td><td>840</td><td>973</td><td>632</td><td>75%</td><td>65%</td></tr>
+                            <tr><td style="text-align:left;">Module 4</td><td>840</td><td>973</td><td>683</td><td>81%</td><td>70%</td></tr>
+                            <tr><td style="text-align:left;">Module 5</td><td>840</td><td>973</td><td>639</td><td>76%</td><td>66%</td></tr>
+                            <tr class="total-row"><td style="text-align:left;"><strong>Grand Total</strong></td><td><strong>840</strong></td><td><strong>973</strong></td><td><strong>649</strong></td><td><strong>77%</strong></td><td><strong>67%</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Charts -->
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Module Completion by Gender</h4>
+                        <div style="height: 320px;"><canvas id="output-mangrove-gender"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>Completion Rate vs Target (%)</h4>
+                        <div style="height: 320px;"><canvas id="output-mangrove-target"></canvas></div>
+                    </div>
+                </div>
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Registration vs Completion (All)</h4>
+                        <div style="height: 320px;"><canvas id="output-mangrove-regcomp"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>Overall Gender Split</h4>
+                        <div style="height: 320px;"><canvas id="output-mangrove-split"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORESTRY OUTPUT (placeholder) -->
+            <div id="output-forestry" style="display:none;">
+                <div class="output-placeholder">
+                    <h3>Forestry Output Data</h3>
+                    <p>Coming soon - Forestry group output data will appear here.</p>
+                </div>
+            </div>
+
+            <!-- SEAWEED OUTPUT (placeholder) -->
+            <div id="output-seaweed" style="display:none;">
+                <div class="output-placeholder">
+                    <h3>Seaweed Output Data</h3>
+                    <p>Coming soon - Seaweed farming output data will appear here.</p>
+                </div>
+            </div>
+
+            <!-- GJJ OUTPUT (placeholder) -->
+            <div id="output-gjj" style="display:none;">
+                <div class="output-placeholder">
+                    <h3>GJJ Output Data</h3>
+                    <p>Coming soon - Gender Justice Journey output data will appear here.</p>
+                </div>
+            </div>
+
+            <!-- VSLA OUTPUT (placeholder) -->
+            <div id="output-vsla" style="display:none;">
+                <div class="output-placeholder">
+                    <h3>VSLA Output Data</h3>
+                    <p>Coming soon - Village Savings & Loan Association output data will appear here.</p>
+                </div>
+            </div>
+
+            <!-- SCHOOLS OUTPUT (placeholder) -->
+            <div id="output-schools" style="display:none;">
+                <div class="output-placeholder">
+                    <h3>Schools Output Data</h3>
+                    <p>Coming soon - Schools output data will appear here.</p>
+                </div>
+            </div>
+
         </div>
 
         <!-- EXECUTIVE SUMMARY -->
@@ -1095,7 +1418,7 @@
         </div>
 
         <!-- KPI DASHBOARD -->
-        <div class="section">
+        <div class="section" id="kpi-wrapper-section">
             <button class="collapsible-header" onclick="toggleCollapsible(this)">Critical Performance Indicators</button>
             <div class="collapsible-content">
                 <div class="kpi-section">
@@ -3074,17 +3397,52 @@
                 }
             }
 
-            // TOGGLE between Women, Men, Forestry and Pre-Post sections FIRST (before chart updates)
+            // TOGGLE between Women, Men, Forestry, Pre-Post and Output sections
             const womenSection = document.getElementById('women-survey-section');
             const menSection = document.getElementById('men-survey-section');
             const forestrySection = document.getElementById('forestry-section');
             const prepostSection = document.getElementById('prepost-section');
+            const outputSection = document.getElementById('output-section');
             
             console.log('Toggling survey sections...');
             
-            // Show/hide Pre & Post Test sub-selector
+            // Show/hide sub-selectors
             const prepostTypeSelector = document.getElementById('prepost-type-selector');
+            const outputTypeSelector = document.getElementById('output-type-selector');
             if (prepostTypeSelector) prepostTypeSelector.style.display = surveyKey.startsWith('prepost-') ? 'flex' : 'none';
+            if (outputTypeSelector) outputTypeSelector.style.display = surveyKey === 'project-outputs' ? 'flex' : 'none';
+
+            // Show/hide shared sections for project-outputs
+            const execSummary = document.querySelector('.executive-summary');
+            const kpiWrapper = document.getElementById('kpi-wrapper-section');
+            const logframeWrapper = document.getElementById('logframe-section');
+            if (surveyKey === 'project-outputs') {
+                if (execSummary) execSummary.style.display = 'none';
+                if (kpiWrapper) kpiWrapper.style.display = 'none';
+                if (logframeWrapper) logframeWrapper.style.display = 'none';
+            } else {
+                if (execSummary) execSummary.style.display = '';
+                if (kpiWrapper) kpiWrapper.style.display = '';
+                if (logframeWrapper) logframeWrapper.style.display = '';
+            }
+
+            if (surveyKey === 'project-outputs') {
+                console.log('Showing PROJECT OUTPUTS');
+                if (womenSection) womenSection.style.display = 'none';
+                if (menSection) menSection.style.display = 'none';
+                if (forestrySection) forestrySection.style.display = 'none';
+                if (prepostSection) prepostSection.style.display = 'none';
+                if (outputSection) outputSection.style.display = 'block';
+                // Update header & footer
+                document.getElementById('survey-title').textContent = 'Project Output Dashboard';
+                document.getElementById('footer-title').innerHTML = '<strong>Project Output Dashboard - Mangrove</strong>';
+                document.getElementById('footer-sample').textContent = 'COSME Project Outputs and Deliverables Tracker';
+                // Render output charts
+                renderOutputCharts();
+                return; // Skip the rest of survey-specific logic
+            } else {
+                if (outputSection) outputSection.style.display = 'none';
+            }
 
             if (surveyKey === 'prepost-forest' || surveyKey === 'prepost-mangrove') {
                 console.log('Showing PRE & POST TEST survey only');
@@ -5186,6 +5544,122 @@
                 document.getElementById('pp-meta-pre').textContent = 'Kilifi & Kwale';
                 document.getElementById('pp-meta-post').textContent = 'Counties';
                 updateMangrovePrePostCharts();
+            }
+        }
+
+        // OUTPUT TYPE SUB-SELECTOR
+        function showOutputType(event, typeName) {
+            const typeButtons = document.getElementById('output-type-selector').querySelectorAll('.tab-button');
+            typeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = '';
+                btn.style.color = '';
+            });
+            event.currentTarget.classList.add('active');
+            event.currentTarget.style.background = '#283593';
+            event.currentTarget.style.color = '#fff';
+
+            // Hide all output sub-types
+            const outputTypes = ['mangrove', 'forestry', 'seaweed', 'gjj', 'vsla', 'schools'];
+            outputTypes.forEach(t => {
+                const el = document.getElementById('output-' + t);
+                if (el) el.style.display = 'none';
+            });
+            // Show selected
+            const target = document.getElementById('output-' + typeName);
+            if (target) target.style.display = 'block';
+
+            // Update footer
+            document.getElementById('footer-title').innerHTML = '<strong>Project Output Dashboard - ' + typeName.charAt(0).toUpperCase() + typeName.slice(1) + '</strong>';
+            document.getElementById('footer-sample').textContent = 'COSME Project Outputs and Deliverables Tracker';
+        }
+
+        // OUTPUT CHARTS — stored references so we can destroy/recreate
+        const outputChartInstances = {};
+        function renderOutputCharts() {
+            // Destroy existing
+            Object.values(outputChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            const modules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+
+            // CHART 1 — Module Completion by Gender
+            const ctx1 = document.getElementById('output-mangrove-gender');
+            if (ctx1) {
+                outputChartInstances['gender'] = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: modules,
+                        datasets: [
+                            { label: 'Female', data: [683, 596, 632, 683, 639], backgroundColor: '#8B5CF6' },
+                            { label: 'Male', data: [216, 195, 166, 198, 177], backgroundColor: '#3B82F6' }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10 } } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Participants' } } }
+                    }
+                });
+            }
+
+            // CHART 2 — Completion Rate vs Target (%)
+            const ctx2 = document.getElementById('output-mangrove-target');
+            if (ctx2) {
+                outputChartInstances['target'] = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: modules,
+                        datasets: [
+                            { label: 'All (%)', data: [75, 66, 67, 73, 68], backgroundColor: '#1a237e' },
+                            { label: 'Male (%)', data: [60, 54, 46, 55, 49], backgroundColor: '#3B82F6' },
+                            { label: 'Female (%)', data: [81, 71, 75, 81, 76], backgroundColor: '#8B5CF6' }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10 }, formatter: v => v + '%' } },
+                        scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Target' } } }
+                    }
+                });
+            }
+
+            // CHART 3 — Registration vs Completion (All)
+            const ctx3 = document.getElementById('output-mangrove-regcomp');
+            if (ctx3) {
+                outputChartInstances['regcomp'] = new Chart(ctx3, {
+                    type: 'bar',
+                    data: {
+                        labels: modules,
+                        datasets: [
+                            { label: 'Registered', data: [1344, 1344, 1344, 1344, 1344], backgroundColor: 'rgba(59, 130, 246, 0.3)', borderColor: '#3B82F6', borderWidth: 2 },
+                            { label: 'Completed', data: [899, 791, 798, 881, 816], backgroundColor: '#283593' }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10 } } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Participants' } } }
+                    }
+                });
+            }
+
+            // CHART 4 — Gender Split (Doughnut)
+            const ctx4 = document.getElementById('output-mangrove-split');
+            if (ctx4) {
+                outputChartInstances['split'] = new Chart(ctx4, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Female (973)', 'Male (371)'],
+                        datasets: [{ data: [973, 371], backgroundColor: ['#8B5CF6', '#3B82F6'], borderWidth: 2 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            datalabels: { display: true, font: { size: 13, weight: 'bold' }, color: '#fff', formatter: (v, ctx) => { const total = ctx.dataset.data.reduce((a,b) => a+b, 0); return Math.round(v/total*100) + '%'; } }
+                        }
+                    }
+                });
             }
         }
 
