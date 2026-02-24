@@ -9,10 +9,10 @@ A Streamlit + Plotly interactive dashboard for M&E analysis of the COSME
 project, combining Forestry Conservation Groups and Women Survey datasets.
 
 Excel files (place in the same folder as this script):
-  • Forest Functionality Basline_midline results.xlsx   (sheet "Results")
-  • Women Survey Basline_midline results.xlsx            (sheet "Results Women")
+  • Forest Functionality Basline_midline results.xlsx (sheet "Results")
+  • Women Survey Basline_midline results.xlsx (sheet "Results Women")
 
-Run with:  streamlit run cosme_dashboard.py
+Run with: streamlit run cosme_dashboard.py
 Requirements: pip install streamlit pandas numpy plotly openpyxl
 =============================================================================
 """
@@ -38,84 +38,84 @@ WOMEN_SHEET = "Results Women"
 # THEMES
 # ============================================================================
 THEMES = {
-    "🌲 Forest Green": {
-        "baseline": "#5B8DB8",       "midline": "#2E7D32",
+    "Forest Green": {
+        "baseline": "#5B8DB8", "midline": "#2E7D32",
         "baseline_light": "#A3C4DC", "midline_light": "#81C784",
-        "accent": "#FF8F00",         "danger": "#E53935",
-        "good": "#43A047",           "medium": "#FB8C00",
-        "poor": "#E53935",           "low": "#43A047",
-        "high": "#E53935",           "decrease": "#43A047",
-        "increase": "#E53935",       "no_change": "#78909C",
+        "accent": "#FF8F00", "danger": "#E53935",
+        "good": "#43A047", "medium": "#FB8C00",
+        "poor": "#E53935", "low": "#43A047",
+        "high": "#E53935", "decrease": "#43A047",
+        "increase": "#E53935", "no_change": "#78909C",
         "header_gradient": "linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%)",
-        "card_border": "#2E7D32",    "card_value": "#1B5E20",
-        "narrative_bg": "#E8F5E9",   "narrative_border": "#2E7D32",
+        "card_border": "#2E7D32", "card_value": "#1B5E20",
+        "narrative_bg": "#E8F5E9", "narrative_border": "#2E7D32",
         "narrative_text": "#1B5E20",
         "radar_bl_fill": "rgba(91,141,184,0.3)",
         "radar_ml_fill": "rgba(46,125,50,0.3)",
     },
-    "🌊 Ocean Blue": {
-        "baseline": "#1565C0",       "midline": "#00838F",
+    "Ocean Blue": {
+        "baseline": "#1565C0", "midline": "#00838F",
         "baseline_light": "#90CAF9", "midline_light": "#80DEEA",
-        "accent": "#FF6F00",         "danger": "#D32F2F",
-        "good": "#00897B",           "medium": "#F9A825",
-        "poor": "#D32F2F",           "low": "#00897B",
-        "high": "#D32F2F",           "decrease": "#00897B",
-        "increase": "#D32F2F",       "no_change": "#78909C",
+        "accent": "#FF6F00", "danger": "#D32F2F",
+        "good": "#00897B", "medium": "#F9A825",
+        "poor": "#D32F2F", "low": "#00897B",
+        "high": "#D32F2F", "decrease": "#00897B",
+        "increase": "#D32F2F", "no_change": "#78909C",
         "header_gradient": "linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%)",
-        "card_border": "#1565C0",    "card_value": "#0D47A1",
-        "narrative_bg": "#E3F2FD",   "narrative_border": "#1565C0",
+        "card_border": "#1565C0", "card_value": "#0D47A1",
+        "narrative_bg": "#E3F2FD", "narrative_border": "#1565C0",
         "narrative_text": "#0D47A1",
         "radar_bl_fill": "rgba(21,101,192,0.3)",
         "radar_ml_fill": "rgba(0,131,143,0.3)",
     },
-    "🌅 Sunset": {
-        "baseline": "#E65100",       "midline": "#AD1457",
+    "Sunset": {
+        "baseline": "#E65100", "midline": "#AD1457",
         "baseline_light": "#FFB74D", "midline_light": "#F48FB1",
-        "accent": "#FDD835",         "danger": "#B71C1C",
-        "good": "#388E3C",           "medium": "#F9A825",
-        "poor": "#B71C1C",           "low": "#388E3C",
-        "high": "#B71C1C",           "decrease": "#388E3C",
-        "increase": "#B71C1C",       "no_change": "#78909C",
+        "accent": "#FDD835", "danger": "#B71C1C",
+        "good": "#388E3C", "medium": "#F9A825",
+        "poor": "#B71C1C", "low": "#388E3C",
+        "high": "#B71C1C", "decrease": "#388E3C",
+        "increase": "#B71C1C", "no_change": "#78909C",
         "header_gradient": "linear-gradient(135deg, #BF360C 0%, #E65100 50%, #F4511E 100%)",
-        "card_border": "#E65100",    "card_value": "#BF360C",
-        "narrative_bg": "#FBE9E7",   "narrative_border": "#E65100",
+        "card_border": "#E65100", "card_value": "#BF360C",
+        "narrative_bg": "#FBE9E7", "narrative_border": "#E65100",
         "narrative_text": "#BF360C",
         "radar_bl_fill": "rgba(230,81,0,0.3)",
         "radar_ml_fill": "rgba(173,20,87,0.3)",
     },
-    "🏔️ Earth Tones": {
-        "baseline": "#6D4C41",       "midline": "#33691E",
+    "Earth Tones": {
+        "baseline": "#6D4C41", "midline": "#33691E",
         "baseline_light": "#BCAAA4", "midline_light": "#A5D6A7",
-        "accent": "#FF8F00",         "danger": "#C62828",
-        "good": "#558B2F",           "medium": "#F9A825",
-        "poor": "#C62828",           "low": "#558B2F",
-        "high": "#C62828",           "decrease": "#558B2F",
-        "increase": "#C62828",       "no_change": "#8D6E63",
+        "accent": "#FF8F00", "danger": "#C62828",
+        "good": "#558B2F", "medium": "#F9A825",
+        "poor": "#C62828", "low": "#558B2F",
+        "high": "#C62828", "decrease": "#558B2F",
+        "increase": "#C62828", "no_change": "#8D6E63",
         "header_gradient": "linear-gradient(135deg, #3E2723 0%, #5D4037 50%, #6D4C41 100%)",
-        "card_border": "#6D4C41",    "card_value": "#3E2723",
-        "narrative_bg": "#EFEBE9",   "narrative_border": "#6D4C41",
+        "card_border": "#6D4C41", "card_value": "#3E2723",
+        "narrative_bg": "#EFEBE9", "narrative_border": "#6D4C41",
         "narrative_text": "#3E2723",
         "radar_bl_fill": "rgba(109,76,65,0.3)",
         "radar_ml_fill": "rgba(51,105,30,0.3)",
     },
-    "💼 Professional": {
-        "baseline": "#37474F",       "midline": "#1565C0",
+    "Professional": {
+        "baseline": "#37474F", "midline": "#1565C0",
         "baseline_light": "#B0BEC5", "midline_light": "#90CAF9",
-        "accent": "#FF6F00",         "danger": "#C62828",
-        "good": "#2E7D32",           "medium": "#EF6C00",
-        "poor": "#C62828",           "low": "#2E7D32",
-        "high": "#C62828",           "decrease": "#2E7D32",
-        "increase": "#C62828",       "no_change": "#78909C",
+        "accent": "#FF6F00", "danger": "#C62828",
+        "good": "#2E7D32", "medium": "#EF6C00",
+        "poor": "#C62828", "low": "#2E7D32",
+        "high": "#C62828", "decrease": "#2E7D32",
+        "increase": "#C62828", "no_change": "#78909C",
         "header_gradient": "linear-gradient(135deg, #263238 0%, #37474F 50%, #455A64 100%)",
-        "card_border": "#37474F",    "card_value": "#263238",
-        "narrative_bg": "#ECEFF1",   "narrative_border": "#37474F",
+        "card_border": "#37474F", "card_value": "#263238",
+        "narrative_bg": "#ECEFF1", "narrative_border": "#37474F",
         "narrative_text": "#263238",
         "radar_bl_fill": "rgba(55,71,79,0.3)",
         "radar_ml_fill": "rgba(21,101,192,0.3)",
     },
 }
 
-COLORS = THEMES["🌲 Forest Green"]
+COLORS = THEMES["Forest Green"]
 
 # ============================================================================
 # UTILITY helpers
@@ -157,7 +157,7 @@ def pp_change(bl, ml):
 
 
 # ============================================================================
-# FORESTRY DATA LOADER  (unchanged from forestry_dashboard.py)
+# FORESTRY DATA LOADER (unchanged from forestry_dashboard.py)
 # ============================================================================
 
 @st.cache_data
@@ -165,7 +165,7 @@ def load_forestry_data(filepath):
     try:
         raw = pd.read_excel(filepath, sheet_name=FORESTRY_SHEET, header=None)
     except FileNotFoundError:
-        st.error(f"❌ Forestry Excel not found: {filepath}")
+        st.error(f"Forestry Excel not found: {filepath}")
         st.stop()
 
     data = {}
@@ -482,7 +482,7 @@ def load_women_data(filepath):
     try:
         raw = pd.read_excel(filepath, sheet_name=WOMEN_SHEET, header=None)
     except FileNotFoundError:
-        st.error(f"❌ Women Survey Excel not found: {filepath}")
+        st.error(f"Women Survey Excel not found: {filepath}")
         st.stop()
 
     w = {}
@@ -1173,7 +1173,12 @@ def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
                              textposition='auto'))
         fig.update_layout(title=title, barmode='group', height=height, yaxis_title=y_label,
                           legend=dict(orientation='h', yanchor='bottom', y=1.02))
-    fig.update_layout(font=dict(size=12), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(
+        font=dict(size=13, color='#333'),
+        title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
     return fig
 
 
@@ -1199,7 +1204,10 @@ def make_stacked_bar(df, cat_col, columns, colors_list, title,
                       yaxis_title=y_label if orientation=='v' else '',
                       xaxis_title=y_label if orientation=='h' else '',
                       legend=dict(orientation='h', yanchor='bottom', y=1.02),
-                      font=dict(size=12), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                      font=dict(size=13, color='#333'),
+                      title_font=dict(size=16, color='#222'),
+                      plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                      margin=dict(l=20, r=20, t=60, b=20))
     return fig
 
 
@@ -1214,7 +1222,10 @@ def make_delta_bar(df, cat_col, title, multiply=True, height=400):
                          marker_color=colors,
                          text=plot_df['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
     fig.update_layout(title=title, height=height, xaxis_title="Change (pp)",
-                      font=dict(size=12), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                      font=dict(size=13, color='#333'),
+                      title_font=dict(size=16, color='#222'),
+                      plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                      margin=dict(l=20, r=20, t=60, b=20))
     return fig
 
 
@@ -1235,7 +1246,10 @@ def make_two_col_bar(df1, df2, col1_name, col2_name, cat_col, title, height=450)
                          text=df2['Midline'].apply(lambda x: f"{x*100:.0f}%"), textposition='auto'))
     fig.update_layout(title=title, barmode='group', height=height, xaxis_title='%',
                       legend=dict(orientation='h', yanchor='bottom', y=1.02),
-                      font=dict(size=11), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                      font=dict(size=13, color='#333'),
+                      title_font=dict(size=16, color='#222'),
+                      plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                      margin=dict(l=20, r=20, t=60, b=20))
     return fig
 
 
@@ -1246,7 +1260,8 @@ def make_two_col_bar(df1, df2, col1_name, col2_name, cat_col, title, height=450)
 def _section_header(icon, title, badge_text=None):
     """Render a styled section header with optional badge."""
     badge = f'<span class="badge">{badge_text}</span>' if badge_text else ''
-    st.markdown(f'<div class="section-header"><h2>{icon} {title}</h2>{badge}</div>',
+    heading = f'{icon} {title}' if icon else title
+    st.markdown(f'<div class="section-header"><h2>{heading}</h2>{badge}</div>',
                 unsafe_allow_html=True)
 
 
@@ -1259,8 +1274,8 @@ def _quick_nav_pills(items):
 def render_women_tab1(w):
     """Tab 1: Household Profile & Services."""
     st.markdown("""<div class="section-narrative">
-    <strong>Household Profile:</strong> Demographics of surveyed women — location type, household 
-    headship, marital status, education levels, economic activities, and access to basic services 
+    <strong>Household Profile:</strong> Demographics of surveyed women — location type, household
+    headship, marital status, education levels, economic activities, and access to basic services
     (water, sanitation, electricity, housing materials).
     </div>""", unsafe_allow_html=True)
 
@@ -1283,7 +1298,7 @@ def render_women_tab1(w):
                         'Education Level', height=380, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('💼', 'Economic Activities', 'Section A')
+    _section_header('', 'Economic Activities', 'Section A')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['main_econ'], 'Activity',
@@ -1293,7 +1308,7 @@ def render_women_tab1(w):
                         'Secondary HH Economic Activities', height=500, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('🏠', 'Access to Basic Services', 'Section A')
+    _section_header('', 'Access to Basic Services', 'Section A')
     c7, c8, c9 = st.columns(3)
     with c7:
         st.plotly_chart(make_comparison_bar(w['water'], 'Category',
@@ -1317,8 +1332,8 @@ def render_women_tab1(w):
 def render_women_tab2(w):
     """Tab 2: Shocks, Coping & Preparedness."""
     st.markdown("""<div class="section-narrative">
-    <strong>Shocks & Preparedness:</strong> Shocks and stresses experienced by women's households, 
-    their perceived impact, coping strategies employed, and access to disaster preparedness information 
+    <strong>Shocks & Preparedness:</strong> Shocks and stresses experienced by women's households,
+    their perceived impact, coping strategies employed, and access to disaster preparedness information
     including weather/tidal forecasts and early warning systems.
     </div>""", unsafe_allow_html=True)
 
@@ -1334,12 +1349,12 @@ def render_women_tab2(w):
                         'Perceived Impact on Wellbeing', height=400, orientation='h'),
                         width='stretch')
 
-    _section_header('🛡️', 'Coping Strategies', 'Section B')
+    _section_header('', 'Coping Strategies', 'Section B')
     st.plotly_chart(make_comparison_bar(w['coping'], 'Strategy',
                     'Coping Strategies Used', height=500, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('📋', 'Disaster Preparedness', 'Section C')
+    _section_header('', 'Disaster Preparedness', 'Section C')
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['prep_knowledge'], 'Response',
@@ -1368,19 +1383,19 @@ def render_women_tab2(w):
 def render_women_tab3(w):
     """Tab 3: Assets, Land, Savings & Loans."""
     st.markdown("""<div class="section-narrative">
-    <strong>Assets & Financial Inclusion:</strong> Household assets, ownership patterns (joint/sole/all), 
-    ability to use or sell assets, access to productive inputs, land size and tenure, savings behaviour, 
+    <strong>Assets & Financial Inclusion:</strong> Household assets, ownership patterns (joint/sole/all),
+    ability to use or sell assets, access to productive inputs, land size and tenure, savings behaviour,
     and borrowing patterns.
     </div>""", unsafe_allow_html=True)
 
     _quick_nav_pills(['Household Assets', 'Land', 'Savings', 'Loans'])
 
-    _section_header('🏡', 'Household Assets', 'Section D')
+    _section_header('', 'Household Assets', 'Section D')
     st.plotly_chart(make_comparison_bar(w['hh_assets'], 'Asset',
                     'Assets Present in Household', height=600, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('🌾', 'Land', 'Section D')
+    _section_header('', 'Land', 'Section D')
     c1, c2, c3 = st.columns(3)
     with c1:
         st.plotly_chart(make_comparison_bar(w['land_size'], 'Category',
@@ -1393,7 +1408,7 @@ def render_women_tab3(w):
                         'Currently Using Land for Agriculture', height=300), width='stretch')
 
     st.markdown("---")
-    _section_header('💰', 'Savings', 'Section E')
+    _section_header('', 'Savings', 'Section E')
     c4, c5 = st.columns(2)
     with c4:
         st.plotly_chart(make_comparison_bar(w['personal_saving'], 'Response',
@@ -1419,7 +1434,7 @@ def render_women_tab3(w):
                         'Intended Use of Savings', height=380, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('🏦', 'Loans', 'Section E')
+    _section_header('', 'Loans', 'Section E')
     c10, c11 = st.columns(2)
     with c10:
         st.plotly_chart(make_comparison_bar(w['personal_loan'], 'Response',
@@ -1435,21 +1450,21 @@ def render_women_tab3(w):
 def render_women_tab4(w):
     """Tab 4: Roles, Time Use & Decision-Making."""
     st.markdown("""<div class="section-narrative">
-    <strong>Roles & Decisions:</strong> Gender norms around household roles (who SHOULD do tasks vs. 
-    who DOES them), women's time use across categories (unpaid care, productive work, community 
-    conservation, personal development), and decision-making power including influence on key 
+    <strong>Roles & Decisions:</strong> Gender norms around household roles (who SHOULD do tasks vs.
+    who DOES them), women's time use across categories (unpaid care, productive work, community
+    conservation, personal development), and decision-making power including influence on key
     household decisions.
     </div>""", unsafe_allow_html=True)
 
     _quick_nav_pills(['Roles & Norms', 'Time Use', 'Decision-Making'])
 
-    _section_header('👥', 'Roles & Responsibilities: Norms vs. Experience', 'Section F')
+    _section_header('', 'Roles & Responsibilities: Norms vs. Experience', 'Section F')
     st.plotly_chart(make_two_col_bar(w['roles_should_joint'], w['roles_does_joint'],
                     'Should be Joint', 'Actually Joint', 'Role',
                     'Roles: Should be Joint vs. Actually Joint', height=500), width='stretch')
 
     st.markdown("---")
-    _section_header('⏰', 'Time Use (Average Hours per Day)', 'Section G')
+    _section_header('', 'Time Use (Average Hours per Day)', 'Section G')
     ts = w['time_summary']
     fig_time = go.Figure()
     fig_time.add_trace(go.Bar(x=ts['Category'], y=ts['Baseline'], name='Baseline',
@@ -1461,6 +1476,7 @@ def render_women_tab4(w):
     fig_time.update_layout(title="Average Hours per Day by Activity Category",
                            barmode='group', height=450, yaxis_title='Hours',
                            legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                           font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_time, width='stretch')
 
@@ -1474,6 +1490,7 @@ def render_women_tab4(w):
                                 orientation='h', marker_color=COLORS['midline']))
         fig_uc.update_layout(title='Unpaid Care Work (Hours/Day)', barmode='group', height=350,
                              xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_uc, width='stretch')
     with c2:
@@ -1485,16 +1502,17 @@ def render_women_tab4(w):
                                 orientation='h', marker_color=COLORS['midline']))
         fig_pw.update_layout(title='Productive Work (Hours/Day)', barmode='group', height=350,
                              xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_pw, width='stretch')
 
     st.markdown("---")
-    _section_header('🗳️', 'Decision-Making', 'Section H')
+    _section_header('', 'Decision-Making', 'Section H')
     st.plotly_chart(make_two_col_bar(w['decision_should_joint'], w['decision_does_joint'],
                     'Should be Joint', 'Actually Joint', 'Decision',
                     'Decision-Making: Norms vs. Experience (Joint %)', height=550), width='stretch')
 
-    _section_header('💪', "Influence on HH Decisions ('To a Large Extent')", 'Section H')
+    _section_header('', "Influence on HH Decisions ('To a Large Extent')", 'Section H')
     st.plotly_chart(make_comparison_bar(w['decision_influence'], 'Decision',
                     'Women Who Can Influence Decisions to a Large Extent',
                     height=500, orientation='h'), width='stretch')
@@ -1503,8 +1521,8 @@ def render_women_tab4(w):
 def render_women_tab5(w):
     """Tab 5: Climate Change & NbS."""
     st.markdown("""<div class="section-narrative">
-    <strong>Climate & Nature-based Solutions:</strong> Women's awareness of climate change, ability to 
-    define it, perceived effects on livelihoods and environment, knowledge of Nature-based Solutions 
+    <strong>Climate & Nature-based Solutions:</strong> Women's awareness of climate change, ability to
+    define it, perceived effects on livelihoods and environment, knowledge of Nature-based Solutions
     (NbS), and participation in mangrove restoration, seaweed farming, and forest management.
     </div>""", unsafe_allow_html=True)
 
@@ -1529,7 +1547,7 @@ def render_women_tab5(w):
                         width='stretch')
 
     st.markdown("---")
-    _section_header('🌿', 'Nature-based Solutions', 'Section H')
+    _section_header('', 'Nature-based Solutions', 'Section H')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['nbs_heard'], 'Response',
@@ -1548,9 +1566,9 @@ def render_women_tab5(w):
 
     st.markdown("---")
     # NbS Modules
-    for module, prefix, icon in [('Mangrove Restoration', 'mangrove', '🌊'),
-                                  ('Seaweed Farming', 'seaweed', '🌿'),
-                                  ('Forest Management', 'forest', '🌲')]:
+    for module, prefix, icon in [('Mangrove Restoration', 'mangrove', ''),
+                                  ('Seaweed Farming', 'seaweed', ''),
+                                  ('Forest Management', 'forest', '')]:
         _section_header(icon, module, 'NbS Module')
         ca, cb = st.columns(2)
         with ca:
@@ -1581,15 +1599,15 @@ def render_women_tab5(w):
 def render_women_tab6(w):
     """Tab 6: Life Skills & Social Norms."""
     st.markdown("""<div class="section-narrative">
-    <strong>Life Skills & Social Norms:</strong> Women's self-assessed life skills (self-esteem, 
-    aspirations, leadership, communication, conflict resolution) and prevailing social norms around 
+    <strong>Life Skills & Social Norms:</strong> Women's self-assessed life skills (self-esteem,
+    aspirations, leadership, communication, conflict resolution) and prevailing social norms around
     gender roles, economic control, domestic work, ecosystem participation, and emotional expression.
     </div>""", unsafe_allow_html=True)
 
     _quick_nav_pills(['Life Skills Radar', 'Communication', 'Social Norms'])
 
     # Life skills radar
-    _section_header('🌟', 'Life Skills — Agree/Strongly Agree', 'Section I')
+    _section_header('', 'Life Skills — Agree/Strongly Agree', 'Section I')
     ls_a = w['lifeskills_agree'].copy()
     ls_s = w['lifeskills_strong'].copy()
 
@@ -1609,7 +1627,8 @@ def render_women_tab6(w):
                                          line=dict(color=COLORS['midline'])))
     fig_radar.update_layout(title='Life Skills by Domain (Agree/SA %)',
                             polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-                            height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15))
+                            height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
+                            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
     st.plotly_chart(fig_radar, width='stretch')
 
     # Detailed bars
@@ -1622,7 +1641,7 @@ def render_women_tab6(w):
                         'Life Skills — Strongly Agree %', height=550, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('💬', 'Communication & Conflict Resolution', 'Section I')
+    _section_header('', 'Communication & Conflict Resolution', 'Section I')
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['communication_agree'], 'Statement',
@@ -1632,7 +1651,7 @@ def render_women_tab6(w):
                         'Conflict Resolution — Agree/SA', height=350, orientation='h'), width='stretch')
 
     st.markdown("---")
-    _section_header('⚖️', 'Social Norms', 'Section J')
+    _section_header('', 'Social Norms', 'Section J')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['socialnorms_agree'], 'Norm',
@@ -1643,14 +1662,14 @@ def render_women_tab6(w):
 
 
 # ============================================================================
-# FORESTRY TAB RENDERERS  (extracted from forestry_dashboard.py main())
+# FORESTRY TAB RENDERERS (extracted from forestry_dashboard.py main())
 # ============================================================================
 
 def render_forestry_tabs(data, show_change):
     """Render all 6 forestry tabs exactly as the original forestry_dashboard.py."""
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "📊 Overview", "👥 Group Characteristics", "🏛️ Governance & Gender",
-        "📚 Training & Assets", "🌳 Forest Condition & Threats", "💰 Income & Agroforestry"
+        " Overview", " Group Characteristics", " Governance & Gender",
+        " Training & Assets", " Forest Condition & Threats", " Income & Agroforestry"
     ])
 
     # ---- TAB 1: OVERVIEW ----
@@ -1696,6 +1715,7 @@ def render_forestry_tabs(data, show_change):
             fig.update_layout(title="Functionality Scores by Domain (0-100)", barmode='group', height=450,
                               yaxis=dict(title='Score', range=[0,105]),
                               legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                               plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, width='stretch')
         with col_r:
@@ -1712,10 +1732,11 @@ def render_forestry_tabs(data, show_change):
                 fillcolor=COLORS['radar_ml_fill'], line=dict(color=COLORS['midline'])))
             fig_r.update_layout(title="Domain Performance Radar",
                                 polar=dict(radialaxis=dict(visible=True, range=[0,100])),
-                                height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15))
+                                height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
+                                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
             st.plotly_chart(fig_r, width='stretch')
 
-        st.subheader("📈 Score Statistics")
+        st.subheader("Score Statistics")
         col_s1, col_s2 = st.columns(2)
         with col_s1:
             s = fs[fs['Timepoint']=='Baseline'].iloc[0]
@@ -1783,6 +1804,7 @@ def render_forestry_tabs(data, show_change):
         fig_mp.add_trace(go.Bar(y=mp['Practice'], x=mp['StronglyAgree_Midline']*100, name='SA (ML)', orientation='h', marker_color=COLORS['midline_light']))
         fig_mp.update_layout(barmode='group', height=500, xaxis_title="%",
                              legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_mp, width='stretch')
         st.markdown("---")
@@ -1810,6 +1832,7 @@ def render_forestry_tabs(data, show_change):
                                         text=[f"{row['Baseline']:.1f}%",f"{row['Midline']:.1f}%"], textposition='inside'))
             fig_tc.update_layout(title="Coverage (Stacked)", barmode='stack', height=400, yaxis_title="%",
                                  legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                 font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                                  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig_tc, width='stretch')
 
@@ -1897,13 +1920,13 @@ def render_forestry_tabs(data, show_change):
 def render_synthesis_view(f_data, w_data):
     """Combined overview of both datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
-    <strong>📊 Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
+    <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
     from both the Forestry Conservation Groups (community-level) and Women's Survey (household-level)
     datasets. This view highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
-    st.markdown('<h3 style="margin-top:0.5rem;">🌲 Forestry Conservation Groups — Headlines</h3>',
+    st.markdown('<h3 style="margin-top:0.5rem;"> Forestry Conservation Groups — Headlines</h3>',
                 unsafe_allow_html=True)
     ft = f_data['functionality_threshold']
     fs = f_data['functionality_scores']
@@ -1942,7 +1965,7 @@ def render_synthesis_view(f_data, w_data):
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ---- Women Survey Headline KPIs ----
-    st.markdown('<h3>👩 Women\'s Survey — Headlines</h3>', unsafe_allow_html=True)
+    st.markdown('<h3> Women\'s Survey — Headlines</h3>', unsafe_allow_html=True)
 
     # CC heard
     cc_bl = w_data['cc_heard'].loc[w_data['cc_heard']['Response']=='Yes','Baseline'].values[0] if len(w_data['cc_heard'][w_data['cc_heard']['Response']=='Yes']) else 0
@@ -1982,7 +2005,7 @@ def render_synthesis_view(f_data, w_data):
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Side-by-side mini charts
-    st.markdown('<h3>📊 Comparative Snapshots</h3>', unsafe_allow_html=True)
+    st.markdown('<h3>Comparative Snapshots</h3>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
         # Forestry domains radar
@@ -2005,7 +2028,8 @@ def render_synthesis_view(f_data, w_data):
             fillcolor=COLORS['radar_ml_fill'], line=dict(color=COLORS['midline'])))
         fig_r.update_layout(title="Forestry Domain Performance",
                             polar=dict(radialaxis=dict(visible=True, range=[0,100])),
-                            height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15))
+                            height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
+                            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
         st.plotly_chart(fig_r, width='stretch')
     with c2:
         # Women's life-skills radar
@@ -2023,7 +2047,8 @@ def render_synthesis_view(f_data, w_data):
             fillcolor=COLORS['radar_ml_fill'], line=dict(color=COLORS['midline'])))
         fig_ls.update_layout(title="Women's Life Skills Domains",
                              polar=dict(radialaxis=dict(visible=True, range=[0,100])),
-                             height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15))
+                             height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
         st.plotly_chart(fig_ls, width='stretch')
 
     # Social norms mini-bar
@@ -2039,7 +2064,8 @@ def render_synthesis_view(f_data, w_data):
                                 text=sn_sorted['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
         fig_sn.update_layout(title="Social Norms Change (↓ = positive)", height=400,
                              xaxis_title="Change (pp)",
-                             font=dict(size=11), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                             plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_sn, width='stretch')
     with c4:
         ts = w_data['time_summary'].copy()
@@ -2053,11 +2079,12 @@ def render_synthesis_view(f_data, w_data):
         fig_ts.update_layout(title="Women's Time Use (hrs/day)", barmode='group', height=400,
                              yaxis_title='Hours',
                              legend=dict(orientation='h', yanchor='bottom', y=1.02),
-                             font=dict(size=11), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                             plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_ts, width='stretch')
 
     st.markdown("""<div class="section-narrative" style="margin-top:1rem;">
-    <strong>💡 Navigate deeper:</strong> Use the sidebar to select either <em>Forestry Groups</em>
+    <strong>Navigate deeper:</strong> Use the sidebar to select either <em>Forestry Groups</em>
     or <em>Women Survey</em> for detailed breakdowns across all thematic areas.
     </div>""", unsafe_allow_html=True)
 
@@ -2069,13 +2096,13 @@ def render_synthesis_view(f_data, w_data):
 def main():
     st.set_page_config(
         page_title="COSME M&E Dashboard",
-        page_icon="🌍",
+        page_icon="bar_chart",
         layout="wide",
         initial_sidebar_state="expanded"
     )
 
     # ---- THEME ----
-    theme_name = st.sidebar.selectbox("🎨 Dashboard Theme", list(THEMES.keys()), index=0,
+    theme_name = st.sidebar.selectbox("Dashboard Theme", list(THEMES.keys()), index=0,
                                        help="Color palette for all charts and UI elements")
     global COLORS
     COLORS = THEMES[theme_name]
@@ -2083,12 +2110,21 @@ def main():
     # ---- ENHANCED CSS ----
     st.markdown(f"""
     <style>
+    /* ---------- GLOBAL TYPOGRAPHY ---------- */
+    html, body, [class*="css"] {{
+        font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    }}
+    .block-container {{
+        max-width: 1200px;
+        padding: 1rem 2rem 2rem;
+    }}
+
     /* ---------- HEADER ---------- */
     .main-header {{
         background: {COLORS['header_gradient']};
-        color: white; padding: 1.8rem 2.5rem; border-radius: 14px;
-        margin-bottom: 1.8rem; text-align: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        color: white; padding: 2rem 2.5rem; border-radius: 14px;
+        margin-bottom: 2rem; text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
         position: relative; overflow: hidden;
     }}
     .main-header::before {{
@@ -2098,56 +2134,60 @@ def main():
             radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
         pointer-events: none;
     }}
-    .main-header h1 {{ margin: 0; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.15); position: relative; }}
-    .main-header p {{ margin: 0.4rem 0 0; opacity: 0.92; font-size: 1.05rem; position: relative; }}
+    .main-header h1 {{ margin: 0; font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; }}
+    .main-header p {{ margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.1rem; font-weight: 500;
+        position: relative; letter-spacing: 0.01em; }}
 
     /* ---------- KPI CARDS ---------- */
     .kpi-card {{
-        background: white; border-radius: 12px; padding: 1.3rem 1rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.07); text-align: center;
+        background: white; border-radius: 12px; padding: 1.5rem 1.2rem;
+        box-shadow: 0 2px 14px rgba(0,0,0,0.08); text-align: center;
         border-left: 5px solid {COLORS['card_border']};
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
     }}
-    .kpi-card:hover {{ transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }}
-    .kpi-card h3 {{ font-size: 0.78rem; color: #888; margin: 0 0 0.4rem;
-        text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }}
-    .kpi-card .value {{ font-size: 2rem; font-weight: 800; color: {COLORS['card_value']};
-        line-height: 1.1; }}
-    .delta-positive {{ color: {COLORS['good']}; font-weight: 600; font-size: 0.85rem; margin-top: 0.2rem; }}
-    .delta-negative {{ color: {COLORS['danger']}; font-weight: 600; font-size: 0.85rem; margin-top: 0.2rem; }}
+    .kpi-card:hover {{ transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,0.14); }}
+    .kpi-card h3 {{ font-size: 0.85rem; color: #555; margin: 0 0 0.5rem;
+        text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }}
+    .kpi-card .value {{ font-size: 2.2rem; font-weight: 800; color: {COLORS['card_value']};
+        line-height: 1.15; }}
+    .delta-positive {{ color: {COLORS['good']}; font-weight: 700; font-size: 0.9rem; margin-top: 0.3rem; }}
+    .delta-negative {{ color: {COLORS['danger']}; font-weight: 700; font-size: 0.9rem; margin-top: 0.3rem; }}
 
     /* ---------- SECTION NARRATIVE ---------- */
     .section-narrative {{
         background: {COLORS['narrative_bg']};
         border-left: 5px solid {COLORS['narrative_border']};
-        padding: 1rem 1.4rem; border-radius: 0 10px 10px 0;
-        margin-bottom: 1.2rem; font-size: 0.95rem;
+        padding: 1.2rem 1.5rem; border-radius: 0 10px 10px 0;
+        margin-bottom: 1.4rem; font-size: 1rem;
         color: {COLORS['narrative_text']};
-        box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+        line-height: 1.65;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.05);
     }}
+    .section-narrative strong {{ font-size: 1.05rem; }}
 
     /* ---------- BREADCRUMB / NAV BAR ---------- */
     .nav-breadcrumb {{
         display: flex; align-items: center; gap: 0.5rem;
-        padding: 0.6rem 1rem; background: rgba(0,0,0,0.03);
-        border-radius: 8px; margin-bottom: 1rem;
-        font-size: 0.88rem; color: #555;
-        border: 1px solid rgba(0,0,0,0.06);
+        padding: 0.7rem 1.2rem; background: rgba(0,0,0,0.035);
+        border-radius: 8px; margin-bottom: 1.2rem;
+        font-size: 0.92rem; color: #444; font-weight: 500;
+        border: 1px solid rgba(0,0,0,0.07);
     }}
-    .nav-breadcrumb .sep {{ color: #bbb; }}
+    .nav-breadcrumb .sep {{ color: #aaa; font-weight: 400; }}
     .nav-breadcrumb .active {{ font-weight: 700; color: {COLORS['card_value']}; }}
 
     /* ---------- QUICK NAV PILLS ---------- */
     .quick-nav {{
-        display: flex; flex-wrap: wrap; gap: 0.4rem;
-        margin-bottom: 1rem;
+        display: flex; flex-wrap: wrap; gap: 0.5rem;
+        margin-bottom: 1.2rem;
     }}
     .quick-nav-pill {{
-        display: inline-block; padding: 0.35rem 0.9rem;
+        display: inline-block; padding: 0.4rem 1rem;
         background: {COLORS['narrative_bg']}; border: 1px solid {COLORS['narrative_border']};
-        border-radius: 20px; font-size: 0.8rem; color: {COLORS['narrative_text']};
+        border-radius: 20px; font-size: 0.85rem; color: {COLORS['narrative_text']};
+        font-weight: 600;
         cursor: pointer; transition: all 0.2s ease; text-decoration: none;
     }}
     .quick-nav-pill:hover {{ background: {COLORS['card_border']}; color: white; }}
@@ -2155,46 +2195,79 @@ def main():
     /* ---------- SECTION HEADER ---------- */
     .section-header {{
         display: flex; align-items: center; gap: 0.6rem;
-        padding: 0.6rem 0; margin: 1rem 0 0.5rem;
-        border-bottom: 2px solid {COLORS['card_border']};
+        padding: 0.8rem 0; margin: 1.5rem 0 0.8rem;
+        border-bottom: 3px solid {COLORS['card_border']};
     }}
-    .section-header h2 {{ margin: 0; font-size: 1.3rem; color: {COLORS['card_value']}; }}
+    .section-header h2 {{ margin: 0; font-size: 1.45rem; font-weight: 700; color: {COLORS['card_value']}; }}
     .section-header .badge {{
         background: {COLORS['card_border']}; color: white;
-        padding: 0.15rem 0.6rem; border-radius: 10px;
-        font-size: 0.7rem; font-weight: 600;
+        padding: 0.2rem 0.7rem; border-radius: 10px;
+        font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em;
     }}
 
     /* ---------- DATA TABLE STYLING ---------- */
     .styled-table {{
-        width: 100%; border-collapse: collapse; font-size: 0.88rem;
+        width: 100%; border-collapse: collapse; font-size: 0.92rem;
         border-radius: 8px; overflow: hidden;
-        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     }}
     .styled-table th {{
         background: {COLORS['card_border']}; color: white;
-        padding: 0.6rem 0.8rem; text-align: left; font-weight: 600;
+        padding: 0.7rem 1rem; text-align: left; font-weight: 700;
+        font-size: 0.9rem; letter-spacing: 0.02em;
     }}
-    .styled-table td {{ padding: 0.5rem 0.8rem; border-bottom: 1px solid #eee; }}
+    .styled-table td {{ padding: 0.6rem 1rem; border-bottom: 1px solid #e0e0e0; color: #333; font-weight: 500; }}
     .styled-table tr:hover td {{ background: {COLORS['narrative_bg']}; }}
+    .styled-table tr:nth-child(even) td {{ background: rgba(0,0,0,0.015); }}
+
+    /* ---------- DATAFRAME STYLING ---------- */
+    div[data-testid="stDataFrame"] {{
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 8px;
+        overflow: hidden;
+    }}
+    div[data-testid="stDataFrame"] table {{
+        font-size: 0.9rem !important;
+    }}
 
     /* ---------- EXPANDER STYLING ---------- */
     div[data-testid="stExpander"] {{
-        border: 1px solid rgba(0,0,0,0.08); border-radius: 10px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04); margin-bottom: 0.6rem;
+        border: 1px solid rgba(0,0,0,0.1); border-radius: 10px;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.05); margin-bottom: 0.8rem;
+    }}
+    div[data-testid="stExpander"] summary {{
+        font-weight: 600 !important; font-size: 0.95rem !important;
+        color: #333 !important;
     }}
 
     /* ---------- METRIC STYLING ---------- */
-    div[data-testid="stMetricValue"] {{ font-size: 1.5rem; font-weight: 700; }}
-    div[data-testid="stMetricDelta"] {{ font-size: 0.85rem; }}
+    div[data-testid="stMetricValue"] {{ font-size: 1.8rem !important; font-weight: 800 !important; color: #222 !important; }}
+    div[data-testid="stMetricDelta"] {{ font-size: 0.9rem !important; font-weight: 600 !important; }}
+    div[data-testid="stMetricLabel"] {{ font-size: 0.9rem !important; font-weight: 600 !important; color: #555 !important; }}
 
     /* ---------- TAB STYLING ---------- */
     button[data-baseweb="tab"] {{
-        font-size: 0.92rem !important; font-weight: 600 !important;
-        padding: 0.6rem 1.1rem !important;
+        font-size: 0.95rem !important; font-weight: 700 !important;
+        padding: 0.7rem 1.2rem !important;
+        color: #444 !important;
     }}
     button[data-baseweb="tab"]:hover {{
         background: {COLORS['narrative_bg']} !important;
+        color: {COLORS['card_value']} !important;
+    }}
+    button[data-baseweb="tab"][aria-selected="true"] {{
+        color: {COLORS['card_value']} !important;
+        border-bottom: 3px solid {COLORS['card_border']} !important;
+    }}
+
+    /* ---------- PLOTLY CHART CONTAINER ---------- */
+    div[data-testid="stPlotlyChart"] {{
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 10px;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        background: white;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.04);
     }}
 
     /* ---------- SIDEBAR STYLING ---------- */
@@ -2202,36 +2275,51 @@ def main():
         background: linear-gradient(180deg, #fafafa 0%, #f0f2f6 100%);
     }}
     section[data-testid="stSidebar"] .block-container {{ padding-top: 1rem; }}
+    section[data-testid="stSidebar"] label {{
+        font-weight: 600 !important; color: #333 !important; font-size: 0.9rem !important;
+    }}
     .sidebar-section {{
-        background: white; border-radius: 10px; padding: 0.8rem 1rem;
-        margin-bottom: 0.8rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        border: 1px solid rgba(0,0,0,0.06);
+        background: white; border-radius: 10px; padding: 1rem 1.2rem;
+        margin-bottom: 0.8rem; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.07);
     }}
     .sidebar-nav-link {{
-        display: block; padding: 0.4rem 0.6rem; margin: 0.15rem 0;
-        border-radius: 6px; font-size: 0.82rem; color: #444;
+        display: block; padding: 0.45rem 0.7rem; margin: 0.2rem 0;
+        border-radius: 6px; font-size: 0.88rem; color: #333; font-weight: 500;
         text-decoration: none; transition: all 0.15s ease;
     }}
-    .sidebar-nav-link:hover {{ background: {COLORS['narrative_bg']}; color: {COLORS['card_value']}; }}
+    .sidebar-nav-link:hover {{ background: {COLORS['narrative_bg']}; color: {COLORS['card_value']}; font-weight: 600; }}
+
+    /* ---------- MARKDOWN TEXT ---------- */
+    .stMarkdown p {{ font-size: 0.95rem; color: #333; line-height: 1.65; }}
+    .stMarkdown h1 {{ font-size: 1.8rem !important; font-weight: 800 !important; color: #222 !important; }}
+    .stMarkdown h2 {{ font-size: 1.4rem !important; font-weight: 700 !important; color: #333 !important; }}
+    .stMarkdown h3 {{ font-size: 1.15rem !important; font-weight: 700 !important; color: #444 !important; }}
+    .stMarkdown strong {{ color: #222; }}
+
+    /* ---------- HORIZONTAL RULE ---------- */
+    hr {{ border: none; border-top: 2px solid rgba(0,0,0,0.08); margin: 1.5rem 0; }}
 
     /* ---------- FOOTER ---------- */
     .dashboard-footer {{
-        text-align: center; color: #999; font-size: 0.82rem;
-        padding: 1.5rem 0 0.5rem; border-top: 1px solid #eee;
-        margin-top: 1.5rem;
+        text-align: center; color: #777; font-size: 0.88rem;
+        padding: 2rem 0 1rem; border-top: 2px solid #e0e0e0;
+        margin-top: 2rem;
     }}
-    .dashboard-footer a {{ color: {COLORS['card_border']}; text-decoration: none; }}
+    .dashboard-footer strong {{ color: #444; }}
+    .dashboard-footer a {{ color: {COLORS['card_border']}; text-decoration: none; font-weight: 600; }}
 
     /* ---------- BACK TO TOP ---------- */
     .back-to-top {{
         position: fixed; bottom: 2rem; right: 2rem;
         background: {COLORS['card_border']}; color: white;
-        width: 42px; height: 42px; border-radius: 50%;
+        width: 44px; height: 44px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+        font-size: 1.3rem; font-weight: 700;
+        box-shadow: 0 3px 14px rgba(0,0,0,0.25);
         cursor: pointer; z-index: 999; text-decoration: none;
         transition: transform 0.2s ease, opacity 0.2s ease;
-        opacity: 0.85;
+        opacity: 0.9;
     }}
     .back-to-top:hover {{ transform: scale(1.1); opacity: 1; }}
 
@@ -2240,14 +2328,14 @@ def main():
     .stTabs [data-baseweb="tab-panel"] {{ animation: fadeInUp 0.35s ease-out; }}
     </style>
 
-    <a href="#top" class="back-to-top" title="Back to top">⬆</a>
+    <a href="#top" class="back-to-top" title="Back to top"></a>
     <div id="top"></div>
     """, unsafe_allow_html=True)
 
     # ---- SIDEBAR ----
     st.sidebar.markdown("""
     <div style="text-align:center; margin-bottom:0.8rem;">
-        <span style="font-size:2.5rem;">🌍</span>
+        <span style="font-size:2.5rem;"></span>
         <h2 style="margin:0.2rem 0 0; font-size:1.15rem; color:#333;">COSME Dashboard</h2>
         <p style="margin:0; font-size:0.78rem; color:#888;">Baseline–Midline M&amp;E</p>
     </div>
@@ -2256,49 +2344,49 @@ def main():
 
     # Dataset selector
     dataset = st.sidebar.radio(
-        "📂 Dataset View",
-        ["🔄 Combined Overview", "🌲 Forestry Groups", "👩 Women Survey"],
+        "Dataset View",
+        ["Combined Overview", "Forestry Groups", "Women Survey"],
         index=0,
         help="Combined Overview shows headline KPIs from both datasets side by side."
     )
 
-    show_change = st.sidebar.toggle("📊 Show Change (pp) Charts", value=False,
+    show_change = st.sidebar.toggle("Show Change (pp) Charts", value=False,
                                      help="Toggle percentage-point change visualisation")
 
     st.sidebar.markdown("---")
 
     # ---- QUICK NAVIGATION in sidebar ----
-    if dataset == "🌲 Forestry Groups":
-        st.sidebar.markdown("**🧭 Quick Navigate**")
+    if dataset == "Forestry Groups":
+        st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
-            <span class="sidebar-nav-link">📊 Overview & KPIs</span>
-            <span class="sidebar-nav-link">👥 Group Characteristics</span>
-            <span class="sidebar-nav-link">🏛️ Governance & Gender</span>
-            <span class="sidebar-nav-link">📚 Training & Assets</span>
-            <span class="sidebar-nav-link">🌳 Forest Condition</span>
-            <span class="sidebar-nav-link">💰 Income & Agroforestry</span>
+            <span class="sidebar-nav-link">Overview & KPIs</span>
+            <span class="sidebar-nav-link">Group Characteristics</span>
+            <span class="sidebar-nav-link">Governance & Gender</span>
+            <span class="sidebar-nav-link">Training & Assets</span>
+            <span class="sidebar-nav-link">Forest Condition</span>
+            <span class="sidebar-nav-link">Income & Agroforestry</span>
         </div>
         """, unsafe_allow_html=True)
-    elif dataset == "👩 Women Survey":
-        st.sidebar.markdown("**🧭 Quick Navigate**")
+    elif dataset == "Women Survey":
+        st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
-            <span class="sidebar-nav-link">🏠 Household Profile</span>
-            <span class="sidebar-nav-link">⚡ Shocks & Preparedness</span>
-            <span class="sidebar-nav-link">💰 Assets & Savings</span>
-            <span class="sidebar-nav-link">👥 Roles & Decisions</span>
-            <span class="sidebar-nav-link">🌍 Climate & NbS</span>
-            <span class="sidebar-nav-link">🌟 Life Skills & Norms</span>
+            <span class="sidebar-nav-link">Household Profile</span>
+            <span class="sidebar-nav-link">Shocks & Preparedness</span>
+            <span class="sidebar-nav-link">Assets & Savings</span>
+            <span class="sidebar-nav-link">Roles & Decisions</span>
+            <span class="sidebar-nav-link">Climate & NbS</span>
+            <span class="sidebar-nav-link">Life Skills & Norms</span>
         </div>
         """, unsafe_allow_html=True)
     else:
-        st.sidebar.markdown("**🧭 Quick Navigate**")
+        st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
-            <span class="sidebar-nav-link">🌲 Forestry Headlines</span>
-            <span class="sidebar-nav-link">👩 Women Survey Headlines</span>
-            <span class="sidebar-nav-link">📊 Comparative Snapshots</span>
+            <span class="sidebar-nav-link">Forestry Headlines</span>
+            <span class="sidebar-nav-link">Women Survey Headlines</span>
+            <span class="sidebar-nav-link">Comparative Snapshots</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2310,22 +2398,22 @@ def main():
     women_path = os.path.join(script_dir, WOMEN_EXCEL)
 
     # ---- HEADER ----
-    if dataset == "🌲 Forestry Groups":
+    if dataset == "Forestry Groups":
         st.markdown("""<div class="main-header">
-            <h1>🌲 Community Forest Conservation Dashboard</h1>
+            <h1>Community Forest Conservation Dashboard</h1>
             <p>Baseline vs Midline Assessment | Forestry Conservation Groups Functionality</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
-        st.markdown('<div class="nav-breadcrumb"><span>🌍 COSME</span><span class="sep">›</span>'
-                    '<span class="active">🌲 Forestry Groups</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
+                    '<span class="active">Forestry Groups</span></div>', unsafe_allow_html=True)
 
         data = load_forestry_data(forestry_path)
 
         # Sidebar KPI summary
         bl_grp = data['num_groups'].loc[data['num_groups']['Timepoint']=='Baseline','Groups_Assessed'].values[0]
         ml_grp = data['num_groups'].loc[data['num_groups']['Timepoint']=='Midline','Groups_Assessed'].values[0]
-        st.sidebar.markdown("**📋 Dataset Summary**")
+        st.sidebar.markdown("**Dataset Summary**")
         st.sidebar.markdown(f"""
         <div class="sidebar-section">
             <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
@@ -2345,20 +2433,20 @@ def main():
 
         render_forestry_tabs(data, show_change)
 
-    elif dataset == "👩 Women Survey":
+    elif dataset == "Women Survey":
         st.markdown("""<div class="main-header">
-            <h1>👩 Women's Survey Dashboard</h1>
+            <h1>Women's Survey Dashboard</h1>
             <p>Baseline vs Midline Assessment | Household-Level Women's Empowerment &amp; Climate Resilience</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
-        st.markdown('<div class="nav-breadcrumb"><span>🌍 COSME</span><span class="sep">›</span>'
-                    '<span class="active">👩 Women Survey</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
+                    '<span class="active">Women Survey</span></div>', unsafe_allow_html=True)
 
         w = load_women_data(women_path)
 
         # Sidebar sample size
-        st.sidebar.markdown("**📋 Dataset Summary**")
+        st.sidebar.markdown("**Dataset Summary**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
             <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
@@ -2377,12 +2465,12 @@ def main():
         """, unsafe_allow_html=True)
 
         wt1, wt2, wt3, wt4, wt5, wt6 = st.tabs([
-            "🏠 Household Profile & Services",
-            "⚡ Shocks, Coping & Preparedness",
-            "💰 Assets, Land, Savings & Loans",
-            "👥 Roles, Time Use & Decisions",
-            "🌍 Climate Change & NbS",
-            "🌟 Life Skills & Social Norms"
+            "Household Profile & Services",
+            "Shocks, Coping & Preparedness",
+            "Assets, Land, Savings & Loans",
+            "Roles, Time Use & Decisions",
+            "Climate Change & NbS",
+            "Life Skills & Social Norms"
         ])
         with wt1: render_women_tab1(w)
         with wt2: render_women_tab2(w)
@@ -2394,22 +2482,22 @@ def main():
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
-            <h1>🌍 COSME Baseline–Midline Dashboard</h1>
+            <h1>COSME Baseline–Midline Dashboard</h1>
             <p>Integrated M&amp;E Analysis | Community Forest Conservation &amp; Women's Survey</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
-        st.markdown('<div class="nav-breadcrumb"><span class="active">🌍 COSME — Combined Overview</span></div>',
+        st.markdown('<div class="nav-breadcrumb"><span class="active">COSME — Combined Overview</span></div>',
                     unsafe_allow_html=True)
 
         f_data = load_forestry_data(forestry_path)
         w_data = load_women_data(women_path)
 
-        st.sidebar.markdown("**📋 Datasets Loaded**")
+        st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
-            <div style="margin-bottom:0.3rem;">✅ Forestry Groups</div>
-            <div>✅ Women Survey</div>
+            <div style="margin-bottom:0.3rem;">Forestry Groups</div>
+            <div>Women Survey</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2418,7 +2506,7 @@ def main():
     # ---- FOOTER ----
     st.markdown(f"""
     <div class="dashboard-footer">
-        🌍 <strong>COSME Baseline–Midline Dashboard</strong><br>
+        <strong>COSME Baseline–Midline Dashboard</strong><br>
         Community Forest Conservation Groups &amp; Women's Survey | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
@@ -2429,21 +2517,21 @@ if __name__ == "__main__":
 
 # ============================================================================
 # HOW TO RUN:
-#   streamlit run cosme_dashboard.py
+# streamlit run cosme_dashboard.py
 #
 # Requirements:
-#   pip install streamlit pandas numpy plotly openpyxl
+# pip install streamlit pandas numpy plotly openpyxl
 #
 # Data files (same folder as this script):
-#   1. Forest Functionality Basline_midline results.xlsx  (sheet: Results)
-#   2. Women Survey Basline_midline results.xlsx          (sheet: Results Women)
+# 1. Forest Functionality Basline_midline results.xlsx (sheet: Results)
+# 2. Women Survey Basline_midline results.xlsx (sheet: Results Women)
 #
 # To adjust data mappings:
-#   - load_forestry_data(): row/col positions for forestry indicators
-#   - load_women_data(): row/col positions for women survey indicators
-#   - Each uses _val(raw, row_0based, col_0based)
+# - load_forestry_data(): row/col positions for forestry indicators
+# - load_women_data(): row/col positions for women survey indicators
+# - Each uses _val(raw, row_0based, col_0based)
 #
 # To add/remove indicators:
-#   - Add new DataFrame in the appropriate loader function
-#   - Add chart call in the corresponding render function
+# - Add new DataFrame in the appropriate loader function
+# - Add chart call in the corresponding render function
 # ============================================================================

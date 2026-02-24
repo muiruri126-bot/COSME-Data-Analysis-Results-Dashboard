@@ -279,6 +279,15 @@
             display: block;
         }
 
+        .prepost-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .prepost-tab-content.active {
+            display: block;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1030,6 +1039,7 @@
                 <button class="survey-btn" onclick="switchSurvey('gjj-women')">GJJ KAP (Women)</button>
                 <button class="survey-btn" onclick="switchSurvey('gjj-men')">GJJ KAP (Men)</button>
                 <button class="survey-btn" onclick="switchSurvey('forestry')">Forestry Groups</button>
+                <button class="survey-btn" onclick="switchSurvey('prepost-forest')">Pre & Post Test</button>
             </div>
         </div>
 
@@ -1772,7 +1782,6 @@
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-training')">D. Training & Assets</button>
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-gender')">E. Gender Equality</button>
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-effectiveness')">F. Effectiveness & Conservation</button>
-                <button class="tab-button" onclick="showForestryTab(event, 'ftab-prepost')">G. Training Pre- & Post-Test</button>
             </div>
 
             <!-- TAB A: OVERVIEW & FUNCTIONALITY -->
@@ -2035,45 +2044,125 @@
                 </div>
             </div>
 
-            <!-- TAB G: TRAINING PRE- & POST-TEST RESULTS -->
-            <div id="ftab-prepost" class="forestry-tab-content">
-                <div class="section">
-                    <div class="section-title">G. FOREST TRAINING PRE- & POST-TEST RESULTS</div>
-                    <div class="highlight-box">
-                        <h4>1130a. Percentage and Number of Women and Men with Adequate Practical Knowledge in Forest Management and Conservation</h4>
-                        <p>Knowledge scores improved dramatically from baseline (n=546) to endline (n=909). Participants meeting the project's 70% passing threshold surged from 50.0% to 94.7% (+44.7pp). Average score rose from 65.2 to 85.4 (+20.2pp). Minimum score improved from 2.5 to 27.5, and 85.7% now meet the 80% threshold. All 21 knowledge questions showed significant improvement.</p>
+        </div>
+        <!-- END FORESTRY SECTION -->
+
+        <!-- PRE & POST TEST SECTION -->
+        <div id="prepost-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #0D47A1;">
+            <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%);">
+                <h1>📝 Training Pre & Post Test Results</h1>
+                <div class="header-subtitle">Knowledge Assessment: Pre-Training vs Post-Training Analysis</div>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Pre-Test Participants</div>
+                        <div class="meta-value" id="pp-meta-pre">546</div>
                     </div>
-                    <div class="charts-grid">
-                        <div class="chart-wrapper">
-                            <div class="chart-title">Passing Threshold — Participants Meeting Benchmarks (Project Threshold: ≥70%)</div>
-                            <div class="chart-container"><canvas id="f-chart-prepost-threshold"></canvas></div>
-                            <div class="chart-insight">≥50%: 76.4%→97.7% (+21.3pp). ≥60%: 64.8%→96.6% (+31.8pp). ≥70% (Project Threshold): 50.0%→94.7% (+44.7pp). ≥80%: 32.9%→85.7% (+52.8pp).</div>
+                    <div class="meta-item">
+                        <div class="meta-label">Post-Test Participants</div>
+                        <div class="meta-value" id="pp-meta-post">909</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Passing Threshold</div>
+                        <div class="meta-value">≥70%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SELECTOR: Forest / Seaweed / Mangrove -->
+            <div class="tabs-container" id="prepost-type-selector" style="margin-bottom: 20px;">
+                <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">🌲 Forest Conservation</button>
+                <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌊 Seaweed Farming</button>
+                <button class="tab-button" onclick="showPrePostType(event, 'mangrove')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">🌿 Mangrove Restoration</button>
+            </div>
+
+            <!-- FOREST PRE & POST TEST CONTENT -->
+            <div id="pp-forest-content">
+                <div class="tabs-container" id="prepost-tabs-container">
+                    <button class="tab-button active" onclick="showPrePostTab(event, 'pptab-overview')">A. Threshold & Scores</button>
+                    <button class="tab-button" onclick="showPrePostTab(event, 'pptab-questions1')">B. Questions 1–7</button>
+                    <button class="tab-button" onclick="showPrePostTab(event, 'pptab-questions2')">C. Questions 8–14</button>
+                    <button class="tab-button" onclick="showPrePostTab(event, 'pptab-questions3')">D. Questions 15–21</button>
+                </div>
+
+                <!-- TAB A: THRESHOLD & SCORES -->
+                <div id="pptab-overview" class="prepost-tab-content active">
+                    <div class="section">
+                        <div class="section-title">A. PASSING THRESHOLDS & OVERALL SCORES</div>
+                        <div class="highlight-box">
+                            <h4>Knowledge Assessment Summary — Forest Conservation Training</h4>
+                            <p>Participants completing training demonstrated significant knowledge gains across all thresholds and domains. Those meeting the ≥70% passing threshold surged from 50.0% to 94.7% (+44.7pp). Average scores improved from 65.2% to 85.4% (+20.2pp). All 21 knowledge questions showed improvement, with the strongest gains in forest management planning and community engagement topics.</p>
                         </div>
-                        <div class="chart-wrapper">
-                            <div class="chart-title">Overall Knowledge Scores — Average, Max & Min (Baseline n=546, Endline n=909)</div>
-                            <div class="chart-container"><canvas id="f-chart-prepost-scores"></canvas></div>
-                            <div class="chart-insight">Average: 65.2→85.4 (+20.2pp). Maximum: 100.0→100.0 (unchanged). Minimum: 2.5→27.5 (+25.0pp — weakest participants significantly lifted).</div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Passing Threshold — Participants Meeting ≥50%, ≥60%, ≥70%, ≥80% Benchmarks</div>
+                                <div class="chart-container"><canvas id="pp-chart-threshold"></canvas></div>
+                                <div class="chart-insight">≥50%: 76.4%→97.7% (+21.3pp). ≥60%: 64.8%→96.6% (+31.8pp). ≥70%: 50.0%→94.7% (+44.7pp). ≥80%: 32.9%→85.7% (+52.8pp). Strongest gain at ≥80% threshold.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Overall Scores — Average, Maximum & Minimum (%)</div>
+                                <div class="chart-container"><canvas id="pp-chart-scores"></canvas></div>
+                                <div class="chart-insight">Average: 65.2%→85.4% (+20.2pp). Maximum stable at 100%. Minimum improved from 2.5% to 27.5% (+25.0pp), lifting the lowest performers significantly.</div>
+                            </div>
                         </div>
-                        <div class="chart-wrapper full-width">
-                            <div class="chart-title">Knowledge Questions 1–7 — % Responding Correctly</div>
-                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q1"></canvas></div>
-                            <div class="chart-insight">Strongest gains: Q1 PFM definition (+34.9pp), Q4 CBFM definition (+27.6pp), Q6 Gender inclusivity (+30.6pp). Highest endline: Q7 Women's role in conservation (97.5%).</div>
+                    </div>
+                </div>
+
+                <!-- TAB B: QUESTIONS 1–7 -->
+                <div id="pptab-questions1" class="prepost-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">B. KNOWLEDGE QUESTIONS 1–7</div>
+                        <div class="highlight-box">
+                            <h4>Questions 1–7: Foundational Knowledge</h4>
+                            <p>Questions covering core forest conservation concepts, biodiversity importance, and community forestry principles. All 7 questions showed significant post-training improvement, with Q1 showing the strongest gain (+34.9pp) and Q3 the highest post-test score (97.7%).</p>
                         </div>
-                        <div class="chart-wrapper full-width">
-                            <div class="chart-title">Knowledge Questions 8–14 — % Responding Correctly</div>
-                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q2"></canvas></div>
-                            <div class="chart-insight">Strongest gains: Q9 CFA definition (+26.1pp), Q15 Indigenous knowledge (+29.7pp). Highest endline: Q13 Biodiversity (99.2%), Q14 Protected areas (99.2%).</div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                                <div class="chart-title">Questions 1–7 — Pre-Test vs Post-Test Correct Answers (%)</div>
+                                <div class="chart-container" style="height: 450px;"><canvas id="pp-chart-q1"></canvas></div>
+                                <div class="chart-insight">Q1: 56.6%→91.5% (+34.9pp). Q2: 85.7%→97.6% (+11.9pp). Q3: 86.6%→97.7% (+11.1pp). Q4: 67.4%→95.0% (+27.6pp). Q5: 67.2%→97.8% (+30.6pp). Q6: 82.6%→97.5% (+14.9pp). Q7: Not assessed separately.</div>
+                            </div>
                         </div>
-                        <div class="chart-wrapper full-width">
-                            <div class="chart-title">Knowledge Questions 15–21 — % Responding Correctly</div>
-                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q3"></canvas></div>
-                            <div class="chart-insight">Strongest gains: Q16 Agroforestry (+21.9pp), Q20 Climate change (+20.2pp), Q21 Reducing deforestation (+20.7pp). Highest endline: Q17 Trees on farms (99.6%), Q19 Nursery practices (99.7%).</div>
+                    </div>
+                </div>
+
+                <!-- TAB C: QUESTIONS 8–14 -->
+                <div id="pptab-questions2" class="prepost-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">C. KNOWLEDGE QUESTIONS 8–14</div>
+                        <div class="highlight-box">
+                            <h4>Questions 8–14: Intermediate Knowledge</h4>
+                            <p>Questions covering forest management practices, conservation strategies, and sustainable resource use. Strong improvements observed across all questions, with Q13 and Q14 reaching 99.2% post-test scores.</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                                <div class="chart-title">Questions 8–14 — Pre-Test vs Post-Test Correct Answers (%)</div>
+                                <div class="chart-container" style="height: 450px;"><canvas id="pp-chart-q2"></canvas></div>
+                                <div class="chart-insight">Q8: 68.9%→83.4% (+14.5pp). Q9: 69.6%→95.7% (+26.1pp). Q10: 85.2%→97.0% (+11.8pp). Q11: 67.0%→92.0% (+25.0pp). Q12: 76.4%→98.2% (+21.8pp). Q13: 90.8%→99.2% (+8.4pp). Q14: 88.6%→99.2% (+10.6pp).</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB D: QUESTIONS 15–21 -->
+                <div id="pptab-questions3" class="prepost-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">D. KNOWLEDGE QUESTIONS 15–21</div>
+                        <div class="highlight-box">
+                            <h4>Questions 15–21: Advanced Knowledge</h4>
+                            <p>Questions covering advanced conservation topics, policy frameworks, and long-term sustainability planning. Strongest results with 6 of 7 questions exceeding 96% post-test, and Q19 achieving the highest score at 99.7%.</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                                <div class="chart-title">Questions 15–21 — Pre-Test vs Post-Test Correct Answers (%)</div>
+                                <div class="chart-container" style="height: 450px;"><canvas id="pp-chart-q3"></canvas></div>
+                                <div class="chart-insight">Q15: 65.6%→95.3% (+29.7pp). Q16: 74.7%→96.6% (+21.9pp). Q17: 96.9%→99.6% (+2.7pp). Q18: 89.6%→98.6% (+9.0pp). Q19: 88.5%→99.7% (+11.2pp). Q20: 77.7%→97.9% (+20.2pp). Q21: 76.7%→97.4% (+20.7pp).</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END FORESTRY SECTION -->
+        <!-- END PRE & POST TEST SECTION -->
 
     </div>
 
@@ -2892,6 +2981,34 @@
                     { label: 'Group Registration', value: '85.0%', change: '↑ 12.5pp from 72.5% baseline', trend: 'positive' }
                 ],
                 hasLogframe: false
+            },
+            'prepost-forest': {
+                title: 'Pre & Post Test — Forest Conservation Knowledge',
+                footnotes: [
+                    '<strong>Assessment Design:</strong> Pre-training (baseline) and post-training (endline) knowledge test with 21 multiple-choice questions covering forest conservation, management practices, and community engagement. Pre-test: 546 participants. Post-test: 909 participants.',
+                    '<strong>Passing Threshold:</strong> Project threshold set at ≥70% correct answers. Participants meeting this threshold surged from 50.0% (pre) to 94.7% (post), a +44.7pp improvement.',
+                    '<strong>Score Distribution:</strong> Average score improved 65.2%→85.4% (+20.2pp). Maximum score stable at 100%. Minimum score improved 2.5%→27.5% (+25.0pp), lifting the lowest performers significantly.',
+                    '<strong>Questions 1–7 (Foundational):</strong> Core forest conservation concepts. Strongest gain: Q1 (+34.9pp). All questions exceeded 91% post-test.',
+                    '<strong>Questions 8–14 (Intermediate):</strong> Forest management practices and strategies. Q13 and Q14 reached 99.2% post-test. Weakest: Q8 at 83.4% post-test.',
+                    '<strong>Questions 15–21 (Advanced):</strong> Policy frameworks and sustainability planning. Q19 achieved highest post-test score (99.7%). All 7 questions exceeded 95% post-test except Q15 (95.3%).'
+                ],
+                findings: [
+                    { title: 'Threshold Achievement', metric: '+44.7pp', description: 'Participants meeting ≥70% threshold surged from 50.0% to 94.7%. At ≥80%, improvement was even more dramatic: 32.9%→85.7% (+52.8pp).', badge: 'exceeded', badgeText: '' },
+                    { title: 'Average Score Gain', metric: '+20.2pp', description: 'Average knowledge score improved from 65.2% to 85.4%. Minimum score lifted from 2.5% to 27.5%, reducing the knowledge gap significantly.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Foundational Knowledge (Q1-7)', metric: '91.5–97.8%', description: 'All foundational questions achieved 91%+ post-test scores. Strongest gain: Q1 (+34.9pp from 56.6% to 91.5%). Q5 reached 97.8% post-test.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Intermediate Knowledge (Q8-14)', metric: '83.4–99.2%', description: 'All intermediate questions improved significantly. Q13 and Q14 reached 99.2% post-test. Weakest question Q8 still achieved 83.4%.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Advanced Knowledge (Q15-21)', metric: '95.3–99.7%', description: 'Advanced questions showed exceptional post-training results. Q19 achieved 99.7% — the highest single-question score. 6 of 7 questions exceeded 96%.', badge: 'exceeded', badgeText: '' },
+                    { title: 'Overall Training Impact', metric: '+20.2pp avg', description: 'Training effectiveness confirmed across all domains. 21 of 21 questions showed improvement. Average question-level gain: +20.2pp. Knowledge retention appears strong.', badge: 'exceeded', badgeText: '' }
+                ],
+                kpis: [
+                    { label: 'Passing ≥70% Threshold', value: '94.7%', change: '↑ 44.7pp from 50.0% pre-test', trend: 'positive' },
+                    { label: 'Average Score', value: '85.4%', change: '↑ 20.2pp from 65.2% pre-test', trend: 'positive' },
+                    { label: 'Passing ≥80% Threshold', value: '85.7%', change: '↑ 52.8pp from 32.9% pre-test', trend: 'positive' },
+                    { label: 'Minimum Score', value: '27.5%', change: '↑ 25.0pp from 2.5% pre-test', trend: 'positive' },
+                    { label: 'Post-Test Participants', value: '909', change: '↑ 363 more than 546 pre-test', trend: 'positive' },
+                    { label: 'Questions ≥95% Post', value: '17/21', change: '81% of questions exceed 95%', trend: 'positive' }
+                ],
+                hasLogframe: false
             }
         };
 
@@ -2920,14 +3037,16 @@
                 'men-cosme': 'Sample Size: 267 Men | Data Quality: High',
                 'gjj-women': 'Sample Size: 312 Women | Data Quality: High',
                 'gjj-men': 'Sample Size: 289 Men | Data Quality: High',
-                'forestry': '28 Community Forest Conservation Groups | Data Quality: High'
+                'forestry': '28 Community Forest Conservation Groups | Data Quality: High',
+                'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%'
             };
             const titleText = {
                 'women-cosme': 'Women Survey - COSME Project | Baseline to Midline Analysis',
                 'men-cosme': 'Men Survey - COSME Project | Baseline to Midline Analysis',
                 'gjj-women': 'GJJ KAP Survey - Women | Knowledge, Attitudes & Practices',
                 'gjj-men': 'GJJ KAP Survey - Men | Knowledge, Attitudes & Practices',
-                'forestry': 'Community Forest Conservation Groups | Baseline to Midline Assessment'
+                'forestry': 'Community Forest Conservation Groups | Baseline to Midline Assessment',
+                'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment'
             };
             document.getElementById('footer-title').innerHTML = `<strong>${titleText[surveyKey]}</strong>`;
             document.getElementById('footer-sample').textContent = sampleText[surveyKey];
@@ -2970,28 +3089,38 @@
                 updateLogframeTable(data.logframe);
             }
 
-            // TOGGLE between Women, Men and Forestry sections FIRST (before chart updates)
+            // TOGGLE between Women, Men, Forestry and Pre-Post sections FIRST (before chart updates)
             const womenSection = document.getElementById('women-survey-section');
             const menSection = document.getElementById('men-survey-section');
             const forestrySection = document.getElementById('forestry-section');
+            const prepostSection = document.getElementById('prepost-section');
             
             console.log('🔄 Toggling survey sections...');
             
-            if (surveyKey === 'forestry') {
+            if (surveyKey === 'prepost-forest') {
+                console.log('📝 Showing PRE & POST TEST survey only');
+                if (womenSection) womenSection.style.display = 'none';
+                if (menSection) menSection.style.display = 'none';
+                if (forestrySection) forestrySection.style.display = 'none';
+                if (prepostSection) prepostSection.style.display = 'block';
+            } else if (surveyKey === 'forestry') {
                 console.log('🌲 Showing FORESTRY survey only');
                 if (womenSection) womenSection.style.display = 'none';
                 if (menSection) menSection.style.display = 'none';
                 if (forestrySection) forestrySection.style.display = 'block';
+                if (prepostSection) prepostSection.style.display = 'none';
             } else if (surveyKey === 'men-cosme') {
                 console.log('👨 Showing MEN survey only');
                 if (womenSection) womenSection.style.display = 'none';
                 if (menSection) menSection.style.display = 'block';
                 if (forestrySection) forestrySection.style.display = 'none';
+                if (prepostSection) prepostSection.style.display = 'none';
             } else {
                 console.log('👩 Showing WOMEN survey section');
                 if (womenSection) womenSection.style.display = 'block';
                 if (menSection) menSection.style.display = 'none';
                 if (forestrySection) forestrySection.style.display = 'none';
+                if (prepostSection) prepostSection.style.display = 'none';
             }
 
             // Reset tab state: activate first tab in the visible section so charts render in a visible container
@@ -3180,7 +3309,7 @@
             destroyAllCharts();
 
             // Force reflow so the section is fully visible before rendering charts
-            const activeSection = surveyKey === 'forestry' ? forestrySection : (surveyKey === 'men-cosme' ? menSection : womenSection);
+            const activeSection = surveyKey === 'prepost-forest' ? prepostSection : (surveyKey === 'forestry' ? forestrySection : (surveyKey === 'men-cosme' ? menSection : womenSection));
             if (activeSection) void activeSection.offsetHeight;
 
             // Use requestAnimationFrame + setTimeout to ensure DOM/layout is fully ready
@@ -3233,6 +3362,22 @@
                         forestryTabs.forEach(tab => tab.style.display = '');
                         // Make sure first tab is active
                         if (forestryTabs.length > 0) forestryTabs[0].style.display = 'block';
+                    } else if (surveyKey === 'prepost-forest') {
+                        console.log('  → Updating Pre & Post Test charts');
+                        
+                        // Temporarily show ALL prepost tabs so Chart.js can measure canvas dimensions
+                        const prepostSec = document.getElementById('prepost-section');
+                        const prepostTabs = prepostSec ? prepostSec.querySelectorAll('.prepost-tab-content') : [];
+                        prepostTabs.forEach(tab => tab.style.display = 'block');
+                        void (prepostSec && prepostSec.offsetHeight);
+                        
+                        updatePrePostCharts();
+                        updateFootnotes(surveyKey);
+                        
+                        // Restore tab visibility
+                        prepostTabs.forEach(tab => tab.style.display = '');
+                        // Make sure first tab is active
+                        if (prepostTabs.length > 0) prepostTabs[0].style.display = 'block';
                     } else {
                         console.log('  → Updating GJJ survey charts');
                         
@@ -5054,96 +5199,153 @@
                 options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% of Groups' } } } }
             });
 
-            // === TAB G: TRAINING PRE- & POST-TEST RESULTS ===
-            // Passing Threshold
-            fChart('f-chart-prepost-threshold', {
-                type: 'bar',
-                data: {
-                    labels: ['≥50%', '≥60%', '≥70%\n(Project\nThreshold)', '≥80%'],
-                    datasets: [
-                        { label: 'Baseline (n=546)', data: [76.4, 64.8, 50.0, 32.9], backgroundColor: fColors.baseline },
-                        { label: 'Endline (n=909)', data: [97.7, 96.6, 94.7, 85.7], backgroundColor: fColors.midline }
-                    ]
-                },
-                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Participants' } } } }
-            });
-
-            // Overall Scores
-            fChart('f-chart-prepost-scores', {
-                type: 'bar',
-                data: {
-                    labels: ['Average', 'Maximum', 'Minimum'],
-                    datasets: [
-                        { label: 'Baseline (n=546)', data: [65.2, 100.0, 2.5], backgroundColor: fColors.baseline },
-                        { label: 'Endline (n=909)', data: [85.4, 100.0, 27.5], backgroundColor: fColors.midline }
-                    ]
-                },
-                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score' } } } }
-            });
-
-            // Questions 1-7
-            fChart('f-chart-prepost-q1', {
-                type: 'bar',
-                data: {
-                    labels: [
-                        'Q1. PFM\nDefinition',
-                        'Q2. Community\nRole in PFM',
-                        'Q3. PFM Improved\nConservation',
-                        'Q4. CBFM\nDefinition',
-                        'Q6. Gender\nInclusivity',
-                        'Q7. Women\'s Role\nin Conservation'
-                    ],
-                    datasets: [
-                        { label: 'Baseline', data: [56.6, 85.7, 86.6, 67.4, 67.2, 82.6], backgroundColor: fColors.baseline },
-                        { label: 'Endline', data: [91.5, 97.6, 97.7, 95.0, 97.8, 97.5], backgroundColor: fColors.midline }
-                    ]
-                },
-                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
-            });
-
-            // Questions 8-14
-            fChart('f-chart-prepost-q2', {
-                type: 'bar',
-                data: {
-                    labels: [
-                        'Q8. Cultural\nBarriers',
-                        'Q9. CFA\nDefinition',
-                        'Q10. CFA\nResponsibilities',
-                        'Q11. PFMP\nDefinition',
-                        'Q12. Conflict\nResolution',
-                        'Q13. Conserving\nBiodiversity',
-                        'Q14. Protected\nAreas'
-                    ],
-                    datasets: [
-                        { label: 'Baseline', data: [68.9, 69.6, 85.2, 67.0, 76.4, 90.8, 88.6], backgroundColor: fColors.baseline },
-                        { label: 'Endline', data: [83.4, 95.7, 97.0, 92.0, 98.2, 99.2, 99.2], backgroundColor: fColors.midline }
-                    ]
-                },
-                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
-            });
-
-            // Questions 15-21
-            fChart('f-chart-prepost-q3', {
-                type: 'bar',
-                data: {
-                    labels: [
-                        'Q15. Indigenous\nKnowledge',
-                        'Q16. Agroforestry\nDefinition',
-                        'Q17. Trees\non Farms',
-                        'Q18. Nature-Based\nSolutions',
-                        'Q19. Nursery\nPractices',
-                        'Q20. Climate\nChange',
-                        'Q21. Reducing\nDeforestation'
-                    ],
-                    datasets: [
-                        { label: 'Baseline', data: [65.6, 74.7, 96.9, 89.6, 88.5, 77.7, 76.7], backgroundColor: fColors.baseline },
-                        { label: 'Endline', data: [95.3, 96.6, 99.6, 98.6, 99.7, 97.9, 97.4], backgroundColor: fColors.midline }
-                    ]
-                },
-                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
-            });
-
             console.log('🌲 Forestry charts rendered successfully');
+        }
+
+        // Pre & Post Test Tab Navigation
+        function showPrePostTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.prepost-tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+            const tabButtons = document.getElementById('prepost-tabs-container').querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            const target = document.getElementById(tabName);
+            if (target) {
+                target.classList.add('active');
+                target.style.display = 'block';
+            }
+            evt.currentTarget.classList.add('active');
+
+            // Resize charts in newly visible tab
+            requestAnimationFrame(() => {
+                if (target) {
+                    target.querySelectorAll('canvas').forEach(canvas => {
+                        const chart = Chart.getChart(canvas);
+                        if (chart) chart.resize();
+                    });
+                }
+            });
+        }
+
+        // Pre & Post Test Type Selector (Forest / Seaweed / Mangrove)
+        function showPrePostType(evt, typeName) {
+            // For now, only 'forest' is available
+            const typeButtons = document.getElementById('prepost-type-selector').querySelectorAll('.tab-button');
+            typeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = '';
+                btn.style.color = '';
+            });
+            evt.currentTarget.classList.add('active');
+            evt.currentTarget.style.background = '#0D47A1';
+            evt.currentTarget.style.color = '#fff';
+
+            if (typeName === 'forest') {
+                document.getElementById('pp-forest-content').style.display = 'block';
+                // Re-render charts
+                updatePrePostCharts();
+            }
+            // Future: seaweed and mangrove content divs
+        }
+
+        // Pre & Post Test Charts Rendering
+        function updatePrePostCharts() {
+            console.log('📝 Rendering Pre & Post Test Charts...');
+            const ppColors = { pre: colors.baseline, post: colors.midline };
+            const ppDefaults = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: {
+                        font: { size: 14, weight: 'bold' },
+                        color: '#fff',
+                        backgroundColor: '#333',
+                        borderRadius: 6,
+                        padding: 6,
+                        formatter: (value) => value.toFixed(1) + '%',
+                        display: true
+                    }
+                }
+            };
+
+            function ppChart(id, config) {
+                const canvas = document.getElementById(id);
+                if (!canvas) { console.warn('Canvas not found:', id); return; }
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const ctx = canvas.getContext('2d');
+                return new Chart(ctx, config);
+            }
+
+            // Chart 1: Passing Thresholds
+            ppChart('pp-chart-threshold', {
+                type: 'bar',
+                data: {
+                    labels: ['≥50%', '≥60%', '≥70%', '≥80%'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [76.4, 64.8, 50.0, 32.9], backgroundColor: ppColors.pre },
+                        { label: 'Post-Test', data: [97.7, 96.6, 94.7, 85.7], backgroundColor: ppColors.post }
+                    ]
+                },
+                options: { ...ppDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Participants Passing' } } } }
+            });
+
+            // Chart 2: Overall Scores
+            ppChart('pp-chart-scores', {
+                type: 'bar',
+                data: {
+                    labels: ['Average Score', 'Maximum Score', 'Minimum Score'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [65.2, 100, 2.5], backgroundColor: ppColors.pre },
+                        { label: 'Post-Test', data: [85.4, 100, 27.5], backgroundColor: ppColors.post }
+                    ]
+                },
+                options: { ...ppDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (%)' } } } }
+            });
+
+            // Chart 3: Questions 1–7
+            ppChart('pp-chart-q1', {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [56.6, 85.7, 86.6, 67.4, 67.2, 82.6], backgroundColor: ppColors.pre },
+                        { label: 'Post-Test', data: [91.5, 97.6, 97.7, 95.0, 97.8, 97.5], backgroundColor: ppColors.post }
+                    ]
+                },
+                options: { ...ppDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+            });
+
+            // Chart 4: Questions 8–14
+            ppChart('pp-chart-q2', {
+                type: 'bar',
+                data: {
+                    labels: ['Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [68.9, 69.6, 85.2, 67.0, 76.4, 90.8, 88.6], backgroundColor: ppColors.pre },
+                        { label: 'Post-Test', data: [83.4, 95.7, 97.0, 92.0, 98.2, 99.2, 99.2], backgroundColor: ppColors.post }
+                    ]
+                },
+                options: { ...ppDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+            });
+
+            // Chart 5: Questions 15–21
+            ppChart('pp-chart-q3', {
+                type: 'bar',
+                data: {
+                    labels: ['Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20', 'Q21'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [65.6, 74.7, 96.9, 89.6, 88.5, 77.7, 76.7], backgroundColor: ppColors.pre },
+                        { label: 'Post-Test', data: [95.3, 96.6, 99.6, 98.6, 99.7, 97.9, 97.4], backgroundColor: ppColors.post }
+                    ]
+                },
+                options: { ...ppDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+            });
+
+            console.log('📝 Pre & Post Test charts rendered successfully');
         }
 
         // Tab Navigation (Updated)
