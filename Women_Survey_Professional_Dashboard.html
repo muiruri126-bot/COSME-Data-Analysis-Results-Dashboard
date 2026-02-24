@@ -2876,82 +2876,111 @@
         function updateTabContent(surveyKey) {
             console.log('>>> updateTabContent called with surveyKey:', surveyKey);
             
-            // Access global surveyData
-            if (!window.surveyData) {
-                console.error('ERROR: window.surveyData is not defined!');
-                return;
-            }
-            
-            if (!window.surveyData[surveyKey]) {
-                console.error('ERROR: surveyData does not have key:', surveyKey);
-                console.log('Available keys:', Object.keys(window.surveyData));
+            if (!window.surveyData || !window.surveyData[surveyKey]) {
+                console.error('ERROR: surveyData missing for key:', surveyKey);
                 return;
             }
 
             const currentSurvey = window.surveyData[surveyKey];
-            console.log('Current survey data:', currentSurvey);
 
-            // For COSME surveys (women-cosme and men-cosme), update tab highlights
-            if (surveyKey === 'women-cosme' || surveyKey === 'men-cosme') {
-                if (!currentSurvey.tabContent) {
-                    console.error('ERROR: No tabContent in survey data');
-                    return;
-                }
-                
-                const tabIds = Object.keys(currentSurvey.tabContent);
-                console.log(`Found ${tabIds.length} tabs to update:`, tabIds);
-                
-                // Iterate through all tabs in tabContent
-                tabIds.forEach(tabId => {
-                    const tabInfo = currentSurvey.tabContent[tabId];
-                    
-                    // Get the tab element by ID
-                    const tabElement = document.getElementById(tabId);
-                    if (!tabElement) {
-                        console.warn(`WARNING: Tab element not found for ID: ${tabId}`);
-                        return;
-                    }
-                    
-                    // Find and update the highlight box
-                    const highlightBox = tabElement.querySelector('.highlight-box');
-                    if (!highlightBox) {
-                        console.warn(`WARNING: Highlight box not found in ${tabId}`);
-                        return;
-                    }
-                    
-                    // Update the highlight content
-                    if (tabInfo.highlight) {
-                        const oldContent = highlightBox.innerHTML;
-                        highlightBox.innerHTML = tabInfo.highlight;
-                        console.log(`✓ Updated #${tabId} .highlight-box`);
-                    }
-
-                    // Update chart insights for this tab
-                    if (tabInfo.chartInsights) {
-                        Object.keys(tabInfo.chartInsights).forEach(chartId => {
-                            const canvasElement = document.getElementById(chartId);
-                            if (canvasElement) {
-                                const chartWrapper = canvasElement.closest('.chart-wrapper');
-                                if (chartWrapper) {
-                                    const insightElement = chartWrapper.querySelector('.chart-insight');
-                                    if (insightElement) {
-                                        insightElement.textContent = tabInfo.chartInsights[chartId];
+            // === WOMEN-COSME: Restore original highlights and chart insights ===
+            if (surveyKey === 'women-cosme') {
+                if (window.originalWomenContent) {
+                    const womenSection = document.getElementById('women-survey-section');
+                    if (womenSection) {
+                        Object.keys(window.originalWomenContent).forEach(tabId => {
+                            const tab = document.getElementById(tabId);
+                            if (!tab) return;
+                            const saved = window.originalWomenContent[tabId];
+                            // Restore highlight box
+                            const highlightBox = tab.querySelector('.highlight-box');
+                            if (highlightBox && saved.highlight) {
+                                highlightBox.innerHTML = saved.highlight;
+                            }
+                            // Restore chart insights
+                            if (saved.insights) {
+                                Object.keys(saved.insights).forEach(chartId => {
+                                    const canvas = document.getElementById(chartId);
+                                    if (canvas) {
+                                        const wrapper = canvas.closest('.chart-wrapper');
+                                        if (wrapper) {
+                                            const insightEl = wrapper.querySelector('.chart-insight');
+                                            if (insightEl) {
+                                                insightEl.innerHTML = saved.insights[chartId];
+                                            }
+                                        }
                                     }
-                                }
+                                });
                             }
                         });
+                        console.log('✓ Restored original women survey content');
                     }
-                });
-                
-                console.log('>>> updateTabContent completed successfully');
+                }
+                return;
             }
 
-            // For GJJ surveys, show standard message
+            // === MEN-COSME: Update the MEN section tabs (with -men suffix) ===
+            if (surveyKey === 'men-cosme') {
+                if (currentSurvey.tabContent) {
+                    const tabIds = Object.keys(currentSurvey.tabContent);
+                    tabIds.forEach(tabId => {
+                        const tabInfo = currentSurvey.tabContent[tabId];
+                        // Men tabs have '-men' suffix in their IDs
+                        const menTabId = tabId + '-men';
+                        const tabElement = document.getElementById(menTabId);
+                        if (!tabElement) {
+                            console.warn(`Tab element not found: ${menTabId}`);
+                            return;
+                        }
+                        // Update highlight box
+                        const highlightBox = tabElement.querySelector('.highlight-box');
+                        if (highlightBox && tabInfo.highlight) {
+                            highlightBox.innerHTML = tabInfo.highlight;
+                            console.log(`✓ Updated #${menTabId} .highlight-box`);
+                        }
+                        // Update chart insights (men charts have '-men' suffix on canvas IDs)
+                        if (tabInfo.chartInsights) {
+                            Object.keys(tabInfo.chartInsights).forEach(chartId => {
+                                const menChartId = chartId + '-men';
+                                const canvasElement = document.getElementById(menChartId);
+                                if (canvasElement) {
+                                    const chartWrapper = canvasElement.closest('.chart-wrapper');
+                                    if (chartWrapper) {
+                                        const insightElement = chartWrapper.querySelector('.chart-insight');
+                                        if (insightElement) {
+                                            insightElement.innerHTML = tabInfo.chartInsights[chartId];
+                                            console.log(`✓ Updated insight for ${menChartId}`);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+                console.log('>>> updateTabContent (men) completed');
+                return;
+            }
+
+            // === GJJ SURVEYS: Update women section with GJJ-appropriate content ===
             if (surveyKey === 'gjj-women' || surveyKey === 'gjj-men') {
-                const allHighlights = document.querySelectorAll('.highlight-box');
-                allHighlights.forEach(highlight => {
-                    highlight.innerHTML = '<h4>Survey Details</h4><p>This survey focuses on knowledge, attitudes, and practices. Detailed tab analytics are optimized for COSME surveys. Use the summary section above for comprehensive insights.</p>';
+                const womenSection = document.getElementById('women-survey-section');
+                if (!womenSection) return;
+                const surveyLabel = surveyKey === 'gjj-women' ? 'GJJ KAP Women' : 'GJJ KAP Men';
+                const sampleSize = surveyKey === 'gjj-women' ? '312 Women' : '289 Men';
+                // Update only highlights within the women section (not all on page)
+                womenSection.querySelectorAll('.highlight-box').forEach(highlight => {
+                    highlight.innerHTML = `<h4>${surveyLabel} - Knowledge, Attitudes & Practices Survey</h4><p>This ${surveyLabel} survey (${sampleSize}) focuses on gender justice knowledge, attitudes, and practices. The charts below show baseline-to-midline comparisons for this survey type. Key areas include gender justice awareness, shared responsibilities, support for women's rights, and community engagement in gender equality initiatives.</p>`;
                 });
+                // Update chart insights within women section to reflect GJJ context
+                womenSection.querySelectorAll('.chart-insight').forEach(insight => {
+                    const wrapper = insight.closest('.chart-wrapper');
+                    if (wrapper) {
+                        const title = wrapper.querySelector('.chart-title');
+                        const titleText = title ? title.textContent : 'this indicator';
+                        insight.textContent = `${surveyLabel} data: Baseline vs midline comparison for ${titleText.toLowerCase()}. See summary section above for detailed findings and key insights.`;
+                    }
+                });
+                console.log('>>> updateTabContent (GJJ) completed');
             }
         }
 
@@ -3710,6 +3739,31 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('=== DOMContentLoaded fired ===');
+            
+            // Save original women survey content (highlights + chart insights)
+            // so we can restore them when switching back from other surveys
+            window.originalWomenContent = {};
+            const womenSec = document.getElementById('women-survey-section');
+            if (womenSec) {
+                womenSec.querySelectorAll('.tab-content').forEach(tab => {
+                    const tabId = tab.id;
+                    if (!tabId) return;
+                    const highlightBox = tab.querySelector('.highlight-box');
+                    const insights = {};
+                    tab.querySelectorAll('.chart-wrapper').forEach(wrapper => {
+                        const canvas = wrapper.querySelector('canvas');
+                        const insightEl = wrapper.querySelector('.chart-insight');
+                        if (canvas && insightEl) {
+                            insights[canvas.id] = insightEl.innerHTML;
+                        }
+                    });
+                    window.originalWomenContent[tabId] = {
+                        highlight: highlightBox ? highlightBox.innerHTML : '',
+                        insights: insights
+                    };
+                });
+                console.log('✓ Saved original women content for', Object.keys(window.originalWomenContent).length, 'tabs');
+            }
             
             // Initialize men survey tabs
             console.log('Initializing men survey tabs...');
