@@ -141,6 +141,11 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
+        .finding-card.negative {
+            border-left: 4px solid #c62828;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+
         .finding-title {
             font-weight: 600;
             color: #667eea;
@@ -148,11 +153,19 @@
             font-size: 1.15em;
         }
 
+        .finding-card.negative .finding-title {
+            color: #c62828;
+        }
+
         .finding-metric {
             font-size: 2.0em;
             font-weight: bold;
             color: #2e7d32;
             margin-bottom: 5px;
+        }
+
+        .finding-card.negative .finding-metric {
+            color: #c62828;
         }
 
         .finding-description {
@@ -179,6 +192,7 @@
         }
 
         .kpi-card.positive { border-top-color: #2e7d32; }
+        .kpi-card.negative { border-top-color: #c62828; }
         .kpi-card.warning { border-top-color: #f57c00; }
         .kpi-card.critical { border-top-color: #c62828; }
 
@@ -2552,7 +2566,7 @@
             findingsContainer.innerHTML = '';
             data.findings.forEach(finding => {
                 const card = document.createElement('div');
-                card.className = 'finding-card';
+                card.className = finding.badge === 'drop' ? 'finding-card negative' : 'finding-card';
                 card.innerHTML = `
                     <div class="finding-title">${finding.title}</div>
                     <div class="finding-metric">${finding.metric}</div>
