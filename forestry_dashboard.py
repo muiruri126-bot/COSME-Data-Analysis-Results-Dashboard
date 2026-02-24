@@ -1,17 +1,24 @@
 """
 =============================================================================
-FORESTRY CONSERVATION GROUP DASHBOARD
-Baseline vs Midline Assessment | Community Forest Conservation Project
+COSME M&E DASHBOARD — Entrypoint Wrapper
 =============================================================================
-A Streamlit + Plotly interactive dashboard for M&E analysis of Community
-Forestry Conservation Groups.
-
-Excel file: 'Forest Functionality Basline_midline results.xlsx'
-Sheet: 'Results' (single sheet with all data sections)
+This file serves as the Streamlit Cloud entrypoint.
+It delegates to cosme_dashboard.py which contains the full integrated
+dashboard (Forestry + Women Survey).
 
 Run with:  streamlit run forestry_dashboard.py
 =============================================================================
 """
+# Import and run the integrated COSME dashboard
+from cosme_dashboard import main as cosme_main
+cosme_main()
+
+
+# ---------- ORIGINAL FORESTRY-ONLY DASHBOARD BELOW (kept for reference) ----------
+# The code below is no longer executed. To restore the standalone forestry
+# dashboard, remove the import/main() call above and uncomment the if-main block
+# at the bottom of this file.
+# ---------------------------------------------------------------------------------
 
 import streamlit as st
 import pandas as pd
@@ -1506,8 +1513,9 @@ def main():
     )
 
 
-if __name__ == "__main__":
-    main()
+# Original entrypoint disabled — cosme_dashboard is now the active dashboard
+# if __name__ == "__main__":
+#     main()
 
 # ============================================================================
 # INSTRUCTIONS:
