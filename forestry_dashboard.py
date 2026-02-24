@@ -2177,7 +2177,9 @@ def _generate_cross_cutting_insights(f_data, w_data):
     insights.append(("Governance & Empowerment Linkage",
                      f"Forestry gender domain score changed by {gender_change:+.1f} pts while women's "
                      f"decision-making influence shifted by {infl_change:+.1f} pp. "
-                     f"{'Both are moving in the right direction — community and household empowerment reinforce each other.' if gender_change > 0 and infl_change > 0 else 'Progress at one level has not fully translated to the other — integrated programming may help.'}",
+                     + ("Both are moving in the right direction — community and household empowerment reinforce each other."
+                        if gender_change > 0 and infl_change > 0
+                        else "Progress at one level has not fully translated to the other — integrated programming may help."),
                      "positive" if gender_change > 0 and infl_change > 0 else "neutral"))
 
     # 2. Environment + NbS
@@ -2221,6 +2223,101 @@ def _generate_cross_cutting_insights(f_data, w_data):
     return insights
 
 
+def _build_indicator_table(f_data, w_data):
+    """Build a master table of key indicators with BL/ML values for trend charts."""
+    rows = []
+
+    # Forestry indicators
+    ft = f_data['functionality_threshold']
+    bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
+    ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
+    rows.append({'Indicator': 'Functionality >=60%', 'Dataset': 'Forestry',
+                 'Baseline': round(bl_60 * 100 if bl_60 <= 1 else bl_60, 1),
+                 'Midline': round(ml_60 * 100 if ml_60 <= 1 else ml_60, 1)})
+
+    for domain in ['Management', 'Gender', 'Effectiveness', 'Overall']:
+        fd = f_data['functionality_domain']
+        b = fd.loc[fd['Timepoint'] == 'Baseline', domain].values[0]
+        m = fd.loc[fd['Timepoint'] == 'Midline', domain].values[0]
+        rows.append({'Indicator': f'{domain} Score', 'Dataset': 'Forestry',
+                     'Baseline': round(b, 1), 'Midline': round(m, 1)})
+
+    ig = f_data['income_gen']
+    b_ig = ig.loc[ig['Category'] == 'Yes', 'Baseline'].values[0]
+    m_ig = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
+    rows.append({'Indicator': 'Income Generation', 'Dataset': 'Forestry',
+                 'Baseline': round(b_ig * 100 if b_ig <= 1 else b_ig, 1),
+                 'Midline': round(m_ig * 100 if m_ig <= 1 else m_ig, 1)})
+
+    af = f_data['agroforestry']
+    b_af = af.loc[af['Category'] == 'Yes', 'Baseline'].values[0]
+    m_af = af.loc[af['Category'] == 'Yes', 'Midline'].values[0]
+    rows.append({'Indicator': 'Agroforestry', 'Dataset': 'Forestry',
+                 'Baseline': round(b_af * 100 if b_af <= 1 else b_af, 1),
+                 'Midline': round(m_af * 100 if m_af <= 1 else m_af, 1)})
+
+    # Women indicators
+    for label, df_key, resp_col, resp_val in [
+        ('CC Awareness', 'cc_heard', 'Response', 'Yes'),
+        ('NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
+        ('Personal Savings', 'personal_saving', 'Response', 'Yes'),
+        ('Prep Knowledge', 'prep_knowledge', 'Response', 'Yes'),
+    ]:
+        df = w_data[df_key]
+        b_w = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0]
+        m_w = df.loc[df[resp_col] == resp_val, 'Midline'].values[0]
+        rows.append({'Indicator': label, 'Dataset': 'Women',
+                     'Baseline': round(b_w * 100, 1), 'Midline': round(m_w * 100, 1)})
+
+    ls = w_data['lifeskills_agree']
+    rows.append({'Indicator': 'Life Skills (avg)', 'Dataset': 'Women',
+                 'Baseline': round(ls['Baseline'].mean() * 100, 1),
+                 'Midline': round(ls['Midline'].mean() * 100, 1)})
+
+    di = w_data['decision_influence']
+    rows.append({'Indicator': 'Decision Influence', 'Dataset': 'Women',
+                 'Baseline': round(di['Baseline'].mean() * 100, 1),
+                 'Midline': round(di['Midline'].mean() * 100, 1)})
+
+    return rows
+
+
+def _make_slope_chart(data_tuples, title):
+    """Create a slope / parallel coordinates chart showing BL→ML trends.
+
+    data_tuples: list of (label, baseline_pct, midline_pct)
+    """
+    fig = go.Figure()
+    for label, bl, ml in data_tuples:
+        change = ml - bl
+        color = COLORS['good'] if change >= 0 else COLORS['danger']
+        # Line connecting BL to ML
+        fig.add_trace(go.Scatter(
+            x=['Baseline', 'Midline'],
+            y=[bl, ml],
+            mode='lines+markers+text',
+            line=dict(color=color, width=2.5),
+            marker=dict(size=9, color=color, line=dict(width=1.5, color='white')),
+            text=[f"{bl:.1f}%", f"{ml:.1f}%"],
+            textposition=['middle left', 'middle right'],
+            textfont=dict(size=10, color=color),
+            name=label,
+            hovertemplate=f'<b>{label}</b><br>%{{x}}: %{{y:.1f}}%<br>Change: {change:+.1f}pp<extra></extra>'
+        ))
+    fig.update_layout(
+        title=title,
+        height=380,
+        xaxis=dict(tickvals=['Baseline', 'Midline'], tickfont=dict(size=13, color='#333')),
+        yaxis_title='Percentage (%)',
+        legend=dict(orientation='v', yanchor='top', y=1, x=1.02, font=dict(size=10)),
+        font=dict(size=13, color='#333'),
+        title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=50, r=120, t=60, b=20),
+    )
+    return fig
+
+
 def render_insights_tab(f_data, w_data):
     """Render the Insights tab with automated analysis across both datasets."""
 
@@ -2237,6 +2334,7 @@ def render_insights_tab(f_data, w_data):
 
     positive_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "positive")
     warning_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t in ("warning", "negative"))
+    neutral_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "neutral")
     total = len(f_insights) + len(w_insights) + len(cc_insights)
 
     # KPI summary
@@ -2247,127 +2345,434 @@ def render_insights_tab(f_data, w_data):
     c4.metric("Cross-cutting", len(cc_insights))
 
     st.markdown("---")
-    _quick_nav_pills(['Forestry Insights', 'Women Survey Insights', 'Cross-Cutting Insights', 'Recommendations'])
+    _quick_nav_pills(['Trend Overview', 'Forestry Insights', 'Women Survey Insights',
+                       'Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
 
-    # ---- FORESTRY INSIGHTS ----
+    # ====================================================================
+    # TREND OVERVIEW — Donut + Dumbbell Chart
+    # ====================================================================
+    _section_header('', 'Trend Overview', 'At a Glance')
+
+    # --- Build master indicator table used across multiple charts ---
+    indicator_rows = _build_indicator_table(f_data, w_data)
+    ind_df = pd.DataFrame(indicator_rows)
+    ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
+    ind_df['Direction'] = ind_df['Change'].apply(
+        lambda x: 'Improving' if x > 0.5 else ('Declining' if x < -0.5 else 'Stable'))
+
+    # --- Row 1: Donut (trend distribution) + Dumbbell overview ---
+    ov_col1, ov_col2 = st.columns([1, 2])
+
+    with ov_col1:
+        # Trend classification donut
+        trend_counts = ind_df['Direction'].value_counts()
+        donut_colors = {'Improving': COLORS['good'], 'Declining': COLORS['danger'], 'Stable': '#9E9E9E'}
+        fig_donut = go.Figure(go.Pie(
+            labels=trend_counts.index,
+            values=trend_counts.values,
+            hole=0.55,
+            marker=dict(colors=[donut_colors.get(d, '#888') for d in trend_counts.index]),
+            textinfo='label+value',
+            textfont=dict(size=13),
+            hovertemplate='%{label}: %{value} indicators<extra></extra>'
+        ))
+        fig_donut.update_layout(
+            title="Indicator Trend Distribution",
+            height=350,
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            showlegend=False,
+            margin=dict(l=10, r=10, t=50, b=10),
+            annotations=[dict(text=f"{len(ind_df)}<br>Indicators", x=0.5, y=0.5,
+                               font=dict(size=16, color='#333', family='Arial'),
+                               showarrow=False)]
+        )
+        st.plotly_chart(fig_donut, use_container_width=True)
+
+    with ov_col2:
+        # Dumbbell / slope chart: Baseline dot → Midline dot with connecting line
+        dumb_df = ind_df.sort_values('Change', ascending=True).reset_index(drop=True)
+        fig_dumb = go.Figure()
+
+        # Connecting lines (drawn first so dots sit on top)
+        for i, row in dumb_df.iterrows():
+            line_color = COLORS['good'] if row['Change'] >= 0 else COLORS['danger']
+            fig_dumb.add_trace(go.Scatter(
+                x=[row['Baseline'], row['Midline']],
+                y=[row['Indicator'], row['Indicator']],
+                mode='lines',
+                line=dict(color=line_color, width=2.5),
+                showlegend=False,
+                hoverinfo='skip'
+            ))
+        # Baseline dots
+        fig_dumb.add_trace(go.Scatter(
+            x=dumb_df['Baseline'], y=dumb_df['Indicator'],
+            mode='markers',
+            marker=dict(size=10, color=COLORS['baseline'], symbol='circle',
+                        line=dict(width=1.5, color='white')),
+            name='Baseline',
+            hovertemplate='%{y}<br>Baseline: %{x:.1f}%<extra></extra>'
+        ))
+        # Midline dots
+        fig_dumb.add_trace(go.Scatter(
+            x=dumb_df['Midline'], y=dumb_df['Indicator'],
+            mode='markers',
+            marker=dict(size=10, color=COLORS['midline'], symbol='diamond',
+                        line=dict(width=1.5, color='white')),
+            name='Midline',
+            hovertemplate='%{y}<br>Midline: %{x:.1f}%<extra></extra>'
+        ))
+        fig_dumb.update_layout(
+            title="Baseline to Midline Shift (Dumbbell Chart)",
+            height=max(420, len(dumb_df) * 30),
+            xaxis_title="Percentage (%)",
+            yaxis=dict(categoryorder='trace'),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        st.plotly_chart(fig_dumb, use_container_width=True)
+
+    st.markdown("---")
+
+    # ====================================================================
+    # FORESTRY INSIGHTS + Domain Radar Trend
+    # ====================================================================
     _section_header('', 'Forestry Conservation Insights', 'Community Level')
+
+    # Forestry Domain Radar — BL vs ML overlay
+    fd = f_data['functionality_domain']
+    domains = ['Management', 'Gender', 'Effectiveness', 'Overall']
+    bl_vals = [fd.loc[fd['Timepoint'] == 'Baseline', d].values[0] for d in domains]
+    ml_vals = [fd.loc[fd['Timepoint'] == 'Midline', d].values[0] for d in domains]
+
+    rad_col1, rad_col2 = st.columns([1, 1])
+    with rad_col1:
+        fig_radar = go.Figure()
+        fig_radar.add_trace(go.Scatterpolar(
+            r=bl_vals + [bl_vals[0]],
+            theta=domains + [domains[0]],
+            name='Baseline',
+            fill='toself',
+            fillcolor='rgba(66,133,244,0.12)',
+            line=dict(color=COLORS['baseline'], width=2.5),
+            marker=dict(size=7)
+        ))
+        fig_radar.add_trace(go.Scatterpolar(
+            r=ml_vals + [ml_vals[0]],
+            theta=domains + [domains[0]],
+            name='Midline',
+            fill='toself',
+            fillcolor='rgba(52,168,83,0.12)',
+            line=dict(color=COLORS['midline'], width=2.5),
+            marker=dict(size=7)
+        ))
+        fig_radar.update_layout(
+            title="Domain Score Trend (Radar)",
+            polar=dict(radialaxis=dict(visible=True, range=[0, max(max(bl_vals), max(ml_vals)) * 1.15],
+                                        tickfont=dict(size=11))),
+            showlegend=True,
+            legend=dict(orientation='h', yanchor='bottom', y=-0.15, x=0.5, xanchor='center'),
+            height=380,
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            margin=dict(l=60, r=60, t=60, b=40),
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+    with rad_col2:
+        # Forestry slope chart — selected key indicators
+        f_slope_data = []
+        # Functionality threshold
+        ft = f_data['functionality_threshold']
+        bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
+        ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
+        f_slope_data.append(('Functionality >=60%', bl_60 * 100 if bl_60 <= 1 else bl_60,
+                             ml_60 * 100 if ml_60 <= 1 else ml_60))
+        # Women leadership
+        wl = f_data['women_leadership']
+        sig_bl = wl.loc[wl['Category'] == 'Significant Leadership', 'Baseline'].values[0]
+        sig_ml = wl.loc[wl['Category'] == 'Significant Leadership', 'Midline'].values[0]
+        f_slope_data.append(('Women Leadership', sig_bl * 100 if sig_bl <= 1 else sig_bl,
+                             sig_ml * 100 if sig_ml <= 1 else sig_ml))
+        # Training coverage
+        tc = f_data['training_coverage']
+        tc_bl = tc.loc[tc['Category'] == 'Most Members', 'Baseline'].values[0]
+        tc_ml = tc.loc[tc['Category'] == 'Most Members', 'Midline'].values[0]
+        f_slope_data.append(('Training (Most)', tc_bl * 100 if tc_bl <= 1 else tc_bl,
+                             tc_ml * 100 if tc_ml <= 1 else tc_ml))
+        # Income gen
+        ig = f_data['income_gen']
+        ig_bl = ig.loc[ig['Category'] == 'Yes', 'Baseline'].values[0]
+        ig_ml = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
+        f_slope_data.append(('Income Gen', ig_bl * 100 if ig_bl <= 1 else ig_bl,
+                             ig_ml * 100 if ig_ml <= 1 else ig_ml))
+        # Agroforestry
+        af = f_data['agroforestry']
+        af_bl = af.loc[af['Category'] == 'Yes', 'Baseline'].values[0]
+        af_ml = af.loc[af['Category'] == 'Yes', 'Midline'].values[0]
+        f_slope_data.append(('Agroforestry', af_bl * 100 if af_bl <= 1 else af_bl,
+                             af_ml * 100 if af_ml <= 1 else af_ml))
+
+        fig_fslope = _make_slope_chart(f_slope_data, "Forestry Key Indicator Trends")
+        st.plotly_chart(fig_fslope, use_container_width=True)
+
+    # Insight cards
     for title, body, trend in f_insights:
         _insight_card(title, body, trend)
 
     st.markdown("---")
 
-    # ---- WOMEN SURVEY INSIGHTS ----
+    # ====================================================================
+    # WOMEN SURVEY INSIGHTS + Empowerment Trend Charts
+    # ====================================================================
     _section_header('', "Women's Survey Insights", 'Household Level')
+
+    # Women empowerment slope chart + life skills domain trend
+    we_col1, we_col2 = st.columns([1, 1])
+
+    with we_col1:
+        # Women's key indicators slope chart
+        w_slope_data = []
+        for label, df_key, resp_col, resp_val in [
+            ('CC Awareness', 'cc_heard', 'Response', 'Yes'),
+            ('NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
+            ('Personal Savings', 'personal_saving', 'Response', 'Yes'),
+            ('Prep Knowledge', 'prep_knowledge', 'Response', 'Yes'),
+        ]:
+            df = w_data[df_key]
+            b_w = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0] * 100
+            m_w = df.loc[df[resp_col] == resp_val, 'Midline'].values[0] * 100
+            w_slope_data.append((label, b_w, m_w))
+
+        # Decision influence avg
+        di = w_data['decision_influence']
+        w_slope_data.append(('Decision Influence', di['Baseline'].mean() * 100, di['Midline'].mean() * 100))
+
+        # Life skills avg
+        ls = w_data['lifeskills_agree']
+        w_slope_data.append(('Life Skills', ls['Baseline'].mean() * 100, ls['Midline'].mean() * 100))
+
+        fig_wslope = _make_slope_chart(w_slope_data, "Women's Key Indicator Trends")
+        st.plotly_chart(fig_wslope, use_container_width=True)
+
+    with we_col2:
+        # Life skills by domain — grouped bar with trend lines
+        ls_all = w_data['lifeskills_agree'].copy()
+        # Attempt to group by domain if Statement column contains domain hints
+        domain_map = {}
+        for _, row in ls_all.iterrows():
+            stmt = str(row.get('Statement', ''))
+            if any(k in stmt.lower() for k in ['confident', 'proud', 'worth', 'self']):
+                domain_map[stmt] = 'Self Esteem'
+            elif any(k in stmt.lower() for k in ['future', 'plan', 'goal', 'aspir']):
+                domain_map[stmt] = 'Aspirations'
+            else:
+                domain_map[stmt] = 'Leadership'
+
+        # Build domain averages
+        ls_all['Domain'] = ls_all['Statement'].map(domain_map)
+        domain_avg = ls_all.groupby('Domain')[['Baseline', 'Midline']].mean().reset_index()
+
+        # Add communication and conflict as extra domains
+        comm = w_data['communication_agree']
+        conf = w_data['conflict_agree']
+        extra_domains = [
+            {'Domain': 'Communication', 'Baseline': comm['Baseline'].mean(), 'Midline': comm['Midline'].mean()},
+            {'Domain': 'Conflict Res.', 'Baseline': conf['Baseline'].mean(), 'Midline': conf['Midline'].mean()},
+        ]
+        domain_avg = pd.concat([domain_avg, pd.DataFrame(extra_domains)], ignore_index=True)
+        domain_avg['BL_pct'] = domain_avg['Baseline'] * 100
+        domain_avg['ML_pct'] = domain_avg['Midline'] * 100
+        domain_avg['Change'] = round(domain_avg['ML_pct'] - domain_avg['BL_pct'], 1)
+
+        fig_dom = go.Figure()
+        fig_dom.add_trace(go.Bar(
+            x=domain_avg['Domain'], y=domain_avg['BL_pct'],
+            name='Baseline', marker_color=COLORS['baseline'],
+            text=domain_avg['BL_pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto'
+        ))
+        fig_dom.add_trace(go.Bar(
+            x=domain_avg['Domain'], y=domain_avg['ML_pct'],
+            name='Midline', marker_color=COLORS['midline'],
+            text=domain_avg['ML_pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto'
+        ))
+        # Trend line connecting midline values
+        fig_dom.add_trace(go.Scatter(
+            x=domain_avg['Domain'], y=domain_avg['ML_pct'],
+            mode='lines+markers',
+            name='Midline Trend',
+            line=dict(color=COLORS['card_value'], width=2.5, dash='dot'),
+            marker=dict(size=8, symbol='diamond'),
+            yaxis='y'
+        ))
+        fig_dom.update_layout(
+            title="Skills Domain Trends (BL vs ML)",
+            barmode='group', height=380,
+            yaxis_title='Agree/Strongly Agree (%)',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        st.plotly_chart(fig_dom, use_container_width=True)
+
+    # Insight cards
     for title, body, trend in w_insights:
         _insight_card(title, body, trend)
 
     st.markdown("---")
 
-    # ---- CROSS-CUTTING INSIGHTS ----
+    # ====================================================================
+    # CROSS-CUTTING INSIGHTS + Performance Quadrant
+    # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
+
+    # Performance Quadrant Scatter — Midline level (x) vs Change (y)
+    st.markdown("""<div class="section-narrative">
+    <strong>Performance Quadrant:</strong> Each dot is one indicator. The x-axis shows
+    the current (Midline) level, the y-axis shows Baseline-to-Midline change. Quadrants
+    help identify high performers, rising stars, areas at risk, and stagnating indicators.
+    </div>""", unsafe_allow_html=True)
+
+    fig_quad = go.Figure()
+
+    # Separate by dataset for color coding
+    for ds, color, symbol in [('Forestry', COLORS['baseline'], 'circle'),
+                               ('Women', COLORS['midline'], 'diamond')]:
+        subset = ind_df[ind_df['Dataset'] == ds]
+        fig_quad.add_trace(go.Scatter(
+            x=subset['Midline'],
+            y=subset['Change'],
+            mode='markers+text',
+            marker=dict(size=12, color=color, symbol=symbol,
+                        line=dict(width=1.5, color='white')),
+            text=subset['Indicator'],
+            textposition='top center',
+            textfont=dict(size=10),
+            name=ds,
+            hovertemplate='<b>%{text}</b><br>Midline: %{x:.1f}%<br>Change: %{y:+.1f}pp<extra></extra>'
+        ))
+
+    # Quadrant reference lines
+    median_ml = ind_df['Midline'].median()
+    fig_quad.add_hline(y=0, line_dash='dash', line_color='#999', line_width=1)
+    fig_quad.add_vline(x=median_ml, line_dash='dash', line_color='#999', line_width=1)
+
+    # Quadrant labels
+    y_range = max(abs(ind_df['Change'].min()), abs(ind_df['Change'].max()))
+    x_max = ind_df['Midline'].max()
+    x_min = ind_df['Midline'].min()
+    annotations = [
+        dict(x=x_min + (median_ml - x_min) * 0.5, y=y_range * 0.85,
+             text="Needs Attention", showarrow=False,
+             font=dict(size=11, color='#C62828'), bgcolor='rgba(255,235,238,0.7)'),
+        dict(x=median_ml + (x_max - median_ml) * 0.5, y=y_range * 0.85,
+             text="High Performers", showarrow=False,
+             font=dict(size=11, color='#2E7D32'), bgcolor='rgba(232,245,233,0.7)'),
+        dict(x=x_min + (median_ml - x_min) * 0.5, y=-y_range * 0.85,
+             text="At Risk", showarrow=False,
+             font=dict(size=11, color='#E65100'), bgcolor='rgba(255,243,224,0.7)'),
+        dict(x=median_ml + (x_max - median_ml) * 0.5, y=-y_range * 0.85,
+             text="Declining Leaders", showarrow=False,
+             font=dict(size=11, color='#37474F'), bgcolor='rgba(236,239,241,0.7)'),
+    ]
+    fig_quad.update_layout(
+        title="Performance Quadrant: Current Level vs Change",
+        height=480,
+        xaxis_title="Midline Level (%)",
+        yaxis_title="Change (pp)",
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+        font=dict(size=13, color='#333'),
+        title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+        annotations=annotations,
+    )
+    st.plotly_chart(fig_quad, use_container_width=True)
+
+    # Insight cards
     for title, body, trend in cc_insights:
         _insight_card(title, body, trend)
 
     st.markdown("---")
 
-    # ---- CHANGE HEATMAP ----
+    # ====================================================================
+    # CHANGE HEATMAP + Waterfall
+    # ====================================================================
     _section_header('', 'Indicator Change Heatmap', 'Overview')
     st.markdown("""<div class="section-narrative">
     A visual summary of percentage-point changes across key indicators from both datasets.
     Green cells indicate positive change; red cells indicate areas that declined.
     </div>""", unsafe_allow_html=True)
 
-    # Build heatmap data
-    heatmap_rows = []
+    heatmap_df = ind_df.copy()
 
-    # Forestry indicators
-    ft = f_data['functionality_threshold']
-    bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
-    ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
-    heatmap_rows.append({'Indicator': 'Functionality >=60%', 'Dataset': 'Forestry',
-                         'Baseline': bl_60 * 100 if bl_60 <= 1 else bl_60,
-                         'Midline': ml_60 * 100 if ml_60 <= 1 else ml_60})
+    # --- Butterfly chart: BL on left, ML on right ---
+    hm_sorted = heatmap_df.sort_values('Change')
+    hm_col1, hm_col2 = st.columns([1, 1])
 
-    for domain in ['Management', 'Gender', 'Effectiveness', 'Overall']:
-        fd = f_data['functionality_domain']
-        b = fd.loc[fd['Timepoint'] == 'Baseline', domain].values[0]
-        m = fd.loc[fd['Timepoint'] == 'Midline', domain].values[0]
-        heatmap_rows.append({'Indicator': f'{domain} Score', 'Dataset': 'Forestry',
-                             'Baseline': b, 'Midline': m})
+    with hm_col1:
+        # Diverging bar chart of changes
+        colors_bar = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in hm_sorted['Change']]
+        fig_hm = go.Figure()
+        fig_hm.add_trace(go.Bar(
+            y=hm_sorted['Indicator'] + ' (' + hm_sorted['Dataset'] + ')',
+            x=hm_sorted['Change'],
+            orientation='h',
+            marker_color=colors_bar,
+            text=hm_sorted['Change'].apply(lambda x: f"{x:+.1f} pp"),
+            textposition='auto'
+        ))
+        fig_hm.update_layout(
+            title="Baseline-to-Midline Change",
+            height=max(400, len(heatmap_df) * 32),
+            xaxis_title="Change (pp)",
+            yaxis=dict(categoryorder='trace'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        st.plotly_chart(fig_hm, use_container_width=True)
 
-    ig = f_data['income_gen']
-    b_ig = ig.loc[ig['Category'] == 'Yes', 'Baseline'].values[0]
-    m_ig = ig.loc[ig['Category'] == 'Yes', 'Midline'].values[0]
-    heatmap_rows.append({'Indicator': 'Income Generation', 'Dataset': 'Forestry',
-                         'Baseline': b_ig * 100 if b_ig <= 1 else b_ig,
-                         'Midline': m_ig * 100 if m_ig <= 1 else m_ig})
-
-    af = f_data['agroforestry']
-    b_af = af.loc[af['Category'] == 'Yes', 'Baseline'].values[0]
-    m_af = af.loc[af['Category'] == 'Yes', 'Midline'].values[0]
-    heatmap_rows.append({'Indicator': 'Agroforestry', 'Dataset': 'Forestry',
-                         'Baseline': b_af * 100 if b_af <= 1 else b_af,
-                         'Midline': m_af * 100 if m_af <= 1 else m_af})
-
-    # Women indicators
-    for label, df_key, resp_col, resp_val in [
-        ('CC Awareness', 'cc_heard', 'Response', 'Yes'),
-        ('NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
-        ('Personal Savings', 'personal_saving', 'Response', 'Yes'),
-        ('Prep Knowledge', 'prep_knowledge', 'Response', 'Yes'),
-    ]:
-        df = w_data[df_key]
-        b_w = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0]
-        m_w = df.loc[df[resp_col] == resp_val, 'Midline'].values[0]
-        heatmap_rows.append({'Indicator': label, 'Dataset': 'Women',
-                             'Baseline': b_w * 100, 'Midline': m_w * 100})
-
-    # Life skills avg
-    ls = w_data['lifeskills_agree']
-    heatmap_rows.append({'Indicator': 'Life Skills (avg)', 'Dataset': 'Women',
-                         'Baseline': ls['Baseline'].mean() * 100,
-                         'Midline': ls['Midline'].mean() * 100})
-
-    # Decision influence avg
-    di = w_data['decision_influence']
-    heatmap_rows.append({'Indicator': 'Decision Influence (avg)', 'Dataset': 'Women',
-                         'Baseline': di['Baseline'].mean() * 100,
-                         'Midline': di['Midline'].mean() * 100})
-
-    heatmap_df = pd.DataFrame(heatmap_rows)
-    heatmap_df['Change (pp)'] = round(heatmap_df['Midline'] - heatmap_df['Baseline'], 1)
-    heatmap_df['Baseline'] = heatmap_df['Baseline'].round(1)
-    heatmap_df['Midline'] = heatmap_df['Midline'].round(1)
-
-    # Display as a styled bar chart
-    heatmap_sorted = heatmap_df.sort_values('Change (pp)')
-    colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in heatmap_sorted['Change (pp)']]
-    fig_hm = go.Figure()
-    fig_hm.add_trace(go.Bar(
-        y=heatmap_sorted['Indicator'] + ' (' + heatmap_sorted['Dataset'] + ')',
-        x=heatmap_sorted['Change (pp)'],
-        orientation='h',
-        marker_color=colors,
-        text=heatmap_sorted['Change (pp)'].apply(lambda x: f"{x:+.1f} pp"),
-        textposition='auto'
-    ))
-    fig_hm.update_layout(
-        title="Baseline-to-Midline Change Across Key Indicators",
-        height=max(400, len(heatmap_rows) * 32),
-        xaxis_title="Change (pp)",
-        yaxis=dict(categoryorder='trace'),
-        font=dict(size=13, color='#333'),
-        title_font=dict(size=16, color='#222'),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        margin=dict(l=20, r=20, t=60, b=20),
-    )
-    st.plotly_chart(fig_hm, use_container_width=True)
+    with hm_col2:
+        # Waterfall chart — cumulative gain/loss
+        wf_sorted = heatmap_df.sort_values('Change', ascending=False).reset_index(drop=True)
+        wf_colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in wf_sorted['Change']]
+        fig_wf = go.Figure(go.Waterfall(
+            x=wf_sorted['Indicator'],
+            y=wf_sorted['Change'],
+            measure=['relative'] * len(wf_sorted),
+            text=wf_sorted['Change'].apply(lambda x: f"{x:+.1f}"),
+            textposition='outside',
+            increasing=dict(marker=dict(color=COLORS['good'])),
+            decreasing=dict(marker=dict(color=COLORS['danger'])),
+            connector=dict(line=dict(color='#ccc', width=1)),
+        ))
+        fig_wf.update_layout(
+            title="Cumulative Change Waterfall",
+            height=max(400, len(heatmap_df) * 32),
+            yaxis_title="Change (pp)",
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=60),
+            xaxis=dict(tickangle=-45),
+        )
+        st.plotly_chart(fig_wf, use_container_width=True)
 
     # Data table
     with st.expander("View Full Indicator Change Table"):
+        display_df = heatmap_df[['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change']].copy()
+        display_df.columns = ['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change (pp)']
         st.dataframe(
-            heatmap_df[['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change (pp)']].style.applymap(
+            display_df.style.applymap(
                 lambda v: 'color: #2E7D32; font-weight: 700' if isinstance(v, (int, float)) and v > 0
                 else ('color: #C62828; font-weight: 700' if isinstance(v, (int, float)) and v < 0 else ''),
                 subset=['Change (pp)']
@@ -2378,7 +2783,9 @@ def render_insights_tab(f_data, w_data):
 
     st.markdown("---")
 
-    # ---- KEY RECOMMENDATIONS ----
+    # ====================================================================
+    # KEY RECOMMENDATIONS
+    # ====================================================================
     _section_header('', 'Key Recommendations', 'Action Items')
 
     # Auto-generate recommendations based on the insights
