@@ -2551,10 +2551,18 @@
         // Survey Switching Function
         function switchSurvey(surveyKey) {
             const data = window.surveyData[surveyKey];
+            if (!data) {
+                console.error('No survey data for key:', surveyKey);
+                return;
+            }
             
-            // Update buttons
-            document.querySelectorAll('.survey-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            // Update buttons - find matching button by surveyKey instead of relying on event.target
+            document.querySelectorAll('.survey-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(surveyKey)) {
+                    btn.classList.add('active');
+                }
+            });
             
             // Update title
             document.getElementById('survey-title').textContent = data.title;
@@ -2615,54 +2623,67 @@
                 updateLogframeTable(data.logframe);
             }
 
-            // Update Charts
-            updateSurveyCharts(surveyKey);
-
-            // TOGGLE between Women and Men sections - show one at a time
+            // TOGGLE between Women and Men sections FIRST (before chart updates)
             const womenSection = document.getElementById('women-survey-section');
             const menSection = document.getElementById('men-survey-section');
             
             console.log('🔄 Toggling survey sections...');
-            console.log('  Women section ID:', womenSection ? 'FOUND' : 'NOT FOUND');
-            console.log('  Men section ID:', menSection ? 'FOUND' : 'NOT FOUND');
             
-            if (surveyKey === 'women-cosme') {
-                console.log('👩 Showing WOMEN survey only');
-                womenSection.style.display = 'block';
-                menSection.style.display = 'none';
-            } else if (surveyKey === 'men-cosme') {
+            if (surveyKey === 'men-cosme') {
                 console.log('👨 Showing MEN survey only');
-                womenSection.style.display = 'none';
-                menSection.style.display = 'block';
+                if (womenSection) womenSection.style.display = 'none';
+                if (menSection) menSection.style.display = 'block';
             } else {
-                console.log('📊 Showing GJJ/default survey');
-                womenSection.style.display = 'block';
-                menSection.style.display = 'none';
+                console.log('👩 Showing WOMEN survey section');
+                if (womenSection) womenSection.style.display = 'block';
+                if (menSection) menSection.style.display = 'none';
             }
 
-            // Update tab content and charts (with a small delay for DOM rendering)
-            // Use requestAnimationFrame + setTimeout to ensure DOM is fully rendered
+            // Reset tab state: activate first tab in the visible section so charts render in a visible container
+            if (surveyKey === 'women-cosme' || surveyKey === 'gjj-women' || surveyKey === 'gjj-men') {
+                // Reset women tabs to the first tab
+                const womenTabContents = womenSection ? womenSection.querySelectorAll('.tab-content') : [];
+                const womenTabButtons = womenSection ? womenSection.querySelectorAll('.tab-button') : [];
+                womenTabContents.forEach(tab => tab.classList.remove('active'));
+                womenTabButtons.forEach(btn => btn.classList.remove('active'));
+                if (womenTabContents.length > 0) womenTabContents[0].classList.add('active');
+                if (womenTabButtons.length > 0) womenTabButtons[0].classList.add('active');
+            }
+
+            // Destroy ALL existing Chart.js instances to prevent stale renders
+            function destroyAllCharts() {
+                // Get all canvas elements and destroy any Chart.js instances
+                document.querySelectorAll('canvas').forEach(canvas => {
+                    const existingChart = Chart.getChart(canvas);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                });
+            }
+            destroyAllCharts();
+
+            // Force reflow so the section is fully visible before rendering charts
+            const activeSection = surveyKey === 'men-cosme' ? menSection : womenSection;
+            if (activeSection) void activeSection.offsetHeight;
+
+            // Use requestAnimationFrame + setTimeout to ensure DOM/layout is fully ready
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     console.log('⏱️ Timeout triggered - initializing surveys...');
                     
-                    // Force a reflow to ensure layout is recalculated
-                    const sectionToUpdate = surveyKey === 'women-cosme' ? womenSection : surveyKey === 'men-cosme' ? menSection : womenSection;
-                    if (sectionToUpdate) {
-                        // Trigger reflow by accessing offsetHeight
-                        void sectionToUpdate.offsetHeight;
-                        console.log(`  ✓ Reflow triggered for section visibility`);
-                    }
+                    // Force another reflow
+                    if (activeSection) void activeSection.offsetHeight;
                     
                     if (surveyKey === 'women-cosme') {
                         console.log('  → Updating women survey charts');
+                        updateSurveyCharts(surveyKey);
                         updateAllTabCharts('women-cosme');
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                     } else if (surveyKey === 'men-cosme') {
                         console.log('  → Initializing men survey tabs and charts');
+                        updateSurveyCharts(surveyKey);
                         initializeMenSurveyTabs();
-                        // Additional delay for chart rendering after tab initialization
                         setTimeout(() => {
                             console.log('  → Rendering men survey charts');
                             updateMenSurveyCharts('men-cosme');
@@ -2670,12 +2691,13 @@
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                     } else {
-                        console.log('  → Updating other survey charts');
+                        console.log('  → Updating GJJ survey charts');
+                        updateSurveyCharts(surveyKey);
                         updateAllTabCharts(surveyKey);
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                     }
-                }, 150);
+                }, 200);
             });
         }
 
