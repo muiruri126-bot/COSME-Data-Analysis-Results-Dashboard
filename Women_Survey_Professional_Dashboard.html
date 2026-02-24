@@ -2821,7 +2821,7 @@
                     } else {
                         console.log('  → Updating GJJ survey charts');
                         updateSurveyCharts(surveyKey);
-                        updateAllTabCharts(surveyKey);
+                        updateGJJTabCharts(surveyKey);
                         updateFootnotes(surveyKey);
                         updateTabContent(surveyKey);
                     }
@@ -3226,6 +3226,111 @@
                 });
                 console.log('>>> updateTabContent (GJJ) completed');
             }
+        }
+
+        // === GJJ Tab Charts — renders bar charts for GJJ survey domains ===
+        function updateGJJTabCharts(surveyKey) {
+            if (surveyKey !== 'gjj-women') return;
+            console.log('🔄 updateGJJTabCharts called');
+
+            function getColors(bl, el) {
+                return el.map((v, i) => v < bl[i] ? colors.danger : colors.midline);
+            }
+
+            function gjjChart(id, labels, bl, el, horiz) {
+                const canvas = document.getElementById(id);
+                if (!canvas) { console.warn('GJJ canvas not found:', id); return; }
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const maxVal = Math.min(Math.max(...bl, ...el) + 12, 105);
+                return new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Baseline', data: bl, backgroundColor: colors.baseline },
+                            { label: 'Endline', data: el, backgroundColor: getColors(bl, el) }
+                        ]
+                    },
+                    options: {
+                        ...chartDefaults,
+                        indexAxis: horiz ? 'y' : 'x',
+                        scales: horiz
+                            ? { x: { beginAtZero: true, max: maxVal } }
+                            : { y: { beginAtZero: true, max: maxVal } },
+                        plugins: {
+                            ...chartDefaults.plugins,
+                            datalabels: {
+                                ...chartDefaults.plugins.datalabels,
+                                anchor: 'end',
+                                align: horiz ? 'right' : 'top'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ===== TAB 0: SELF — Self-Esteem & Self-Perception =====
+            gjjChart('chart-location',
+                ['"I have many strengths & qualities" (SA%)'], [33.5], [52.6]);
+            gjjChart('chart-headship',
+                ['"I see myself as equal to opposite gender" (SA%)'], [20.4], [48.2]);
+            gjjChart('chart-activities',
+                ['"My feelings and opinions are important" (SA%)'], [28.9], [49.4]);
+            gjjChart('chart-housing',
+                ['"I voice my opinions in my community" (SA%)'], [26.7], [65.9]);
+            gjjChart('chart-wash',
+                ['Strengths', 'Feelings', 'Equal', 'Voice'],
+                [33.5, 28.9, 20.4, 26.7], [52.6, 49.4, 48.2, 65.9]);
+
+            // ===== TAB 1: RELATIONAL — Relationship Quality =====
+            gjjChart('chart-shocks',
+                ['Respected (Always)', 'Voice Disagreement', 'Laugh Together'],
+                [43.1, 26.9, 38.2], [39.1, 27.1, 41.5], true);
+            gjjChart('chart-impact',
+                ['Share Feelings', 'Consent Respect', 'Shared Responsibility'],
+                [31.4, 45.3, 28.7], [35.2, 52.8, 42.1]);
+            gjjChart('chart-coping',
+                ['Respected', 'Disagreement', 'Laughing', 'Feelings', 'Consent'],
+                [43.1, 26.9, 38.2, 31.4, 45.3], [39.1, 27.1, 41.5, 35.2, 52.8], true);
+
+            // ===== TAB 2: SHARED RESPONSIBILITY =====
+            gjjChart('chart-prep-knowledge',
+                ['Supports Chores', 'Always Does Chores', 'Weekly Discussion'],
+                [41.4, 13.7, 63.7], [64.7, 13.1, 94.5]);
+            gjjChart('chart-prep-participation',
+                ['Always', 'Sometimes', 'Never'],
+                [13.7, 27.7, 58.6], [13.1, 51.6, 35.3]);
+            gjjChart('chart-warnings',
+                ['Husband Supports', 'Weekly Dialogue', 'Care Work Talk'],
+                [41.4, 63.7, 52.3], [64.7, 94.5, 78.9]);
+
+            // ===== TAB 3: SHARED POWER =====
+            gjjChart('chart-assets',
+                ['Decision Talks', 'Purchase Assets', 'Child School', 'Invest Business'],
+                [60.2, 17.6, 39.8, 18.4], [81.7, 22.0, 50.6, 22.1], true);
+            gjjChart('chart-land',
+                ['Husband Alone', 'Joint Decision', 'Wife Alone'],
+                [8.8, 55.0, 36.2], [2.0, 72.0, 26.0]);
+            gjjChart('chart-cultivation',
+                ['Often', 'Sometimes', 'Rarely'],
+                [35.2, 40.8, 24.0], [52.1, 35.6, 12.3]);
+            gjjChart('chart-inputs',
+                ['Purchase Assets', 'Build on Land', 'Child School', 'Business', 'Healthcare'],
+                [17.6, 36.4, 39.8, 18.4, 6.6], [22.0, 28.3, 50.6, 22.1, 20.3], true);
+
+            // ===== TAB 4: AUTONOMY & LEADERSHIP =====
+            gjjChart('chart-personal-savings',
+                ['Hide Money (Always)'], [12.0], [3.3]);
+            gjjChart('chart-mechanism',
+                ['Community Leadership (Definitely)'], [87.1], [84.4]);
+            gjjChart('chart-loans',
+                ['Business Support (Definitely)'], [84.9], [64.2]);
+            gjjChart('chart-savings-use',
+                ['Hide Money', 'Leadership', 'Business Support'],
+                [12.0, 87.1, 84.9], [3.3, 84.4, 64.2]);
+
+            console.log('✓ updateGJJTabCharts completed');
         }
 
         // Dynamic Tab Charts Data Structure - Make globally accessible
