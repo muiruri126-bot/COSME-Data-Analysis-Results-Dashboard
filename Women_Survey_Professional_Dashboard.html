@@ -1141,7 +1141,7 @@
         </div>
 
         <!-- PROJECT TARGETS VS RESULTS -->
-        <div class="section">
+        <div class="section" id="logframe-section">
             <button class="collapsible-header" onclick="toggleCollapsible(this)">Program Targets vs Results Alignment</button>
             <div class="collapsible-content">
                 <div class="highlight-box">
@@ -2626,7 +2626,7 @@
             });
 
             // Show/Hide Logframe Section
-            const logframeSection = document.querySelector('.collapsible-header').parentElement;
+            const logframeSection = document.getElementById('logframe-section');
             if (data.hasLogframe === false) {
                 logframeSection.style.display = 'none';
             } else {
