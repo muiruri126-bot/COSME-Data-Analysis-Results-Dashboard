@@ -28,23 +28,100 @@ import os
 EXCEL_FILE = "Forest Functionality Basline_midline results.xlsx"
 SHEET_NAME = "Results"  # The sheet containing all data
 
-# Color palette for Baseline vs Midline
-COLORS = {
-    "baseline": "#5B8DB8",      # Steel blue
-    "midline": "#2E7D32",       # Forest green
-    "baseline_light": "#A3C4DC",
-    "midline_light": "#81C784",
-    "accent": "#FF8F00",        # Amber accent
-    "danger": "#E53935",        # Red for negative
-    "good": "#43A047",
-    "medium": "#FB8C00",
-    "poor": "#E53935",
-    "low": "#43A047",
-    "high": "#E53935",
-    "decrease": "#43A047",
-    "increase": "#E53935",
-    "no_change": "#78909C",
+# ============================================================================
+# THEMES — Multiple color palettes selectable from the sidebar
+# ============================================================================
+THEMES = {
+    "🌲 Forest Green": {
+        "baseline": "#5B8DB8",       "midline": "#2E7D32",
+        "baseline_light": "#A3C4DC", "midline_light": "#81C784",
+        "accent": "#FF8F00",         "danger": "#E53935",
+        "good": "#43A047",           "medium": "#FB8C00",
+        "poor": "#E53935",           "low": "#43A047",
+        "high": "#E53935",           "decrease": "#43A047",
+        "increase": "#E53935",       "no_change": "#78909C",
+        # UI chrome
+        "header_gradient": "linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%)",
+        "card_border": "#2E7D32",
+        "card_value": "#1B5E20",
+        "narrative_bg": "#E8F5E9",
+        "narrative_border": "#2E7D32",
+        "narrative_text": "#1B5E20",
+        "radar_bl_fill": "rgba(91,141,184,0.3)",
+        "radar_ml_fill": "rgba(46,125,50,0.3)",
+    },
+    "🌊 Ocean Blue": {
+        "baseline": "#1565C0",       "midline": "#00838F",
+        "baseline_light": "#90CAF9", "midline_light": "#80DEEA",
+        "accent": "#FF6F00",         "danger": "#D32F2F",
+        "good": "#00897B",           "medium": "#F9A825",
+        "poor": "#D32F2F",           "low": "#00897B",
+        "high": "#D32F2F",           "decrease": "#00897B",
+        "increase": "#D32F2F",       "no_change": "#78909C",
+        "header_gradient": "linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%)",
+        "card_border": "#1565C0",
+        "card_value": "#0D47A1",
+        "narrative_bg": "#E3F2FD",
+        "narrative_border": "#1565C0",
+        "narrative_text": "#0D47A1",
+        "radar_bl_fill": "rgba(21,101,192,0.3)",
+        "radar_ml_fill": "rgba(0,131,143,0.3)",
+    },
+    "🌅 Sunset": {
+        "baseline": "#E65100",       "midline": "#AD1457",
+        "baseline_light": "#FFB74D", "midline_light": "#F48FB1",
+        "accent": "#FDD835",         "danger": "#B71C1C",
+        "good": "#388E3C",           "medium": "#F9A825",
+        "poor": "#B71C1C",           "low": "#388E3C",
+        "high": "#B71C1C",           "decrease": "#388E3C",
+        "increase": "#B71C1C",       "no_change": "#78909C",
+        "header_gradient": "linear-gradient(135deg, #BF360C 0%, #E65100 50%, #F4511E 100%)",
+        "card_border": "#E65100",
+        "card_value": "#BF360C",
+        "narrative_bg": "#FBE9E7",
+        "narrative_border": "#E65100",
+        "narrative_text": "#BF360C",
+        "radar_bl_fill": "rgba(230,81,0,0.3)",
+        "radar_ml_fill": "rgba(173,20,87,0.3)",
+    },
+    "🏔️ Earth Tones": {
+        "baseline": "#6D4C41",       "midline": "#33691E",
+        "baseline_light": "#BCAAA4", "midline_light": "#A5D6A7",
+        "accent": "#FF8F00",         "danger": "#C62828",
+        "good": "#558B2F",           "medium": "#F9A825",
+        "poor": "#C62828",           "low": "#558B2F",
+        "high": "#C62828",           "decrease": "#558B2F",
+        "increase": "#C62828",       "no_change": "#8D6E63",
+        "header_gradient": "linear-gradient(135deg, #3E2723 0%, #5D4037 50%, #6D4C41 100%)",
+        "card_border": "#6D4C41",
+        "card_value": "#3E2723",
+        "narrative_bg": "#EFEBE9",
+        "narrative_border": "#6D4C41",
+        "narrative_text": "#3E2723",
+        "radar_bl_fill": "rgba(109,76,65,0.3)",
+        "radar_ml_fill": "rgba(51,105,30,0.3)",
+    },
+    "💼 Professional": {
+        "baseline": "#37474F",       "midline": "#1565C0",
+        "baseline_light": "#B0BEC5", "midline_light": "#90CAF9",
+        "accent": "#FF6F00",         "danger": "#C62828",
+        "good": "#2E7D32",           "medium": "#EF6C00",
+        "poor": "#C62828",           "low": "#2E7D32",
+        "high": "#C62828",           "decrease": "#2E7D32",
+        "increase": "#C62828",       "no_change": "#78909C",
+        "header_gradient": "linear-gradient(135deg, #263238 0%, #37474F 50%, #455A64 100%)",
+        "card_border": "#37474F",
+        "card_value": "#263238",
+        "narrative_bg": "#ECEFF1",
+        "narrative_border": "#37474F",
+        "narrative_text": "#263238",
+        "radar_bl_fill": "rgba(55,71,79,0.3)",
+        "radar_ml_fill": "rgba(21,101,192,0.3)",
+    },
 }
+
+# Default — will be overridden per session by the sidebar selector
+COLORS = THEMES["🌲 Forest Green"]
 
 # ============================================================================
 # DATA LOADING — Reads raw data from specific rows/columns in the Excel sheet
@@ -649,42 +726,53 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    # Custom CSS
-    st.markdown("""
+    # ---- THEME SELECTOR (must come before CSS injection) ----
+    theme_name = st.sidebar.selectbox(
+        "🎨 Dashboard Theme",
+        list(THEMES.keys()),
+        index=0,
+        help="Choose a color palette for all charts and UI elements"
+    )
+    # Apply selected theme globally
+    global COLORS
+    COLORS = THEMES[theme_name]
+
+    # Custom CSS — driven by the active theme
+    st.markdown(f"""
     <style>
-    .main-header {
-        background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
+    .main-header {{
+        background: {COLORS['header_gradient']};
         color: white;
         padding: 1.5rem 2rem;
         border-radius: 12px;
         margin-bottom: 1.5rem;
         text-align: center;
-    }
-    .main-header h1 { margin: 0; font-size: 2rem; }
-    .main-header p { margin: 0.3rem 0 0; opacity: 0.9; font-size: 1rem; }
-    .kpi-card {
+    }}
+    .main-header h1 {{ margin: 0; font-size: 2rem; }}
+    .main-header p {{ margin: 0.3rem 0 0; opacity: 0.9; font-size: 1rem; }}
+    .kpi-card {{
         background: white;
         border-radius: 10px;
         padding: 1.2rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         text-align: center;
-        border-left: 4px solid #2E7D32;
-    }
-    .kpi-card h3 { font-size: 0.85rem; color: #666; margin: 0 0 0.3rem; }
-    .kpi-card .value { font-size: 2rem; font-weight: 700; color: #1B5E20; }
-    .kpi-card .delta { font-size: 0.9rem; margin-top: 0.2rem; }
-    .delta-positive { color: #2E7D32; }
-    .delta-negative { color: #E53935; }
-    .section-narrative {
-        background: #E8F5E9;
-        border-left: 4px solid #2E7D32;
+        border-left: 4px solid {COLORS['card_border']};
+    }}
+    .kpi-card h3 {{ font-size: 0.85rem; color: #666; margin: 0 0 0.3rem; }}
+    .kpi-card .value {{ font-size: 2rem; font-weight: 700; color: {COLORS['card_value']}; }}
+    .kpi-card .delta {{ font-size: 0.9rem; margin-top: 0.2rem; }}
+    .delta-positive {{ color: {COLORS['good']}; }}
+    .delta-negative {{ color: {COLORS['danger']}; }}
+    .section-narrative {{
+        background: {COLORS['narrative_bg']};
+        border-left: 4px solid {COLORS['narrative_border']};
         padding: 1rem 1.2rem;
         border-radius: 0 8px 8px 0;
         margin-bottom: 1rem;
         font-size: 0.95rem;
-        color: #1B5E20;
-    }
-    div[data-testid="stMetricValue"] { font-size: 1.4rem; }
+        color: {COLORS['narrative_text']};
+    }}
+    div[data-testid="stMetricValue"] {{ font-size: 1.4rem; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -699,6 +787,7 @@ def main():
     # ---- SIDEBAR ----
     st.sidebar.image("https://img.icons8.com/color/96/forest.png", width=80)
     st.sidebar.title("🌿 Dashboard Controls")
+    st.sidebar.markdown("---")
 
     # Resolve Excel file path (same folder as script)
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -832,13 +921,13 @@ def main():
                 r=list(domain_df['Baseline']) + [domain_df['Baseline'].iloc[0]],
                 theta=list(domain_df['Domain']) + [domain_df['Domain'].iloc[0]],
                 fill='toself', name='Baseline',
-                fillcolor='rgba(91,141,184,0.3)', line=dict(color=COLORS['baseline'])
+                fillcolor=COLORS['radar_bl_fill'], line=dict(color=COLORS['baseline'])
             ))
             fig_radar.add_trace(go.Scatterpolar(
                 r=list(domain_df['Midline']) + [domain_df['Midline'].iloc[0]],
                 theta=list(domain_df['Domain']) + [domain_df['Domain'].iloc[0]],
                 fill='toself', name='Midline',
-                fillcolor='rgba(46,125,50,0.3)', line=dict(color=COLORS['midline'])
+                fillcolor=COLORS['radar_ml_fill'], line=dict(color=COLORS['midline'])
             ))
             fig_radar.update_layout(
                 title="Domain Performance Radar",
