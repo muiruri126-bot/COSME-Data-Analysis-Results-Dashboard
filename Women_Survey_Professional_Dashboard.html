@@ -161,42 +161,6 @@
             line-height: 1.5;
         }
 
-        /* ACHIEVEMENT BADGES */
-        .achievement-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-exceeded {
-            background: #c8e6c9;
-            color: #1b5e20;
-            border-left: 3px solid #2e7d32;
-        }
-
-        .badge-met {
-            background: #a5d6a7;
-            color: #1b5e20;
-            border-left: 3px solid #2e7d32;
-        }
-
-        .badge-near {
-            background: #ffe0b2;
-            color: #e65100;
-            border-left: 3px solid #f57c00;
-        }
-
-        .badge-drop {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 3px solid #c62828;
-        }
-
         /* KPI DASHBOARD */
         .kpi-section {
             display: grid;
@@ -758,12 +722,6 @@
                 line-height: 1.4;
             }
 
-            .achievement-badge {
-                font-size: 0.65em;
-                padding: 4px 8px;
-                margin-top: 8px;
-            }
-
             /* KPI Cards */
             .kpi-section {
                 grid-template-columns: 1fr;
@@ -1065,37 +1023,31 @@
                     <div class="finding-title">Savings Transformation</div>
                     <div class="finding-metric">+48.8%</div>
                     <div class="finding-description">average improvement across savings rates, VSLA participation, and loan access. Personal saving (43.1%→93.4%), VSLA participation (43.6%→98%), women taking loans (28%→79.1%).</div>
-                    <div class="achievement-badge badge-exceeded">✓ Target Exceeded (70% goal)</div>
                 </div>
                 <div class="finding-card">
                     <div class="finding-title">Disaster Preparedness</div>
                     <div class="finding-metric">+35%</div>
                     <div class="finding-description">average improvement across preparedness knowledge, action knowledge, and early warning access. From 4.7%→37.8%, 11.8%→46.3%, 8.9%→45.0%.</div>
-                    <div class="achievement-badge badge-exceeded">✓ Target Exceeded</div>
                 </div>
                 <div class="finding-card">
                     <div class="finding-title">Climate Awareness</div>
                     <div class="finding-metric">+45%</div>
                     <div class="finding-description">average improvement across climate awareness and NbS understanding. Climate change awareness: 60.5%→96.3%, NbS solutions understanding: 23.1%→77.8%.</div>
-                    <div class="achievement-badge badge-exceeded">✓ Target Exceeded (55% goal)</div>
                 </div>
                 <div class="finding-card">
                     <div class="finding-title">Women Empowerment</div>
                     <div class="finding-metric">+24%</div>
                     <div class="finding-description">average improvement across 5 key household decisions: market access (+34.6pp), mangrove work (+39.3pp), routine purchases (+25pp), business/loans (+19.2pp), child education (+1.6pp).</div>
-                    <div class="achievement-badge badge-near">⚠ Target Nearly Met (65% goal: 58.8%)</div>
                 </div>
                 <div class="finding-card">
                     <div class="finding-title">NbS Participation</div>
                     <div class="finding-metric">+45%</div>
                     <div class="finding-description">average improvement across conservation activities. Mangrove restoration: 36.9%→86.5%, Seaweed farming: 19.8%→74.7%, Forest management: 67.4%→98.4%.</div>
-                    <div class="achievement-badge badge-exceeded">✓ Target Exceeded</div>
                 </div>
                 <div class="finding-card">
                     <div class="finding-title">Life Skills Growth</div>
                     <div class="finding-metric">+26%</div>
                     <div class="finding-description">average improvement across self-esteem (5.9%-19.6%), aspirations (9%-18%), leadership (31%-37.4%), and communication skills (15%-35%).</div>
-                    <div class="achievement-badge badge-exceeded">✓ Target Exceeded (55% goal)</div>
                 </div>
             </div>
             </div>
@@ -2599,14 +2551,12 @@
             const findingsContainer = document.querySelector('.key-findings');
             findingsContainer.innerHTML = '';
             data.findings.forEach(finding => {
-                const badgeClass = finding.badge === 'exceeded' ? 'badge-exceeded' : finding.badge === 'drop' ? 'badge-drop' : finding.badge === 'near' ? 'badge-near' : 'badge-met';
                 const card = document.createElement('div');
                 card.className = 'finding-card';
                 card.innerHTML = `
                     <div class="finding-title">${finding.title}</div>
                     <div class="finding-metric">${finding.metric}</div>
                     <div class="finding-description">${finding.description}</div>
-                    <div class="achievement-badge ${badgeClass}">${finding.badgeText}</div>
                 `;
                 findingsContainer.appendChild(card);
             });
