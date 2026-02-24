@@ -1137,7 +1137,7 @@
         <div class="section" id="logframe-section">
             <button class="collapsible-header" onclick="toggleCollapsible(this)">Program Targets vs Results Alignment</button>
             <div class="collapsible-content">
-                <div class="highlight-box">
+                <div class="highlight-box" id="logframe-highlight">
                     <h4>COSME Logframe Indicator Performance</h4>
                     <p>Midline achievement against official M&E targets. Exceptional performance across 8 indicators: 7 out of 8 indicators EXCEEDED targets. Strongest gains in decision-making involvement (1200a: 57.6%→95.9%), NbS knowledge (1210a: 20.7%→80.9%), savings groups (1220a: 28.8%→91.9%), and clean energy access (1220b: 50.8%→83.1%). Unpaid work time reduced below target (1200b: 9.3→7.7 hours). Gender equality perception improved significantly (1210c: 42.1→64.7/100). One indicator (1210b: skills & confidence at 46.3%) is on track but has not yet reached the 55% target.</p>
                 </div>
@@ -2712,18 +2712,7 @@
         window.surveyData = {
             'women-cosme': {
                 title: 'Women Survey - COSME Project',
-                footnotes: [
-                    '<strong>Logframe Hierarchy Levels:</strong> Indicators organized by three results chain levels: OUTCOME (1130-series) → INTERMEDIATE OUTCOME (1200-series) → IMMEDIATE OUTCOME (1210/1220-series)',
-                    '<strong>1200a (Decision Involvement):</strong> Women with adequate HH/group/enterprise decision involvement surged from 57.6% to 95.9%, far exceeding the 65% target (+38.3pp)',
-                    '<strong>1200b (Unpaid Work Time):</strong> Average time women spend in unpaid work reduced from 9.3 hours to 7.7 hours daily, surpassing the 8.3 hours target (-1.6 hrs)',
-                    '<strong>1200c (Resource Control):</strong> Women with adequate access/control over household & enterprise resources improved from 41.2% to 53.8%, exceeding the 50% target (+12.6pp)',
-                    '<strong>1210a (NbS Knowledge):</strong> Women with adequate practical knowledge on NbS, Economic Rights & GE&I jumped from 20.7% to 80.9%, far exceeding the 55% target (+60.2pp)',
-                    '<strong>1210b (Skills & Confidence):</strong> Women with adequate personal skills and confidence to assert rights improved from 32.7% to 46.3% (+13.6pp). On track but has not yet reached the 55% target - continued focus on life skills and psychosocial support needed',
-                    '<strong>1210c (Gender Equality Perception):</strong> Degree/extent women perceived as equal to men improved from 42.1/100 to 64.7/100, exceeding the 55.0/100 target (+22.6 pts)',
-                    '<strong>1220a (Savings Groups):</strong> Women actively saving in Savings Groups surged from 28.8% to 91.9%, far exceeding the 70% target (+63.1pp)',
-                    '<strong>1220b (Clean Energy Access):</strong> Women with access to time-saving and environmentally friendly solar panels and cooking stoves improved from 50.8% to 83.1%, exceeding the 80% target (+32.3pp)',
-                    '<strong>Data Quality Note:</strong> High confidence baseline-midline survey with 345 women respondents across marine and terrestrial COSME zones with community validation and cross-checks'
-                ],
+                logframeHighlight: '<h4>COSME Logframe Indicator Performance</h4><p>Midline achievement against official M&E targets. Exceptional performance across 8 indicators: 7 out of 8 indicators EXCEEDED targets. Strongest gains in decision-making involvement (1200a: 57.6%→95.9%), NbS knowledge (1210a: 20.7%→80.9%), savings groups (1220a: 28.8%→91.9%), and clean energy access (1220b: 50.8%→83.1%). Unpaid work time reduced below target (1200b: 9.3→7.7 hours). Gender equality perception improved significantly (1210c: 42.1→64.7/100). One indicator (1210b: skills & confidence at 46.3%) is on track but has not yet reached the 55% target.</p>',
                 findings: [
                     { title: 'Savings Transformation', metric: '+48.8%', description: 'average improvement across savings rates, VSLA participation, and loan access. Personal saving (43.1%→93.4%), VSLA participation (43.6%→98%), women taking loans (28%→79.1%).', badge: 'exceeded', badgeText: '✓ Target Exceeded (70% goal)' },
                     { title: 'Disaster Preparedness', metric: '+35%', description: 'average improvement across preparedness knowledge, action knowledge, and early warning access. From 4.7%→37.8%, 11.8%→46.3%, 8.9%→45.0%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
@@ -2757,14 +2746,7 @@
             },
             'men-cosme': {
                 title: 'Men Survey - COSME Project',
-                footnotes: [
-                    '<strong>Survey Design:</strong> Baseline to midline evaluation with 267 male household members and community leaders from COSME target areas',
-                    '<strong>Indicator 1230a (Knowledge & Skills):</strong> Calculated from average of climate awareness (100%), NbS knowledge (89.8%), joint decision support (84%), and female participation support (86.8%) = 80.3% result showing strong uptake of program messaging',
-                    '<strong>Indicator 1230b (Equality Perception):</strong> Derived from gender attitudes norm questions and transformed to 0-100 scale: baseline 41.2/100 → midline 71/100, representing significant shift in male perception of women equality',
-                    '<strong>Time Investment Validation:</strong> Men increased daily unpaid care work from 2.3 to 4.2 hours (+1.9 hours = +82.6%), with community conservation work tripling from 0.3 to 2.0 hours, validating behavioral shift',
-                    '<strong>Norm Reduction Success:</strong> Harmful gender norms rejection averaged -30 percentage points across 4 key norms: husband income control (-22.6pp), man earns/woman cares (-34.7pp), harassment victim fault (-36.9pp), male-only boating (-36.4pp)',
-                    '<strong>Data Quality:</strong> High confidence with stratified sampling across agroecological zones and community triangulation validation. Both indicators EXCEEDED targets, indicating strong program effectiveness in male engagement'
-                ],
+                logframeHighlight: '<h4>Men Survey — Logframe Indicator Performance</h4><p>Both indicators EXCEEDED targets. Males with adequate knowledge and practical skills to promote NbS, economic rights of women and GE&I: 54.7% → 80.3% (target 65.0%, +25.6pp). Degree/extent to which women are perceived as equal to men by male family members: 41.2/100 → 71/100 (target 55/100, +29.8 pts).</p>',
                 tabContent: {
                     'tab-household': {
                         title: 'A. HOUSEHOLD CHARACTERISTICS - MEN\'S PERSPECTIVE',
@@ -2889,15 +2871,6 @@
             },
             'gjj-women': {
                 title: 'GJJ KAP Survey - Women',
-                footnotes: [
-                    '<strong>Survey Design:</strong> Gender Justice Journey (GJJ) Knowledge, Attitudes & Practices (KAP) survey covering SELF, RELATIONAL, and GENDER TRANSFORMATION domains across baseline and endline periods',
-                    '<strong>SELF Domain:</strong> Measures self-esteem (strengths/qualities), emotional validation (feelings/opinions importance), and gender equality self-perception using Likert scale agreement levels',
-                    '<strong>RELATIONAL Domain:</strong> Assesses relationship quality through frequency of positive interactions (laughing together, feeling respected, voicing disagreement, emotional communication, consent respect, and shared responsibility discussions)',
-                    '<strong>Shared Responsibility:</strong> Tracks husband support with household chores, frequency of husband carrying out care work, and conversations about sharing unpaid household and care work',
-                    '<strong>Shared Power:</strong> Measures household decision-making conversations, important decision frequency, types of decisions (assets, land, business, children, health), and whether decisions are joint or unilateral',
-                    '<strong>Autonomy & Leadership:</strong> Assesses women hiding money from husbands, support for community leadership, and support for starting own business - key indicators of womens economic agency',
-                    '<strong>Data Quality:</strong> High confidence with structured KAP methodology across baseline and endline with community validation'
-                ],
                 findings: [
                     { title: 'Self-Esteem Growth', metric: '+19.1pp', description: '"I have many strengths and qualities" (Strongly Agree) improved from 33.5% to 52.6%. Self-perception as equal to opposite gender (Strongly Agree) grew 20.4% → 48.2%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
                     { title: 'Relational Quality', metric: '-4.0pp', description: 'Women feeling respected by husband/partner (Always) declined from 43.1% to 39.1% (-4.0pp). Voicing disagreement comfortably (Always) stable at 26.9% → 27.1%. Some gains in emotional communication and consent respect.', badge: 'drop', badgeText: '✗ Drop from Baseline' },
@@ -2918,14 +2891,6 @@
             },
             'gjj-men': {
                 title: 'GJJ KAP Survey - Men',
-                footnotes: [
-                    '<strong>Survey Design:</strong> Gender Justice Journey (GJJ) Knowledge, Attitudes & Practices (KAP) survey targeting men across SELF, RELATIONAL, and GENDER TRANSFORMATION domains (Shared Responsibility, Shared Power, Autonomy & Leadership)',
-                    '<strong>SELF Domain:</strong> Measures self-responsibility for feelings/actions (SA 50.1%→70.3%), learning from mistakes (SA 47.7%→71.2%), equal gender perception (SA 44.0%→61.1%), and self-compassion/nurturing self-talk (Frequently 61.1%→75.4%)',
-                    '<strong>RELATIONAL Domain:</strong> Assesses laughing with partner (Always 52.2%→83.5%), feeling respected (Always 30.1%→83.5%), emotional safety checks (Always 52.4%→70.3%), conflict management, emotional communication (Always 47.1%→53.4%), consent acceptance (Always 40.5%→60.2%), and shared responsibility discussions (Always 51.4%→71.6%)',
-                    '<strong>Shared Responsibility:</strong> Support for chores traditionally done by women (Yes 86.9%→92.7%), chore frequency (Always 17.7%→42.2%), weekly chore discussion (Yes 76.2%→90.2%), encourage wife time for self (Yes 94.1%→99.0%)',
-                    '<strong>Shared Power:</strong> Decision conversations past 6 months (Yes 87.9%→97.1%), important decisions made (Yes 83.3%→85.8%), support wife as community leader (Always 53.1%→64.9%), support wife business (Definitely 53.5%→67.6%)',
-                    '<strong>Data Quality:</strong> High confidence with structured KAP methodology across baseline and endline periods with community validation'
-                ],
                 findings: [
                     { title: 'Self-Responsibility Growth', metric: '+20.2pp', description: '"I take responsibility for my feelings" (Strongly Agree) improved from 50.1% to 70.3%. "I learn and grow from my mistakes" (SA) rose 47.7%→71.2% (+23.5pp). Equal perception SA: 44.0%→61.1% (+17.1pp). Self-compassion (Frequently): 61.1%→75.4%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
                     { title: 'Relational Quality', metric: '+53.4pp', description: 'Men feeling respected by partner (Always) surged 30.1%→83.5% (+53.4pp). Discuss sharing responsibility (Always) grew 51.4%→71.6% (+20.2pp). Accept "No" (Always) improved 40.5%→60.2% (+19.7pp). Laughing together: 52.2%→83.5%.', badge: 'exceeded', badgeText: '✓ Target Exceeded' },
@@ -2946,14 +2911,7 @@
             },
             'forestry': {
                 title: 'Community Forest Conservation Groups',
-                footnotes: [
-                    '<strong>Survey Design:</strong> Forest Functionality Assessment measuring group-level capacity across Management, Gender Equality, and Effectiveness domains. Baseline: 43 groups, Midline: 28 groups assessed.',
-                    '<strong>Functionality Threshold:</strong> Groups assessed against ≥60% and ≥70% functionality benchmarks. Overall score improved from 70.6% to 84.2% (+13.6pp), with 96.4% of groups now meeting the ≥60% threshold and 85.7% meeting ≥70%.',
-                    '<strong>Management Domain:</strong> Covers board roles, written guidelines, meeting regularity, management practices (transparent elections, inclusive decisions, grievance mechanisms, benefit sharing). Management score: 78.6%→78.0%.',
-                    '<strong>Gender Domain:</strong> Tracks gender equality discussions, topics covered (equitable roles, resource sharing, women leadership), gender actions taken, and women in leadership positions. Gender score: 32.9%→85.5% (+52.6pp — strongest improvement).',
-                    '<strong>Effectiveness Domain:</strong> Measures forest condition (area, biodiversity, ecosystem services), threat levels (fire, charcoal, encroachment), income generation, and agroforestry adoption. Effectiveness score: 72.0%→90.1%.',
-                    '<strong>Data Quality:</strong> High confidence with structured group-level assessments across 28 community forest conservation groups with community validation.'
-                ],
+                logframeHighlight: '<h4>Community Forest Conservation — Logframe Indicator Performance</h4><p>Indicator 1130b: Percentage of functional groups with functionality score ≥70%. Baseline 53.5% → Midline 85.7% (target 70.0%). EXCEEDED target by +15.7pp. Strong improvement in group functionality across management, gender equality, and effectiveness domains.</p>',
                 findings: [
                     { title: 'Functionality Improvement', metric: '+32.2pp', description: 'Groups meeting ≥60% threshold: 81.4%→96.4% (+15.0pp). Groups meeting ≥70% threshold: 53.5%→85.7% (+32.2pp). Overall score improved from 70.6 to 84.2 (+13.6pp).', badge: 'exceeded', badgeText: '' },
                     { title: 'Gender Equality Gains', metric: '+32.5pp', description: 'Groups discussing gender equality surged 40.0%→72.5%. Groups taking gender actions: 25.0%→55.0%. Women in significant leadership: 17.5%→35.0%. Gender domain score: 42.8%→63.5% (+20.7pp).', badge: 'exceeded', badgeText: '' },
@@ -2978,14 +2936,7 @@
             },
             'prepost-forest': {
                 title: 'Pre & Post Test — Forest Conservation Knowledge',
-                footnotes: [
-                    '<strong>Assessment Design:</strong> Pre-training (baseline) and post-training (endline) knowledge test covering 21 topics across Forest Ecology & Rights, Management & Conservation, and Policy & Sustainability domains. Pre-test: 546 participants. Post-test: 909 participants.',
-                    '<strong>Passing Threshold:</strong> Project threshold set at ≥70% correct answers. Participants meeting this threshold surged from 50.0% (pre) to 94.7% (post), a +44.7pp improvement.',
-                    '<strong>Score Distribution:</strong> Average score improved 65.2%→85.4% (+20.2pp). Maximum score stable at 100%. Minimum score improved 2.5%→27.5% (+25.0pp), lifting the lowest performers significantly.',
-                    '<strong>Forest Ecology & Rights (Foundational):</strong> Covers Forest Ecosystems, Biodiversity, Community Forestry, Forest Rights, Conservation Principles, and Tree Species. Strongest gain: Forest Ecosystems (+34.9pp). All topics exceeded 91% post-test.',
-                    '<strong>Management & Conservation (Intermediate):</strong> Covers Management Plans, Sustainable Harvesting, Fire Prevention, Reforestation, Watershed Protection, Carbon Sequestration, and Wildlife Corridors. Carbon Sequestration and Wildlife Corridors reached 99.2% post-test. Weakest: Management Plans at 83.4% post-test.',
-                    '<strong>Policy & Sustainability (Advanced):</strong> Covers Forest Policy, Climate Adaptation, Community Governance, Benefit Sharing, Ecosystem Services, Agroforestry, and Monitoring & Evaluation. Ecosystem Services achieved highest post-test score (99.7%). All 7 topics exceeded 95% post-test except Forest Policy (95.3%).'
-                ],
+                logframeHighlight: '<h4>Forest Conservation Knowledge — Logframe Indicator Performance</h4><p>Indicator 1130a: Percentage of training participants with adequate knowledge on forest conservation. Pre-test 50.0% → Post-test 94.7% (target 68.0%). EXCEEDED target by +26.7pp. Knowledge gains observed across all three domains: Forest Ecology &amp; Rights, Management &amp; Conservation, and Policy &amp; Sustainability.</p>',
                 findings: [
                     { title: 'Threshold Achievement', metric: '+44.7pp', description: 'Participants meeting ≥70% threshold surged from 50.0% to 94.7%. At ≥80%, improvement was even more dramatic: 32.9%→85.7% (+52.8pp).', badge: 'exceeded', badgeText: '' },
                     { title: 'Average Score Gain', metric: '+20.2pp', description: 'Average knowledge score improved from 65.2% to 85.4%. Minimum score lifted from 2.5% to 27.5%, reducing the knowledge gap significantly.', badge: 'exceeded', badgeText: '' },
@@ -3010,14 +2961,7 @@
             },
             'prepost-mangrove': {
                 title: 'Pre & Post Test — Mangrove Restoration Knowledge',
-                footnotes: [
-                    '<strong>Assessment Design:</strong> Pre-training and post-training knowledge assessment for mangrove restoration participants across Kilifi and Kwale counties. Measures percentage of participants achieving adequate knowledge.',
-                    '<strong>Adequate Knowledge:</strong> Overall adequate knowledge improved from 36.9% to 81.5% (+44.6pp by location) and 36.9% to 81.9% (+45.0pp by gender). Both breakdowns confirm strong training effectiveness.',
-                    '<strong>Location Analysis:</strong> Kilifi showed the strongest improvement (+59.0pp, from 21.1% to 80.1%), substantially closing the gap with Kwale (53.7%→83.1%, +29.4pp). Both counties exceeded 80% post-test.',
-                    '<strong>Gender Analysis:</strong> Female participants outperformed males at post-test (87.4% vs 80.2%), despite starting from a lower baseline (34.7% vs 38.2%). Female gain of +52.7pp exceeded male gain of +42.0pp by 10.7pp.',
-                    '<strong>Key Insight:</strong> Training was particularly effective for groups with lower baseline knowledge (Kilifi, females), demonstrating the program\'s ability to close knowledge gaps and promote equitable learning outcomes.',
-                    '<strong>Data Quality:</strong> High confidence with structured pre/post assessment design across two counties with gender-disaggregated results.'
-                ],
+                logframeHighlight: '<h4>Mangrove Restoration Knowledge — Logframe Indicator Performance</h4><p>Indicator 1110a: Percentage of training participants with adequate mangrove restoration knowledge. All participants: 36.9% → 81.9% (target 57.0%). EXCEEDED target by +24.9pp. Female participants showed strongest gain (+52.7pp, 34.7%→87.4%). Kilifi county closed the gap with Kwale, improving by +59.0pp.</p>',
                 findings: [
                     { title: 'Overall Knowledge Gain', metric: '+44.6pp', description: 'Adequate knowledge surged from 36.9% to 81.5% overall. Both Kilifi and Kwale counties exceeded 80% post-test, confirming training effectiveness across locations.', badge: 'exceeded', badgeText: '' },
                     { title: 'Kilifi County Transformation', metric: '+59.0pp', description: 'Kilifi showed the strongest improvement: 21.1%→80.1%. Starting from the lowest baseline, Kilifi nearly closed the gap with Kwale, demonstrating effective knowledge transfer.', badge: 'exceeded', badgeText: '' },
@@ -3123,6 +3067,11 @@
                 logframeSection.style.display = 'block';
                 // Update Logframe Table
                 updateLogframeTable(data.logframe);
+                // Update Logframe Highlight Box dynamically
+                const highlightBox = document.getElementById('logframe-highlight');
+                if (highlightBox && data.logframeHighlight) {
+                    highlightBox.innerHTML = data.logframeHighlight;
+                }
             }
 
             // TOGGLE between Women, Men, Forestry and Pre-Post sections FIRST (before chart updates)
@@ -3471,31 +3420,19 @@
                 return;
             }
 
-            // Define chart data for each survey
+            // Define chart data for each survey (only charts with existing canvas elements)
             const chartDataByKey = {
                 'women-cosme': {
-                    savings: { baseline: [43.1, 43.6, 28], midline: [93.4, 98, 79.1] },
-                    preparedness: { baseline: [4.7, 11.8, 8.9], midline: [37.8, 46.3, 45] },
-                    climate: { baseline: [60.5, 23.1], midline: [96.3, 77.8] },
                     decisions: { baseline: [45, 43.2, 32.1, 28.5, 52.1], midline: [58.8, 77.8, 62.2, 47.7, 53.7] },
-                    nbs: { baseline: [36.9, 19.8, 67.4], midline: [86.5, 74.7, 98.4] },
-                    skills: { baseline: [5.9, 9, 31, 15], midline: [19.6, 18, 37.4, 35] }
+                    nbs: { baseline: [36.9, 19.8, 67.4], midline: [86.5, 74.7, 98.4] }
                 },
                 'gjj-women': {
-                    savings: { baseline: [41.4, 13.7, 63.7], midline: [64.7, 13.1, 94.5] },
-                    preparedness: { baseline: [60.2, 8.8, 5.7], midline: [81.7, 2.0, 4.8] },
-                    climate: { baseline: [33.5, 20.4], midline: [52.6, 48.2] },
                     decisions: { baseline: [17.6, 36.4, 39.8, 18.4, 6.6], midline: [22.0, 28.3, 50.6, 22.1, 20.3] },
-                    nbs: { baseline: [87.1, 84.9, 12.0], midline: [84.4, 64.2, 3.3] },
-                    skills: { baseline: [33.5, 28.9, 20.4, 26.7], midline: [52.6, 49.4, 48.2, 65.9] }
+                    nbs: { baseline: [87.1, 84.9, 12.0], midline: [84.4, 64.2, 3.3] }
                 },
                 'gjj-men': {
-                    savings: { baseline: [86.9, 17.7, 76.2], midline: [92.7, 42.2, 90.2] },
-                    preparedness: { baseline: [87.9, 83.3, 53.1], midline: [97.1, 85.8, 64.9] },
-                    climate: { baseline: [50.1, 44.0], midline: [70.3, 61.1] },
                     decisions: { baseline: [52.2, 30.1, 52.4, 47.1, 40.5], midline: [83.5, 83.5, 70.3, 53.4, 60.2] },
-                    nbs: { baseline: [53.1, 53.5, 94.1], midline: [64.9, 67.6, 99.0] },
-                    skills: { baseline: [50.1, 47.7, 44.0, 61.1], midline: [70.3, 71.2, 61.1, 75.4] }
+                    nbs: { baseline: [53.1, 53.5, 94.1], midline: [64.9, 67.6, 99.0] }
                 }
             };
 
@@ -3520,21 +3457,6 @@
             const isGJJ = isGJJWomen || isGJJMen;
             const endlineLabel = isGJJ ? 'Endline' : 'Midline';
 
-            const savingsLabels = isGJJWomen
-                ? ['Husband Supports Chores', 'Husband Always Does Chores', 'Weekly Chore Discussion']
-                : isGJJMen
-                ? ['Support Chores (Yes%)', 'Always Does Chores', 'Discussed Chores (Yes%)']
-                : ['Personal Savings', 'VSLA Groups', 'Access to Loans'];
-            const preparednessLabels = isGJJWomen
-                ? ['Decision Conversations', 'Husband Alone Decides', 'Joint Final Say']
-                : isGJJMen
-                ? ['Decision Conversations', 'Important Decisions', 'Support Wife Leader']
-                : ['Preparedness Knowledge', 'Action Knowledge', 'Early Warning Access'];
-            const climateLabels = isGJJWomen
-                ? ['Strengths & Qualities\n(Strongly Agree)', 'Equal to Opposite Gender\n(Strongly Agree)']
-                : isGJJMen
-                ? ['Take Responsibility\n(Strongly Agree)', 'Equal to Opp. Gender\n(Strongly Agree)']
-                : ['Climate Awareness', 'NbS Solutions Understanding'];
             const decisionsLabels = isGJJWomen
                 ? ['Purchase Assets', 'Build on Land', 'Send/Remove Child', 'Invest in Business', 'Seek Healthcare']
                 : isGJJMen
@@ -3545,55 +3467,6 @@
                 : isGJJMen
                 ? ['Support Leadership\n(Always%)', 'Support Business\n(Definitely%)', 'Encourage Wife Time']
                 : ['Mangrove Restoration', 'Seaweed Farming', 'Forest Management'];
-            const skillsLabels = isGJJWomen
-                ? ['Strengths & Qualities', 'Feelings Important', 'Equal Perception', 'Voice Opinions']
-                : isGJJMen
-                ? ['Responsibility', 'Learn & Grow', 'Equal Perception', 'Self-Compassion']
-                : ['Self-Esteem', 'Aspirations', 'Leadership', 'Communication'];
-
-            // Use consistent blue/purple coloring
-            function getBarColors(baselineArr, midlineArr, normalColor) {
-                return normalColor;
-            }
-
-            // Update Savings / Shared Responsibility Chart
-            window.savingsChart = createChartIfExists('chart-savings', {
-                type: 'bar',
-                data: {
-                    labels: savingsLabels,
-                    datasets: [
-                        { label: 'Baseline', data: data.savings.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.savings.midline, backgroundColor: getBarColors(data.savings.baseline, data.savings.midline, colors.midline) }
-                    ]
-                },
-                options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
-            });
-
-            // Update Preparedness / Shared Power Chart
-            window.preparednessChart = createChartIfExists('chart-preparedness', {
-                type: 'bar',
-                data: {
-                    labels: preparednessLabels,
-                    datasets: [
-                        { label: 'Baseline', data: data.preparedness.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.preparedness.midline, backgroundColor: getBarColors(data.preparedness.baseline, data.preparedness.midline, colors.midline) }
-                    ]
-                },
-                options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
-            });
-
-            // Update Climate / Self-Esteem Chart
-            window.climateChart = createChartIfExists('chart-climate', {
-                type: 'bar',
-                data: {
-                    labels: climateLabels,
-                    datasets: [
-                        { label: 'Baseline', data: data.climate.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.climate.midline, backgroundColor: getBarColors(data.climate.baseline, data.climate.midline, colors.midline) }
-                    ]
-                },
-                options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
-            });
 
             // Update Decisions / Household Decision Types Chart
             window.decisionsChart = createChartIfExists('chart-decisions', {
@@ -3602,7 +3475,7 @@
                     labels: decisionsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.decisions.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.decisions.midline, backgroundColor: getBarColors(data.decisions.baseline, data.decisions.midline, colors.midline) }
+                        { label: endlineLabel, data: data.decisions.midline, backgroundColor: colors.midline }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
@@ -3615,20 +3488,7 @@
                     labels: nbsLabels,
                     datasets: [
                         { label: 'Baseline', data: data.nbs.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.nbs.midline, backgroundColor: getBarColors(data.nbs.baseline, data.nbs.midline, colors.midline) }
-                    ]
-                },
-                options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
-            });
-
-            // Update Skills / SELF Statements Chart
-            window.skillsChart = createChartIfExists('chart-skills', {
-                type: 'bar',
-                data: {
-                    labels: skillsLabels,
-                    datasets: [
-                        { label: 'Baseline', data: data.skills.baseline, backgroundColor: colors.baseline },
-                        { label: endlineLabel, data: data.skills.midline, backgroundColor: getBarColors(data.skills.baseline, data.skills.midline, colors.midline) }
+                        { label: endlineLabel, data: data.nbs.midline, backgroundColor: colors.midline }
                     ]
                 },
                 options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'top' } } }
@@ -5363,6 +5223,14 @@
                 card.innerHTML = '<div class="kpi-label">' + kpi.label + '</div><div class="kpi-value">' + kpi.value + '</div><div class="kpi-change ' + kpi.trend + '">' + kpi.change + '</div>';
                 kpiContainer.appendChild(card);
             });
+            // Update Logframe Table and Highlight for sub-type switching
+            if (data.logframe) {
+                updateLogframeTable(data.logframe);
+            }
+            const sharedHighlightBox = document.getElementById('logframe-highlight');
+            if (sharedHighlightBox && data.logframeHighlight) {
+                sharedHighlightBox.innerHTML = data.logframeHighlight;
+            }
         }
 
         // Pre & Post Test Charts Rendering
