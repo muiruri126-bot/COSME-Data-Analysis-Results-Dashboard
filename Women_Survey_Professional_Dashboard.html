@@ -1772,6 +1772,7 @@
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-training')">D. Training & Assets</button>
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-gender')">E. Gender Equality</button>
                 <button class="tab-button" onclick="showForestryTab(event, 'ftab-effectiveness')">F. Effectiveness & Conservation</button>
+                <button class="tab-button" onclick="showForestryTab(event, 'ftab-prepost')">G. Training Pre- & Post-Test</button>
             </div>
 
             <!-- TAB A: OVERVIEW & FUNCTIONALITY -->
@@ -2029,6 +2030,44 @@
                             <div class="chart-title">Agroforestry Practices & Objectives (%)</div>
                             <div class="chart-container"><canvas id="f-chart-agroforestry"></canvas></div>
                             <div class="chart-insight">Top practices: Intercropping 25.0%→47.5%, Forest Farming 15.0%→37.5%, Beekeeping 20.0%→45.0%. Top objectives: Biodiversity, soil fertility, income diversification.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB G: TRAINING PRE- & POST-TEST RESULTS -->
+            <div id="ftab-prepost" class="forestry-tab-content">
+                <div class="section">
+                    <div class="section-title">G. FOREST TRAINING PRE- & POST-TEST RESULTS</div>
+                    <div class="highlight-box">
+                        <h4>1130a. Percentage and Number of Women and Men with Adequate Practical Knowledge in Forest Management and Conservation</h4>
+                        <p>Knowledge scores improved dramatically from baseline (n=546) to endline (n=909). Participants meeting the project's 70% passing threshold surged from 50.0% to 94.7% (+44.7pp). Average score rose from 65.2 to 85.4 (+20.2pp). Minimum score improved from 2.5 to 27.5, and 85.7% now meet the 80% threshold. All 21 knowledge questions showed significant improvement.</p>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Passing Threshold — Participants Meeting Benchmarks (Project Threshold: ≥70%)</div>
+                            <div class="chart-container"><canvas id="f-chart-prepost-threshold"></canvas></div>
+                            <div class="chart-insight">≥50%: 76.4%→97.7% (+21.3pp). ≥60%: 64.8%→96.6% (+31.8pp). ≥70% (Project Threshold): 50.0%→94.7% (+44.7pp). ≥80%: 32.9%→85.7% (+52.8pp).</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Overall Knowledge Scores — Average, Max & Min (Baseline n=546, Endline n=909)</div>
+                            <div class="chart-container"><canvas id="f-chart-prepost-scores"></canvas></div>
+                            <div class="chart-insight">Average: 65.2→85.4 (+20.2pp). Maximum: 100.0→100.0 (unchanged). Minimum: 2.5→27.5 (+25.0pp — weakest participants significantly lifted).</div>
+                        </div>
+                        <div class="chart-wrapper full-width">
+                            <div class="chart-title">Knowledge Questions 1–7 — % Responding Correctly</div>
+                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q1"></canvas></div>
+                            <div class="chart-insight">Strongest gains: Q1 PFM definition (+34.9pp), Q4 CBFM definition (+27.6pp), Q6 Gender inclusivity (+30.6pp). Highest endline: Q7 Women's role in conservation (97.5%).</div>
+                        </div>
+                        <div class="chart-wrapper full-width">
+                            <div class="chart-title">Knowledge Questions 8–14 — % Responding Correctly</div>
+                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q2"></canvas></div>
+                            <div class="chart-insight">Strongest gains: Q9 CFA definition (+26.1pp), Q15 Indigenous knowledge (+29.7pp). Highest endline: Q13 Biodiversity (99.2%), Q14 Protected areas (99.2%).</div>
+                        </div>
+                        <div class="chart-wrapper full-width">
+                            <div class="chart-title">Knowledge Questions 15–21 — % Responding Correctly</div>
+                            <div class="chart-container" style="height:380px"><canvas id="f-chart-prepost-q3"></canvas></div>
+                            <div class="chart-insight">Strongest gains: Q16 Agroforestry (+21.9pp), Q20 Climate change (+20.2pp), Q21 Reducing deforestation (+20.7pp). Highest endline: Q17 Trees on farms (99.6%), Q19 Nursery practices (99.7%).</div>
                         </div>
                     </div>
                 </div>
@@ -5013,6 +5052,95 @@
                     ]
                 },
                 options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            // === TAB G: TRAINING PRE- & POST-TEST RESULTS ===
+            // Passing Threshold
+            fChart('f-chart-prepost-threshold', {
+                type: 'bar',
+                data: {
+                    labels: ['≥50%', '≥60%', '≥70%\n(Project\nThreshold)', '≥80%'],
+                    datasets: [
+                        { label: 'Baseline (n=546)', data: [76.4, 64.8, 50.0, 32.9], backgroundColor: fColors.baseline },
+                        { label: 'Endline (n=909)', data: [97.7, 96.6, 94.7, 85.7], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Participants' } } } }
+            });
+
+            // Overall Scores
+            fChart('f-chart-prepost-scores', {
+                type: 'bar',
+                data: {
+                    labels: ['Average', 'Maximum', 'Minimum'],
+                    datasets: [
+                        { label: 'Baseline (n=546)', data: [65.2, 100.0, 2.5], backgroundColor: fColors.baseline },
+                        { label: 'Endline (n=909)', data: [85.4, 100.0, 27.5], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score' } } } }
+            });
+
+            // Questions 1-7
+            fChart('f-chart-prepost-q1', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Q1. PFM\nDefinition',
+                        'Q2. Community\nRole in PFM',
+                        'Q3. PFM Improved\nConservation',
+                        'Q4. CBFM\nDefinition',
+                        'Q6. Gender\nInclusivity',
+                        'Q7. Women\'s Role\nin Conservation'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [56.6, 85.7, 86.6, 67.4, 67.2, 82.6], backgroundColor: fColors.baseline },
+                        { label: 'Endline', data: [91.5, 97.6, 97.7, 95.0, 97.8, 97.5], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+            });
+
+            // Questions 8-14
+            fChart('f-chart-prepost-q2', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Q8. Cultural\nBarriers',
+                        'Q9. CFA\nDefinition',
+                        'Q10. CFA\nResponsibilities',
+                        'Q11. PFMP\nDefinition',
+                        'Q12. Conflict\nResolution',
+                        'Q13. Conserving\nBiodiversity',
+                        'Q14. Protected\nAreas'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [68.9, 69.6, 85.2, 67.0, 76.4, 90.8, 88.6], backgroundColor: fColors.baseline },
+                        { label: 'Endline', data: [83.4, 95.7, 97.0, 92.0, 98.2, 99.2, 99.2], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+            });
+
+            // Questions 15-21
+            fChart('f-chart-prepost-q3', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Q15. Indigenous\nKnowledge',
+                        'Q16. Agroforestry\nDefinition',
+                        'Q17. Trees\non Farms',
+                        'Q18. Nature-Based\nSolutions',
+                        'Q19. Nursery\nPractices',
+                        'Q20. Climate\nChange',
+                        'Q21. Reducing\nDeforestation'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [65.6, 74.7, 96.9, 89.6, 88.5, 77.7, 76.7], backgroundColor: fColors.baseline },
+                        { label: 'Endline', data: [95.3, 96.6, 99.6, 98.6, 99.7, 97.9, 97.4], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
             });
 
             console.log('🌲 Forestry charts rendered successfully');
