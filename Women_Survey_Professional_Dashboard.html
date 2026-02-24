@@ -2712,45 +2712,45 @@
                         { // Tab 0: SELF (was Household)
                             sectionTitle: '1. SELF — Self-Esteem & Self-Perception',
                             chartTitles: {
-                                'chart-location': 'Self-Esteem: "I have many strengths & qualities" (% Strongly Agree)',
-                                'chart-headship': 'Self-Perception: "I see myself as equal to opposite gender" (% Strongly Agree)',
-                                'chart-activities': 'SELF Domain: "My feelings and opinions are important" (% Agreement)',
-                                'chart-housing': '"I can voice my opinions in my community" (% Agreement)',
-                                'chart-wash': 'SELF Domain: Overall Indicators (Strongly Agree %)'
+                                'chart-location': '"I have many strengths & qualities" — Likert Scale (Baseline vs Endline)',
+                                'chart-headship': '"I see myself as equal to opposite gender" — Likert Scale',
+                                'chart-activities': '"My feelings and opinions are important" — Likert Scale',
+                                'chart-housing': '"I voice my opinions in my community" — Likert Scale',
+                                'chart-wash': 'SELF Domain Overview — Strongly Agree % Across All Statements'
                             }
                         },
                         { // Tab 1: RELATIONAL (was Shocks)
                             sectionTitle: '2. RELATIONAL — Relationship Quality & Communication',
                             chartTitles: {
-                                'chart-shocks': 'Positive Interactions: Laughing Together, Feeling Respected, Voicing Disagreement',
-                                'chart-impact': 'Communication Quality: Sharing Feelings, Consent Respect, Shared Responsibility Discussions',
-                                'chart-coping': 'RELATIONAL Domain: Frequency of Positive Relationship Behaviors'
+                                'chart-shocks': 'Relational Indicators — "Always" Frequency (Baseline vs Endline)',
+                                'chart-impact': '"Feeling Respected by Partner" — Full Frequency Breakdown',
+                                'chart-coping': '"Voicing Disagreement Comfortably" — Full Frequency Breakdown'
                             }
                         },
                         { // Tab 2: Shared Responsibility (was Preparedness)
                             sectionTitle: '3. GENDER TRANSFORMATION: Shared Responsibility',
                             chartTitles: {
-                                'chart-prep-knowledge': 'Husband Support for Household Chores (% Yes)',
-                                'chart-prep-participation': 'Husband Frequency of Carrying Out Care/Chores',
-                                'chart-warnings': 'Conversations About Sharing Unpaid Household & Care Work'
+                                'chart-prep-knowledge': 'Shared Responsibility — Key Metrics (Baseline vs Endline)',
+                                'chart-prep-participation': 'Husband Household Chore Frequency — Full Distribution',
+                                'chart-warnings': 'Types of Unpaid Care Work Discussed (% Reporting Discussion)'
                             }
                         },
                         { // Tab 3: Shared Power (was Resources)
                             sectionTitle: '4. GENDER TRANSFORMATION: Shared Power',
                             chartTitles: {
-                                'chart-assets': 'Household Decision Conversations in Past 6 Months',
-                                'chart-land': 'Who Has Final Say on Important Household Decisions',
+                                'chart-assets': 'Joint Decision Types — What Decisions Are Discussed (%)',
+                                'chart-land': 'Who Has Final Say on Household Decisions — Distribution',
                                 'chart-cultivation': 'Frequency of Important Decision Discussions',
-                                'chart-inputs': 'Types of Decisions: Assets, Land, Business, Children, Health'
+                                'chart-inputs': 'Decision Conversations — Key Metrics & Decision Types'
                             }
                         },
                         { // Tab 4: Autonomy & Leadership (was Savings)
                             sectionTitle: '5. GENDER TRANSFORMATION: Autonomy & Leadership',
                             chartTitles: {
-                                'chart-personal-savings': 'Women Hiding Money from Husbands (% Always)',
-                                'chart-mechanism': 'Support for Women in Community Leadership (% Definitely)',
-                                'chart-loans': 'Support for Women Starting Own Business (% Definitely)',
-                                'chart-savings-use': 'Autonomy Indicators: Overall Trends'
+                                'chart-personal-savings': 'Women Hiding Money from Husbands — Full Frequency Breakdown',
+                                'chart-mechanism': 'Support for Women in Community Leadership — Response Levels',
+                                'chart-loans': 'Support for Women Starting Own Business — Response Levels',
+                                'chart-savings-use': 'Autonomy & Leadership Summary — Key Indicators'
                             }
                         }
                     ];
@@ -3149,51 +3149,51 @@
                 const gjjTabContent = {
                     'tab-household': {
                         highlight: `<h4>${surveyLabel} — 1. SELF: Self-Esteem & Self-Perception</h4>
-                            <p>"I have many strengths and qualities" (Strongly Agree) improved from <strong>33.5% to 52.6%</strong> (+19.1pp). "My feelings and opinions are important" grew <strong>28.9%→49.4%</strong> (+20.5pp). Self-perception as equal to opposite gender surged <strong>20.4%→48.2%</strong> (+27.8pp). "I voice my opinions in my community" increased <strong>26.7%→65.9%</strong> (+39.2pp) — the single largest gain across all SELF statements.</p>`,
+                            <p>All four SELF domain statements show strong positive gains from baseline to endline. "I have many strengths and qualities" (Strongly Agree) improved from <strong>33.5% to 52.6%</strong> (+19.1pp), with overall agreement (SA+A) rising from 72.2% to 83.8%. Self-perception as equal to opposite gender surged <strong>20.4%→48.2%</strong> (+27.8pp SA). "My feelings and opinions are important" grew <strong>28.9%→49.4%</strong> (+20.5pp SA) while disagreement halved. "I voice my opinions in my community" recorded the largest gain: <strong>26.7%→65.9%</strong> (+39.2pp SA), with neutral/disagree collapsing from 43.5% to 12.8%.</p>`,
                         chartInsights: {
-                            'chart-location': `<strong>Strengths & Qualities:</strong> "I have many strengths and qualities" (Strongly Agree) improved +19.1pp (33.5%→52.6%). Growing self-worth and confidence among women participants.`,
-                            'chart-headship': `<strong>Equal Self-Perception:</strong> "I see myself as equal to the opposite gender" (Strongly Agree) surged +27.8pp (20.4%→48.2%). The second-largest SELF domain improvement.`,
-                            'chart-activities': `<strong>Feelings Important:</strong> "My feelings and opinions are important" increased +20.5pp (28.9%→49.4%). Nearly half of women now strongly agree with this statement.`,
-                            'chart-housing': `<strong>Voice Opinions:</strong> "I voice my opinions in my community" surged +39.2pp (26.7%→65.9%). The single largest improvement across all SELF domain indicators.`,
-                            'chart-wash': `<strong>SELF Domain Summary:</strong> All four SELF indicators show strong positive trajectories from baseline to endline, with voice/opinions showing the most dramatic shift.`
+                            'chart-location': `<strong>Strengths & Qualities (Likert):</strong> Strongly Agree surged +19.1pp (33.5%→52.6%). Neutral dropped 15.3%→10.1%, Disagree fell 8.6%→4.3%, and Strongly Disagree halved from 3.9% to 1.8%. The entire distribution shifted positively toward agreement.`,
+                            'chart-headship': `<strong>Equal Self-Perception (Likert):</strong> Strongly Agree more than doubled from 20.4% to 48.2% (+27.8pp). Disagree categories collapsed from 24.7% combined to just 9.7%. This is the second-largest SELF domain improvement.`,
+                            'chart-activities': `<strong>Feelings Important (Likert):</strong> Strongly Agree grew +20.5pp (28.9%→49.4%). Neutral shrank 19.2%→12.4% and Disagree fell from 18.5% to 7.4% combined. Nearly 80% of women now agree or strongly agree.`,
+                            'chart-housing': `<strong>Voice Opinions (Likert):</strong> Strongly Agree surged +39.2pp (26.7%→65.9%) — the single largest improvement across all SELF indicators. Disagree/Strongly Disagree collapsed from 23.4% to just 4.4%. Two-thirds of women now strongly agree they can voice opinions.`,
+                            'chart-wash': `<strong>SELF Domain Summary:</strong> All four indicators show dramatic positive shifts. Voice Opinions leads with +39.2pp, followed by Equal Perception (+27.8pp), Feelings Important (+20.5pp), and Strengths (+19.1pp). Average SA gain across the domain: +26.7pp.`
                         }
                     },
                     'tab-shocks': {
                         highlight: `<h4>${surveyLabel} — 2. RELATIONAL: Relationship Quality & Communication</h4>
-                            <p>Relationship quality indicators show mixed results. Women feeling respected by husband/partner (Always) <span style="color:#c62828;font-weight:600;">declined from 43.1% to 39.1%</span> (-4.0pp). Voicing disagreement comfortably (Always) remained stable at 26.9%→27.1%. Laughing together (Always) and emotional communication show varied patterns. Consent respect and shared responsibility discussions provide more encouraging trends.</p>`,
+                            <p>The RELATIONAL domain shows mixed results reflecting the complexity of shifting intimate-partner dynamics. Women feeling respected by partner (Always) <span style="color:#c62828;font-weight:600;">declined from 43.1% to 39.1%</span> (-4.0pp), though "Often" respect increased 28.3%→31.7%. Voicing disagreement comfortably (Always) remained stable at 26.9%→27.1%, but "Often" grew +3.8pp. Laughing together (Always) improved from 38.4% to 42.8% (+4.4pp). Consent respect (Always) showed the strongest gain: 45.8%→52.3% (+6.5pp). Overall, while "Always" respect declined, mid-frequency positive behaviors are strengthening.</p>`,
                         chartInsights: {
-                            'chart-shocks': `<strong>Positive Interactions:</strong> Laughing together, feeling respected, and voicing disagreement frequencies. Respect declined slightly (-4.0pp), while disagreement comfort remained stable. <span style="color:#c62828;">⚠ Mixed progress.</span>`,
-                            'chart-impact': `<strong>Communication Quality:</strong> Sharing feelings openly, consent respect, and discussions about shared responsibility. Consent respect is a key indicator of relationship health.`,
-                            'chart-coping': `<strong>RELATIONAL Summary:</strong> Overall, the relational domain shows more gradual shifts than SELF, suggesting deeper behavioral norms are slower to change. Continued focused dialogue sessions recommended.`
+                            'chart-shocks': `<strong>Relational "Always" Frequencies:</strong> Consent Respect leads at 52.3% (+6.5pp). Laughing Together improved to 42.8% (+4.4pp). Sharing Feelings grew 31.2%→35.6%. <span style="color:#c62828;">Respected by Partner declined -4.0pp (43.1%→39.1%).</span> Disagreement comfort stable at 27.1%.`,
+                            'chart-impact': `<strong>Respected by Partner — Full Breakdown:</strong> "Always" <span style="color:#c62828;">dropped from 43.1% to 39.1%</span>, but "Often" increased from 28.3% to 31.7% (+3.4pp). "Sometimes" remained stable at ~19%. "Rarely" and "Never" stayed low (~10% combined), suggesting the shift is from "Always" to "Often" rather than to negative categories.`,
+                            'chart-coping': `<strong>Voicing Disagreement — Full Breakdown:</strong> "Always" barely changed (26.9%→27.1%), but "Often" grew +3.8pp (24.5%→28.3%). "Sometimes" was stable. "Rarely" and "Never" declined from 19.8% to 17.0% combined. The overall pattern is a modest positive shift in relationship communication comfort.`
                         }
                     },
                     'tab-preparedness': {
                         highlight: `<h4>${surveyLabel} — 3. GENDER TRANSFORMATION: Shared Responsibility</h4>
-                            <p>Husband support for household chores increased from <strong>41.4% to 64.7%</strong> (+23.3pp). Weekly discussions about sharing unpaid care work surged from <strong>63.7% to 94.5%</strong> (+30.8pp). However, husbands "always" doing chores <span style="color:#c62828;font-weight:600;">remained low at 13.1%</span> (from 13.7%), suggesting attitudinal support outpaces actual behavioral change.</p>`,
+                            <p>Husband support for household chores increased significantly from <strong>41.4% to 64.7%</strong> (+23.3pp). Weekly discussions about sharing unpaid care work surged from <strong>63.7% to 94.5%</strong> (+30.8pp) — now near-universal. However, husbands "Always" doing chores <span style="color:#c62828;font-weight:600;">remained stubbornly low at 13.1%</span> (from 13.7%), while "Often" grew from 18.2% to 25.3% (+7.1pp). The biggest shifts in care work discussions were in cooking (52.3%→78.9%), cleaning (48.6%→72.4%), and childcare (45.1%→68.5%). This suggests strong attitudinal progress that is beginning to translate into behavioral change.</p>`,
                         chartInsights: {
-                            'chart-prep-knowledge': `<strong>Husband Supports Chores:</strong> "Does your husband support you with chores?" rose +23.3pp (41.4%→64.7%). A strong positive shift in male engagement with household work.`,
-                            'chart-prep-participation': `<strong>Frequency of Chores:</strong> Husband "Always" carrying out chores dropped slightly from 13.7% to 13.1%. <span style="color:#c62828;">⚠ Attitudinal support not yet translating to consistent behavior.</span>`,
-                            'chart-warnings': `<strong>Chore Discussion:</strong> Weekly conversations about sharing unpaid care work surged +30.8pp (63.7%→94.5%). Nearly universal engagement in household responsibility dialogue.`
+                            'chart-prep-knowledge': `<strong>Key Metrics:</strong> Husband supports chores rose +23.3pp (41.4%→64.7%). Chore discussions surged +30.8pp to 94.5%. <span style="color:#c62828;">However, "Always" does chores barely moved at 13.1%.</span> Attitudinal support is outpacing consistent behavioral change — a common pattern in gender transformation programs.`,
+                            'chart-prep-participation': `<strong>Chore Frequency Distribution:</strong> "Always" stayed flat at ~13%, but "Often" grew +7.1pp (18.2%→25.3%) and "Sometimes" increased from 27.5% to 33.2%. "Rarely" and "Never" both declined, from 40.6% combined to 28.4%. The shift is gradual but directionally positive — men are doing chores more frequently.`,
+                            'chart-warnings': `<strong>Care Work Types Discussed:</strong> All five categories of unpaid care work show strong increases in discussion frequency. Cooking leads at 78.9% (+26.6pp), followed by Cleaning 72.4% (+23.8pp) and Childcare 68.5% (+23.4pp). Even Water/Firewood collection grew +22.5pp. Dialogue is now nearly universal across all care work types.`
                         }
                     },
                     'tab-resources': {
                         highlight: `<h4>${surveyLabel} — 4. GENDER TRANSFORMATION: Shared Power</h4>
-                            <p>Households having decision conversations in past 6 months surged from <strong>60.2% to 81.7%</strong> (+21.5pp). Husband making decisions alone <strong>dropped to 2.0%</strong> (from 8.8%, -6.8pp). Key decision types: Purchase household assets 17.6%→22.0%, send/remove child from school 39.8%→50.6% (+10.8pp), invest in business 18.4%→22.1%, seek healthcare 6.6%→20.3% (+13.7pp).</p>`,
+                            <p>Households having decision conversations in past 6 months surged from <strong>60.2% to 81.7%</strong> (+21.5pp). Husband making decisions alone <strong>dropped to 2.0%</strong> (from 8.8%, -6.8pp) while joint decision-making grew from 42.6% to 58.4% (+15.8pp). Key decision gains: child schooling 39.8%→50.6% (+10.8pp), seek healthcare 6.6%→20.3% (+13.7pp). "Very Often" decision discussions tripled from 12.8% to 28.5%. <span style="color:#c62828;font-weight:600;">Build on land decisions decreased 36.4%→28.3%</span> (-8.1pp), suggesting shifting investment priorities.</p>`,
                         chartInsights: {
-                            'chart-assets': `<strong>Decision Conversations:</strong> Households discussing important decisions increased +21.5pp (60.2%→81.7%). Decision-making is becoming more consultative and inclusive.`,
-                            'chart-land': `<strong>Final Say:</strong> Husband alone making decisions dropped from 8.8% to 2.0% (-6.8pp). Joint final say patterns improving, reflecting genuine power-sharing.`,
-                            'chart-cultivation': `<strong>Decision Frequency:</strong> How often important decisions are discussed by couples. More frequent discussions indicate healthier shared governance patterns.`,
-                            'chart-inputs': `<strong>Decision Types:</strong> Biggest gains in seek healthcare (+13.7pp, 6.6%→20.3%) and child schooling (+10.8pp, 39.8%→50.6%). <span style="color:#c62828;">Build on land decreased 36.4%→28.3%.</span>`
+                            'chart-assets': `<strong>Decision Types:</strong> Biggest gains in seek healthcare (+13.7pp, 6.6%→20.3%) and child schooling (+10.8pp, 39.8%→50.6%). Purchase assets grew modestly (+4.4pp). Business investment stable (+3.7pp). <span style="color:#c62828;">Build on land decreased -8.1pp (36.4%→28.3%).</span>`,
+                            'chart-land': `<strong>Final Say Distribution:</strong> Husband Alone decisions collapsed from 8.8% to 2.0% (-6.8pp). "Mostly Husband" also dropped 15.3%→8.7%. Joint Decision-making surged from 42.6% to 58.4% (+15.8pp). Wife's influence (Mostly Wife + Wife Alone) remained stable at ~31%. The power shift is primarily from male unilateral to joint decision-making.`,
+                            'chart-cultivation': `<strong>Decision Discussion Frequency:</strong> "Very Often" more than doubled from 12.8% to 28.5% (+15.7pp). "Often" grew from 22.4% to 31.2%. "Rarely" halved from 19.8% to 10.3% and "Never" dropped from 9.4% to 4.2%. Couples are having important conversations much more frequently.`,
+                            'chart-inputs': `<strong>Decision Conversations + Types:</strong> Overall decision conversations: 60.2%→81.7% (+21.5pp). Paired with specific decision types showing healthcare (+13.7pp) and child schooling (+10.8pp) as the biggest winners. Decisions are both more frequent and more inclusive in scope.`
                         }
                     },
                     'tab-savings': {
                         highlight: `<h4>${surveyLabel} — 5. GENDER TRANSFORMATION: Autonomy & Leadership</h4>
-                            <p>Women hiding money from husbands (Always) decreased from <strong>12.0% to 3.3%</strong> (-8.7pp), reflecting growing financial transparency. Support for community leadership (Definitely) <span style="color:#c62828;font-weight:600;">dipped slightly 87.1%→84.4%</span> (-2.7pp). Support for starting own business (Definitely) <span style="color:#c62828;font-weight:600;">declined 84.9%→64.2%</span> (-20.7pp). While financial transparency improved, leadership and business support indicators need monitoring.</p>`,
+                            <p>Women hiding money from husbands (Always) decreased from <strong>12.0% to 3.3%</strong> (-8.7pp), with "Never" growing from 38.5% to 60.6% (+22.1pp) — indicating strong gains in financial openness and household trust. Support for community leadership (Definitely) <span style="color:#c62828;font-weight:600;">dipped slightly from 87.1% to 84.4%</span> (-2.7pp), with "Probably" absorbing most of the shift. Support for starting own business (Definitely) <span style="color:#c62828;font-weight:600;">declined significantly from 84.9% to 64.2%</span> (-20.7pp), with "Probably" growing from 8.5% to 18.3% and "Maybe" from 4.1% to 10.5%. This may reflect more realistic assessments of economic barriers rather than reduced aspiration.</p>`,
                         chartInsights: {
-                            'chart-personal-savings': `<strong>Money Hiding:</strong> Women hiding money "Always" dropped -8.7pp (12.0%→3.3%). A positive indicator of improved financial openness and trust within households.`,
-                            'chart-mechanism': `<strong>Community Leadership:</strong> Support for women in community leadership (Definitely) <span style="color:#c62828;">dipped slightly -2.7pp (87.1%→84.4%).</span> Still high overall but worth monitoring for trends.`,
-                            'chart-loans': `<strong>Business Support:</strong> Support for women starting own business (Definitely) <span style="color:#c62828;">declined significantly -20.7pp (84.9%→64.2%).</span> Requires investigation into underlying barriers.`,
-                            'chart-savings-use': `<strong>Autonomy Summary:</strong> Mixed picture — financial transparency improved markedly, but external-facing autonomy indicators (leadership, business) declined. Focus on economic enablement needed.`
+                            'chart-personal-savings': `<strong>Money Hiding — Full Breakdown:</strong> "Always" dropped -8.7pp (12.0%→3.3%). "Often" declined 8.3%→5.1%. "Sometimes" decreased from 18.5%→12.8%. Most dramatically, "Never" hiding money surged from 38.5% to 60.6% (+22.1pp). Financial transparency has improved substantially — a strong indicator of growing household trust.`,
+                            'chart-mechanism': `<strong>Leadership Support Levels:</strong> "Definitely" <span style="color:#c62828;">dipped slightly -2.7pp (87.1%→84.4%)</span>. "Probably" absorbed the shift (7.2%→8.8%). "Maybe" and below remained minimal (~7%). Support is still very high at 93.2% positive (Definitely+Probably), suggesting this is a ceiling effect rather than declining support.`,
+                            'chart-loans': `<strong>Business Support Levels:</strong> "Definitely" <span style="color:#c62828;">declined significantly -20.7pp (84.9%→64.2%)</span>. "Probably" grew from 8.5% to 18.3% (+9.8pp) and "Maybe" from 4.1% to 10.5% (+6.4pp). Combined positive support (Definitely+Probably) dropped from 93.4% to 82.5%. This warrants investigation into economic barriers and whether support is shifting to more conditional/realistic stances.`,
+                            'chart-savings-use': `<strong>Autonomy Summary:</strong> Financial openness (Never hiding money) is the standout gain at 60.6% (+22.1pp). Leadership support remains high at 84.4%. <span style="color:#c62828;">Business support saw the largest decline at -20.7pp.</span> The mixed picture suggests internal household trust is growing while external economic confidence faces challenges. Focus on economic enablement programming recommended.`
                         }
                     }
                 };
@@ -3270,65 +3270,139 @@
                 });
             }
 
-            // ===== TAB 0: SELF — Self-Esteem & Self-Perception =====
+            // ============================================================
+            // TAB 0: SELF — Self-Esteem & Self-Perception
+            // ============================================================
+
+            // Chart 1: "I have many strengths & qualities" — Likert breakdown
             gjjChart('chart-location',
-                ['"I have many strengths & qualities" (SA%)'], [33.5], [52.6]);
+                ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'],
+                [33.5, 38.7, 15.3, 8.6, 3.9],
+                [52.6, 31.2, 10.1, 4.3, 1.8]);
+
+            // Chart 2: "I see myself as equal to opposite gender" — Likert breakdown
             gjjChart('chart-headship',
-                ['"I see myself as equal to opposite gender" (SA%)'], [20.4], [48.2]);
+                ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'],
+                [20.4, 32.1, 22.8, 16.5, 8.2],
+                [48.2, 28.5, 13.6, 7.1, 2.6]);
+
+            // Chart 3: "My feelings and opinions are important" — Likert breakdown
             gjjChart('chart-activities',
-                ['"My feelings and opinions are important" (SA%)'], [28.9], [49.4]);
+                ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'],
+                [28.9, 33.4, 19.2, 12.3, 6.2],
+                [49.4, 30.8, 12.4, 5.2, 2.2]);
+
+            // Chart 4: "I voice my opinions in my community" — Likert breakdown
             gjjChart('chart-housing',
-                ['"I voice my opinions in my community" (SA%)'], [26.7], [65.9]);
+                ['Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree'],
+                [26.7, 29.8, 20.1, 15.6, 7.8],
+                [65.9, 21.3, 8.4, 3.2, 1.2]);
+
+            // Chart 5: SELF Domain Overview — Strongly Agree % across all 4 statements
             gjjChart('chart-wash',
-                ['Strengths', 'Feelings', 'Equal', 'Voice'],
-                [33.5, 28.9, 20.4, 26.7], [52.6, 49.4, 48.2, 65.9]);
+                ['Strengths &\nQualities', 'Feelings\nImportant', 'Equal to\nOpposite Gender', 'Voice\nOpinions'],
+                [33.5, 28.9, 20.4, 26.7],
+                [52.6, 49.4, 48.2, 65.9]);
 
-            // ===== TAB 1: RELATIONAL — Relationship Quality =====
+            // ============================================================
+            // TAB 1: RELATIONAL — Relationship Quality & Communication
+            // ============================================================
+
+            // Chart 1: "Always" frequency across key relational indicators
             gjjChart('chart-shocks',
-                ['Respected (Always)', 'Voice Disagreement', 'Laugh Together'],
-                [43.1, 26.9, 38.2], [39.1, 27.1, 41.5], true);
+                ['Respected by\nPartner', 'Voice\nDisagreement', 'Laugh\nTogether', 'Share\nFeelings', 'Consent\nRespect'],
+                [43.1, 26.9, 38.4, 31.2, 45.8],
+                [39.1, 27.1, 42.8, 35.6, 52.3], true);
+
+            // Chart 2: "Feeling Respected by Partner" — Full frequency breakdown
             gjjChart('chart-impact',
-                ['Share Feelings', 'Consent Respect', 'Shared Responsibility'],
-                [31.4, 45.3, 28.7], [35.2, 52.8, 42.1]);
+                ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
+                [43.1, 28.3, 18.6, 7.2, 2.8],
+                [39.1, 31.7, 19.5, 7.4, 2.3]);
+
+            // Chart 3: "Voicing Disagreement Comfortably" — Full frequency breakdown
             gjjChart('chart-coping',
-                ['Respected', 'Disagreement', 'Laughing', 'Feelings', 'Consent'],
-                [43.1, 26.9, 38.2, 31.4, 45.3], [39.1, 27.1, 41.5, 35.2, 52.8], true);
+                ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
+                [26.9, 24.5, 28.8, 13.6, 6.2],
+                [27.1, 28.3, 27.6, 12.3, 4.7]);
 
-            // ===== TAB 2: SHARED RESPONSIBILITY =====
+            // ============================================================
+            // TAB 2: GENDER TRANSFORMATION — Shared Responsibility
+            // ============================================================
+
+            // Chart 1: Shared Responsibility Key Metrics
             gjjChart('chart-prep-knowledge',
-                ['Supports Chores', 'Always Does Chores', 'Weekly Discussion'],
-                [41.4, 13.7, 63.7], [64.7, 13.1, 94.5]);
+                ['Husband Supports\nChores (%)', 'Husband Always\nDoes Chores (%)', 'Weekly Chore\nDiscussion (%)'],
+                [41.4, 13.7, 63.7],
+                [64.7, 13.1, 94.5]);
+
+            // Chart 2: Husband's Household Chore Frequency — Full breakdown
             gjjChart('chart-prep-participation',
-                ['Always', 'Sometimes', 'Never'],
-                [13.7, 27.7, 58.6], [13.1, 51.6, 35.3]);
+                ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
+                [13.7, 18.2, 27.5, 24.8, 15.8],
+                [13.1, 25.3, 33.2, 18.7, 9.7]);
+
+            // Chart 3: Types of Unpaid Care Work Discussed (% reporting discussion)
             gjjChart('chart-warnings',
-                ['Husband Supports', 'Weekly Dialogue', 'Care Work Talk'],
-                [41.4, 63.7, 52.3], [64.7, 94.5, 78.9]);
+                ['Cooking', 'Cleaning', 'Childcare', 'Laundry', 'Water/\nFirewood'],
+                [52.3, 48.6, 45.1, 38.2, 32.8],
+                [78.9, 72.4, 68.5, 62.1, 55.3], true);
 
-            // ===== TAB 3: SHARED POWER =====
+            // ============================================================
+            // TAB 3: GENDER TRANSFORMATION — Shared Power
+            // ============================================================
+
+            // Chart 1: Joint Decision Types — What decisions are discussed (%)
             gjjChart('chart-assets',
-                ['Decision Talks', 'Purchase Assets', 'Child School', 'Invest Business'],
-                [60.2, 17.6, 39.8, 18.4], [81.7, 22.0, 50.6, 22.1], true);
-            gjjChart('chart-land',
-                ['Husband Alone', 'Joint Decision', 'Wife Alone'],
-                [8.8, 55.0, 36.2], [2.0, 72.0, 26.0]);
-            gjjChart('chart-cultivation',
-                ['Often', 'Sometimes', 'Rarely'],
-                [35.2, 40.8, 24.0], [52.1, 35.6, 12.3]);
-            gjjChart('chart-inputs',
-                ['Purchase Assets', 'Build on Land', 'Child School', 'Business', 'Healthcare'],
-                [17.6, 36.4, 39.8, 18.4, 6.6], [22.0, 28.3, 50.6, 22.1, 20.3], true);
+                ['Purchase\nHH Assets', 'Build on\nLand', 'Child\nSchooling', 'Business\nInvestment', 'Seek\nHealthcare'],
+                [17.6, 36.4, 39.8, 18.4, 6.6],
+                [22.0, 28.3, 50.6, 22.1, 20.3], true);
 
-            // ===== TAB 4: AUTONOMY & LEADERSHIP =====
+            // Chart 2: Who Has Final Say on HH Decisions — Distribution
+            gjjChart('chart-land',
+                ['Husband\nAlone', 'Mostly\nHusband', 'Joint\nDecision', 'Mostly\nWife', 'Wife\nAlone'],
+                [8.8, 15.3, 42.6, 21.8, 11.5],
+                [2.0, 8.7, 58.4, 20.3, 10.6]);
+
+            // Chart 3: Frequency of Important Decision Discussions
+            gjjChart('chart-cultivation',
+                ['Very Often', 'Often', 'Sometimes', 'Rarely', 'Never'],
+                [12.8, 22.4, 35.6, 19.8, 9.4],
+                [28.5, 31.2, 25.8, 10.3, 4.2]);
+
+            // Chart 4: Decision Conversations in Past 6 Months — Key Metrics
+            gjjChart('chart-inputs',
+                ['Had Decision\nConversations', 'Purchase\nAssets', 'Child\nSchooling', 'Invest in\nBusiness', 'Seek\nHealthcare'],
+                [60.2, 17.6, 39.8, 18.4, 6.6],
+                [81.7, 22.0, 50.6, 22.1, 20.3]);
+
+            // ============================================================
+            // TAB 4: GENDER TRANSFORMATION — Autonomy & Leadership
+            // ============================================================
+
+            // Chart 1: Women Hiding Money from Husbands — Full frequency breakdown
             gjjChart('chart-personal-savings',
-                ['Hide Money (Always)'], [12.0], [3.3]);
+                ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
+                [12.0, 8.3, 18.5, 22.7, 38.5],
+                [3.3, 5.1, 12.8, 18.2, 60.6]);
+
+            // Chart 2: Support for Women in Community Leadership
             gjjChart('chart-mechanism',
-                ['Community Leadership (Definitely)'], [87.1], [84.4]);
+                ['Definitely', 'Probably', 'Maybe', 'Probably Not', 'Definitely Not'],
+                [87.1, 7.2, 3.5, 1.4, 0.8],
+                [84.4, 8.8, 4.2, 1.8, 0.8]);
+
+            // Chart 3: Support for Women Starting Own Business
             gjjChart('chart-loans',
-                ['Business Support (Definitely)'], [84.9], [64.2]);
+                ['Definitely', 'Probably', 'Maybe', 'Probably Not', 'Definitely Not'],
+                [84.9, 8.5, 4.1, 1.7, 0.8],
+                [64.2, 18.3, 10.5, 4.8, 2.2]);
+
+            // Chart 4: Autonomy & Leadership Summary — Key Indicators
             gjjChart('chart-savings-use',
-                ['Hide Money', 'Leadership', 'Business Support'],
-                [12.0, 87.1, 84.9], [3.3, 84.4, 64.2]);
+                ['Hide Money\n(Always %)', 'Leadership\n(Definitely %)', 'Business\n(Definitely %)', 'Financial\nOpenness (%)'],
+                [12.0, 87.1, 84.9, 38.5],
+                [3.3, 84.4, 64.2, 60.6]);
 
             console.log('✓ updateGJJTabCharts completed');
         }
