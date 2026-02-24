@@ -1144,6 +1144,22 @@ def load_women_data(filepath):
 # CHART HELPERS
 # ============================================================================
 
+def _export_data_csv(data_dict, prefix='data'):
+    """Combine all DataFrames in a dict into a single CSV for download."""
+    import io
+    buf = io.StringIO()
+    first = True
+    for key, df in data_dict.items():
+        if not isinstance(df, pd.DataFrame) or df.empty:
+            continue
+        if not first:
+            buf.write('\n')
+        buf.write(f'--- {key} ---\n')
+        df.to_csv(buf, index=False)
+        first = False
+    return buf.getvalue()
+
+
 def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
                         multiply=True, height=450, orientation='v',
                         color_baseline=None, color_midline=None):
@@ -1272,13 +1288,18 @@ def _section_header(icon, title, badge_text=None):
     """Render a styled section header with optional badge."""
     badge = f'<span class="badge">{badge_text}</span>' if badge_text else ''
     heading = f'{icon} {title}' if icon else title
-    st.markdown(f'<div class="section-header"><h2>{heading}</h2>{badge}</div>',
+    anchor_id = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+    st.markdown(f'<div class="section-header" id="{anchor_id}"><h2>{heading}</h2>{badge}</div>',
                 unsafe_allow_html=True)
 
 
 def _quick_nav_pills(items):
     """Render quick navigation pills for in-tab section jumping."""
-    pills = ''.join([f'<span class="quick-nav-pill">{item}</span>' for item in items])
+    pills = ''.join([
+        f'<a href="#{re.sub(r"[^a-z0-9]+", "-", item.lower()).strip("-")}" '
+        f'class="quick-nav-pill" style="text-decoration:none;color:inherit;">{item}</a>'
+        for item in items
+    ])
     st.markdown(f'<div class="quick-nav">{pills}</div>', unsafe_allow_html=True)
 
 
@@ -1295,49 +1316,49 @@ def render_women_tab1(w):
     c1, c2 = st.columns(2)
     with c1:
         st.plotly_chart(make_comparison_bar(w['location'], 'Category',
-                        'Women by Location Type', height=300), width='stretch')
+                        'Women by Location Type', height=300), use_container_width=True)
     with c2:
         st.plotly_chart(make_comparison_bar(w['hh_type'], 'Category',
-                        'Household Type', height=300), width='stretch')
+                        'Household Type', height=300), use_container_width=True)
 
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['marital'], 'Category',
-                        'Marital Status', height=380, orientation='h'), width='stretch')
+                        'Marital Status', height=380, orientation='h'), use_container_width=True)
     with c4:
         st.plotly_chart(make_comparison_bar(w['education'], 'Category',
-                        'Education Level', height=380, orientation='h'), width='stretch')
+                        'Education Level', height=380, orientation='h'), use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Economic Activities', 'Section A')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['main_econ'], 'Activity',
-                        'Main HH Economic Activity', height=500, orientation='h'), width='stretch')
+                        'Main HH Economic Activity', height=500, orientation='h'), use_container_width=True)
     with c6:
         st.plotly_chart(make_comparison_bar(w['sec_econ'], 'Activity',
-                        'Secondary HH Economic Activities', height=500, orientation='h'), width='stretch')
+                        'Secondary HH Economic Activities', height=500, orientation='h'), use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Access to Basic Services', 'Section A')
     c7, c8, c9 = st.columns(3)
     with c7:
         st.plotly_chart(make_comparison_bar(w['water'], 'Category',
-                        'Access to Safe Drinking Water', height=300), width='stretch')
+                        'Access to Safe Drinking Water', height=300), use_container_width=True)
     with c8:
         st.plotly_chart(make_comparison_bar(w['toilet'], 'Category',
-                        'Access to Improved Toilet', height=300), width='stretch')
+                        'Access to Improved Toilet', height=300), use_container_width=True)
     with c9:
         st.plotly_chart(make_comparison_bar(w['electricity'], 'Category',
-                        'Access to Electricity', height=300), width='stretch')
+                        'Access to Electricity', height=300), use_container_width=True)
 
     c10, c11 = st.columns(2)
     with c10:
         st.plotly_chart(make_comparison_bar(w['walls'], 'Category',
-                        'Wall Material', height=350), width='stretch')
+                        'Wall Material', height=350), use_container_width=True)
     with c11:
         st.plotly_chart(make_comparison_bar(w['floors'], 'Category',
-                        'Floor Material', height=350), width='stretch')
+                        'Floor Material', height=350), use_container_width=True)
 
 
 def render_women_tab2(w):
@@ -1354,41 +1375,47 @@ def render_women_tab2(w):
     with c1:
         st.plotly_chart(make_comparison_bar(w['shocks'], 'Shock',
                         'Shocks Experienced (Past 12 Months)', height=450, orientation='h'),
-                        width='stretch')
+                        use_container_width=True)
     with c2:
         st.plotly_chart(make_comparison_bar(w['shock_impact'], 'Extent',
                         'Perceived Impact on Wellbeing', height=400, orientation='h'),
-                        width='stretch')
+                        use_container_width=True)
 
     _section_header('', 'Coping Strategies', 'Section B')
     st.plotly_chart(make_comparison_bar(w['coping'], 'Strategy',
-                    'Coping Strategies Used', height=500, orientation='h'), width='stretch')
+                    'Coping Strategies Used', height=500, orientation='h'), use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Disaster Preparedness', 'Section C')
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['prep_knowledge'], 'Response',
-                        'Knowledge of Preparedness Plans', height=350), width='stretch')
+                        'Knowledge of Preparedness Plans', height=350), use_container_width=True)
     with c4:
         st.plotly_chart(make_comparison_bar(w['prep_participation'], 'Response',
-                        'Participation in Plan Development', height=350), width='stretch')
+                        'Participation in Plan Development', height=350), use_container_width=True)
 
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['prep_know_action'], 'Response',
-                        'Know What to Do in Disaster', height=300), width='stretch')
+                        'Know What to Do in Disaster', height=300), use_container_width=True)
     with c6:
         st.plotly_chart(make_comparison_bar(w['early_warning'], 'Response',
-                        'Access to Early Warning Info', height=300), width='stretch')
+                        'Access to Early Warning Info', height=300), use_container_width=True)
 
     c7, c8 = st.columns(2)
     with c7:
         st.plotly_chart(make_comparison_bar(w['weather_forecast'], 'Response',
-                        'Access to Weather Forecasts', height=300), width='stretch')
+                        'Access to Weather Forecasts', height=300), use_container_width=True)
     with c8:
         st.plotly_chart(make_comparison_bar(w['tidal_forecast'], 'Response',
-                        'Access to Tidal Forecasts', height=300), width='stretch')
+                        'Access to Tidal Forecasts', height=300), use_container_width=True)
+
+    # Awareness of plan actions
+    _section_header('', 'Awareness of Preparedness Plan Actions', 'Section C')
+    st.plotly_chart(make_comparison_bar(w['prep_awareness'], 'Extent',
+                    'Awareness of Plan Actions (by Extent)', height=400, orientation='h'),
+                    use_container_width=True)
 
 
 def render_women_tab3(w):
@@ -1403,59 +1430,146 @@ def render_women_tab3(w):
 
     _section_header('', 'Household Assets', 'Section D')
     st.plotly_chart(make_comparison_bar(w['hh_assets'], 'Asset',
-                    'Assets Present in Household', height=600, orientation='h'), width='stretch')
+                    'Assets Present in Household', height=600, orientation='h'), use_container_width=True)
+
+    # Asset ownership breakdown
+    _section_header('', 'Asset Ownership (Joint vs Sole)', 'Section D')
+    ao = w['asset_ownership']
+    fig_ao = go.Figure()
+    fig_ao.add_trace(go.Bar(y=ao['Asset'], x=ao['Joint_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                            name='Joint (BL)', orientation='h', marker_color=COLORS['baseline_light']))
+    fig_ao.add_trace(go.Bar(y=ao['Asset'], x=ao['Joint_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                            name='Joint (ML)', orientation='h', marker_color=COLORS['baseline']))
+    fig_ao.add_trace(go.Bar(y=ao['Asset'], x=ao['Sole_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                            name='Sole (BL)', orientation='h', marker_color=COLORS['midline_light']))
+    fig_ao.add_trace(go.Bar(y=ao['Asset'], x=ao['Sole_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                            name='Sole (ML)', orientation='h', marker_color=COLORS['midline']))
+    fig_ao.update_layout(title='Asset Ownership: Joint vs Sole', barmode='group', height=550,
+                         xaxis_title='%', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                         font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                         plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                         margin=dict(l=20, r=20, t=60, b=20))
+    st.plotly_chart(fig_ao, use_container_width=True)
+
+    # Ability to use/sell assets
+    aus = w['asset_use_sell']
+    aus_c1, aus_c2 = st.columns(2)
+    with aus_c1:
+        fig_use = go.Figure()
+        fig_use.add_trace(go.Bar(y=aus['Asset'], x=aus['Use_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                 name='BL', orientation='h', marker_color=COLORS['baseline']))
+        fig_use.add_trace(go.Bar(y=aus['Asset'], x=aus['Use_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                 name='ML', orientation='h', marker_color=COLORS['midline']))
+        fig_use.update_layout(title='Ability to Use Assets', barmode='group', height=500,
+                              xaxis_title='%', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')  
+        st.plotly_chart(fig_use, use_container_width=True)
+    with aus_c2:
+        fig_sell = go.Figure()
+        fig_sell.add_trace(go.Bar(y=aus['Asset'], x=aus['Sell_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                  name='BL', orientation='h', marker_color=COLORS['baseline']))
+        fig_sell.add_trace(go.Bar(y=aus['Asset'], x=aus['Sell_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                  name='ML', orientation='h', marker_color=COLORS['midline']))
+        fig_sell.update_layout(title='Ability to Sell Assets', barmode='group', height=500,
+                               xaxis_title='%', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                               font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                               plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)') 
+        st.plotly_chart(fig_sell, use_container_width=True)
+
+    # Access to productive inputs
+    _section_header('', 'Access to Productive Inputs', 'Section D')
+    inp = w['inputs']
+    inp_c1, inp_c2 = st.columns(2)
+    with inp_c1:
+        fig_inp_a = go.Figure()
+        fig_inp_a.add_trace(go.Bar(y=inp['Input'], x=inp['Access_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                   name='BL', orientation='h', marker_color=COLORS['baseline']))
+        fig_inp_a.add_trace(go.Bar(y=inp['Input'], x=inp['Access_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                   name='ML', orientation='h', marker_color=COLORS['midline']))
+        fig_inp_a.update_layout(title='Access to Inputs', barmode='group', height=400,
+                                xaxis_title='%', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')  
+        st.plotly_chart(fig_inp_a, use_container_width=True)
+    with inp_c2:
+        fig_inp_p = go.Figure()
+        fig_inp_p.add_trace(go.Bar(y=inp['Input'], x=inp['PersonalUse_BL'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                   name='BL', orientation='h', marker_color=COLORS['baseline']))
+        fig_inp_p.add_trace(go.Bar(y=inp['Input'], x=inp['PersonalUse_ML'].apply(lambda x: x*100 if isinstance(x,(int,float)) and x<=1 else x),
+                                   name='ML', orientation='h', marker_color=COLORS['midline']))
+        fig_inp_p.update_layout(title='Personal Use of Inputs', barmode='group', height=400,
+                                xaxis_title='%', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')  
+        st.plotly_chart(fig_inp_p, use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Land', 'Section D')
     c1, c2, c3 = st.columns(3)
     with c1:
         st.plotly_chart(make_comparison_bar(w['land_size'], 'Category',
-                        'Agricultural Land Size', height=350), width='stretch')
+                        'Agricultural Land Size', height=350), use_container_width=True)
     with c2:
         st.plotly_chart(make_comparison_bar(w['land_status'], 'Category',
-                        'Land Tenure Status', height=350), width='stretch')
+                        'Land Tenure Status', height=350), use_container_width=True)
     with c3:
         st.plotly_chart(make_comparison_bar(w['land_use'], 'Category',
-                        'Currently Using Land for Agriculture', height=300), width='stretch')
+                        'Currently Using Land for Agriculture', height=300), use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Savings', 'Section E')
     c4, c5 = st.columns(2)
     with c4:
         st.plotly_chart(make_comparison_bar(w['personal_saving'], 'Response',
-                        'Women Personally Saving', height=300), width='stretch')
+                        'Women Personally Saving', height=300), use_container_width=True)
     with c5:
         st.plotly_chart(make_comparison_bar(w['family_saving'], 'Response',
-                        'Family Members Saving', height=300), width='stretch')
+                        'Family Members Saving', height=300), use_container_width=True)
 
     c6, c7 = st.columns(2)
     with c6:
         st.plotly_chart(make_comparison_bar(w['saving_freq'], 'Frequency',
-                        'Saving Frequency', height=350, orientation='h'), width='stretch')
+                        'Saving Frequency', height=350, orientation='h'), use_container_width=True)
     with c7:
         st.plotly_chart(make_comparison_bar(w['saving_amount'], 'Amount',
-                        'Amount Saved per Period', height=350, orientation='h'), width='stretch')
+                        'Amount Saved per Period', height=350, orientation='h'), use_container_width=True)
 
     c8, c9 = st.columns(2)
     with c8:
         st.plotly_chart(make_comparison_bar(w['saving_mechanism'], 'Mechanism',
-                        'Saving Mechanism', height=380, orientation='h'), width='stretch')
+                        'Saving Mechanism', height=380, orientation='h'), use_container_width=True)
     with c9:
         st.plotly_chart(make_comparison_bar(w['saving_use'], 'Use',
-                        'Intended Use of Savings', height=380, orientation='h'), width='stretch')
+                        'Intended Use of Savings', height=380, orientation='h'), use_container_width=True)
 
-    st.markdown("---")
+    # Savings balance distribution
+    st.plotly_chart(make_comparison_bar(w['saving_balance'], 'Balance',
+                    'Savings Balance Distribution', height=350, orientation='h'),
+                    use_container_width=True)
+
+    st.markdown('---')
     _section_header('', 'Loans', 'Section E')
     c10, c11 = st.columns(2)
     with c10:
         st.plotly_chart(make_comparison_bar(w['personal_loan'], 'Response',
-                        'Women Personally Taking a Loan', height=300), width='stretch')
+                        'Women Personally Taking a Loan', height=300), use_container_width=True)
         pl = w['personal_loan_size']
-        st.metric("Avg Personal Loan (BL → ML)",
-                  f"KES {pl['Baseline'].values[0]:,.0f} → {pl['Midline'].values[0]:,.0f}")
+        st.metric('Avg Personal Loan (BL \u2192 ML)',
+                  f"KES {pl['Baseline'].values[0]:,.0f} \u2192 {pl['Midline'].values[0]:,.0f}")
     with c11:
         st.plotly_chart(make_comparison_bar(w['loan_source'], 'Source',
-                        'Loan Sources', height=380, orientation='h'), width='stretch')
+                        'Loan Sources', height=380, orientation='h'), use_container_width=True)
+
+    # Family loan data
+    fl_c1, fl_c2 = st.columns(2)
+    with fl_c1:
+        st.plotly_chart(make_comparison_bar(w['family_loan'], 'Response',
+                        'Family Members Taking Loans', height=300), use_container_width=True)
+    with fl_c2:
+        fls = w['family_loan_size']
+        st.metric('Avg Family Loan (BL \u2192 ML)',
+                  f"KES {fls['Baseline'].values[0]:,.0f} \u2192 {fls['Midline'].values[0]:,.0f}")
 
 
 def render_women_tab4(w):
@@ -1472,9 +1586,20 @@ def render_women_tab4(w):
     _section_header('', 'Roles & Responsibilities: Norms vs. Experience', 'Section F')
     st.plotly_chart(make_two_col_bar(w['roles_should_joint'], w['roles_does_joint'],
                     'Should be Joint', 'Actually Joint', 'Role',
-                    'Roles: Should be Joint vs. Actually Joint', height=500), width='stretch')
+                    'Roles: Should be Joint vs. Actually Joint', height=500), use_container_width=True)
 
-    st.markdown("---")
+    # Women-only norms vs actual practice
+    rw_c1, rw_c2 = st.columns(2)
+    with rw_c1:
+        st.plotly_chart(make_comparison_bar(w['roles_should_women'], 'Role',
+                        'Roles: Should be Done by Women Only (Norms)', height=500, orientation='h'),
+                        use_container_width=True)
+    with rw_c2:
+        st.plotly_chart(make_comparison_bar(w['roles_does_self'], 'Role',
+                        'Roles: Actually Done by Self/Spouse', height=500, orientation='h'),
+                        use_container_width=True)
+
+    st.markdown('---')
     _section_header('', 'Time Use (Average Hours per Day)', 'Section G')
     ts = w['time_summary']
     fig_time = go.Figure()
@@ -1489,7 +1614,7 @@ def render_women_tab4(w):
                            legend=dict(orientation='h', yanchor='bottom', y=1.02),
                            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-    st.plotly_chart(fig_time, width='stretch')
+    st.plotly_chart(fig_time, use_container_width=True)
 
     c1, c2 = st.columns(2)
     with c1:
@@ -1503,7 +1628,7 @@ def render_women_tab4(w):
                              xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig_uc, width='stretch')
+        st.plotly_chart(fig_uc, use_container_width=True)
     with c2:
         tp = w['time_productive']
         fig_pw = go.Figure()
@@ -1515,18 +1640,57 @@ def render_women_tab4(w):
                              xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig_pw, width='stretch')
+        st.plotly_chart(fig_pw, use_container_width=True)
 
-    st.markdown("---")
+    # Community conservation time breakdown
+    tc = w['time_conservation']
+    fig_tc = go.Figure()
+    fig_tc.add_trace(go.Bar(y=tc['Activity'], x=tc['Hours_BL'], name='Baseline',
+                            orientation='h', marker_color=COLORS['baseline']))
+    fig_tc.add_trace(go.Bar(y=tc['Activity'], x=tc['Hours_ML'], name='Midline',
+                            orientation='h', marker_color=COLORS['midline']))
+    fig_tc.update_layout(title='Community Conservation Work (Hours/Day)', barmode='group', height=300,
+                         xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                         font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                         plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    st.plotly_chart(fig_tc, use_container_width=True)
+
+    # Total hours summary metrics
+    tt_c1, tt_c2, tt_c3 = st.columns(3)
+    tut = w['time_unpaid_total']
+    tpt = w['time_productive_total']
+    tct = w['time_conservation_total']
+    with tt_c1:
+        st.metric('Unpaid Care (BL / ML)',
+                  f"{tut['Baseline'].values[0]:.1f}h / {tut['Midline'].values[0]:.1f}h")
+    with tt_c2:
+        st.metric('Productive (BL / ML)',
+                  f"{tpt['Baseline'].values[0]:.1f}h / {tpt['Midline'].values[0]:.1f}h")
+    with tt_c3:
+        st.metric('Conservation (BL / ML)',
+                  f"{tct['Baseline'].values[0]:.1f}h / {tct['Midline'].values[0]:.1f}h")
+
+    st.markdown('---')
     _section_header('', 'Decision-Making', 'Section H')
     st.plotly_chart(make_two_col_bar(w['decision_should_joint'], w['decision_does_joint'],
                     'Should be Joint', 'Actually Joint', 'Decision',
-                    'Decision-Making: Norms vs. Experience (Joint %)', height=550), width='stretch')
+                    'Decision-Making: Norms vs. Experience (Joint %)', height=550), use_container_width=True)
+
+    # Women-only decision norms vs actual
+    dw_c1, dw_c2 = st.columns(2)
+    with dw_c1:
+        st.plotly_chart(make_comparison_bar(w['decision_should_women'], 'Decision',
+                        'Should be Decided by Women Only', height=550, orientation='h'),
+                        use_container_width=True)
+    with dw_c2:
+        st.plotly_chart(make_comparison_bar(w['decision_does_self'], 'Decision',
+                        'Actually Decided by Self/Spouse', height=550, orientation='h'),
+                        use_container_width=True)
 
     _section_header('', "Influence on HH Decisions ('To a Large Extent')", 'Section H')
     st.plotly_chart(make_comparison_bar(w['decision_influence'], 'Decision',
                     'Women Who Can Influence Decisions to a Large Extent',
-                    height=500, orientation='h'), width='stretch')
+                    height=500, orientation='h'), use_container_width=True)
 
 
 def render_women_tab5(w):
@@ -1542,38 +1706,38 @@ def render_women_tab5(w):
     c1, c2 = st.columns(2)
     with c1:
         st.plotly_chart(make_comparison_bar(w['cc_heard'], 'Response',
-                        'Heard of Climate Change', height=300), width='stretch')
+                        'Heard of Climate Change', height=300), use_container_width=True)
     with c2:
         st.plotly_chart(make_comparison_bar(w['cc_define'], 'Response',
-                        'Ability to Define Climate Change', height=350), width='stretch')
+                        'Ability to Define Climate Change', height=350), use_container_width=True)
 
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['cc_env_effects'], 'Effect',
                         'Perceived Environmental Effects of CC', height=500, orientation='h'),
-                        width='stretch')
+                        use_container_width=True)
     with c4:
         st.plotly_chart(make_comparison_bar(w['cc_livelihood_effects'], 'Effect',
                         'Perceived Livelihood Effects of CC', height=500, orientation='h'),
-                        width='stretch')
+                        use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Nature-based Solutions', 'Section H')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['nbs_heard'], 'Response',
-                        'Heard of NbS', height=300), width='stretch')
+                        'Heard of NbS', height=300), use_container_width=True)
     with c6:
         st.plotly_chart(make_comparison_bar(w['nbs_define'], 'Response',
-                        'Ability to Define NbS', height=350), width='stretch')
+                        'Ability to Define NbS', height=350), use_container_width=True)
 
     c7, c8 = st.columns(2)
     with c7:
         st.plotly_chart(make_comparison_bar(w['nbs_examples'], 'Example',
-                        'NbS Examples Women Can Cite', height=450, orientation='h'), width='stretch')
+                        'NbS Examples Women Can Cite', height=450, orientation='h'), use_container_width=True)
     with c8:
         st.plotly_chart(make_comparison_bar(w['nbs_benefits'], 'Benefit',
-                        'Perceived Benefits of NbS', height=500, orientation='h'), width='stretch')
+                        'Perceived Benefits of NbS', height=500, orientation='h'), use_container_width=True)
 
     st.markdown("---")
     # NbS Modules
@@ -1584,26 +1748,26 @@ def render_women_tab5(w):
         ca, cb = st.columns(2)
         with ca:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_heard'], 'Response',
-                            f'Awareness of {module}', height=300), width='stretch')
+                            f'Awareness of {module}', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_current'], 'Response',
-                            f'Currently Involved', height=280), width='stretch')
+                            f'Currently Involved', height=280), use_container_width=True)
         with cb:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_ever'], 'Response',
-                            f'Ever Participated', height=300), width='stretch')
+                            f'Ever Participated', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_modality'], 'Modality',
-                            f'Participation Modality', height=300), width='stretch')
+                            f'Participation Modality', height=300), use_container_width=True)
 
         cc, cd = st.columns(2)
         with cc:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_training'], 'Response',
-                            f'Training Received', height=300), width='stretch')
+                            f'Training Received', height=300), use_container_width=True)
         with cd:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_assets'], 'Response',
-                            f'Assets/Inputs Received', height=300), width='stretch')
+                            f'Assets/Inputs Received', height=300), use_container_width=True)
 
         if f'{prefix}_interest' in w:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_interest'], 'Response',
-                            f'Interest in Participating', height=280), width='stretch')
+                            f'Interest in Participating', height=280), use_container_width=True)
         st.markdown("---")
 
 
@@ -1640,36 +1804,46 @@ def render_women_tab6(w):
                             polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
                             height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
-    st.plotly_chart(fig_radar, width='stretch')
+    st.plotly_chart(fig_radar, use_container_width=True)
 
     # Detailed bars
     c1, c2 = st.columns(2)
     with c1:
         st.plotly_chart(make_comparison_bar(ls_a, 'Statement',
-                        'Life Skills — Agree/SA %', height=550, orientation='h'), width='stretch')
+                        'Life Skills — Agree/SA %', height=550, orientation='h'), use_container_width=True)
     with c2:
         st.plotly_chart(make_comparison_bar(ls_s, 'Statement',
-                        'Life Skills — Strongly Agree %', height=550, orientation='h'), width='stretch')
+                        'Life Skills — Strongly Agree %', height=550, orientation='h'), use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Communication & Conflict Resolution', 'Section I')
     c3, c4 = st.columns(2)
     with c3:
         st.plotly_chart(make_comparison_bar(w['communication_agree'], 'Statement',
-                        'Communication — Agree/SA', height=350, orientation='h'), width='stretch')
+                        'Communication — Agree/SA', height=350, orientation='h'), use_container_width=True)
     with c4:
         st.plotly_chart(make_comparison_bar(w['conflict_agree'], 'Statement',
-                        'Conflict Resolution — Agree/SA', height=350, orientation='h'), width='stretch')
+                        'Conflict Resolution — Agree/SA', height=350, orientation='h'), use_container_width=True)
+
+    c3b, c4b = st.columns(2)
+    with c3b:
+        st.plotly_chart(make_comparison_bar(w['communication_strong'], 'Statement',
+                        'Communication — Strongly Agree Only', height=350, orientation='h'),
+                        use_container_width=True)
+    with c4b:
+        st.plotly_chart(make_comparison_bar(w['conflict_strong'], 'Statement',
+                        'Conflict Resolution — Strongly Agree Only', height=350, orientation='h'),
+                        use_container_width=True)
 
     st.markdown("---")
     _section_header('', 'Social Norms', 'Section J')
     c5, c6 = st.columns(2)
     with c5:
         st.plotly_chart(make_comparison_bar(w['socialnorms_agree'], 'Norm',
-                        'Social Norms — Agree/SA %', height=500, orientation='h'), width='stretch')
+                        'Social Norms — Agree/SA %', height=500, orientation='h'), use_container_width=True)
     with c6:
         st.plotly_chart(make_comparison_bar(w['socialnorms_strong'], 'Norm',
-                        'Social Norms — Strongly Agree %', height=500, orientation='h'), width='stretch')
+                        'Social Norms — Strongly Agree %', height=500, orientation='h'), use_container_width=True)
 
 
 # ============================================================================
@@ -1728,7 +1902,7 @@ def render_forestry_tabs(data, show_change):
                               legend=dict(orientation='h', yanchor='bottom', y=1.02),
                               font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                               plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         with col_r:
             fig_r = go.Figure()
             fig_r.add_trace(go.Scatterpolar(
@@ -1745,7 +1919,7 @@ def render_forestry_tabs(data, show_change):
                                 polar=dict(radialaxis=dict(visible=True, range=[0,100])),
                                 height=450, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
                                 font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
-            st.plotly_chart(fig_r, width='stretch')
+            st.plotly_chart(fig_r, use_container_width=True)
 
         st.subheader("Score Statistics")
         col_s1, col_s2 = st.columns(2)
@@ -1761,30 +1935,43 @@ def render_forestry_tabs(data, show_change):
         st.markdown("""<div class="section-narrative">
         <strong>Group Characteristics:</strong> Membership composition, years of operation, land tenure, and forest size.
         </div>""", unsafe_allow_html=True)
+
+        # Summary statistics metric cards
+        ys = data['years_stats']
+        fss = data['forest_size_stats']
+        sc1, sc2, sc3, sc4, sc5, sc6 = st.columns(6)
+        with sc1: st.metric('Avg Years (BL)', f"{ys.loc[ys['Stat']=='Average','Baseline'].values[0]:.1f}")
+        with sc2: st.metric('Avg Years (ML)', f"{ys.loc[ys['Stat']=='Average','Midline'].values[0]:.1f}")
+        with sc3: st.metric('Max Years (ML)', f"{ys.loc[ys['Stat']=='Maximum','Midline'].values[0]:.0f}")
+        with sc4: st.metric('Avg Forest ha (BL)', f"{fss.loc[fss['Stat']=='Average','Baseline'].values[0]:.1f}")
+        with sc5: st.metric('Avg Forest ha (ML)', f"{fss.loc[fss['Stat']=='Average','Midline'].values[0]:.1f}")
+        with sc6: st.metric('Max Forest ha (ML)', f"{fss.loc[fss['Stat']=='Maximum','Midline'].values[0]:.0f}")
+        st.markdown('---')
+
         c1,c2,c3 = st.columns(3)
         with c1:
             st.plotly_chart(make_comparison_bar(data['avg_membership'],'Category','Avg Members',
-                            y_label='Members', multiply=False, height=350), width='stretch')
+                            y_label='Members', multiply=False, height=350), use_container_width=True)
         with c2:
             st.plotly_chart(make_comparison_bar(data['max_membership'],'Category','Max Members',
-                            y_label='Members', multiply=False, height=350), width='stretch')
+                            y_label='Members', multiply=False, height=350), use_container_width=True)
         with c3:
             st.plotly_chart(make_comparison_bar(data['min_membership'],'Category','Min Members',
-                            y_label='Members', multiply=False, height=350), width='stretch')
+                            y_label='Members', multiply=False, height=350), use_container_width=True)
         st.markdown("---")
         c4,c5,c6 = st.columns(3)
         with c4:
             fn = make_delta_bar if show_change else make_comparison_bar
             kw = {'title':'Change in Years Dist'} if show_change else {'title':'Years of Operation', 'height':400}
-            st.plotly_chart(fn(data['years_dist'],'Category',**kw), width='stretch')
+            st.plotly_chart(fn(data['years_dist'],'Category',**kw), use_container_width=True)
         with c5:
             fn = make_delta_bar if show_change else make_comparison_bar
             kw = {'title':'Change in Tenure'} if show_change else {'title':'Land Tenure Type', 'height':400}
-            st.plotly_chart(fn(data['tenure'],'Category',**kw), width='stretch')
+            st.plotly_chart(fn(data['tenure'],'Category',**kw), use_container_width=True)
         with c6:
             fn = make_delta_bar if show_change else make_comparison_bar
             kw = {'title':'Change in Forest Size'} if show_change else {'title':'Forest Size (ha)', 'height':400}
-            st.plotly_chart(fn(data['forest_size_dist'],'Category',**kw), width='stretch')
+            st.plotly_chart(fn(data['forest_size_dist'],'Category',**kw), use_container_width=True)
 
     # ---- TAB 3: GOVERNANCE & GENDER ----
     with tab3:
@@ -1793,18 +1980,18 @@ def render_forestry_tabs(data, show_change):
         management practices, gender equality discussions and actions.
         </div>""", unsafe_allow_html=True)
         c1,c2 = st.columns(2)
-        with c1: st.plotly_chart(make_comparison_bar(data['goals_defined'],'Category','Defined Goals', height=350), width='stretch')
-        with c2: st.plotly_chart(make_comparison_bar(data['goals_stated'],'Goal','Stated Goals', height=350, orientation='h'), width='stretch')
+        with c1: st.plotly_chart(make_comparison_bar(data['goals_defined'],'Category','Defined Goals', height=350), use_container_width=True)
+        with c2: st.plotly_chart(make_comparison_bar(data['goals_stated'],'Goal','Stated Goals', height=350, orientation='h'), use_container_width=True)
         c3,c4 = st.columns(2)
-        with c3: st.plotly_chart(make_comparison_bar(data['rights'],'Right','Right Entitlements', height=400, orientation='h'), width='stretch')
-        with c4: st.plotly_chart(make_comparison_bar(data['responsibilities'],'Responsibility','Govt Responsibilities', height=400, orientation='h'), width='stretch')
+        with c3: st.plotly_chart(make_comparison_bar(data['rights'],'Right','Right Entitlements', height=400, orientation='h'), use_container_width=True)
+        with c4: st.plotly_chart(make_comparison_bar(data['responsibilities'],'Responsibility','Govt Responsibilities', height=400, orientation='h'), use_container_width=True)
         st.markdown("---")
         c5,c6 = st.columns(2)
-        with c5: st.plotly_chart(make_comparison_bar(data['board_roles'],'Category','Board Role Clarity', height=380, orientation='h'), width='stretch')
-        with c6: st.plotly_chart(make_comparison_bar(data['guidelines'],'Category','Guidelines Status', height=380, orientation='h'), width='stretch')
+        with c5: st.plotly_chart(make_comparison_bar(data['board_roles'],'Category','Board Role Clarity', height=380, orientation='h'), use_container_width=True)
+        with c6: st.plotly_chart(make_comparison_bar(data['guidelines'],'Category','Guidelines Status', height=380, orientation='h'), use_container_width=True)
         c7,c8 = st.columns(2)
-        with c7: st.plotly_chart(make_comparison_bar(data['meetings'],'Category','Meeting Frequency', height=350, orientation='h'), width='stretch')
-        with c8: st.plotly_chart(make_comparison_bar(data['women_leadership'],'Category',"Women's Leadership", height=350, orientation='h'), width='stretch')
+        with c7: st.plotly_chart(make_comparison_bar(data['meetings'],'Category','Meeting Frequency', height=350, orientation='h'), use_container_width=True)
+        with c8: st.plotly_chart(make_comparison_bar(data['women_leadership'],'Category',"Women's Leadership", height=350, orientation='h'), use_container_width=True)
 
         # Management practices
         mp = data['mgmt_practices']
@@ -1817,15 +2004,15 @@ def render_forestry_tabs(data, show_change):
                              legend=dict(orientation='h', yanchor='bottom', y=1.02),
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig_mp, width='stretch')
+        st.plotly_chart(fig_mp, use_container_width=True)
         st.markdown("---")
         c9,c10 = st.columns(2)
         with c9:
-            st.plotly_chart(make_comparison_bar(data['ge_discussion'],'Category','GE Discussion', height=350), width='stretch')
-            st.plotly_chart(make_comparison_bar(data['ge_actions'],'Category','GE Actions Agreed', height=350), width='stretch')
+            st.plotly_chart(make_comparison_bar(data['ge_discussion'],'Category','GE Discussion', height=350), use_container_width=True)
+            st.plotly_chart(make_comparison_bar(data['ge_actions'],'Category','GE Actions Agreed', height=350), use_container_width=True)
         with c10:
-            st.plotly_chart(make_comparison_bar(data['ge_topics'],'Topic','GE Topics', height=350, orientation='h'), width='stretch')
-            st.plotly_chart(make_comparison_bar(data['ge_completion'],'Category','GE Action Completion', height=350), width='stretch')
+            st.plotly_chart(make_comparison_bar(data['ge_topics'],'Topic','GE Topics', height=350, orientation='h'), use_container_width=True)
+            st.plotly_chart(make_comparison_bar(data['ge_completion'],'Category','GE Action Completion', height=350), use_container_width=True)
 
     # ---- TAB 4: TRAINING & ASSETS ----
     with tab4:
@@ -1833,7 +2020,7 @@ def render_forestry_tabs(data, show_change):
         <strong>Training & Assets:</strong> Training coverage, topics, and assets/inputs received.
         </div>""", unsafe_allow_html=True)
         c1,c2 = st.columns(2)
-        with c1: st.plotly_chart(make_comparison_bar(data['training_coverage'],'Category','Training Coverage', height=400), width='stretch')
+        with c1: st.plotly_chart(make_comparison_bar(data['training_coverage'],'Category','Training Coverage', height=400), use_container_width=True)
         with c2:
             tc = data['training_coverage'].copy(); tc['Baseline']*=100; tc['Midline']*=100
             fig_tc = go.Figure()
@@ -1845,16 +2032,16 @@ def render_forestry_tabs(data, show_change):
                                  legend=dict(orientation='h', yanchor='bottom', y=1.02),
                                  font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                                  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-            st.plotly_chart(fig_tc, width='stretch')
+            st.plotly_chart(fig_tc, use_container_width=True)
 
         if show_change:
-            st.plotly_chart(make_delta_bar(data['training_topics'],'Topic','Training Topics Change (pp)', height=500), width='stretch')
+            st.plotly_chart(make_delta_bar(data['training_topics'],'Topic','Training Topics Change (pp)', height=500), use_container_width=True)
         else:
-            st.plotly_chart(make_comparison_bar(data['training_topics'],'Topic','Training Topics', height=600, orientation='h'), width='stretch')
+            st.plotly_chart(make_comparison_bar(data['training_topics'],'Topic','Training Topics', height=600, orientation='h'), use_container_width=True)
         st.markdown("---")
         c3,c4 = st.columns(2)
-        with c3: st.plotly_chart(make_comparison_bar(data['assets_received'],'Category','Assets Received', height=350), width='stretch')
-        with c4: st.plotly_chart(make_comparison_bar(data['asset_types'],'Asset','Asset Types', height=400, orientation='h'), width='stretch')
+        with c3: st.plotly_chart(make_comparison_bar(data['assets_received'],'Category','Assets Received', height=350), use_container_width=True)
+        with c4: st.plotly_chart(make_comparison_bar(data['asset_types'],'Asset','Asset Types', height=400, orientation='h'), use_container_width=True)
 
     # ---- TAB 5: FOREST CONDITION & THREATS ----
     with tab5:
@@ -1867,7 +2054,7 @@ def render_forestry_tabs(data, show_change):
         fig = make_stacked_bar(fc,'Characteristic', cols, [COLORS['good'],COLORS['medium'],COLORS['poor']],
                                f'Forest Condition — {tp}', height=400)
         for i,l in enumerate(['Good','Medium','Poor']): fig.data[i].name = l
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         st.markdown("---")
         tp2 = st.radio("Timepoint", ["Baseline","Midline"], horizontal=True, key="fch_tp")
         fch = data['forest_change']
@@ -1875,19 +2062,75 @@ def render_forestry_tabs(data, show_change):
         fig2 = make_stacked_bar(fch,'Characteristic', cols2, [COLORS['danger'],COLORS['no_change'],COLORS['good']],
                                 f'Perceived Changes — {tp2}', height=400)
         for i,l in enumerate(['Decrease','No Change','Increase']): fig2.data[i].name = l
-        st.plotly_chart(fig2, width='stretch')
+        st.plotly_chart(fig2, use_container_width=True)
         st.markdown("---")
         c1,c2 = st.columns(2)
         with c1:
             fig_t = make_stacked_bar(data['threats'],'Threat', ['Baseline_Low','Baseline_Medium','Baseline_High'],
                                      [COLORS['good'],COLORS['medium'],COLORS['danger']], 'Threats — Baseline', height=450, orientation='h')
             for i,l in enumerate(['Low','Medium','High']): fig_t.data[i].name = l
-            st.plotly_chart(fig_t, width='stretch')
+            st.plotly_chart(fig_t, use_container_width=True)
         with c2:
             fig_t2 = make_stacked_bar(data['threats'],'Threat', ['Midline_Low','Midline_Medium','Midline_High'],
                                       [COLORS['good'],COLORS['medium'],COLORS['danger']], 'Threats — Midline', height=450, orientation='h')
             for i,l in enumerate(['Low','Medium','High']): fig_t2.data[i].name = l
-            st.plotly_chart(fig_t2, width='stretch')
+            st.plotly_chart(fig_t2, use_container_width=True)
+
+        # Threat change trends
+        st.markdown('---')
+        _section_header('', 'Threat Change Trends', 'Section E')
+        tc1, tc2 = st.columns(2)
+        with tc1:
+            fig_tc = make_stacked_bar(data['threat_changes'], 'Threat',
+                                      ['Baseline_Decrease','Baseline_NoChange','Baseline_Increase'],
+                                      [COLORS['good'],'#9E9E9E',COLORS['danger']],
+                                      'Threat Changes — Baseline', height=450, orientation='h')
+            for i,l in enumerate(['Decrease','No Change','Increase']): fig_tc.data[i].name = l
+            st.plotly_chart(fig_tc, use_container_width=True)
+        with tc2:
+            fig_tc2 = make_stacked_bar(data['threat_changes'], 'Threat',
+                                       ['Midline_Decrease','Midline_NoChange','Midline_Increase'],
+                                       [COLORS['good'],'#9E9E9E',COLORS['danger']],
+                                       'Threat Changes — Midline', height=450, orientation='h')
+            for i,l in enumerate(['Decrease','No Change','Increase']): fig_tc2.data[i].name = l
+            st.plotly_chart(fig_tc2, use_container_width=True)
+
+        # Harvest amounts
+        st.markdown('---')
+        _section_header('', 'Harvest Amounts by Product', 'Section E')
+        hc1, hc2 = st.columns(2)
+        with hc1:
+            fig_ha = make_stacked_bar(data['harvest_amount'], 'Product',
+                                      ['Baseline_None','Baseline_Medium','Baseline_Substantial'],
+                                      ['#9E9E9E',COLORS['medium'],COLORS['good']],
+                                      'Harvest Amount — Baseline', height=450, orientation='h')
+            for i,l in enumerate(['None','Medium','Substantial']): fig_ha.data[i].name = l
+            st.plotly_chart(fig_ha, use_container_width=True)
+        with hc2:
+            fig_ha2 = make_stacked_bar(data['harvest_amount'], 'Product',
+                                       ['Midline_None','Midline_Medium','Midline_Substantial'],
+                                       ['#9E9E9E',COLORS['medium'],COLORS['good']],
+                                       'Harvest Amount — Midline', height=450, orientation='h')
+            for i,l in enumerate(['None','Medium','Substantial']): fig_ha2.data[i].name = l
+            st.plotly_chart(fig_ha2, use_container_width=True)
+
+        # Harvest change trends
+        _section_header('', 'Harvest Change Trends', 'Section E')
+        ht1, ht2 = st.columns(2)
+        with ht1:
+            fig_hc = make_stacked_bar(data['harvest_changes'], 'Product',
+                                      ['Baseline_Decrease','Baseline_NoChange','Baseline_Increase'],
+                                      [COLORS['danger'],'#9E9E9E',COLORS['good']],
+                                      'Harvest Changes — Baseline', height=450, orientation='h')
+            for i,l in enumerate(['Decrease','No Change','Increase']): fig_hc.data[i].name = l
+            st.plotly_chart(fig_hc, use_container_width=True)
+        with ht2:
+            fig_hc2 = make_stacked_bar(data['harvest_changes'], 'Product',
+                                       ['Midline_Decrease','Midline_NoChange','Midline_Increase'],
+                                       [COLORS['danger'],'#9E9E9E',COLORS['good']],
+                                       'Harvest Changes — Midline', height=450, orientation='h')
+            for i,l in enumerate(['Decrease','No Change','Increase']): fig_hc2.data[i].name = l
+            st.plotly_chart(fig_hc2, use_container_width=True)
 
     # ---- TAB 6: INCOME & AGROFORESTRY ----
     with tab6:
@@ -1895,29 +2138,29 @@ def render_forestry_tabs(data, show_change):
         <strong>Income & Agroforestry:</strong> Income generation, sources, uses, agroforestry practices, support, and challenges.
         </div>""", unsafe_allow_html=True)
         c1,c2,c3 = st.columns(3)
-        with c1: st.plotly_chart(make_comparison_bar(data['income_gen'],'Category','Income Generation', height=350), width='stretch')
-        with c2: st.plotly_chart(make_comparison_bar(data['income_sources'],'Source','Income Sources', height=400, orientation='h'), width='stretch')
-        with c3: st.plotly_chart(make_comparison_bar(data['income_use'],'Use','Income Use', height=400, orientation='h'), width='stretch')
+        with c1: st.plotly_chart(make_comparison_bar(data['income_gen'],'Category','Income Generation', height=350), use_container_width=True)
+        with c2: st.plotly_chart(make_comparison_bar(data['income_sources'],'Source','Income Sources', height=400, orientation='h'), use_container_width=True)
+        with c3: st.plotly_chart(make_comparison_bar(data['income_use'],'Use','Income Use', height=400, orientation='h'), use_container_width=True)
         st.markdown("---")
         c4,c5 = st.columns(2)
-        with c4: st.plotly_chart(make_comparison_bar(data['agroforestry'],'Category','Agroforestry Practice', height=350), width='stretch')
-        with c5: st.plotly_chart(make_comparison_bar(data['af_types'],'Practice','AF Types', height=350, orientation='h'), width='stretch')
+        with c4: st.plotly_chart(make_comparison_bar(data['agroforestry'],'Category','Agroforestry Practice', height=350), use_container_width=True)
+        with c5: st.plotly_chart(make_comparison_bar(data['af_types'],'Practice','AF Types', height=350, orientation='h'), use_container_width=True)
         c6,c7 = st.columns(2)
-        with c6: st.plotly_chart(make_comparison_bar(data['af_objectives'],'Objective','AF Objectives', height=400, orientation='h'), width='stretch')
-        with c7: st.plotly_chart(make_comparison_bar(data['af_training'],'Category','AF Training', height=350), width='stretch')
+        with c6: st.plotly_chart(make_comparison_bar(data['af_objectives'],'Objective','AF Objectives', height=400, orientation='h'), use_container_width=True)
+        with c7: st.plotly_chart(make_comparison_bar(data['af_training'],'Category','AF Training', height=350), use_container_width=True)
         st.markdown("---")
         c8,c9 = st.columns(2)
         with c8:
             fn = make_delta_bar if show_change else make_comparison_bar
             kw = {'title':'Change in AF Support (pp)'} if show_change else {'title':'AF Support Types', 'height':380, 'orientation':'h'}
-            st.plotly_chart(fn(data['af_support'],'Support',**kw), width='stretch')
+            st.plotly_chart(fn(data['af_support'],'Support',**kw), use_container_width=True)
         with c9:
             fn = make_delta_bar if show_change else make_comparison_bar
             kw = {'title':'Change in AF Challenges (pp)'} if show_change else {'title':'AF Challenges', 'height':380, 'orientation':'h'}
-            st.plotly_chart(fn(data['af_challenges'],'Challenge',**kw), width='stretch')
+            st.plotly_chart(fn(data['af_challenges'],'Challenge',**kw), use_container_width=True)
         c10,c11 = st.columns(2)
-        with c10: st.plotly_chart(make_comparison_bar(data['af_reinvest'],'Category','AF Reinvestment', height=380, orientation='h'), width='stretch')
-        with c11: st.plotly_chart(make_comparison_bar(data['af_potential'],'Category','Livelihood Potential', height=350), width='stretch')
+        with c10: st.plotly_chart(make_comparison_bar(data['af_reinvest'],'Category','AF Reinvestment', height=380, orientation='h'), use_container_width=True)
+        with c11: st.plotly_chart(make_comparison_bar(data['af_potential'],'Category','Livelihood Potential', height=350), use_container_width=True)
 
 
 # ============================================================================
@@ -1953,8 +2196,16 @@ def _pp(bl, ml, multiply=True):
 def _generate_forestry_insights(data):
     """Generate automated insights from forestry data."""
     insights = []
+    try:
+        _gen_forestry_insights_inner(data, insights)
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some forestry insights could not be generated: {e}",
+                         "neutral"))
+    return insights
 
-    # 1. Functionality threshold
+
+def _gen_forestry_insights_inner(data, insights):
     ft = data['functionality_threshold']
     bl_60 = ft.loc[ft['Timepoint'] == 'Baseline', 'Functional_60_pct'].values[0]
     ml_60 = ft.loc[ft['Timepoint'] == 'Midline', 'Functional_60_pct'].values[0]
@@ -2055,7 +2306,16 @@ def _generate_forestry_insights(data):
 def _generate_women_insights(w):
     """Generate automated insights from women survey data."""
     insights = []
+    try:
+        _gen_women_insights_inner(w, insights)
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some women survey insights could not be generated: {e}",
+                         "neutral"))
+    return insights
 
+
+def _gen_women_insights_inner(w, insights):
     # 1. Climate change awareness
     cc = w['cc_heard']
     cc_yes_bl = cc.loc[cc['Response'] == 'Yes', 'Baseline'].values[0]
@@ -2162,7 +2422,16 @@ def _generate_women_insights(w):
 def _generate_cross_cutting_insights(f_data, w_data):
     """Generate insights that span both datasets."""
     insights = []
+    try:
+        _gen_cross_cutting_inner(f_data, w_data, insights)
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some cross-cutting insights could not be generated: {e}",
+                         "neutral"))
+    return insights
 
+
+def _gen_cross_cutting_inner(f_data, w_data, insights):
     # 1. Governance + Empowerment linkage
     fd = f_data['functionality_domain']
     gender_bl = fd.loc[fd['Timepoint'] == 'Baseline', 'Gender'].values[0]
@@ -2772,7 +3041,7 @@ def render_insights_tab(f_data, w_data):
         display_df = heatmap_df[['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change']].copy()
         display_df.columns = ['Indicator', 'Dataset', 'Baseline', 'Midline', 'Change (pp)']
         st.dataframe(
-            display_df.style.applymap(
+            display_df.style.map(
                 lambda v: 'color: #2E7D32; font-weight: 700' if isinstance(v, (int, float)) and v > 0
                 else ('color: #C62828; font-weight: 700' if isinstance(v, (int, float)) and v < 0 else ''),
                 subset=['Change (pp)']
@@ -2950,7 +3219,7 @@ def render_synthesis_view(f_data, w_data):
                             polar=dict(radialaxis=dict(visible=True, range=[0,100])),
                             height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
-        st.plotly_chart(fig_r, width='stretch')
+        st.plotly_chart(fig_r, use_container_width=True)
     with c2:
         # Women's life-skills radar
         ls_a = w_data['lifeskills_agree']
@@ -2969,7 +3238,7 @@ def render_synthesis_view(f_data, w_data):
                              polar=dict(radialaxis=dict(visible=True, range=[0,100])),
                              height=380, legend=dict(orientation='h', yanchor='bottom', y=-0.15),
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'))
-        st.plotly_chart(fig_ls, width='stretch')
+        st.plotly_chart(fig_ls, use_container_width=True)
 
     # Social norms mini-bar
     c3, c4 = st.columns(2)
@@ -2986,7 +3255,7 @@ def render_synthesis_view(f_data, w_data):
                              xaxis_title="Change (pp)",
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig_sn, width='stretch')
+        st.plotly_chart(fig_sn, use_container_width=True)
     with c4:
         ts = w_data['time_summary'].copy()
         fig_ts = go.Figure()
@@ -3001,7 +3270,7 @@ def render_synthesis_view(f_data, w_data):
                              legend=dict(orientation='h', yanchor='bottom', y=1.02),
                              font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig_ts, width='stretch')
+        st.plotly_chart(fig_ts, use_container_width=True)
 
     st.markdown("""<div class="section-narrative" style="margin-top:1rem;">
     <strong>Navigate deeper:</strong> Use the sidebar to select either <em>Forestry Groups</em>
@@ -3362,6 +3631,17 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        # CSV Downloads
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Forestry Data (CSV)",
+            data=_export_data_csv(data, 'forestry'),
+            file_name='forestry_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
         render_forestry_tabs(data, show_change)
 
     elif dataset == "Women Survey":
@@ -3394,6 +3674,17 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        # CSV Downloads
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Women Survey Data (CSV)",
+            data=_export_data_csv(w, 'women'),
+            file_name='women_survey_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
 
         wt1, wt2, wt3, wt4, wt5, wt6 = st.tabs([
             "Household Profile & Services",

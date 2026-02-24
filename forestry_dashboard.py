@@ -1144,6 +1144,22 @@ def load_women_data(filepath):
 # CHART HELPERS
 # ============================================================================
 
+def _export_data_csv(data_dict, prefix='data'):
+    """Combine all DataFrames in a dict into a single CSV for download."""
+    import io
+    buf = io.StringIO()
+    first = True
+    for key, df in data_dict.items():
+        if not isinstance(df, pd.DataFrame) or df.empty:
+            continue
+        if not first:
+            buf.write('\n')
+        buf.write(f'--- {key} ---\n')
+        df.to_csv(buf, index=False)
+        first = False
+    return buf.getvalue()
+
+
 def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
                         multiply=True, height=450, orientation='v',
                         color_baseline=None, color_midline=None):
@@ -1272,13 +1288,18 @@ def _section_header(icon, title, badge_text=None):
     """Render a styled section header with optional badge."""
     badge = f'<span class="badge">{badge_text}</span>' if badge_text else ''
     heading = f'{icon} {title}' if icon else title
-    st.markdown(f'<div class="section-header"><h2>{heading}</h2>{badge}</div>',
+    anchor_id = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+    st.markdown(f'<div class="section-header" id="{anchor_id}"><h2>{heading}</h2>{badge}</div>',
                 unsafe_allow_html=True)
 
 
 def _quick_nav_pills(items):
     """Render quick navigation pills for in-tab section jumping."""
-    pills = ''.join([f'<span class="quick-nav-pill">{item}</span>' for item in items])
+    pills = ''.join([
+        f'<a href="#{re.sub(r"[^a-z0-9]+", "-", item.lower()).strip("-")}" '
+        f'class="quick-nav-pill" style="text-decoration:none;color:inherit;">{item}</a>'
+        for item in items
+    ])
     st.markdown(f'<div class="quick-nav">{pills}</div>', unsafe_allow_html=True)
 
 
@@ -3610,6 +3631,17 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        # CSV Downloads
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Forestry Data (CSV)",
+            data=_export_data_csv(data, 'forestry'),
+            file_name='forestry_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
         render_forestry_tabs(data, show_change)
 
     elif dataset == "Women Survey":
@@ -3642,6 +3674,17 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        # CSV Downloads
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Women Survey Data (CSV)",
+            data=_export_data_csv(w, 'women'),
+            file_name='women_survey_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
 
         wt1, wt2, wt3, wt4, wt5, wt6 = st.tabs([
             "Household Profile & Services",
