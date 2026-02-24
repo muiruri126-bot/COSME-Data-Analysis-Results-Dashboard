@@ -3233,10 +3233,6 @@
             if (surveyKey !== 'gjj-women') return;
             console.log('🔄 updateGJJTabCharts called');
 
-            function getColors(bl, el) {
-                return el.map((v, i) => v < bl[i] ? colors.danger : colors.midline);
-            }
-
             function gjjChart(id, labels, bl, el, horiz) {
                 const canvas = document.getElementById(id);
                 if (!canvas) { console.warn('GJJ canvas not found:', id); return; }
@@ -3249,7 +3245,7 @@
                         labels: labels,
                         datasets: [
                             { label: 'Baseline', data: bl, backgroundColor: colors.baseline },
-                            { label: 'Endline', data: el, backgroundColor: getColors(bl, el) }
+                            { label: 'Endline', data: el, backgroundColor: colors.midline }
                         ]
                     },
                     options: {
