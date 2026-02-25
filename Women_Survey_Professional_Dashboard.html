@@ -6,12 +6,93 @@
     <title>COSME & GJJ Surveys Dashboard | Professional Analysis</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
+        }
+
+        /* LIVE VIEWERS BADGE */
+        #live-viewers-badge {
+            position: fixed;
+            top: 14px;
+            right: 18px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.82em;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        #live-viewers-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+        }
+        #live-viewers-badge .pulse-dot {
+            width: 8px; height: 8px;
+            background: #69f0ae;
+            border-radius: 50%;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(105, 240, 174, 0.7); }
+            50% { box-shadow: 0 0 0 6px rgba(105, 240, 174, 0); }
+        }
+        #viewer-panel {
+            position: fixed;
+            top: 50px;
+            right: 18px;
+            z-index: 9998;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        #viewer-panel.open { display: block; }
+        #viewer-panel .vp-header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: #fff;
+            padding: 14px 18px;
+            border-radius: 12px 12px 0 0;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        #viewer-panel .vp-list { padding: 10px 0; }
+        #viewer-panel .vp-item {
+            padding: 8px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.82em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #viewer-panel .vp-item:last-child { border-bottom: none; }
+        #viewer-panel .vp-name { font-weight: 600; color: #333; }
+        #viewer-panel .vp-time { color: #999; font-size: 0.75em; }
+        #viewer-panel .vp-tab {
+            background: #e8eaf6;
+            color: #283593;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
         }
 
         body {
@@ -1160,6 +1241,18 @@
 </head>
 <body>
     <div class="container">
+        <!-- LIVE VIEWERS BADGE -->
+        <div id="live-viewers-badge" onclick="document.getElementById('viewer-panel').classList.toggle('open')">
+            <span class="pulse-dot"></span>
+            <span id="viewer-count">0</span> viewing now
+        </div>
+        <div id="viewer-panel">
+            <div class="vp-header">Active Viewers</div>
+            <div class="vp-list" id="viewer-list">
+                <div class="vp-item" style="color:#999; text-align:center;">Connecting...</div>
+            </div>
+        </div>
+
         <!-- SURVEY SELECTOR -->
         <div class="survey-selector">
             <label>Select Survey:</label>
@@ -6404,6 +6497,119 @@
             
             console.log('=== Initialization complete ===');
         });
+    </script>
+
+    <!-- FIREBASE REALTIME PRESENCE TRACKING -->
+    <script>
+    (function() {
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0RhPFs7Hj9vAfJYCvJRSds2VwihSZdto",
+            authDomain: "cosme-dashboard.firebaseapp.com",
+            databaseURL: "https://cosme-dashboard-default-rtdb.firebaseio.com",
+            projectId: "cosme-dashboard",
+            storageBucket: "cosme-dashboard.firebasestorage.app",
+            messagingSenderId: "306162598730",
+            appId: "1:306162598730:web:f60247fdb5a0489ba077b3",
+            measurementId: "G-BYD6S776VZ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Generate a session ID & display name
+        const sessionId = 'user_' + Math.random().toString(36).substr(2, 9);
+        const adjectives = ['Swift', 'Bright', 'Keen', 'Bold', 'Calm', 'Warm', 'Cool', 'Wise', 'Kind', 'Fair'];
+        const animals = ['Eagle', 'Lion', 'Fox', 'Owl', 'Hawk', 'Bear', 'Wolf', 'Deer', 'Hare', 'Dove'];
+        const displayName = adjectives[Math.floor(Math.random() * adjectives.length)] + ' ' + animals[Math.floor(Math.random() * animals.length)];
+
+        // Reference to presence node
+        const presenceRef = db.ref('presence/' + sessionId);
+        const allPresenceRef = db.ref('presence');
+
+        // Get current active tab
+        function getCurrentTab() {
+            const activeBtn = document.querySelector('.survey-btn.active');
+            if (activeBtn) {
+                return activeBtn.textContent.trim();
+            }
+            return 'Dashboard';
+        }
+
+        // Set presence on connect
+        const connectedRef = db.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                // Write presence data
+                presenceRef.set({
+                    name: displayName,
+                    tab: getCurrentTab(),
+                    joinedAt: firebase.database.ServerValue.TIMESTAMP,
+                    lastActive: firebase.database.ServerValue.TIMESTAMP
+                });
+                // Remove on disconnect
+                presenceRef.onDisconnect().remove();
+            }
+        });
+
+        // Update active tab when switching
+        const origSwitchSurvey = window.switchSurvey;
+        if (typeof origSwitchSurvey === 'function') {
+            window.switchSurvey = function(surveyKey) {
+                origSwitchSurvey(surveyKey);
+                setTimeout(() => {
+                    presenceRef.update({
+                        tab: getCurrentTab(),
+                        lastActive: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }, 100);
+            };
+        }
+
+        // Keep-alive ping every 30s
+        setInterval(() => {
+            presenceRef.update({ lastActive: firebase.database.ServerValue.TIMESTAMP });
+        }, 30000);
+
+        // Listen for presence changes and update UI
+        allPresenceRef.on('value', (snapshot) => {
+            const viewers = snapshot.val() || {};
+            const count = Object.keys(viewers).length;
+
+            // Update badge count
+            const countEl = document.getElementById('viewer-count');
+            if (countEl) countEl.textContent = count;
+
+            // Update panel list
+            const listEl = document.getElementById('viewer-list');
+            if (!listEl) return;
+
+            if (count === 0) {
+                listEl.innerHTML = '<div class="vp-item" style="color:#999; text-align:center;">No active viewers</div>';
+                return;
+            }
+
+            let html = '';
+            const now = Date.now();
+            Object.entries(viewers).forEach(([id, v]) => {
+                const isYou = (id === sessionId);
+                const ago = v.joinedAt ? Math.round((now - v.joinedAt) / 60000) : 0;
+                const timeStr = ago < 1 ? 'Just now' : ago + 'm ago';
+                html += '<div class="vp-item">';
+                html += '<span class="vp-name">' + (v.name || 'Anonymous') + (isYou ? ' (You)' : '') + '</span>';
+                html += '<span class="vp-tab">' + (v.tab || 'Dashboard') + '</span>';
+                html += '<span class="vp-time">' + timeStr + '</span>';
+                html += '</div>';
+            });
+            listEl.innerHTML = html;
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            presenceRef.remove();
+        });
+    })();
     </script>
 </body>
 </html>
