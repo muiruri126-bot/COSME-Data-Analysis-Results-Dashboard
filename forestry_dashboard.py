@@ -4,13 +4,16 @@ COSME INTEGRATED DASHBOARD
 Baseline vs Midline Assessment
   1. Community Forest Conservation Groups (Group-level)
   2. Women's Survey (Household-level)
+  3. Men's Survey (Household-level)
 =============================================================================
 A Streamlit + Plotly interactive dashboard for M&E analysis of the COSME
-project, combining Forestry Conservation Groups and Women Survey datasets.
+project, combining Forestry Conservation Groups, Women Survey, and Men Survey
+datasets.
 
 Excel files (place in the same folder as this script):
   • Forest Functionality Basline_midline results.xlsx (sheet "Results")
   • Women Survey Basline_midline results.xlsx (sheet "Results Women")
+  • Men Survey Basline_midline results.xlsx (sheet "Results Men")
 
 Run with: streamlit run cosme_dashboard.py
 Requirements: pip install streamlit pandas numpy plotly openpyxl
@@ -33,6 +36,9 @@ FORESTRY_SHEET = "Results"
 
 WOMEN_EXCEL = "Women Survey Basline_midline results.xlsx"
 WOMEN_SHEET = "Results Women"
+
+MEN_EXCEL = "Men Survey Basline_midline results.xlsx"
+MEN_SHEET = "Results Men"
 
 # ============================================================================
 # THEMES
@@ -1141,6 +1147,388 @@ def load_women_data(filepath):
 
 
 # ============================================================================
+# MEN SURVEY DATA LOADER
+# ============================================================================
+
+@st.cache_data
+def load_men_data(filepath):
+    """
+    Parse the Men Survey Excel file.
+    Sheet 'Results Men' — 263 rows × 19 columns, non-standard dual-table layout.
+    Left table cols 1-3 (label / BL / ML), right table cols 11-13 (label / BL / ML).
+    All proportions are 0-1 scale; charts multiply ×100 for display.
+    """
+    try:
+        raw = pd.read_excel(filepath, sheet_name=MEN_SHEET, header=None)
+    except FileNotFoundError:
+        st.error(f"Men Survey Excel not found: {filepath}")
+        st.stop()
+
+    m = {}
+
+    # ---- A. HOUSEHOLD CHARACTERISTICS ----
+    # Location type (Excel R12-13, _val rows 11-12, BL=col2, ML=col3)
+    m['location'] = pd.DataFrame({
+        'Category': ['Marine', 'Terrestrial'],
+        'Baseline': [_val(raw, 11, 2), _val(raw, 12, 2)],
+        'Midline': [_val(raw, 11, 3), _val(raw, 12, 3)],
+    })
+
+    # Education level (Excel R12-15 right, _val rows 11-14, cols 11-12)
+    m['education'] = pd.DataFrame({
+        'Category': ['College Level or Higher', 'Pre-primary/None/Other',
+                     'Primary', 'Secondary/Vocational'],
+        'Baseline': [_val(raw, 11, 11), _val(raw, 12, 11),
+                     _val(raw, 13, 11), _val(raw, 14, 11)],
+        'Midline': [_val(raw, 11, 12), _val(raw, 12, 12),
+                    _val(raw, 13, 12), _val(raw, 14, 12)],
+    })
+
+    # Main HH economic activity (Excel R17-28, _val rows 16-27, labels=col1, BL=col2, ML=col3)
+    econ_labels = [_clean_label(_val(raw, r, 1)) for r in range(16, 28)
+                   if _val(raw, r, 1) != 0]
+    econ_bl = [_val(raw, r, 2) for r in range(16, 28) if _val(raw, r, 1) != 0]
+    econ_ml = [_val(raw, r, 3) for r in range(16, 28) if _val(raw, r, 1) != 0]
+    m['main_econ'] = pd.DataFrame({
+        'Activity': econ_labels, 'Baseline': econ_bl, 'Midline': econ_ml})
+
+    # ---- B. CLIMATE CHANGE & NBS KNOWLEDGE ----
+    # CC heard (Excel R36-37, _val rows 35-36, col 2-3)
+    m['cc_heard'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 35, 2), _val(raw, 36, 2)],
+        'Midline': [_val(raw, 35, 3), _val(raw, 36, 3)],
+    })
+
+    # CC define adequacy (Excel R41-44, _val rows 40-43, col 2-3)
+    m['cc_define'] = pd.DataFrame({
+        'Response': ['Completely Acceptable', 'Somewhat Acceptable',
+                     'Not Acceptable', "Doesn't Know/Answer"],
+        'Baseline': [_val(raw, r, 2) for r in range(40, 44)],
+        'Midline': [_val(raw, r, 3) for r in range(40, 44)],
+    })
+
+    # CC environmental effects (Excel R48-59, _val rows 47-58, col 2-3)
+    cc_env_labels = ['Hotter Temperatures', 'More Extreme Weather Events',
+                     'Increased Drought', 'Warming Oceans/Water Bodies',
+                     'Sea Level Rise', 'Loss of Species', 'Migration of Species',
+                     'Animal Migration Pattern Changes', 'Spread of Disease/Algal Blooms',
+                     'Ocean Acidification (Coral Reefs)',
+                     'Increased Species Invasions', "I Don't Know"]
+    m['cc_env_effects'] = pd.DataFrame({
+        'Effect': cc_env_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(47, 59)],
+        'Midline': [_val(raw, r, 3) for r in range(47, 59)],
+    })
+
+    # CC livelihood effects (Excel R36-48 right, _val rows 35-47, cols 11-12)
+    cc_live_labels = ['Increased Food Insecurity', 'Increased Water Insecurity',
+                      'Personal Risk from Extremes', 'Forced Migration (Disaster)',
+                      'Changes in Livelihood Activities', 'Reduced Livelihood Activities',
+                      'Extreme Weather on Infrastructure', 'Reduced Agricultural Productivity',
+                      'Crop Loss', 'Loss of Livestock', 'Reduced Livestock Productivity',
+                      'Loss of Savings/Assets', "I Don't Know"]
+    m['cc_livelihood_effects'] = pd.DataFrame({
+        'Effect': cc_live_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(35, 48)],
+        'Midline': [_val(raw, r, 12) for r in range(35, 48)],
+    })
+
+    # NbS heard (Excel R63-64, _val rows 62-63, col 2-3)
+    m['nbs_heard'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 62, 2), _val(raw, 63, 2)],
+        'Midline': [_val(raw, 62, 3), _val(raw, 63, 3)],
+    })
+
+    # NbS define (Excel R52-55 right, _val rows 51-54, cols 11-12)
+    m['nbs_define'] = pd.DataFrame({
+        'Response': ['Completely Acceptable', 'Somewhat Acceptable',
+                     'Not Acceptable', "Doesn't Know/Answer"],
+        'Baseline': [_val(raw, r, 11) for r in range(51, 55)],
+        'Midline': [_val(raw, r, 12) for r in range(51, 55)],
+    })
+
+    # NbS examples cited (Excel R68-75, _val rows 67-74, col 2-3)
+    nbs_ex_labels = ['Mangrove Restoration', 'Coral Reef Restoration',
+                     'Reforestation/Prevention of Deforestation',
+                     'Sustainable Seaweed Farming', "I Don't Know",
+                     'Rainwater Harvesting', 'Sustainable Agriculture',
+                     'Solar Energy']
+    m['nbs_examples'] = pd.DataFrame({
+        'Example': nbs_ex_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(67, 75)],
+        'Midline': [_val(raw, r, 3) for r in range(67, 75)],
+    })
+
+    # NbS benefits (Excel R59-70 right, _val rows 58-69, cols 11-12)
+    nbs_ben_labels = ['Carbon Capture', 'Reduce Storm Surges/Flooding',
+                      'Defense Against Salination', 'Improve Air Quality',
+                      'Water Conservation', 'Soil Health & Fertility',
+                      'Support Pollinators/Biodiversity',
+                      'Local Biodiversity/Ecosystem', 'Fish Diversity & Quantity',
+                      'Seawater Quality & Clarity',
+                      'Improved/Diversified Livelihoods', "I Don't Know"]
+    m['nbs_benefits'] = pd.DataFrame({
+        'Benefit': nbs_ben_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(58, 70)],
+        'Midline': [_val(raw, r, 12) for r in range(58, 70)],
+    })
+
+    # ---- B1. MANGROVE RESTORATION ----
+    # Heard of mangrove (Excel R81-83, _val rows 80-82, col 2-3)
+    m['mangrove_heard'] = pd.DataFrame({
+        'Response': ['Heard & Importance', 'Heard Only', 'Not Heard'],
+        'Baseline': [_val(raw, 80, 2), _val(raw, 81, 2), _val(raw, 82, 2)],
+        'Midline': [_val(raw, 80, 3), _val(raw, 81, 3), _val(raw, 82, 3)],
+    })
+    # Female HH ever participated (Excel R81-82 right, _val rows 80-81, cols 11-12)
+    m['mangrove_ever'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 80, 11), _val(raw, 81, 11)],
+        'Midline': [_val(raw, 80, 12), _val(raw, 81, 12)],
+    })
+    # Female HH currently involved (Excel R87-88, _val rows 86-87, col 2-3)
+    m['mangrove_current'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 86, 2), _val(raw, 87, 2)],
+        'Midline': [_val(raw, 86, 3), _val(raw, 87, 3)],
+    })
+    # Men supporting (Excel R86-88 right, _val rows 85-87, cols 11-12)
+    m['mangrove_support'] = pd.DataFrame({
+        'Response': ['Yes', 'No', 'Somehow'],
+        'Baseline': [_val(raw, 85, 11), _val(raw, 86, 11), _val(raw, 87, 11)],
+        'Midline': [_val(raw, 85, 12), _val(raw, 86, 12), _val(raw, 87, 12)],
+    })
+    # Type of support (Excel R92-98, _val rows 91-97, col 2-3)
+    support_labels = ['Encouraged Participation', 'Sought Community Support',
+                      'Supported with HH Chores', 'Supported with Restoration Work',
+                      'Supported with Materials Purchase', 'None', 'Other']
+    m['mangrove_support_type'] = pd.DataFrame({
+        'Type': support_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(91, 98)],
+        'Midline': [_val(raw, r, 3) for r in range(91, 98)],
+    })
+
+    # ---- B2. SEAWEED FARMING ----
+    m['seaweed_heard'] = pd.DataFrame({
+        'Response': ['Heard & Importance', 'Heard Only', 'Not Heard'],
+        'Baseline': [_val(raw, 103, 2), _val(raw, 104, 2), _val(raw, 105, 2)],
+        'Midline': [_val(raw, 103, 3), _val(raw, 104, 3), _val(raw, 105, 3)],
+    })
+    m['seaweed_ever'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 103, 11), _val(raw, 104, 11)],
+        'Midline': [_val(raw, 103, 12), _val(raw, 104, 12)],
+    })
+    m['seaweed_current'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 109, 2), _val(raw, 110, 2)],
+        'Midline': [_val(raw, 109, 3), _val(raw, 110, 3)],
+    })
+    m['seaweed_support'] = pd.DataFrame({
+        'Response': ['Yes', 'No', 'Somehow'],
+        'Baseline': [_val(raw, 108, 11), _val(raw, 109, 11), _val(raw, 110, 11)],
+        'Midline': [_val(raw, 108, 12), _val(raw, 109, 12), _val(raw, 110, 12)],
+    })
+    m['seaweed_support_type'] = pd.DataFrame({
+        'Type': support_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(114, 121)],
+        'Midline': [_val(raw, r, 3) for r in range(114, 121)],
+    })
+
+    # ---- B3. FOREST MANAGEMENT ----
+    m['forest_heard'] = pd.DataFrame({
+        'Response': ['Yes', 'Not Heard'],
+        'Baseline': [_val(raw, 126, 2), _val(raw, 127, 2)],
+        'Midline': [_val(raw, 126, 3), _val(raw, 127, 3)],
+    })
+    m['forest_ever'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 126, 11), _val(raw, 127, 11)],
+        'Midline': [_val(raw, 126, 12), _val(raw, 127, 12)],
+    })
+    m['forest_current'] = pd.DataFrame({
+        'Response': ['Yes', 'No'],
+        'Baseline': [_val(raw, 132, 2), _val(raw, 133, 2)],
+        'Midline': [_val(raw, 132, 3), _val(raw, 133, 3)],
+    })
+    m['forest_support'] = pd.DataFrame({
+        'Response': ['Yes', 'No', 'Somehow'],
+        'Baseline': [_val(raw, 132, 11), _val(raw, 133, 11), _val(raw, 134, 11)],
+        'Midline': [_val(raw, 132, 12), _val(raw, 133, 12), _val(raw, 134, 12)],
+    })
+    m['forest_support_type'] = pd.DataFrame({
+        'Type': support_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(137, 144)],
+        'Midline': [_val(raw, r, 3) for r in range(137, 144)],
+    })
+
+    # ---- C. ROLES, RESPONSIBILITIES & TIME POVERTY ----
+    role_labels = ['Cook Food', 'Clean/Sweep House', 'Look After Livestock',
+                   'Maintain Garden', 'Care for Ill/Elderly/Disabled',
+                   'Fetch Firewood', 'Fetch Water', 'Wash Clothes',
+                   'Main Income Provider', 'Care for Children']
+
+    # Roles SHOULD — Joint % (Excel R152-161, _val rows 151-160, col 2-3)
+    m['roles_should_joint'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(151, 161)],
+        'Midline': [_val(raw, r, 3) for r in range(151, 161)],
+    })
+    # Roles SHOULD — Women only (Excel R152-161 right, _val rows 151-160, cols 11-12)
+    m['roles_should_women'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(151, 161)],
+        'Midline': [_val(raw, r, 12) for r in range(151, 161)],
+    })
+    # Roles SHOULD — Men only (Excel R152-161 right, _val rows 151-160, cols 13-14)
+    m['roles_should_men'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 13) for r in range(151, 161)],
+        'Midline': [_val(raw, r, 14) for r in range(151, 161)],
+    })
+
+    # Roles DOES — Joint % (Excel R166-175, _val rows 165-174, col 2-3)
+    m['roles_does_joint'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(165, 175)],
+        'Midline': [_val(raw, r, 3) for r in range(165, 175)],
+    })
+    # Roles DOES — Men(Myself) (Excel R166-175 right, _val rows 165-174, cols 11-12)
+    m['roles_does_men'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(165, 175)],
+        'Midline': [_val(raw, r, 12) for r in range(165, 175)],
+    })
+    # Roles DOES — Women(MySpouse) (Excel R166-175 right, _val rows 165-174, cols 13-14)
+    m['roles_does_women'] = pd.DataFrame({
+        'Role': role_labels,
+        'Baseline': [_val(raw, r, 13) for r in range(165, 175)],
+        'Midline': [_val(raw, r, 14) for r in range(165, 175)],
+    })
+
+    # Time use (hours per day)
+    # Unpaid care activities (Excel R178-182, _val rows 177-181, col 2-3)
+    unpaid_labels = ['Child/Elderly/Disabled Care', 'Cooking/Dishes',
+                     'Cleaning/Washing', 'Fetching Water', 'Fetching Firewood']
+    m['time_unpaid'] = pd.DataFrame({
+        'Activity': unpaid_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(177, 182)],
+        'Midline': [_val(raw, r, 3) for r in range(177, 182)],
+    })
+    m['time_unpaid_total'] = pd.DataFrame({
+        'Category': ['Unpaid Care Work'],
+        'Baseline': [_val(raw, 183, 2)], 'Midline': [_val(raw, 183, 3)]})
+
+    # Productive work (Excel R186-191, _val rows 185-190, col 2-3)
+    prod_labels = ['Farm Work (Others)', 'Farm Work (Own)', 'Fishing',
+                   'Seaweed Farming', 'Selling at Market', 'Formal Employment']
+    m['time_productive'] = pd.DataFrame({
+        'Activity': prod_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(185, 191)],
+        'Midline': [_val(raw, r, 3) for r in range(185, 191)],
+    })
+    m['time_productive_total'] = pd.DataFrame({
+        'Category': ['Productive Work'],
+        'Baseline': [_val(raw, 192, 2)], 'Midline': [_val(raw, 192, 3)]})
+
+    # Community conservation (Excel R195-197, _val rows 194-196, col 2-3)
+    cons_labels = ['Mangrove Restoration', 'Seaweed Farming', 'Forest Mgmt & Conservation']
+    m['time_conservation'] = pd.DataFrame({
+        'Activity': cons_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(194, 197)],
+        'Midline': [_val(raw, r, 3) for r in range(194, 197)],
+    })
+    m['time_conservation_total'] = pd.DataFrame({
+        'Category': ['Community Conservation Work'],
+        'Baseline': [_val(raw, 198, 2)], 'Midline': [_val(raw, 198, 3)]})
+
+    # Time summary (all categories)
+    m['time_summary'] = pd.DataFrame({
+        'Category': ['Unpaid Care Work', 'Productive Work', 'Community Conservation',
+                     'Personal Development', 'Personal Care', 'Leisure', 'Other'],
+        'Baseline': [_val(raw, 183, 2), _val(raw, 192, 2), _val(raw, 198, 2),
+                     _val(raw, 200, 2), _val(raw, 205, 2), _val(raw, 207, 2), _val(raw, 209, 2)],
+        'Midline': [_val(raw, 183, 3), _val(raw, 192, 3), _val(raw, 198, 3),
+                    _val(raw, 200, 3), _val(raw, 205, 3), _val(raw, 207, 3), _val(raw, 209, 3)],
+    })
+
+    # ---- D. DECISION-MAKING ----
+    decision_labels = ['Start Small Business', 'Large HH Purchases',
+                       'Using HH Savings', 'Taking Out Loans',
+                       'Children Education', 'Routine HH Purchases',
+                       'Women Go to Mangrove/Seaweed/Forest',
+                       'Use of HH Income', 'Women Go to Market',
+                       'Women Go to Farm', 'Invest Borrowed/Saved Money']
+
+    # Decision SHOULD — Joint (Excel R218-228, _val rows 217-227, col 2-3)
+    m['decision_should_joint'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(217, 228)],
+        'Midline': [_val(raw, r, 3) for r in range(217, 228)],
+    })
+    # Decision SHOULD — Women only (Excel R219-229 right, _val rows 218-228, cols 11-12)
+    m['decision_should_women'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(218, 229)],
+        'Midline': [_val(raw, r, 12) for r in range(218, 229)],
+    })
+    # Decision SHOULD — Men only (Excel R219-229 right, _val rows 218-228, cols 13-14)
+    m['decision_should_men'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 13) for r in range(218, 229)],
+        'Midline': [_val(raw, r, 14) for r in range(218, 229)],
+    })
+
+    # Decision DOES — Joint (Excel R234-244, _val rows 233-243, col 2-3)
+    m['decision_does_joint'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 2) for r in range(233, 244)],
+        'Midline': [_val(raw, r, 3) for r in range(233, 244)],
+    })
+    # Decision DOES — Men(Myself) (Excel R234-244 right, _val rows 233-243, cols 11-12)
+    m['decision_does_men'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 11) for r in range(233, 244)],
+        'Midline': [_val(raw, r, 12) for r in range(233, 244)],
+    })
+    # Decision DOES — Women(MySpouse) (Excel R234-244 right, _val rows 233-243, cols 13-14)
+    m['decision_does_women'] = pd.DataFrame({
+        'Decision': decision_labels,
+        'Baseline': [_val(raw, r, 13) for r in range(233, 244)],
+        'Midline': [_val(raw, r, 14) for r in range(233, 244)],
+    })
+
+    # ---- E. SOCIAL NORMS ----
+    sn_labels = [
+        'Income -> Husband Controls', 'Men Better Business Ideas',
+        "Men Earn, Women Look After Home", 'Inappropriate Dress -> Her Fault',
+        'Cook & Clean -> Good Marriage', 'Embarrassing for Men to Do Chores',
+        'Planting Crops (Family Food)', 'Restoring Ecosystems (Mangrove/Forest)',
+        'Only Men Drive Boats', 'Ok for Women to Express Emotions',
+        'Supportive of Diverse People', 'Women Gain Rights -> Men Lose',
+        'Stronger Women -> Stronger Families',
+    ]
+    sn_rows = list(range(250, 263))
+
+    # Agree or Strongly Agree (Excel R251-263, _val rows 250-262, col 2-3)
+    m['socialnorms_agree'] = pd.DataFrame({
+        'Norm': sn_labels,
+        'Baseline': [_val(raw, r, 2) for r in sn_rows],
+        'Midline': [_val(raw, r, 3) for r in sn_rows],
+    })
+    # Strongly Agree only (Excel R251-263 right, _val rows 250-262, cols 11-12)
+    m['socialnorms_strong'] = pd.DataFrame({
+        'Norm': sn_labels,
+        'Baseline': [_val(raw, r, 11) for r in sn_rows],
+        'Midline': [_val(raw, r, 12) for r in sn_rows],
+    })
+
+    return m
+
+
+# ============================================================================
 # CHART HELPERS
 # ============================================================================
 
@@ -2161,6 +2549,293 @@ def render_forestry_tabs(data, show_change):
         c10,c11 = st.columns(2)
         with c10: st.plotly_chart(make_comparison_bar(data['af_reinvest'],'Category','AF Reinvestment', height=380, orientation='h'), use_container_width=True)
         with c11: st.plotly_chart(make_comparison_bar(data['af_potential'],'Category','Livelihood Potential', height=350), use_container_width=True)
+
+
+# ============================================================================
+# MEN SURVEY TAB RENDERERS
+# ============================================================================
+
+def render_men_tab1(m):
+    """Tab 1: Household Characteristics."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Household Profile:</strong> Demographics of surveyed men — location type (Marine vs
+    Terrestrial), education levels, and main household economic activities such as agriculture,
+    fishing, and small business.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Demographics', 'Economic Activities'])
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(make_comparison_bar(m['location'], 'Category',
+                        'Men by Location Type', height=300), use_container_width=True)
+    with c2:
+        st.plotly_chart(make_comparison_bar(m['education'], 'Category',
+                        'Education Level', height=350), use_container_width=True)
+
+    st.markdown("---")
+    _section_header('', 'Economic Activities', 'Section A')
+    st.plotly_chart(make_comparison_bar(m['main_econ'], 'Activity',
+                    'Main HH Economic Activity', height=500, orientation='h'), use_container_width=True)
+
+
+def render_men_tab2(m):
+    """Tab 2: Climate Change & NbS Knowledge."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Climate & NbS Awareness:</strong> Men's knowledge of climate change, ability to define it,
+    perceived environmental and livelihood effects, awareness of Nature-based Solutions (NbS),
+    examples cited, and perceived benefits.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Climate Awareness', 'CC Effects', 'NbS Knowledge', 'NbS Benefits'])
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(make_comparison_bar(m['cc_heard'], 'Response',
+                        'Heard of Climate Change', height=300), use_container_width=True)
+    with c2:
+        st.plotly_chart(make_comparison_bar(m['cc_define'], 'Response',
+                        'Ability to Define Climate Change', height=350), use_container_width=True)
+
+    _section_header('', 'CC Effects', 'Section B')
+    c3, c4 = st.columns(2)
+    with c3:
+        st.plotly_chart(make_comparison_bar(m['cc_env_effects'], 'Effect',
+                        'Perceived Environmental Effects of CC', height=500, orientation='h'),
+                        use_container_width=True)
+    with c4:
+        st.plotly_chart(make_comparison_bar(m['cc_livelihood_effects'], 'Effect',
+                        'Perceived Livelihood Effects of CC', height=500, orientation='h'),
+                        use_container_width=True)
+
+    st.markdown("---")
+    _section_header('', 'NbS Knowledge', 'Section B')
+    c5, c6 = st.columns(2)
+    with c5:
+        st.plotly_chart(make_comparison_bar(m['nbs_heard'], 'Response',
+                        'Heard of NbS', height=300), use_container_width=True)
+    with c6:
+        st.plotly_chart(make_comparison_bar(m['nbs_define'], 'Response',
+                        'Ability to Define NbS', height=350), use_container_width=True)
+
+    c7, c8 = st.columns(2)
+    with c7:
+        st.plotly_chart(make_comparison_bar(m['nbs_examples'], 'Example',
+                        'NbS Examples Men Can Cite', height=450, orientation='h'), use_container_width=True)
+    with c8:
+        st.plotly_chart(make_comparison_bar(m['nbs_benefits'], 'Benefit',
+                        'Perceived Benefits of NbS', height=500, orientation='h'), use_container_width=True)
+
+
+def render_men_tab3(m):
+    """Tab 3: Support for Women in NbS Participation."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Support for Women in NbS:</strong> Men's awareness of and support for female household
+    members' participation in mangrove restoration, seaweed farming, and forest management.
+    Includes types of support provided such as encouragement, household chore support, and
+    material assistance.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Mangrove Restoration', 'Seaweed Farming', 'Forest Management'])
+
+    for module, prefix, icon in [('Mangrove Restoration', 'mangrove', ''),
+                                  ('Seaweed Farming', 'seaweed', ''),
+                                  ('Forest Management', 'forest', '')]:
+        _section_header(icon, module, 'NbS Module')
+        ca, cb = st.columns(2)
+        with ca:
+            st.plotly_chart(make_comparison_bar(m[f'{prefix}_heard'], 'Response',
+                            f'Awareness of {module}', height=300), use_container_width=True)
+            st.plotly_chart(make_comparison_bar(m[f'{prefix}_current'], 'Response',
+                            f'Female HH Currently Involved', height=280), use_container_width=True)
+        with cb:
+            st.plotly_chart(make_comparison_bar(m[f'{prefix}_ever'], 'Response',
+                            f'Female HH Ever Participated', height=300), use_container_width=True)
+            st.plotly_chart(make_comparison_bar(m[f'{prefix}_support'], 'Response',
+                            f'Men Supporting Female HH Members', height=300), use_container_width=True)
+
+        _section_header('', f'Type of Support — {module}', 'Support')
+        st.plotly_chart(make_comparison_bar(m[f'{prefix}_support_type'], 'Type',
+                        f'Support Type for {module}', height=400, orientation='h'),
+                        use_container_width=True)
+        st.markdown("---")
+
+
+def render_men_tab4(m):
+    """Tab 4: Roles, Responsibilities & Time Use."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Roles & Time Use:</strong> Gender norms around household roles as reported by men —
+    who SHOULD do tasks vs. who DOES them (joint, men only, women only). Time use patterns
+    across unpaid care, productive work, community conservation, personal development, and leisure.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Roles: Norms vs Practice', 'Gendered Roles', 'Time Use'])
+
+    _section_header('', 'Roles & Responsibilities: Norms vs Practice', 'Section C')
+    st.plotly_chart(make_two_col_bar(m['roles_should_joint'], m['roles_does_joint'],
+                    'Should be Joint', 'Actually Joint', 'Role',
+                    'Roles: Should be Joint vs. Actually Joint (Men Reporting)', height=500),
+                    use_container_width=True)
+
+    _section_header('', 'Gendered Roles', 'Section C')
+    rw_c1, rw_c2 = st.columns(2)
+    with rw_c1:
+        st.plotly_chart(make_comparison_bar(m['roles_should_women'], 'Role',
+                        'Should be Done by Women Only', height=500, orientation='h'),
+                        use_container_width=True)
+    with rw_c2:
+        st.plotly_chart(make_comparison_bar(m['roles_should_men'], 'Role',
+                        'Should be Done by Men Only', height=500, orientation='h'),
+                        use_container_width=True)
+
+    rd_c1, rd_c2 = st.columns(2)
+    with rd_c1:
+        st.plotly_chart(make_comparison_bar(m['roles_does_men'], 'Role',
+                        'Actually Done by Myself (Men)', height=500, orientation='h'),
+                        use_container_width=True)
+    with rd_c2:
+        st.plotly_chart(make_comparison_bar(m['roles_does_women'], 'Role',
+                        'Actually Done by My Spouse (Women)', height=500, orientation='h'),
+                        use_container_width=True)
+
+    st.markdown('---')
+    _section_header('', 'Time Use (Average Hours per Day)', 'Section C')
+    ts = m['time_summary']
+    fig_time = go.Figure()
+    fig_time.add_trace(go.Bar(x=ts['Category'], y=ts['Baseline'], name='Baseline',
+                              marker_color=COLORS['baseline'],
+                              text=ts['Baseline'].apply(lambda x: f"{x:.1f}h"), textposition='auto'))
+    fig_time.add_trace(go.Bar(x=ts['Category'], y=ts['Midline'], name='Midline',
+                              marker_color=COLORS['midline'],
+                              text=ts['Midline'].apply(lambda x: f"{x:.1f}h"), textposition='auto'))
+    fig_time.update_layout(title="Average Hours per Day by Category (Men)",
+                           barmode='group', height=450, yaxis_title='Hours',
+                           legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                           font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                           plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    st.plotly_chart(fig_time, use_container_width=True)
+
+    c1, c2 = st.columns(2)
+    with c1:
+        tu = m['time_unpaid']
+        fig_uc = go.Figure()
+        fig_uc.add_trace(go.Bar(y=tu['Activity'], x=tu['Baseline'], name='Baseline',
+                                orientation='h', marker_color=COLORS['baseline']))
+        fig_uc.add_trace(go.Bar(y=tu['Activity'], x=tu['Midline'], name='Midline',
+                                orientation='h', marker_color=COLORS['midline']))
+        fig_uc.update_layout(title='Unpaid Care Work (Hours/Day)', barmode='group', height=350,
+                             xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                             plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig_uc, use_container_width=True)
+    with c2:
+        tp = m['time_productive']
+        fig_pw = go.Figure()
+        fig_pw.add_trace(go.Bar(y=tp['Activity'], x=tp['Baseline'], name='Baseline',
+                                orientation='h', marker_color=COLORS['baseline']))
+        fig_pw.add_trace(go.Bar(y=tp['Activity'], x=tp['Midline'], name='Midline',
+                                orientation='h', marker_color=COLORS['midline']))
+        fig_pw.update_layout(title='Productive Work (Hours/Day)', barmode='group', height=350,
+                             xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                             plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig_pw, use_container_width=True)
+
+    tc = m['time_conservation']
+    fig_tc = go.Figure()
+    fig_tc.add_trace(go.Bar(y=tc['Activity'], x=tc['Baseline'], name='Baseline',
+                            orientation='h', marker_color=COLORS['baseline']))
+    fig_tc.add_trace(go.Bar(y=tc['Activity'], x=tc['Midline'], name='Midline',
+                            orientation='h', marker_color=COLORS['midline']))
+    fig_tc.update_layout(title='Community Conservation Work (Hours/Day)', barmode='group', height=300,
+                         xaxis_title='Hours', legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                         font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                         plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    st.plotly_chart(fig_tc, use_container_width=True)
+
+    # Total hours summary metrics
+    tt_c1, tt_c2, tt_c3 = st.columns(3)
+    tut = m['time_unpaid_total']
+    tpt = m['time_productive_total']
+    tct = m['time_conservation_total']
+    with tt_c1:
+        st.metric('Unpaid Care (BL / ML)',
+                  f"{tut['Baseline'].values[0]:.1f}h / {tut['Midline'].values[0]:.1f}h")
+    with tt_c2:
+        st.metric('Productive (BL / ML)',
+                  f"{tpt['Baseline'].values[0]:.1f}h / {tpt['Midline'].values[0]:.1f}h")
+    with tt_c3:
+        st.metric('Conservation (BL / ML)',
+                  f"{tct['Baseline'].values[0]:.1f}h / {tct['Midline'].values[0]:.1f}h")
+
+
+def render_men_tab5(m):
+    """Tab 5: Decision-Making."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Decision-Making:</strong> Men's perspectives on who SHOULD and who DOES make key
+    household decisions — joint, men only, or women only. Covers decisions on business, finances,
+    education, household purchases, women's mobility and conservation work.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Norms vs Experience', 'Gendered Decisions'])
+
+    _section_header('', 'Decision-Making: Norms vs Experience', 'Section D')
+    st.plotly_chart(make_two_col_bar(m['decision_should_joint'], m['decision_does_joint'],
+                    'Should be Joint', 'Actually Joint', 'Decision',
+                    'Decision-Making: Norms vs. Experience (Joint %)', height=550),
+                    use_container_width=True)
+
+    _section_header('', 'Gendered Decisions', 'Section D')
+    dw_c1, dw_c2 = st.columns(2)
+    with dw_c1:
+        st.plotly_chart(make_comparison_bar(m['decision_should_women'], 'Decision',
+                        'Should be Decided by Women Only', height=550, orientation='h'),
+                        use_container_width=True)
+    with dw_c2:
+        st.plotly_chart(make_comparison_bar(m['decision_should_men'], 'Decision',
+                        'Should be Decided by Men Only', height=550, orientation='h'),
+                        use_container_width=True)
+
+    st.markdown("---")
+    _section_header('', 'Actual Decision-Making Practice', 'Section D')
+    dm_c1, dm_c2 = st.columns(2)
+    with dm_c1:
+        st.plotly_chart(make_comparison_bar(m['decision_does_men'], 'Decision',
+                        'Actually Decided by Myself (Men)', height=550, orientation='h'),
+                        use_container_width=True)
+    with dm_c2:
+        st.plotly_chart(make_comparison_bar(m['decision_does_women'], 'Decision',
+                        'Actually Decided by My Spouse (Women)', height=550, orientation='h'),
+                        use_container_width=True)
+
+
+def render_men_tab6(m):
+    """Tab 6: Social Norms."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Social Norms:</strong> Men's agreement with social norms statements about gender roles,
+    economic control, domestic work, ecosystem participation, emotional expression, and attitudes
+    toward women's rights and independence. Includes both Agree/StronglyAgree and StronglyAgree
+    only proportions.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Agree/Strongly Agree', 'Strongly Agree Only', 'Change'])
+
+    _section_header('', 'Social Norms — Agree or Strongly Agree', 'Section E')
+    st.plotly_chart(make_comparison_bar(m['socialnorms_agree'], 'Norm',
+                    'Men Agreeing/Strongly Agreeing with Social Norms',
+                    height=600, orientation='h'), use_container_width=True)
+
+    st.markdown("---")
+    _section_header('', 'Social Norms — Strongly Agree Only', 'Section E')
+    st.plotly_chart(make_comparison_bar(m['socialnorms_strong'], 'Norm',
+                    'Men Strongly Agreeing with Social Norms',
+                    height=600, orientation='h'), use_container_width=True)
+
+    st.markdown("---")
+    _section_header('', 'Change in Social Norms (pp)', 'Section E')
+    st.plotly_chart(make_delta_bar(m['socialnorms_agree'], 'Norm',
+                    'Change in Agreement (Baseline to Midline)',
+                    height=550), use_container_width=True)
 
 
 # ============================================================================
@@ -3534,9 +4209,9 @@ def main():
     # Dataset selector
     dataset = st.sidebar.radio(
         "Dataset View",
-        ["Combined Overview", "Forestry Groups", "Women Survey", "Insights"],
+        ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey", "Insights"],
         index=0,
-        help="Combined Overview shows headline KPIs from both datasets side by side."
+        help="Combined Overview shows headline KPIs from all datasets side by side."
     )
 
     show_change = st.sidebar.toggle("Show Change (pp) Charts", value=False,
@@ -3580,6 +4255,18 @@ def main():
             <span class="sidebar-nav-link">Recommendations</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "Men Survey":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Household Profile</span>
+            <span class="sidebar-nav-link">Climate & NbS</span>
+            <span class="sidebar-nav-link">Support for Women in NbS</span>
+            <span class="sidebar-nav-link">Roles & Time Use</span>
+            <span class="sidebar-nav-link">Decision-Making</span>
+            <span class="sidebar-nav-link">Social Norms</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -3596,6 +4283,7 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     forestry_path = os.path.join(script_dir, FORESTRY_EXCEL)
     women_path = os.path.join(script_dir, WOMEN_EXCEL)
+    men_path = os.path.join(script_dir, MEN_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -3701,6 +4389,63 @@ def main():
         with wt5: render_women_tab5(w)
         with wt6: render_women_tab6(w)
 
+    elif dataset == "Men Survey":
+        st.markdown("""<div class="main-header">
+            <h1>Men's Survey Dashboard</h1>
+            <p>Baseline vs Midline Assessment | Men's Perspectives on Gender, Climate &amp; NbS</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
+                    '<span class="active">Men Survey</span></div>', unsafe_allow_html=True)
+
+        m = load_men_data(men_path)
+
+        # Sidebar sample size
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Baseline N</span>
+                <strong>661 men</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Midline N</span>
+                <strong>176 men</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">Men Survey Excel</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CSV Downloads
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Men Survey Data (CSV)",
+            data=_export_data_csv(m, 'men'),
+            file_name='men_survey_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        mt1, mt2, mt3, mt4, mt5, mt6 = st.tabs([
+            "Household Profile",
+            "Climate Change & NbS",
+            "Support for Women in NbS",
+            "Roles & Time Use",
+            "Decision-Making",
+            "Social Norms"
+        ])
+        with mt1: render_men_tab1(m)
+        with mt2: render_men_tab2(m)
+        with mt3: render_men_tab3(m)
+        with mt4: render_men_tab4(m)
+        with mt5: render_men_tab5(m)
+        with mt6: render_men_tab6(m)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
@@ -3752,7 +4497,7 @@ def main():
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups &amp; Women's Survey | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey &amp; Men's Survey | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
@@ -3770,10 +4515,12 @@ if __name__ == "__main__":
 # Data files (same folder as this script):
 # 1. Forest Functionality Basline_midline results.xlsx (sheet: Results)
 # 2. Women Survey Basline_midline results.xlsx (sheet: Results Women)
+# 3. Men Survey Basline_midline results.xlsx (sheet: Results Men)
 #
 # To adjust data mappings:
 # - load_forestry_data(): row/col positions for forestry indicators
 # - load_women_data(): row/col positions for women survey indicators
+# - load_men_data(): row/col positions for men survey indicators
 # - Each uses _val(raw, row_0based, col_0based)
 #
 # To add/remove indicators:
