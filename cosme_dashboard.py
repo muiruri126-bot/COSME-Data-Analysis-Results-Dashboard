@@ -3938,11 +3938,116 @@ def _gen_women_insights_inner(w, insights):
     return insights
 
 
-def _generate_cross_cutting_insights(f_data, w_data):
-    """Generate insights that span both datasets."""
+def _generate_men_insights(m):
+    """Generate automated insights from men survey data."""
     insights = []
     try:
-        _gen_cross_cutting_inner(f_data, w_data, insights)
+        _gen_men_insights_inner(m, insights)
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some men survey insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
+def _gen_men_insights_inner(m, insights):
+    # 1. Climate change awareness
+    cc = m['cc_heard']
+    cc_yes_bl = cc.loc[cc['Response'] == 'Yes', 'Baseline'].values[0]
+    cc_yes_ml = cc.loc[cc['Response'] == 'Yes', 'Midline'].values[0]
+    cc_change = _pp(cc_yes_bl, cc_yes_ml)
+    insights.append(("Men's CC Awareness",
+                     f"Men who have heard of climate change: "
+                     f"{cc_yes_bl*100:.1f}% (BL) to {cc_yes_ml*100:.1f}% (ML) ({cc_change:+.1f} pp). "
+                     f"{'Awareness is growing among men.' if cc_change > 0 else 'Climate literacy programmes should target men as well.'}",
+                     "positive" if cc_change > 0 else "warning"))
+
+    # 2. NbS awareness
+    nbs = m['nbs_heard']
+    nbs_yes_bl = nbs.loc[nbs['Response'] == 'Yes', 'Baseline'].values[0]
+    nbs_yes_ml = nbs.loc[nbs['Response'] == 'Yes', 'Midline'].values[0]
+    nbs_change = _pp(nbs_yes_bl, nbs_yes_ml)
+    insights.append(("Men's NbS Awareness",
+                     f"Men aware of NbS: {nbs_yes_bl*100:.1f}% (BL) to {nbs_yes_ml*100:.1f}% (ML) "
+                     f"({nbs_change:+.1f} pp). "
+                     f"{'NbS concepts are reaching more men.' if nbs_change > 0 else 'NbS outreach to men needs strengthening.'}",
+                     "positive" if nbs_change > 0 else "warning"))
+
+    # 3. Joint roles (should) — average
+    rj = m['roles_should_joint']
+    rj_avg_bl = rj['Baseline'].mean()
+    rj_avg_ml = rj['Midline'].mean()
+    rj_change = _pp(rj_avg_bl, rj_avg_ml)
+    insights.append(("Men's Attitude: Joint Roles",
+                     f"Average share of men saying household roles SHOULD be joint: "
+                     f"{rj_avg_bl*100:.1f}% (BL) to {rj_avg_ml*100:.1f}% (ML) ({rj_change:+.1f} pp). "
+                     + ("Men increasingly support equitable household labour sharing." if rj_change > 0
+                        else "Attitudes toward joint roles remain largely unchanged."),
+                     "positive" if rj_change > 0 else "neutral"))
+
+    # 4. Joint decisions (should) — average
+    dj = m['decision_should_joint']
+    dj_avg_bl = dj['Baseline'].mean()
+    dj_avg_ml = dj['Midline'].mean()
+    dj_change = _pp(dj_avg_bl, dj_avg_ml)
+    insights.append(("Men's Attitude: Joint Decisions",
+                     f"Average share of men saying household decisions SHOULD be joint: "
+                     f"{dj_avg_bl*100:.1f}% (BL) to {dj_avg_ml*100:.1f}% (ML) ({dj_change:+.1f} pp). "
+                     + ("More men are embracing shared decision-making norms." if dj_change > 0
+                        else "Further engagement on equitable decision-making is needed."),
+                     "positive" if dj_change > 0 else "neutral"))
+
+    # 5. Social norms — harmful norms (want DECREASES)
+    sn = m['socialnorms_agree']
+    harmful = sn[~sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+    sn_avg_bl = harmful['Baseline'].mean()
+    sn_avg_ml = harmful['Midline'].mean()
+    sn_change = _pp(sn_avg_bl, sn_avg_ml)
+    trend = "positive" if sn_change < 0 else ("negative" if sn_change > 2 else "neutral")
+    insights.append(("Men's Harmful Social Norms",
+                     f"Average agreement with harmful gender norms among men: "
+                     f"{sn_avg_bl*100:.1f}% (BL) to {sn_avg_ml*100:.1f}% (ML) ({sn_change:+.1f} pp). "
+                     f"{'Positive shift — harmful norms are weakening among men.' if sn_change < 0 else 'Norms among men remain entrenched; continued dialogue is critical.'}",
+                     trend))
+
+    # 6. Support for women in NbS — Mangrove + Seaweed + Forest (Yes)
+    support_sum = 0
+    support_count = 0
+    for key in ['mangrove_support', 'seaweed_support', 'forest_support']:
+        df = m[key]
+        yes_bl = df.loc[df['Response'] == 'Yes', 'Baseline'].values[0] if len(df[df['Response'] == 'Yes']) else 0
+        yes_ml = df.loc[df['Response'] == 'Yes', 'Midline'].values[0] if len(df[df['Response'] == 'Yes']) else 0
+        support_sum += _pp(yes_bl, yes_ml)
+        support_count += 1
+    avg_support_change = support_sum / max(support_count, 1)
+    insights.append(("Men's Support for Women in NbS",
+                     f"Average change in men saying 'Yes' to supporting women's NbS participation "
+                     f"(mangrove, seaweed, forest): {avg_support_change:+.1f} pp. "
+                     + ("Men are increasingly supporting women's conservation roles." if avg_support_change > 0
+                        else "Men's active support for women's NbS participation needs strengthening."),
+                     "positive" if avg_support_change > 0 else "warning"))
+
+    # 7. Time use — men's unpaid care work
+    ts = m['time_summary']
+    unpaid_bl = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Baseline'].values[0]
+    unpaid_ml = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Midline'].values[0]
+    unpaid_diff = round(unpaid_ml - unpaid_bl, 2) if isinstance(unpaid_bl, (int, float)) else 0
+    care_msg = ("Men are taking on more care responsibilities \u2014 positive for gender equity."
+                if unpaid_diff > 0
+                else "Men's care contribution remains low; household labour-sharing needs attention.")
+    insights.append(("Men's Unpaid Care Work",
+                     f"Average daily unpaid care work by men: {unpaid_bl:.1f}h (BL) to {unpaid_ml:.1f}h (ML) "
+                     f"({unpaid_diff:+.1f}h change). {care_msg}",
+                     "positive" if unpaid_diff > 0 else "warning"))
+
+    return insights
+
+
+def _generate_cross_cutting_insights(f_data, w_data, m_data=None):
+    """Generate insights that span all datasets."""
+    insights = []
+    try:
+        _gen_cross_cutting_inner(f_data, w_data, m_data, insights)
     except Exception as e:
         insights.append(("Insight Generation Note",
                          f"Some cross-cutting insights could not be generated: {e}",
@@ -3950,7 +4055,7 @@ def _generate_cross_cutting_insights(f_data, w_data):
     return insights
 
 
-def _gen_cross_cutting_inner(f_data, w_data, insights):
+def _gen_cross_cutting_inner(f_data, w_data, m_data, insights):
     # 1. Governance + Empowerment linkage
     fd = f_data['functionality_domain']
     gender_bl = fd.loc[fd['Timepoint'] == 'Baseline', 'Gender'].values[0]
@@ -4008,10 +4113,52 @@ def _gen_cross_cutting_inner(f_data, w_data, insights):
                      f"activities with individual savings programs can strengthen household resilience.",
                      "positive" if ig_yes_ml_pct > 50 and ps_yes_ml > 40 else "neutral"))
 
+    # 5. Men-Women alignment on social norms (only if men data is available)
+    if m_data is not None:
+        w_sn = w_data['socialnorms_agree']
+        w_harmful = w_sn[~w_sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+        w_sn_change = _pp(w_harmful['Baseline'].mean(), w_harmful['Midline'].mean())
+        m_sn = m_data['socialnorms_agree']
+        m_harmful = m_sn[~m_sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+        m_sn_change = _pp(m_harmful['Baseline'].mean(), m_harmful['Midline'].mean())
+        both_improving = w_sn_change < 0 and m_sn_change < 0
+        insights.append(("Gender Norms: Men vs Women Alignment",
+                         f"Harmful norms agreement changed by {w_sn_change:+.1f} pp among women "
+                         f"and {m_sn_change:+.1f} pp among men. "
+                         + ("Both groups show declining support for harmful norms — a strong signal of programme impact."
+                            if both_improving
+                            else "Norms are shifting unevenly between men and women — targeted messaging for each group may help."),
+                         "positive" if both_improving else "neutral"))
+
+        # 6. Men's support for women + women's actual participation
+        m_support_pcts = []
+        for key in ['mangrove_support', 'seaweed_support', 'forest_support']:
+            df = m_data[key]
+            yes_ml = df.loc[df['Response'] == 'Yes', 'Midline'].values[0] if len(df[df['Response'] == 'Yes']) else 0
+            m_support_pcts.append(yes_ml * 100)
+        avg_support = sum(m_support_pcts) / len(m_support_pcts)
+        insights.append(("Men's Support & Women's Conservation Participation",
+                         f"On average, {avg_support:.1f}% of men say they support women's NbS participation "
+                         f"at midline. Aligning men's declared support with actual resource allocation "
+                         f"and time-sharing remains a key programming challenge.",
+                         "positive" if avg_support > 50 else "neutral"))
+
+        # 7. Decision-making alignment: who should vs who does
+        m_dj_should_avg = m_data['decision_should_joint']['Midline'].mean() * 100
+        m_dj_does_avg = m_data['decision_does_joint']['Midline'].mean() * 100
+        gap = round(m_dj_should_avg - m_dj_does_avg, 1)
+        insights.append(("Decision-Making: Attitudes vs Practice (Men)",
+                         f"At midline, {m_dj_should_avg:.1f}% of men say decisions should be joint, "
+                         f"but only {m_dj_does_avg:.1f}% report decisions actually being joint "
+                         f"(gap: {gap:+.1f} pp). "
+                         + ("A gap persists between progressive attitudes and actual behaviour." if gap > 5
+                            else "Attitudes and practice are closely aligned — encouraging."),
+                         "warning" if gap > 5 else "positive"))
+
     return insights
 
 
-def _build_indicator_table(f_data, w_data):
+def _build_indicator_table(f_data, w_data, m_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -4067,6 +4214,47 @@ def _build_indicator_table(f_data, w_data):
                  'Baseline': round(di['Baseline'].mean() * 100, 1),
                  'Midline': round(di['Midline'].mean() * 100, 1)})
 
+    # Men indicators (if available)
+    if m_data is not None:
+        for label, df_key, resp_col, resp_val in [
+            ('CC Awareness (Men)', 'cc_heard', 'Response', 'Yes'),
+            ('NbS Awareness (Men)', 'nbs_heard', 'Response', 'Yes'),
+        ]:
+            df = m_data[df_key]
+            b_m = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0]
+            m_m = df.loc[df[resp_col] == resp_val, 'Midline'].values[0]
+            rows.append({'Indicator': label, 'Dataset': 'Men',
+                         'Baseline': round(b_m * 100, 1), 'Midline': round(m_m * 100, 1)})
+
+        rj = m_data['roles_should_joint']
+        rows.append({'Indicator': 'Joint Roles (Should)', 'Dataset': 'Men',
+                     'Baseline': round(rj['Baseline'].mean() * 100, 1),
+                     'Midline': round(rj['Midline'].mean() * 100, 1)})
+
+        dj = m_data['decision_should_joint']
+        rows.append({'Indicator': 'Joint Decisions (Should)', 'Dataset': 'Men',
+                     'Baseline': round(dj['Baseline'].mean() * 100, 1),
+                     'Midline': round(dj['Midline'].mean() * 100, 1)})
+
+        m_sn = m_data['socialnorms_agree']
+        m_harmful = m_sn[~m_sn['Norm'].str.contains(
+            'Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+        rows.append({'Indicator': 'Harmful Norms (Men)', 'Dataset': 'Men',
+                     'Baseline': round(m_harmful['Baseline'].mean() * 100, 1),
+                     'Midline': round(m_harmful['Midline'].mean() * 100, 1)})
+
+        # Men's support for women in NbS (average across mangrove, seaweed, forest)
+        support_bl, support_ml = [], []
+        for key in ['mangrove_support', 'seaweed_support', 'forest_support']:
+            df = m_data[key]
+            support_bl.append(df.loc[df['Response'] == 'Yes', 'Baseline'].values[0]
+                              if len(df[df['Response'] == 'Yes']) else 0)
+            support_ml.append(df.loc[df['Response'] == 'Yes', 'Midline'].values[0]
+                              if len(df[df['Response'] == 'Yes']) else 0)
+        rows.append({'Indicator': 'NbS Support for Women', 'Dataset': 'Men',
+                     'Baseline': round(sum(support_bl) / len(support_bl) * 100, 1),
+                     'Midline': round(sum(support_ml) / len(support_ml) * 100, 1)})
+
     return rows
 
 
@@ -4106,24 +4294,26 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data):
-    """Render the Insights tab with automated analysis across both datasets."""
+def render_insights_tab(f_data, w_data, m_data=None):
+    """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
-    trends, changes, and patterns across both the Forestry Conservation Groups and Women's Survey
-    datasets. Insights are automatically derived from Baseline-to-Midline comparisons.
+    trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
+    and Men's Survey datasets. Insights are automatically derived from Baseline-to-Midline comparisons.
     </div>""", unsafe_allow_html=True)
 
     # Summary counters
     f_insights = _generate_forestry_insights(f_data)
     w_insights = _generate_women_insights(w_data)
-    cc_insights = _generate_cross_cutting_insights(f_data, w_data)
+    m_insights = _generate_men_insights(m_data) if m_data is not None else []
+    cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data)
 
-    positive_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "positive")
-    warning_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t in ("warning", "negative"))
-    neutral_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "neutral")
-    total = len(f_insights) + len(w_insights) + len(cc_insights)
+    all_insights = f_insights + w_insights + m_insights + cc_insights
+    positive_count = sum(1 for _, _, t in all_insights if t == "positive")
+    warning_count = sum(1 for _, _, t in all_insights if t in ("warning", "negative"))
+    neutral_count = sum(1 for _, _, t in all_insights if t == "neutral")
+    total = len(all_insights)
 
     # KPI summary
     c1, c2, c3, c4 = st.columns(4)
@@ -4133,8 +4323,11 @@ def render_insights_tab(f_data, w_data):
     c4.metric("Cross-cutting", len(cc_insights))
 
     st.markdown("---")
-    _quick_nav_pills(['Trend Overview', 'Forestry Insights', 'Women Survey Insights',
-                       'Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
+    nav_items = ['Trend Overview', 'Forestry Insights', 'Women Survey Insights']
+    if m_data is not None:
+        nav_items.append('Men Survey Insights')
+    nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
+    _quick_nav_pills(nav_items)
 
     # ====================================================================
     # TREND OVERVIEW — Donut + Dumbbell Chart
@@ -4142,7 +4335,7 @@ def render_insights_tab(f_data, w_data):
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -4416,6 +4609,74 @@ def render_insights_tab(f_data, w_data):
     st.markdown("---")
 
     # ====================================================================
+    # MEN SURVEY INSIGHTS + Key Indicator Trends
+    # ====================================================================
+    if m_data is not None and m_insights:
+        _section_header('', "Men's Survey Insights", 'Household Level')
+
+        me_col1, me_col2 = st.columns([1, 1])
+        with me_col1:
+            # Men's key indicators slope chart
+            m_slope_data = []
+            m_cc = m_data['cc_heard']
+            m_slope_data.append(('CC Awareness',
+                                m_cc.loc[m_cc['Response']=='Yes','Baseline'].values[0]*100,
+                                m_cc.loc[m_cc['Response']=='Yes','Midline'].values[0]*100))
+            m_nbs = m_data['nbs_heard']
+            m_slope_data.append(('NbS Awareness',
+                                m_nbs.loc[m_nbs['Response']=='Yes','Baseline'].values[0]*100,
+                                m_nbs.loc[m_nbs['Response']=='Yes','Midline'].values[0]*100))
+            m_rj = m_data['roles_should_joint']
+            m_slope_data.append(('Joint Roles (Should)',
+                                m_rj['Baseline'].mean()*100, m_rj['Midline'].mean()*100))
+            m_dj = m_data['decision_should_joint']
+            m_slope_data.append(('Joint Decisions (Should)',
+                                m_dj['Baseline'].mean()*100, m_dj['Midline'].mean()*100))
+            m_sn = m_data['socialnorms_agree']
+            m_harmful = m_sn[~m_sn['Norm'].str.contains(
+                'Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+            m_slope_data.append(('Harmful Norms',
+                                m_harmful['Baseline'].mean()*100, m_harmful['Midline'].mean()*100))
+
+            fig_mslope = _make_slope_chart(m_slope_data, "Men's Key Indicator Trends")
+            st.plotly_chart(fig_mslope, use_container_width=True)
+
+        with me_col2:
+            # Men's NbS support comparison across sectors
+            sectors = ['mangrove_support', 'seaweed_support', 'forest_support']
+            sector_labels = ['Mangrove', 'Seaweed', 'Forest Mgmt']
+            sup_bl_vals, sup_ml_vals = [], []
+            for key in sectors:
+                df = m_data[key]
+                yes_bl = df.loc[df['Response']=='Yes','Baseline'].values[0]*100 if len(df[df['Response']=='Yes']) else 0
+                yes_ml = df.loc[df['Response']=='Yes','Midline'].values[0]*100 if len(df[df['Response']=='Yes']) else 0
+                sup_bl_vals.append(yes_bl)
+                sup_ml_vals.append(yes_ml)
+
+            fig_msup = go.Figure()
+            fig_msup.add_trace(go.Bar(x=sector_labels, y=sup_bl_vals, name='Baseline',
+                                      marker_color=COLORS['baseline'],
+                                      text=[f"{v:.1f}%" for v in sup_bl_vals], textposition='auto'))
+            fig_msup.add_trace(go.Bar(x=sector_labels, y=sup_ml_vals, name='Midline',
+                                      marker_color=COLORS['midline'],
+                                      text=[f"{v:.1f}%" for v in sup_ml_vals], textposition='auto'))
+            fig_msup.update_layout(
+                title="Men Supporting Women in NbS (% Yes)",
+                barmode='group', height=380, yaxis_title='%',
+                legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20),
+            )
+            st.plotly_chart(fig_msup, use_container_width=True)
+
+        for title, body, trend in m_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -4431,7 +4692,8 @@ def render_insights_tab(f_data, w_data):
 
     # Separate by dataset for color coding
     for ds, color, symbol in [('Forestry', COLORS['baseline'], 'circle'),
-                               ('Women', COLORS['midline'], 'diamond')]:
+                               ('Women', COLORS['midline'], 'diamond'),
+                               ('Men', '#FF9800', 'square')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -4579,9 +4841,9 @@ def render_insights_tab(f_data, w_data):
     # Auto-generate recommendations based on the insights
     recs = []
     # Check for negative trends
-    all_insights = f_insights + w_insights + cc_insights
-    neg_areas = [title for title, _, trend in all_insights if trend in ('negative', 'warning')]
-    pos_areas = [title for title, _, trend in all_insights if trend == 'positive']
+    all_insights_recs = f_insights + w_insights + m_insights + cc_insights
+    neg_areas = [title for title, _, trend in all_insights_recs if trend in ('negative', 'warning')]
+    pos_areas = [title for title, _, trend in all_insights_recs if trend == 'positive']
 
     if any('Functionality' in a for a in neg_areas):
         recs.append(("Strengthen Institutional Capacity",
@@ -4607,6 +4869,14 @@ def render_insights_tab(f_data, w_data):
         recs.append(("Scale Climate & DRR Programming",
                      "Expand community-based disaster preparedness planning and integrate NbS training "
                      "into both forestry group activities and women's empowerment programs."))
+    if any("Men's" in a and ('Norm' in a or 'Support' in a or 'Role' in a) for a in neg_areas):
+        recs.append(("Engage Men as Change Agents",
+                     "Strengthen male engagement strategies — community dialogues, role-model campaigns, "
+                     "and couple-based interventions to shift attitudes on joint roles and NbS support."))
+    if any("Decision" in a and "Practice" in a for a in neg_areas):
+        recs.append(("Close the Attitudes-Practice Gap",
+                     "While men increasingly say decisions should be joint, actual practice lags behind. "
+                     "Facilitate structured household visioning exercises to translate norms into behaviour."))
 
     # Always add these broad recommendations
     recs.append(("Leverage Positive Trends",
@@ -4614,8 +4884,8 @@ def render_insights_tab(f_data, w_data):
                  f"donor reporting and community motivation. Document success stories in areas "
                  f"showing clear improvement."))
     recs.append(("Integrated M&E Approach",
-                 "Continue tracking both community-level (forestry) and household-level (women) indicators "
-                 "together. The cross-cutting insights show that progress at one level supports the other."))
+                 "Continue tracking community-level (forestry), women's, and men's indicators together. "
+                 "The cross-cutting insights show that progress at one level supports the other."))
 
     for title, body in recs:
         _insight_card(title, body, "neutral")
@@ -4625,12 +4895,12 @@ def render_insights_tab(f_data, w_data):
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data):
-    """Combined overview of both datasets — key headline indicators."""
+def render_synthesis_view(f_data, w_data, m_data=None):
+    """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
-    from both the Forestry Conservation Groups (community-level) and Women's Survey (household-level)
-    datasets. This view highlights key programme-wide trends.
+    from all programme datasets — Forestry Conservation Groups (community-level), Women's Survey,
+    and Men's Survey (household-level). This view highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -4712,6 +4982,47 @@ def render_synthesis_view(f_data, w_data):
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # ---- Men Survey Headline KPIs ----
+    if m_data is not None:
+        st.markdown('<h3> Men\'s Survey — Headlines</h3>', unsafe_allow_html=True)
+
+        # CC heard
+        m_cc_bl = m_data['cc_heard'].loc[m_data['cc_heard']['Response']=='Yes','Baseline'].values[0]
+        m_cc_ml = m_data['cc_heard'].loc[m_data['cc_heard']['Response']=='Yes','Midline'].values[0]
+        # NbS heard
+        m_nbs_bl = m_data['nbs_heard'].loc[m_data['nbs_heard']['Response']=='Yes','Baseline'].values[0]
+        m_nbs_ml = m_data['nbs_heard'].loc[m_data['nbs_heard']['Response']=='Yes','Midline'].values[0]
+        # Roles should joint avg
+        m_rj_bl = m_data['roles_should_joint']['Baseline'].mean()
+        m_rj_ml = m_data['roles_should_joint']['Midline'].mean()
+        # Decision should joint avg
+        m_dj_bl = m_data['decision_should_joint']['Baseline'].mean()
+        m_dj_ml = m_data['decision_should_joint']['Midline'].mean()
+
+        mc1, mc2, mc3, mc4 = st.columns(4)
+        mc1.markdown(f"""<div class="kpi-card">
+            <h3>CC Awareness (Men)</h3>
+            <div class="value">{m_cc_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_cc_ml>=m_cc_bl else 'negative'}">{(m_cc_ml-m_cc_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc2.markdown(f"""<div class="kpi-card">
+            <h3>NbS Awareness (Men)</h3>
+            <div class="value">{m_nbs_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_nbs_ml>=m_nbs_bl else 'negative'}">{(m_nbs_ml-m_nbs_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc3.markdown(f"""<div class="kpi-card">
+            <h3>Joint Roles (Should)</h3>
+            <div class="value">{m_rj_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_rj_ml>=m_rj_bl else 'negative'}">{(m_rj_ml-m_rj_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc4.markdown(f"""<div class="kpi-card">
+            <h3>Joint Decisions (Should)</h3>
+            <div class="value">{m_dj_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_dj_ml>=m_dj_bl else 'negative'}">{(m_dj_ml-m_dj_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
     # Side-by-side mini charts
     st.markdown('<h3>Comparative Snapshots</h3>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
@@ -4791,9 +5102,73 @@ def render_synthesis_view(f_data, w_data):
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_ts, use_container_width=True)
 
+    # ---- Men vs Women comparison charts ----
+    if m_data is not None:
+        st.markdown('<h3>Men vs Women: Key Comparisons</h3>', unsafe_allow_html=True)
+        cmp1, cmp2 = st.columns(2)
+        with cmp1:
+            # CC awareness comparison
+            w_cc_yes_ml = cc_ml  # already computed above
+            m_cc_yes_ml = m_data['cc_heard'].loc[m_data['cc_heard']['Response']=='Yes','Midline'].values[0]
+            w_nbs_yes_ml = nbs_ml
+            m_nbs_yes_ml = m_data['nbs_heard'].loc[m_data['nbs_heard']['Response']=='Yes','Midline'].values[0]
+            cmp_df = pd.DataFrame({
+                'Indicator': ['CC Awareness', 'NbS Awareness'],
+                'Women (Midline)': [w_cc_yes_ml*100, w_nbs_yes_ml*100],
+                'Men (Midline)': [m_cc_yes_ml*100, m_nbs_yes_ml*100],
+            })
+            fig_cmp = go.Figure()
+            fig_cmp.add_trace(go.Bar(x=cmp_df['Indicator'], y=cmp_df['Women (Midline)'],
+                                     name='Women', marker_color=COLORS['midline'],
+                                     text=cmp_df['Women (Midline)'].apply(lambda x: f"{x:.1f}%"),
+                                     textposition='auto'))
+            fig_cmp.add_trace(go.Bar(x=cmp_df['Indicator'], y=cmp_df['Men (Midline)'],
+                                     name='Men', marker_color=COLORS['baseline'],
+                                     text=cmp_df['Men (Midline)'].apply(lambda x: f"{x:.1f}%"),
+                                     textposition='auto'))
+            fig_cmp.update_layout(title="Climate & NbS Awareness (Midline)", barmode='group',
+                                  height=380, yaxis_title='%',
+                                  legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                  font=dict(size=13, color='#333'),
+                                  title_font=dict(size=16, color='#222'),
+                                  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig_cmp, use_container_width=True)
+
+        with cmp2:
+            # Social norms comparison — harmful norms average
+            w_sn = w_data['socialnorms_agree'].copy()
+            w_harmful = w_sn[~w_sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+            w_sn_bl = w_harmful['Baseline'].mean() * 100
+            w_sn_ml = w_harmful['Midline'].mean() * 100
+            m_sn = m_data['socialnorms_agree'].copy()
+            m_harmful = m_sn[~m_sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions', regex=True)]
+            m_sn_bl = m_harmful['Baseline'].mean() * 100
+            m_sn_ml = m_harmful['Midline'].mean() * 100
+            norms_df = pd.DataFrame({
+                'Timepoint': ['Baseline', 'Midline'],
+                'Women': [w_sn_bl, w_sn_ml],
+                'Men': [m_sn_bl, m_sn_ml],
+            })
+            fig_norms = go.Figure()
+            fig_norms.add_trace(go.Bar(x=norms_df['Timepoint'], y=norms_df['Women'],
+                                       name='Women', marker_color=COLORS['midline'],
+                                       text=norms_df['Women'].apply(lambda x: f"{x:.1f}%"),
+                                       textposition='auto'))
+            fig_norms.add_trace(go.Bar(x=norms_df['Timepoint'], y=norms_df['Men'],
+                                       name='Men', marker_color=COLORS['baseline'],
+                                       text=norms_df['Men'].apply(lambda x: f"{x:.1f}%"),
+                                       textposition='auto'))
+            fig_norms.update_layout(title="Harmful Social Norms (Avg Agree %)", barmode='group',
+                                    height=380, yaxis_title='Agree/Strongly Agree (%)',
+                                    legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                    font=dict(size=13, color='#333'),
+                                    title_font=dict(size=16, color='#222'),
+                                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig_norms, use_container_width=True)
+
     st.markdown("""<div class="section-narrative" style="margin-top:1rem;">
-    <strong>Navigate deeper:</strong> Use the sidebar to select either <em>Forestry Groups</em>
-    or <em>Women Survey</em> for detailed breakdowns across all thematic areas.
+    <strong>Navigate deeper:</strong> Use the sidebar to select <em>Forestry Groups</em>,
+    <em>Women Survey</em>, or <em>Men Survey</em> for detailed breakdowns across all thematic areas.
     </div>""", unsafe_allow_html=True)
 
 
@@ -5095,6 +5470,7 @@ def main():
         <div class="sidebar-section">
             <span class="sidebar-nav-link">Forestry Insights</span>
             <span class="sidebar-nav-link">Women Survey Insights</span>
+            <span class="sidebar-nav-link">Men Survey Insights</span>
             <span class="sidebar-nav-link">Cross-Cutting Insights</span>
             <span class="sidebar-nav-link">Indicator Change Heatmap</span>
             <span class="sidebar-nav-link">Recommendations</span>
@@ -5129,7 +5505,9 @@ def main():
         <div class="sidebar-section">
             <span class="sidebar-nav-link">Forestry Headlines</span>
             <span class="sidebar-nav-link">Women Survey Headlines</span>
+            <span class="sidebar-nav-link">Men Survey Headlines</span>
             <span class="sidebar-nav-link">Comparative Snapshots</span>
+            <span class="sidebar-nav-link">Men vs Women Comparisons</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -5361,7 +5739,7 @@ def main():
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry Conservation &amp; Women's Survey Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's &amp; Men's Survey Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -5370,22 +5748,24 @@ def main():
 
         f_data = load_forestry_data(forestry_path)
         w_data = load_women_data(women_path)
+        m_data = load_men_data(men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
             <div style="margin-bottom:0.3rem;">Forestry Groups (analysis)</div>
-            <div>Women Survey (analysis)</div>
+            <div style="margin-bottom:0.3rem;">Women Survey (analysis)</div>
+            <div>Men Survey (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data)
+        render_insights_tab(f_data, w_data, m_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Community Forest Conservation &amp; Women's Survey</p>
+            <p>Integrated M&amp;E Analysis | Forestry Conservation, Women's &amp; Men's Survey</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -5394,16 +5774,18 @@ def main():
 
         f_data = load_forestry_data(forestry_path)
         w_data = load_women_data(women_path)
+        m_data = load_men_data(men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
             <div style="margin-bottom:0.3rem;">Forestry Groups</div>
-            <div>Women Survey</div>
+            <div style="margin-bottom:0.3rem;">Women Survey</div>
+            <div>Men Survey</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data)
+        render_synthesis_view(f_data, w_data, m_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
