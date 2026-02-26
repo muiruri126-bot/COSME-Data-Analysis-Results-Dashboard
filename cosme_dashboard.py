@@ -40,6 +40,9 @@ WOMEN_SHEET = "Results Women"
 MEN_EXCEL = "Men Survey Basline_midline results.xlsx"
 MEN_SHEET = "Results Men"
 
+GJJ_KAP_WOMEN_EXCEL = "GJJ KAP Women Basline_endline results.xlsx"
+GJJ_KAP_WOMEN_SHEET = "Results KAP Women Endline"
+
 # ============================================================================
 # THEMES
 # ============================================================================
@@ -1529,6 +1532,277 @@ def load_men_data(filepath):
 
 
 # ============================================================================
+# GJJ KAP WOMEN (BASELINE / ENDLINE) DATA LOADER
+# ============================================================================
+
+@st.cache_data
+def load_gjj_kap_women_data(filepath):
+    """
+    Parse the GJJ KAP Women Survey Excel file.
+    Sheet 'Results KAP Women Endline' — 228 rows x 9 columns.
+    All data lives in Column B (labels) + Columns C-H (values).
+    Proportions are 0-1 scale; charts multiply x100 for display.
+    Row references below are 1-based Excel rows; _val() uses 0-based.
+    """
+    try:
+        raw = pd.read_excel(filepath, sheet_name=GJJ_KAP_WOMEN_SHEET, header=None)
+    except FileNotFoundError:
+        st.error(f"GJJ KAP Women Excel not found: {filepath}")
+        st.stop()
+
+    g = {}
+
+    # ---- A. SELF — Self-Esteem, Self-Compassion, Confidence ----
+    # 3 statements: R10-R12 (0-based 9-11), Baseline Likert: StronglyAgree(c3) Agree(c4) Disagree(c5) StronglyDisagree(c6)
+    self_statements = [
+        _clean_label(_val(raw, 9, 1)),   # "I have many strengths and qualities"
+        _clean_label(_val(raw, 10, 1)),  # "I believe my feelings and opinions are important"
+        _clean_label(_val(raw, 11, 1)),  # "I see myself as an equal..."
+    ]
+
+    g['self_baseline_likert'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Strongly agree': [_val(raw, r, 2) for r in range(9, 12)],
+        'Agree': [_val(raw, r, 3) for r in range(9, 12)],
+        'Disagree': [_val(raw, r, 4) for r in range(9, 12)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(9, 12)],
+    })
+
+    # Endline Likert: R24-R26 (0-based 23-25)
+    g['self_endline_likert'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Strongly agree': [_val(raw, r, 2) for r in range(23, 26)],
+        'Agree': [_val(raw, r, 3) for r in range(23, 26)],
+        'Disagree': [_val(raw, r, 4) for r in range(23, 26)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(23, 26)],
+    })
+
+    # Strongly Agree comparison: R17-R19 (0-based 16-18), BL=c3, EL=c4
+    g['self_strongly_agree'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Baseline': [_val(raw, r, 2) for r in range(16, 19)],
+        'Endline': [_val(raw, r, 3) for r in range(16, 19)],
+    })
+
+    # Agreement vs Disagreement: R31-R33 (0-based 30-32)
+    g['self_agreement'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Agreement_BL': [_val(raw, r, 2) for r in range(30, 33)],
+        'Agreement_EL': [_val(raw, r, 3) for r in range(30, 33)],
+        'Disagreement_BL': [_val(raw, r, 4) for r in range(30, 33)],
+        'Disagreement_EL': [_val(raw, r, 5) for r in range(30, 33)],
+    })
+
+    # Self-compassion frequency: R38-R41 (0-based 37-40), BL=c3, EL=c4
+    compassion_cats = [
+        _clean_label(_val(raw, r, 1)) for r in range(37, 41)
+    ]
+    g['self_compassion'] = pd.DataFrame({
+        'Category': compassion_cats,
+        'Baseline': [_val(raw, r, 2) for r in range(37, 41)],
+        'Endline': [_val(raw, r, 3) for r in range(37, 41)],
+    })
+
+    # ---- B. RELATIONAL WELLBEING ----
+    rel_statements = [
+        _clean_label(_val(raw, r, 1)) for r in range(47, 54)
+    ]
+
+    # Baseline frequency: R48-R54 (0-based 47-53), 6 cols: Always(c3) Frequently(c4) Sometimes(c5) Rarely(c6) Never(c7) NA(c8)
+    g['rel_baseline_freq'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'Always': [_val(raw, r, 2) for r in range(47, 54)],
+        'Frequently': [_val(raw, r, 3) for r in range(47, 54)],
+        'Sometimes': [_val(raw, r, 4) for r in range(47, 54)],
+        'Rarely': [_val(raw, r, 5) for r in range(47, 54)],
+        'Never': [_val(raw, r, 6) for r in range(47, 54)],
+        'NA': [_val(raw, r, 7) for r in range(47, 54)],
+    })
+
+    # Endline frequency: R59-R65 (0-based 58-64)
+    g['rel_endline_freq'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'Always': [_val(raw, r, 2) for r in range(58, 65)],
+        'Frequently': [_val(raw, r, 3) for r in range(58, 65)],
+        'Sometimes': [_val(raw, r, 4) for r in range(58, 65)],
+        'Rarely': [_val(raw, r, 5) for r in range(58, 65)],
+        'Never': [_val(raw, r, 6) for r in range(58, 65)],
+        'NA': [_val(raw, r, 7) for r in range(58, 65)],
+    })
+
+    # Always/Frequently vs Rarely/Never comparison: R70-R76 (0-based 69-75)
+    # Cols: AF_BL(c3) AF_EL(c4) RN_BL(c5) RN_EL(c6) DIF_AF(c8) DIF_RN(c9)
+    g['rel_af_rn'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'AF_Baseline': [_val(raw, r, 2) for r in range(69, 76)],
+        'AF_Endline': [_val(raw, r, 3) for r in range(69, 76)],
+        'RN_Baseline': [_val(raw, r, 4) for r in range(69, 76)],
+        'RN_Endline': [_val(raw, r, 5) for r in range(69, 76)],
+        'DIF_AF': [_val(raw, r, 7) for r in range(69, 76)],
+        'DIF_RN': [_val(raw, r, 8) for r in range(69, 76)],
+    })
+
+    # Relational agreement statements — Baseline: R81-R82 (0-based 80-81)
+    rel_agree_stmts = [
+        _clean_label(_val(raw, 80, 1)),
+        _clean_label(_val(raw, 81, 1)),
+    ]
+    g['rel_agree_baseline'] = pd.DataFrame({
+        'Statement': rel_agree_stmts,
+        'Strongly agree': [_val(raw, r, 2) for r in range(80, 82)],
+        'Agree': [_val(raw, r, 3) for r in range(80, 82)],
+        'Disagree': [_val(raw, r, 4) for r in range(80, 82)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(80, 82)],
+    })
+
+    # Endline: R87-R88 (0-based 86-87)
+    g['rel_agree_endline'] = pd.DataFrame({
+        'Statement': rel_agree_stmts,
+        'Strongly agree': [_val(raw, r, 2) for r in range(86, 88)],
+        'Agree': [_val(raw, r, 3) for r in range(86, 88)],
+        'Disagree': [_val(raw, r, 4) for r in range(86, 88)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(86, 88)],
+    })
+
+    # Agreement vs Disagreement: R93-R94 (0-based 92-93)
+    rel_agree_summary_stmts = [
+        _clean_label(_val(raw, 92, 1)),
+        _clean_label(_val(raw, 93, 1)),
+    ]
+    g['rel_agreement_summary'] = pd.DataFrame({
+        'Statement': rel_agree_summary_stmts,
+        'Agreement_BL': [_val(raw, r, 2) for r in range(92, 94)],
+        'Agreement_EL': [_val(raw, r, 3) for r in range(92, 94)],
+        'Disagreement_BL': [_val(raw, r, 4) for r in range(92, 94)],
+        'Disagreement_EL': [_val(raw, r, 5) for r in range(92, 94)],
+    })
+
+    # ---- C. GENDER TRANSFORMATION: SHARED RESPONSIBILITY ----
+    # Husband supports household chores: R100-R101 (0-based 99-100), BL=c3, EL=c4
+    g['shared_chores_yn'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(99, 101)],
+        'Baseline': [_val(raw, r, 2) for r in range(99, 101)],
+        'Endline': [_val(raw, r, 3) for r in range(99, 101)],
+    })
+
+    # Time since husband supporting: R105-R111 (0-based 104-110)
+    g['chore_duration'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(104, 111)],
+        'Baseline': [_val(raw, r, 2) for r in range(104, 111)],
+        'Endline': [_val(raw, r, 3) for r in range(104, 111)],
+    })
+
+    # Frequency of husband chores: R115-R119 (0-based 114-118)
+    g['chore_frequency'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(114, 119)],
+        'Baseline': [_val(raw, r, 2) for r in range(114, 119)],
+        'Endline': [_val(raw, r, 3) for r in range(114, 119)],
+    })
+
+    # Discussed sharing unpaid chores: R123-R124 (0-based 122-123)
+    g['chore_discussed'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(122, 124)],
+        'Baseline': [_val(raw, r, 2) for r in range(122, 124)],
+        'Endline': [_val(raw, r, 3) for r in range(122, 124)],
+    })
+
+    # Person who started conversation: R128-R130 (0-based 127-129)
+    g['chore_initiator'] = pd.DataFrame({
+        'Person': [_clean_label(_val(raw, r, 1)) for r in range(127, 130)],
+        'Baseline': [_val(raw, r, 2) for r in range(127, 130)],
+        'Endline': [_val(raw, r, 3) for r in range(127, 130)],
+    })
+
+    # Husband completed significant chore: R134-R135 (0-based 133-134)
+    g['chore_completed'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(133, 135)],
+        'Baseline': [_val(raw, r, 2) for r in range(133, 135)],
+        'Endline': [_val(raw, r, 3) for r in range(133, 135)],
+    })
+
+    # Type of chore: R139-R143 (0-based 138-142)
+    g['chore_type'] = pd.DataFrame({
+        'Chore': [_clean_label(_val(raw, r, 1)) for r in range(138, 143)],
+        'Baseline': [_val(raw, r, 2) for r in range(138, 143)],
+        'Endline': [_val(raw, r, 3) for r in range(138, 143)],
+    })
+
+    # Hours saved: R147-R152 (0-based 146-151)
+    g['hours_saved'] = pd.DataFrame({
+        'Hours': [_clean_label(_val(raw, r, 1)) for r in range(146, 152)],
+        'Baseline': [_val(raw, r, 2) for r in range(146, 152)],
+        'Endline': [_val(raw, r, 3) for r in range(146, 152)],
+    })
+
+    # Frequency husband supports women's self-time: R156-R161 (0-based 155-160)
+    g['support_self_time'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(155, 161)],
+        'Baseline': [_val(raw, r, 2) for r in range(155, 161)],
+        'Endline': [_val(raw, r, 3) for r in range(155, 161)],
+    })
+
+    # ---- D. GENDER TRANSFORMATION: SHARED POWER ----
+    # Conversations to change decisions: R168-R169 (0-based 167-168)
+    g['decision_conversations'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(167, 169)],
+        'Baseline': [_val(raw, r, 2) for r in range(167, 169)],
+        'Endline': [_val(raw, r, 3) for r in range(167, 169)],
+    })
+
+    # Made important decisions: R173-R174 (0-based 172-173)
+    g['decisions_made'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(172, 174)],
+        'Baseline': [_val(raw, r, 2) for r in range(172, 174)],
+        'Endline': [_val(raw, r, 3) for r in range(172, 174)],
+    })
+
+    # Type of decision: R178-R188 (0-based 177-187)
+    g['decision_types'] = pd.DataFrame({
+        'Decision': [_clean_label(_val(raw, r, 1)) for r in range(177, 188)],
+        'Baseline': [_val(raw, r, 2) for r in range(177, 188)],
+        'Endline': [_val(raw, r, 3) for r in range(177, 188)],
+    })
+
+    # Person making decision: R192-R194 (0-based 191-193)
+    g['decision_maker'] = pd.DataFrame({
+        'Person': [_clean_label(_val(raw, r, 1)) for r in range(191, 194)],
+        'Baseline': [_val(raw, r, 2) for r in range(191, 194)],
+        'Endline': [_val(raw, r, 3) for r in range(191, 194)],
+    })
+
+    # Equal say in joint decisions: R198-R199 (0-based 197-198)
+    g['equal_say'] = pd.DataFrame({
+        'Response': [_clean_label(_val(raw, r, 1)) for r in range(197, 199)],
+        'Baseline': [_val(raw, r, 2) for r in range(197, 199)],
+        'Endline': [_val(raw, r, 3) for r in range(197, 199)],
+    })
+
+    # ---- E. GENDER TRANSFORMATION: AUTONOMY & LEADERSHIP ----
+    # Hide money to save: R205-R210 (0-based 204-209)
+    g['hide_money'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(204, 210)],
+        'Baseline': [_val(raw, r, 2) for r in range(204, 210)],
+        'Endline': [_val(raw, r, 3) for r in range(204, 210)],
+    })
+
+    # Husband support for women becoming community leader: R214-R219 (0-based 213-218)
+    g['support_leader'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(213, 219)],
+        'Baseline': [_val(raw, r, 2) for r in range(213, 219)],
+        'Endline': [_val(raw, r, 3) for r in range(213, 219)],
+    })
+
+    # Husband support if started/grew own business: R223-R228 (0-based 222-227)
+    g['support_business'] = pd.DataFrame({
+        'Category': [_clean_label(_val(raw, r, 1)) for r in range(222, 228)],
+        'Baseline': [_val(raw, r, 2) for r in range(222, 228)],
+        'Endline': [_val(raw, r, 3) for r in range(222, 228)],
+    })
+
+    return g
+
+
+# ============================================================================
 # CHART HELPERS
 # ============================================================================
 
@@ -2836,6 +3110,576 @@ def render_men_tab6(m):
     st.plotly_chart(make_delta_bar(m['socialnorms_agree'], 'Norm',
                     'Change in Agreement (Baseline to Midline)',
                     height=550), use_container_width=True)
+
+
+# ============================================================================
+# GJJ KAP WOMEN — CHART HELPER & TAB RENDERERS
+# ============================================================================
+
+def _gjj_bar(df, cat_col, title, y_label="Percentage (%)", multiply=True,
+             height=450, orientation='v'):
+    """Baseline vs Endline grouped bar chart (uses Endline column instead of Midline)."""
+    cb = COLORS["baseline"]
+    cm = COLORS["midline"]
+    plot_df = df.copy()
+    if multiply:
+        for c in ['Baseline', 'Endline']:
+            plot_df[c] = pd.to_numeric(plot_df[c], errors='coerce').fillna(0) * 100
+    if orientation == 'h':
+        plot_df['_sort'] = plot_df[['Baseline', 'Endline']].max(axis=1)
+        plot_df = plot_df.sort_values('_sort', ascending=True).drop(columns='_sort')
+        fig = go.Figure()
+        fig.add_trace(go.Bar(y=plot_df[cat_col], x=plot_df['Baseline'], name='Baseline',
+                             orientation='h', marker_color=cb,
+                             text=plot_df['Baseline'].apply(lambda x: f"{x:.1f}%"), textposition='auto'))
+        fig.add_trace(go.Bar(y=plot_df[cat_col], x=plot_df['Endline'], name='Endline',
+                             orientation='h', marker_color=cm,
+                             text=plot_df['Endline'].apply(lambda x: f"{x:.1f}%"), textposition='auto'))
+        fig.update_layout(title=title, barmode='group', height=height,
+                          xaxis_title=y_label, legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                          yaxis=dict(categoryorder='trace'))
+    else:
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=plot_df[cat_col], y=plot_df['Baseline'], name='Baseline',
+                             marker_color=cb,
+                             text=plot_df['Baseline'].apply(lambda x: f"{x:.1f}%"), textposition='auto'))
+        fig.add_trace(go.Bar(x=plot_df[cat_col], y=plot_df['Endline'], name='Endline',
+                             marker_color=cm,
+                             text=plot_df['Endline'].apply(lambda x: f"{x:.1f}%"), textposition='auto'))
+        fig.update_layout(title=title, barmode='group', height=height, yaxis_title=y_label,
+                          legend=dict(orientation='h', yanchor='bottom', y=1.02))
+    fig.update_layout(
+        font=dict(size=13, color='#333'),
+        title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+    return fig
+
+
+def _gjj_delta_bar(df, cat_col, title, multiply=True, height=400):
+    """Baseline to Endline change bar (horizontal, green/red)."""
+    plot_df = df.copy()
+    factor = 100 if multiply else 1
+    plot_df['Change'] = (pd.to_numeric(plot_df['Endline'], errors='coerce').fillna(0)
+                         - pd.to_numeric(plot_df['Baseline'], errors='coerce').fillna(0)) * factor
+    plot_df = plot_df.sort_values('Change')
+    colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in plot_df['Change']]
+    fig = go.Figure()
+    fig.add_trace(go.Bar(y=plot_df[cat_col], x=plot_df['Change'], orientation='h',
+                         marker_color=colors,
+                         text=plot_df['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
+    fig.update_layout(title=title, height=height, xaxis_title="Change (pp)",
+                      yaxis=dict(categoryorder='trace'),
+                      font=dict(size=13, color='#333'),
+                      title_font=dict(size=16, color='#222'),
+                      plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                      margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def _gjj_stacked_bar(df, cat_col, columns, colors_list, title,
+                     y_label="Percentage (%)", height=400, multiply=True):
+    """Stacked horizontal bar chart for Likert / frequency distributions."""
+    plot_df = df.copy()
+    if multiply:
+        for c in columns:
+            plot_df[c] = pd.to_numeric(plot_df[c], errors='coerce').fillna(0) * 100
+    fig = go.Figure()
+    for col, color in zip(columns, colors_list):
+        fig.add_trace(go.Bar(
+            y=plot_df[cat_col], x=plot_df[col], name=col, orientation='h',
+            marker_color=color,
+            text=plot_df[col].apply(lambda x: f"{x:.1f}%" if x > 3 else ""),
+            textposition='inside',
+        ))
+    fig.update_layout(title=title, barmode='stack', height=height,
+                      xaxis_title=y_label,
+                      legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                      yaxis=dict(categoryorder='array', categoryarray=list(plot_df[cat_col])),
+                      font=dict(size=13, color='#333'),
+                      title_font=dict(size=16, color='#222'),
+                      plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                      margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def _short_label(s, max_len=55):
+    """Truncate long statement text for chart axis readability."""
+    if isinstance(s, str) and len(s) > max_len:
+        return s[:max_len].rstrip() + '...'
+    return s
+
+
+# ---- Tab 1: SELF — Confidence, Self-Worth & Compassion ----
+def render_gjj_tab1(g):
+    """GJJ KAP Women — Tab 1: SELF (Self-Esteem, Self-Compassion, Confidence)."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Self-Efficacy &amp; Self-Beliefs:</strong> Women's agreement with self-esteem statements
+    (strengths, feelings matter, gender equality) across baseline and endline. Tracks shifts in
+    <em>Strongly Agree</em> rates and self-compassion frequency to assess programme impact on
+    women's confidence and self-worth.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Likert Breakdown', 'Strongly Agree Shift', 'Agreement vs Disagreement', 'Self-Compassion'])
+
+    # --- KPIs: pp increase in Strongly Agree ---
+    sa = g['self_strongly_agree']
+    kpi_cols = st.columns(len(sa))
+    for i, row in sa.iterrows():
+        bl = row['Baseline'] if isinstance(row['Baseline'], (int, float)) else 0
+        el = row['Endline'] if isinstance(row['Endline'], (int, float)) else 0
+        change = (el - bl) * 100
+        label = _short_label(row['Statement'], 40)
+        kpi_cols[i].markdown(f"""<div class="kpi-card">
+            <h3>{label}</h3>
+            <div class="value">{el*100:.1f}%</div>
+            <div class="delta-{'positive' if change>=0 else 'negative'}">{change:+.1f}pp Strongly Agree</div>
+        </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Likert stacked bars: Baseline vs Endline side by side ---
+    _section_header('', 'Likert Breakdown — Baseline', 'SELF')
+    likert_cols = ['Strongly agree', 'Agree', 'Disagree', 'Strongly disagree']
+    likert_colors = ['#2E7D32', '#81C784', '#EF9A9A', '#C62828']
+    bl_likert = g['self_baseline_likert'].copy()
+    bl_likert['Statement'] = bl_likert['Statement'].apply(lambda s: _short_label(s))
+    st.plotly_chart(
+        _gjj_stacked_bar(bl_likert, 'Statement', likert_cols, likert_colors,
+                         'SELF Statements — Baseline Likert', height=300),
+        use_container_width=True)
+
+    _section_header('', 'Likert Breakdown — Endline', 'SELF')
+    el_likert = g['self_endline_likert'].copy()
+    el_likert['Statement'] = el_likert['Statement'].apply(lambda s: _short_label(s))
+    st.plotly_chart(
+        _gjj_stacked_bar(el_likert, 'Statement', likert_cols, likert_colors,
+                         'SELF Statements — Endline Likert', height=300),
+        use_container_width=True)
+
+    # --- Strongly Agree change ---
+    st.markdown("---")
+    _section_header('', 'Strongly Agree Shift (Baseline vs Endline)', 'SELF')
+    sa_chart = sa.copy()
+    sa_chart['Statement'] = sa_chart['Statement'].apply(lambda s: _short_label(s))
+    st.plotly_chart(_gjj_bar(sa_chart, 'Statement', 'Strongly Agree: Baseline vs Endline',
+                             height=350, orientation='h'), use_container_width=True)
+
+    # --- Agreement vs Disagreement ---
+    st.markdown("---")
+    _section_header('', 'Agreement vs Disagreement', 'SELF')
+    agr = g['self_agreement'].copy()
+    agr['Statement'] = agr['Statement'].apply(lambda s: _short_label(s))
+    agr_plot = agr.rename(columns={'Agreement_BL': 'Agree BL', 'Agreement_EL': 'Agree EL',
+                                   'Disagreement_BL': 'Disagree BL', 'Disagreement_EL': 'Disagree EL'})
+    agr_cols = ['Agree BL', 'Agree EL', 'Disagree BL', 'Disagree EL']
+    agr_colors = ['#5B8DB8', '#2E7D32', '#EF9A9A', '#C62828']
+    st.plotly_chart(
+        _gjj_stacked_bar(agr_plot, 'Statement', agr_cols, agr_colors,
+                         'Agreement vs Disagreement (Baseline & Endline)', height=300,
+                         multiply=True),
+        use_container_width=True)
+
+    # --- Self-compassion frequency ---
+    st.markdown("---")
+    _section_header('', 'Self-Compassion Frequency', 'SELF')
+    st.plotly_chart(_gjj_bar(g['self_compassion'], 'Category',
+                             'Self-Compassion: "I nurture myself with kind self-talk..."',
+                             height=350), use_container_width=True)
+
+
+# ---- Tab 2: RELATIONAL WELLBEING ----
+def render_gjj_tab2(g):
+    """GJJ KAP Women — Tab 2: Relational Wellbeing."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Relational Dynamics:</strong> Women's experience of partner support, respect, and
+    communication — from laughing together to comfort voicing disagreement. Tracks frequency shifts
+    (Always/Frequently vs Rarely/Never) from baseline to endline, plus relational equality and
+    GJJ community support agreement.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Frequency (BL)', 'Frequency (EL)', 'Always/Frequently vs Rarely/Never',
+                       'Difference', 'Relational Equality'])
+
+    # Short labels for axis readability
+    def _shorten_rel(df):
+        out = df.copy()
+        out['Statement'] = out['Statement'].apply(lambda s: _short_label(s, 50))
+        return out
+
+    # --- Baseline frequency ---
+    _section_header('', 'Relational Frequency — Baseline', 'Relational')
+    freq_cols = ['Always', 'Frequently', 'Sometimes', 'Rarely', 'Never']
+    freq_colors = ['#1B5E20', '#43A047', '#FDD835', '#EF9A9A', '#C62828']
+    st.plotly_chart(
+        _gjj_stacked_bar(_shorten_rel(g['rel_baseline_freq']), 'Statement',
+                         freq_cols, freq_colors,
+                         'Relational Circumstances — Baseline Frequency', height=450),
+        use_container_width=True)
+
+    # --- Endline frequency ---
+    _section_header('', 'Relational Frequency — Endline', 'Relational')
+    st.plotly_chart(
+        _gjj_stacked_bar(_shorten_rel(g['rel_endline_freq']), 'Statement',
+                         freq_cols, freq_colors,
+                         'Relational Circumstances — Endline Frequency', height=450),
+        use_container_width=True)
+
+    # --- Always/Frequently vs Rarely/Never ---
+    st.markdown("---")
+    _section_header('', 'Always/Frequently vs Rarely/Never', 'Relational')
+    af_rn = g['rel_af_rn'].copy()
+    af_rn['Statement'] = af_rn['Statement'].apply(lambda s: _short_label(s, 50))
+
+    # Build two side-by-side comparison charts
+    c1, c2 = st.columns(2)
+    with c1:
+        af_df = af_rn[['Statement', 'AF_Baseline', 'AF_Endline']].rename(
+            columns={'AF_Baseline': 'Baseline', 'AF_Endline': 'Endline'})
+        st.plotly_chart(_gjj_bar(af_df, 'Statement', 'Always / Frequently',
+                                 height=450, orientation='h'), use_container_width=True)
+    with c2:
+        rn_df = af_rn[['Statement', 'RN_Baseline', 'RN_Endline']].rename(
+            columns={'RN_Baseline': 'Baseline', 'RN_Endline': 'Endline'})
+        st.plotly_chart(_gjj_bar(rn_df, 'Statement', 'Rarely / Never',
+                                 height=450, orientation='h'), use_container_width=True)
+
+    # --- Difference chart ---
+    st.markdown("---")
+    _section_header('', 'Difference: Always/Frequently Change (pp)', 'Relational')
+    dif_df = af_rn[['Statement', 'DIF_AF']].copy()
+    dif_df['DIF_AF'] = pd.to_numeric(dif_df['DIF_AF'], errors='coerce').fillna(0) * 100
+    dif_df = dif_df.sort_values('DIF_AF')
+    colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in dif_df['DIF_AF']]
+    fig_dif = go.Figure()
+    fig_dif.add_trace(go.Bar(y=dif_df['Statement'], x=dif_df['DIF_AF'], orientation='h',
+                             marker_color=colors,
+                             text=dif_df['DIF_AF'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
+    fig_dif.update_layout(title='Change in Always/Frequently (Baseline to Endline)', height=400,
+                          xaxis_title='Change (pp)', yaxis=dict(categoryorder='trace'),
+                          font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                          plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                          margin=dict(l=20, r=20, t=60, b=20))
+    st.plotly_chart(fig_dif, use_container_width=True)
+
+    # --- Relational equality agreement statements ---
+    st.markdown("---")
+    _section_header('', 'Relational Equality Statements', 'Relational')
+    likert_cols = ['Strongly agree', 'Agree', 'Disagree', 'Strongly disagree']
+    likert_colors = ['#2E7D32', '#81C784', '#EF9A9A', '#C62828']
+
+    c3, c4 = st.columns(2)
+    with c3:
+        bl_agr = g['rel_agree_baseline'].copy()
+        bl_agr['Statement'] = bl_agr['Statement'].apply(lambda s: _short_label(s, 45))
+        st.plotly_chart(
+            _gjj_stacked_bar(bl_agr, 'Statement', likert_cols, likert_colors,
+                             'Relational Equality — Baseline', height=280),
+            use_container_width=True)
+    with c4:
+        el_agr = g['rel_agree_endline'].copy()
+        el_agr['Statement'] = el_agr['Statement'].apply(lambda s: _short_label(s, 45))
+        st.plotly_chart(
+            _gjj_stacked_bar(el_agr, 'Statement', likert_cols, likert_colors,
+                             'Relational Equality — Endline', height=280),
+            use_container_width=True)
+
+    # Agreement summary
+    _section_header('', 'Agreement vs Disagreement Summary', 'Relational')
+    summ = g['rel_agreement_summary'].copy()
+    summ['Statement'] = summ['Statement'].apply(lambda s: _short_label(s, 50))
+    summ_plot = summ.rename(columns={'Agreement_BL': 'Agree BL', 'Agreement_EL': 'Agree EL',
+                                     'Disagreement_BL': 'Disagree BL', 'Disagreement_EL': 'Disagree EL'})
+    st.plotly_chart(
+        _gjj_stacked_bar(summ_plot, 'Statement',
+                         ['Agree BL', 'Agree EL', 'Disagree BL', 'Disagree EL'],
+                         ['#5B8DB8', '#2E7D32', '#EF9A9A', '#C62828'],
+                         'Agreement vs Disagreement (Baseline & Endline)', height=280),
+        use_container_width=True)
+
+
+# ---- Tab 3: Gender Transformation — Shared Responsibility ----
+def render_gjj_tab3(g):
+    """GJJ KAP Women — Tab 3: Shared Responsibility (Household Chores)."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Shared Responsibility — Gender Transformation:</strong> Tracks husbands' support with
+    traditionally female household chores, how long the support has been provided, frequency,
+    types of chores completed, hours saved for women, and frequency of husbands enabling women
+    time for rest, conservation work, or business.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Chore Support', 'Duration & Frequency', 'Chore Types',
+                       'Hours Saved', 'Women Self-Time'])
+
+    # --- KPIs ---
+    yes_bl = g['shared_chores_yn'].loc[g['shared_chores_yn']['Response'] == 'Yes', 'Baseline'].values
+    yes_el = g['shared_chores_yn'].loc[g['shared_chores_yn']['Response'] == 'Yes', 'Endline'].values
+    yes_bl = float(yes_bl[0]) if len(yes_bl) > 0 else 0
+    yes_el = float(yes_el[0]) if len(yes_el) > 0 else 0
+    chg = (yes_el - yes_bl) * 100
+
+    disc_yes_bl = g['chore_discussed'].loc[g['chore_discussed']['Response'] == 'Yes', 'Baseline'].values
+    disc_yes_el = g['chore_discussed'].loc[g['chore_discussed']['Response'] == 'Yes', 'Endline'].values
+    disc_bl = float(disc_yes_bl[0]) if len(disc_yes_bl) > 0 else 0
+    disc_el = float(disc_yes_el[0]) if len(disc_yes_el) > 0 else 0
+    disc_chg = (disc_el - disc_bl) * 100
+
+    comp_yes_bl = g['chore_completed'].loc[g['chore_completed']['Response'] == 'Yes', 'Baseline'].values
+    comp_yes_el = g['chore_completed'].loc[g['chore_completed']['Response'] == 'Yes', 'Endline'].values
+    comp_bl = float(comp_yes_bl[0]) if len(comp_yes_bl) > 0 else 0
+    comp_el = float(comp_yes_el[0]) if len(comp_yes_el) > 0 else 0
+    comp_chg = (comp_el - comp_bl) * 100
+
+    kc1, kc2, kc3 = st.columns(3)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>Husband Supports Chores</h3>
+        <div class="value">{yes_el*100:.1f}%</div>
+        <div class="delta-{'positive' if chg>=0 else 'negative'}">{chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>Discussed Sharing Chores</h3>
+        <div class="value">{disc_el*100:.1f}%</div>
+        <div class="delta-{'positive' if disc_chg>=0 else 'negative'}">{disc_chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+    kc3.markdown(f"""<div class="kpi-card">
+        <h3>Completed Significant Chore</h3>
+        <div class="value">{comp_el*100:.1f}%</div>
+        <div class="delta-{'positive' if comp_chg>=0 else 'negative'}">{comp_chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Husband supports chores Y/N ---
+    _section_header('', 'Husband Supports Household Chores', 'Shared Responsibility')
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(_gjj_bar(g['shared_chores_yn'], 'Response',
+                                 'Husband Supports Chores (Yes/No)', height=300),
+                        use_container_width=True)
+    with c2:
+        st.plotly_chart(_gjj_bar(g['chore_discussed'], 'Response',
+                                 'Discussed Sharing Unpaid Chores', height=300),
+                        use_container_width=True)
+
+    # --- Duration & Frequency ---
+    st.markdown("---")
+    _section_header('', 'Duration & Frequency of Support', 'Shared Responsibility')
+    c3, c4 = st.columns(2)
+    with c3:
+        st.plotly_chart(_gjj_bar(g['chore_duration'], 'Category',
+                                 'Time Since Husband Supporting Chores',
+                                 height=400, orientation='h'), use_container_width=True)
+    with c4:
+        st.plotly_chart(_gjj_bar(g['chore_frequency'], 'Category',
+                                 'Frequency Husbands Carry Out Chores',
+                                 height=400, orientation='h'), use_container_width=True)
+
+    # --- Who started conversation + completed chore ---
+    st.markdown("---")
+    c5, c6 = st.columns(2)
+    with c5:
+        st.plotly_chart(_gjj_bar(g['chore_initiator'], 'Person',
+                                 'Person Who Started Conversation', height=300),
+                        use_container_width=True)
+    with c6:
+        st.plotly_chart(_gjj_bar(g['chore_completed'], 'Response',
+                                 'Husband Completed Significant Chore', height=300),
+                        use_container_width=True)
+
+    # --- Chore types ---
+    st.markdown("---")
+    _section_header('', 'Types of Chores Completed by Husband', 'Shared Responsibility')
+    st.plotly_chart(_gjj_bar(g['chore_type'], 'Chore',
+                             'Type of Household Chore Completed', height=350, orientation='h'),
+                    use_container_width=True)
+
+    # Change in chore types
+    st.plotly_chart(_gjj_delta_bar(g['chore_type'], 'Chore',
+                                   'Change in Chore Types (Baseline to Endline)', height=300),
+                    use_container_width=True)
+
+    # --- Hours saved ---
+    st.markdown("---")
+    _section_header('', 'Hours Saved for Women', 'Shared Responsibility')
+    st.plotly_chart(_gjj_bar(g['hours_saved'], 'Hours',
+                             'Hours Saved Due to Husband Support', height=380),
+                    use_container_width=True)
+
+    # --- Husband support for women self-time ---
+    st.markdown("---")
+    _section_header('', 'Women Self-Time Support', 'Shared Responsibility')
+    st.plotly_chart(_gjj_bar(g['support_self_time'], 'Category',
+                             'Husband Supports Women Taking Time for Themselves',
+                             height=380), use_container_width=True)
+
+
+# ---- Tab 4: Shared Power & Decision-Making ----
+def render_gjj_tab4(g):
+    """GJJ KAP Women — Tab 4: Shared Power & Decision-Making."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Shared Power — Decision-Making:</strong> Household conversations about decision-making,
+    types of important decisions taken in the past 6 months, who made them (husband alone, joint,
+    wife alone), and whether women report having an equal say in joint decisions.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Decision Conversations', 'Decision Types', 'Who Decides', 'Equal Say'])
+
+    # --- KPIs ---
+    conv_yes_bl = g['decision_conversations'].loc[
+        g['decision_conversations']['Response'] == 'Yes', 'Baseline'].values
+    conv_yes_el = g['decision_conversations'].loc[
+        g['decision_conversations']['Response'] == 'Yes', 'Endline'].values
+    conv_bl = float(conv_yes_bl[0]) if len(conv_yes_bl) > 0 else 0
+    conv_el = float(conv_yes_el[0]) if len(conv_yes_el) > 0 else 0
+
+    joint_bl = g['decision_maker'].loc[g['decision_maker']['Person'] == 'Joint', 'Baseline'].values
+    joint_el = g['decision_maker'].loc[g['decision_maker']['Person'] == 'Joint', 'Endline'].values
+    jt_bl = float(joint_bl[0]) if len(joint_bl) > 0 else 0
+    jt_el = float(joint_el[0]) if len(joint_el) > 0 else 0
+
+    eq_yes_bl = g['equal_say'].loc[g['equal_say']['Response'] == 'Yes', 'Baseline'].values
+    eq_yes_el = g['equal_say'].loc[g['equal_say']['Response'] == 'Yes', 'Endline'].values
+    eq_bl = float(eq_yes_bl[0]) if len(eq_yes_bl) > 0 else 0
+    eq_el = float(eq_yes_el[0]) if len(eq_yes_el) > 0 else 0
+
+    kc1, kc2, kc3 = st.columns(3)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>Decision Conversations</h3>
+        <div class="value">{conv_el*100:.1f}%</div>
+        <div class="delta-{'positive' if conv_el>=conv_bl else 'negative'}">{(conv_el-conv_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>Joint Decision-Making</h3>
+        <div class="value">{jt_el*100:.1f}%</div>
+        <div class="delta-{'positive' if jt_el>=jt_bl else 'negative'}">{(jt_el-jt_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+    kc3.markdown(f"""<div class="kpi-card">
+        <h3>Women Equal Say</h3>
+        <div class="value">{eq_el*100:.1f}%</div>
+        <div class="delta-{'positive' if eq_el>=eq_bl else 'negative'}">{(eq_el-eq_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Decision conversations & decisions made ---
+    _section_header('', 'Decision Conversations & Decisions Made', 'Shared Power')
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(_gjj_bar(g['decision_conversations'], 'Response',
+                                 'Conversations to Change Decision-Making', height=300),
+                        use_container_width=True)
+    with c2:
+        st.plotly_chart(_gjj_bar(g['decisions_made'], 'Response',
+                                 'Made Important Decisions (Past 6 Months)', height=300),
+                        use_container_width=True)
+
+    # --- Types of decisions ---
+    st.markdown("---")
+    _section_header('', 'Types of Decisions Taken', 'Shared Power')
+    st.plotly_chart(_gjj_bar(g['decision_types'], 'Decision',
+                             'Type of Decision Taken (Past 6 Months)',
+                             height=500, orientation='h'), use_container_width=True)
+
+    st.plotly_chart(_gjj_delta_bar(g['decision_types'], 'Decision',
+                                   'Change in Decision Types (Baseline to Endline)',
+                                   height=450), use_container_width=True)
+
+    # --- Who makes decisions ---
+    st.markdown("---")
+    _section_header('', 'Who Makes Decisions', 'Shared Power')
+    st.plotly_chart(_gjj_bar(g['decision_maker'], 'Person',
+                             'Person Making the Decision', height=300),
+                    use_container_width=True)
+
+    # --- Equal say ---
+    st.markdown("---")
+    _section_header('', 'Equal Say in Joint Decisions', 'Shared Power')
+    st.plotly_chart(_gjj_bar(g['equal_say'], 'Response',
+                             'Women Reporting Equal Say in Joint Decisions', height=300),
+                    use_container_width=True)
+
+
+# ---- Tab 5: Autonomy & Leadership Support ----
+def render_gjj_tab5(g):
+    """GJJ KAP Women — Tab 5: Autonomy & Leadership."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Autonomy &amp; Leadership:</strong> Whether women hide money to save, and the degree to
+    which husbands would support women becoming community leaders or starting/growing their own
+    businesses. Tracks shifts from baseline to endline across a 6-point certainty scale (Definitely
+    to Definitely Not).
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Hiding Money', 'Leadership Support', 'Business Support'])
+
+    # --- KPIs: Definitely support leadership + Definitely support business ---
+    lead_def_bl = g['support_leader'].loc[
+        g['support_leader']['Category'].str.strip().str.lower() == 'definitely', 'Baseline'].values
+    lead_def_el = g['support_leader'].loc[
+        g['support_leader']['Category'].str.strip().str.lower() == 'definitely', 'Endline'].values
+    l_bl = float(lead_def_bl[0]) if len(lead_def_bl) > 0 else 0
+    l_el = float(lead_def_el[0]) if len(lead_def_el) > 0 else 0
+
+    biz_def_bl = g['support_business'].loc[
+        g['support_business']['Category'].str.strip().str.lower() == 'definitely', 'Baseline'].values
+    biz_def_el = g['support_business'].loc[
+        g['support_business']['Category'].str.strip().str.lower() == 'definitely', 'Endline'].values
+    b_bl = float(biz_def_bl[0]) if len(biz_def_bl) > 0 else 0
+    b_el = float(biz_def_el[0]) if len(biz_def_el) > 0 else 0
+
+    # Hiding money "Always" — lower is better
+    hide_alw_bl = g['hide_money'].loc[
+        g['hide_money']['Category'].str.strip().str.lower() == 'always', 'Baseline'].values
+    hide_alw_el = g['hide_money'].loc[
+        g['hide_money']['Category'].str.strip().str.lower() == 'always', 'Endline'].values
+    h_bl = float(hide_alw_bl[0]) if len(hide_alw_bl) > 0 else 0
+    h_el = float(hide_alw_el[0]) if len(hide_alw_el) > 0 else 0
+    hide_chg = (h_el - h_bl) * 100
+
+    kc1, kc2, kc3 = st.columns(3)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>Hide Money "Always"</h3>
+        <div class="value">{h_el*100:.1f}%</div>
+        <div class="delta-{'positive' if hide_chg<=0 else 'negative'}">{hide_chg:+.1f}pp (lower = better)</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>Definitely Support Leader</h3>
+        <div class="value">{l_el*100:.1f}%</div>
+        <div class="delta-{'positive' if l_el>=l_bl else 'negative'}">{(l_el-l_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+    kc3.markdown(f"""<div class="kpi-card">
+        <h3>Definitely Support Business</h3>
+        <div class="value">{b_el*100:.1f}%</div>
+        <div class="delta-{'positive' if b_el>=b_bl else 'negative'}">{(b_el-b_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Hiding money ---
+    _section_header('', 'Hiding Money from Husband to Save', 'Autonomy')
+    st.plotly_chart(_gjj_bar(g['hide_money'], 'Category',
+                             'Women Hiding Money (Frequency)', height=380),
+                    use_container_width=True)
+
+    # --- Leadership support ---
+    st.markdown("---")
+    _section_header('', 'Husband Support for Women Becoming Leaders', 'Leadership')
+    st.plotly_chart(_gjj_bar(g['support_leader'], 'Category',
+                             'Support if Wife Wanted to Become Community Leader',
+                             height=380), use_container_width=True)
+    st.plotly_chart(_gjj_delta_bar(g['support_leader'], 'Category',
+                                   'Change in Leadership Support (Baseline to Endline)',
+                                   height=350), use_container_width=True)
+
+    # --- Business support ---
+    st.markdown("---")
+    _section_header('', 'Husband Support for Women Starting/Growing Business', 'Leadership')
+    st.plotly_chart(_gjj_bar(g['support_business'], 'Category',
+                             'Support if Wife Started/Grew Own Business',
+                             height=380), use_container_width=True)
+    st.plotly_chart(_gjj_delta_bar(g['support_business'], 'Category',
+                                   'Change in Business Support (Baseline to Endline)',
+                                   height=350), use_container_width=True)
 
 
 # ============================================================================
@@ -4209,7 +5053,8 @@ def main():
     # Dataset selector
     dataset = st.sidebar.radio(
         "Dataset View",
-        ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey", "Insights"],
+        ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey",
+         "GJJ KAP \u2013 Women (Baseline/Endline)", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
     )
@@ -4267,6 +5112,17 @@ def main():
             <span class="sidebar-nav-link">Social Norms</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "GJJ KAP \u2013 Women (Baseline/Endline)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">SELF: Confidence & Compassion</span>
+            <span class="sidebar-nav-link">Relational Wellbeing</span>
+            <span class="sidebar-nav-link">Shared Responsibility</span>
+            <span class="sidebar-nav-link">Shared Power & Decisions</span>
+            <span class="sidebar-nav-link">Autonomy & Leadership</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -4284,6 +5140,7 @@ def main():
     forestry_path = os.path.join(script_dir, FORESTRY_EXCEL)
     women_path = os.path.join(script_dir, WOMEN_EXCEL)
     men_path = os.path.join(script_dir, MEN_EXCEL)
+    gjj_kap_path = os.path.join(script_dir, GJJ_KAP_WOMEN_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -4446,6 +5303,61 @@ def main():
         with mt5: render_men_tab5(m)
         with mt6: render_men_tab6(m)
 
+    elif dataset == "GJJ KAP \u2013 Women (Baseline/Endline)":
+        st.markdown("""<div class="main-header">
+            <h1>GJJ KAP Women Dashboard</h1>
+            <p>Baseline vs Endline Assessment | Knowledge, Attitudes &amp; Practices — Gender Justice Journey</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">\u203a</span>'
+                    '<span class="active">GJJ KAP \u2013 Women</span></div>', unsafe_allow_html=True)
+
+        gjj = load_gjj_kap_women_data(gjj_kap_path)
+
+        # Sidebar dataset summary
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Survey Type</span>
+                <strong>KAP Women</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Timepoints</span>
+                <strong>Baseline &amp; Endline</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">GJJ KAP Women Excel</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CSV Download
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download GJJ KAP Women Data (CSV)",
+            data=_export_data_csv(gjj, 'gjj_kap_women'),
+            file_name='gjj_kap_women_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        gt1, gt2, gt3, gt4, gt5 = st.tabs([
+            "SELF: Confidence & Compassion",
+            "Relational Wellbeing",
+            "Shared Responsibility",
+            "Shared Power & Decisions",
+            "Autonomy & Leadership"
+        ])
+        with gt1: render_gjj_tab1(gjj)
+        with gt2: render_gjj_tab2(gjj)
+        with gt3: render_gjj_tab3(gjj)
+        with gt4: render_gjj_tab4(gjj)
+        with gt5: render_gjj_tab5(gjj)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
@@ -4497,7 +5409,7 @@ def main():
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups, Women's Survey &amp; Men's Survey | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey, Men's Survey &amp; GJJ KAP Women | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
@@ -4516,11 +5428,13 @@ if __name__ == "__main__":
 # 1. Forest Functionality Basline_midline results.xlsx (sheet: Results)
 # 2. Women Survey Basline_midline results.xlsx (sheet: Results Women)
 # 3. Men Survey Basline_midline results.xlsx (sheet: Results Men)
+# 4. GJJ KAP Women Basline_endline results.xlsx (sheet: Results KAP Women Endline)
 #
 # To adjust data mappings:
 # - load_forestry_data(): row/col positions for forestry indicators
 # - load_women_data(): row/col positions for women survey indicators
 # - load_men_data(): row/col positions for men survey indicators
+# - load_gjj_kap_women_data(): row/col positions for GJJ KAP women indicators
 # - Each uses _val(raw, row_0based, col_0based)
 #
 # To add/remove indicators:
