@@ -1,1 +1,0 @@
-﻿Clear localStorage by opening browser console and running: localStorage.clear(); location.reload();

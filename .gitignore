@@ -39,3 +39,25 @@ Desktop.ini
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Temp analysis/debug scripts
+_*.py
+fix_*.py
+read_excel.py
+
+# Office temp files
+~$*
+
+# Report/history exports
+ReportHistory*
+Book1.csv
+history_*.csv
+
+# Old standalone dashboards (tracked separately)
+eston.html
+donor_report.html
+test_debug.html
+midline.html
+result_dashboard*.html
+solvatten_*.html
+ranking_*.html
