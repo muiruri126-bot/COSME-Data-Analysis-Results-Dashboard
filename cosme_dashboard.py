@@ -1174,14 +1174,14 @@ def load_men_data(filepath):
         'Midline': [_val(raw, 11, 3), _val(raw, 12, 3)],
     })
 
-    # Education level (Excel R12-15 right, _val rows 11-14, cols 11-12)
+    # Education level (Excel R12-15 right, _val rows 11-14, cols 12-13)
     m['education'] = pd.DataFrame({
         'Category': ['College Level or Higher', 'Pre-primary/None/Other',
                      'Primary', 'Secondary/Vocational'],
-        'Baseline': [_val(raw, 11, 11), _val(raw, 12, 11),
-                     _val(raw, 13, 11), _val(raw, 14, 11)],
-        'Midline': [_val(raw, 11, 12), _val(raw, 12, 12),
-                    _val(raw, 13, 12), _val(raw, 14, 12)],
+        'Baseline': [_val(raw, 11, 12), _val(raw, 12, 12),
+                     _val(raw, 13, 12), _val(raw, 14, 12)],
+        'Midline': [_val(raw, 11, 13), _val(raw, 12, 13),
+                    _val(raw, 13, 13), _val(raw, 14, 13)],
     })
 
     # Main HH economic activity (Excel R17-28, _val rows 16-27, labels=col1, BL=col2, ML=col3)
@@ -1221,7 +1221,7 @@ def load_men_data(filepath):
         'Midline': [_val(raw, r, 3) for r in range(47, 59)],
     })
 
-    # CC livelihood effects (Excel R36-48 right, _val rows 35-47, cols 11-12)
+    # CC livelihood effects (Excel R36-48 right, _val rows 35-47, cols 12-13)
     cc_live_labels = ['Increased Food Insecurity', 'Increased Water Insecurity',
                       'Personal Risk from Extremes', 'Forced Migration (Disaster)',
                       'Changes in Livelihood Activities', 'Reduced Livelihood Activities',
@@ -1230,8 +1230,8 @@ def load_men_data(filepath):
                       'Loss of Savings/Assets', "I Don't Know"]
     m['cc_livelihood_effects'] = pd.DataFrame({
         'Effect': cc_live_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(35, 48)],
-        'Midline': [_val(raw, r, 12) for r in range(35, 48)],
+        'Baseline': [_val(raw, r, 12) for r in range(35, 48)],
+        'Midline': [_val(raw, r, 13) for r in range(35, 48)],
     })
 
     # NbS heard (Excel R63-64, _val rows 62-63, col 2-3)
@@ -1241,12 +1241,12 @@ def load_men_data(filepath):
         'Midline': [_val(raw, 62, 3), _val(raw, 63, 3)],
     })
 
-    # NbS define (Excel R52-55 right, _val rows 51-54, cols 11-12)
+    # NbS define (Excel R52-55 right, _val rows 51-54, cols 12-13)
     m['nbs_define'] = pd.DataFrame({
         'Response': ['Completely Acceptable', 'Somewhat Acceptable',
                      'Not Acceptable', "Doesn't Know/Answer"],
-        'Baseline': [_val(raw, r, 11) for r in range(51, 55)],
-        'Midline': [_val(raw, r, 12) for r in range(51, 55)],
+        'Baseline': [_val(raw, r, 12) for r in range(51, 55)],
+        'Midline': [_val(raw, r, 13) for r in range(51, 55)],
     })
 
     # NbS examples cited (Excel R68-75, _val rows 67-74, col 2-3)
@@ -1261,7 +1261,7 @@ def load_men_data(filepath):
         'Midline': [_val(raw, r, 3) for r in range(67, 75)],
     })
 
-    # NbS benefits (Excel R59-70 right, _val rows 58-69, cols 11-12)
+    # NbS benefits (Excel R59-70 right, _val rows 58-69, cols 12-13)
     nbs_ben_labels = ['Carbon Capture', 'Reduce Storm Surges/Flooding',
                       'Defense Against Salination', 'Improve Air Quality',
                       'Water Conservation', 'Soil Health & Fertility',
@@ -1271,8 +1271,8 @@ def load_men_data(filepath):
                       'Improved/Diversified Livelihoods', "I Don't Know"]
     m['nbs_benefits'] = pd.DataFrame({
         'Benefit': nbs_ben_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(58, 70)],
-        'Midline': [_val(raw, r, 12) for r in range(58, 70)],
+        'Baseline': [_val(raw, r, 12) for r in range(58, 70)],
+        'Midline': [_val(raw, r, 13) for r in range(58, 70)],
     })
 
     # ---- B1. MANGROVE RESTORATION ----
@@ -1282,11 +1282,11 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, 80, 2), _val(raw, 81, 2), _val(raw, 82, 2)],
         'Midline': [_val(raw, 80, 3), _val(raw, 81, 3), _val(raw, 82, 3)],
     })
-    # Female HH ever participated (Excel R81-82 right, _val rows 80-81, cols 11-12)
+    # Female HH ever participated (Excel R81-82 right, _val rows 80-81, cols 12-13)
     m['mangrove_ever'] = pd.DataFrame({
         'Response': ['Yes', 'No'],
-        'Baseline': [_val(raw, 80, 11), _val(raw, 81, 11)],
-        'Midline': [_val(raw, 80, 12), _val(raw, 81, 12)],
+        'Baseline': [_val(raw, 80, 12), _val(raw, 81, 12)],
+        'Midline': [_val(raw, 80, 13), _val(raw, 81, 13)],
     })
     # Female HH currently involved (Excel R87-88, _val rows 86-87, col 2-3)
     m['mangrove_current'] = pd.DataFrame({
@@ -1294,11 +1294,11 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, 86, 2), _val(raw, 87, 2)],
         'Midline': [_val(raw, 86, 3), _val(raw, 87, 3)],
     })
-    # Men supporting (Excel R86-88 right, _val rows 85-87, cols 11-12)
+    # Men supporting (Excel R86-88 right, _val rows 85-87, cols 12-13)
     m['mangrove_support'] = pd.DataFrame({
         'Response': ['Yes', 'No', 'Somehow'],
-        'Baseline': [_val(raw, 85, 11), _val(raw, 86, 11), _val(raw, 87, 11)],
-        'Midline': [_val(raw, 85, 12), _val(raw, 86, 12), _val(raw, 87, 12)],
+        'Baseline': [_val(raw, 85, 12), _val(raw, 86, 12), _val(raw, 87, 12)],
+        'Midline': [_val(raw, 85, 13), _val(raw, 86, 13), _val(raw, 87, 13)],
     })
     # Type of support (Excel R92-98, _val rows 91-97, col 2-3)
     support_labels = ['Encouraged Participation', 'Sought Community Support',
@@ -1318,8 +1318,8 @@ def load_men_data(filepath):
     })
     m['seaweed_ever'] = pd.DataFrame({
         'Response': ['Yes', 'No'],
-        'Baseline': [_val(raw, 103, 11), _val(raw, 104, 11)],
-        'Midline': [_val(raw, 103, 12), _val(raw, 104, 12)],
+        'Baseline': [_val(raw, 103, 12), _val(raw, 104, 12)],
+        'Midline': [_val(raw, 103, 13), _val(raw, 104, 13)],
     })
     m['seaweed_current'] = pd.DataFrame({
         'Response': ['Yes', 'No'],
@@ -1328,8 +1328,8 @@ def load_men_data(filepath):
     })
     m['seaweed_support'] = pd.DataFrame({
         'Response': ['Yes', 'No', 'Somehow'],
-        'Baseline': [_val(raw, 108, 11), _val(raw, 109, 11), _val(raw, 110, 11)],
-        'Midline': [_val(raw, 108, 12), _val(raw, 109, 12), _val(raw, 110, 12)],
+        'Baseline': [_val(raw, 108, 12), _val(raw, 109, 12), _val(raw, 110, 12)],
+        'Midline': [_val(raw, 108, 13), _val(raw, 109, 13), _val(raw, 110, 13)],
     })
     m['seaweed_support_type'] = pd.DataFrame({
         'Type': support_labels,
@@ -1345,8 +1345,8 @@ def load_men_data(filepath):
     })
     m['forest_ever'] = pd.DataFrame({
         'Response': ['Yes', 'No'],
-        'Baseline': [_val(raw, 126, 11), _val(raw, 127, 11)],
-        'Midline': [_val(raw, 126, 12), _val(raw, 127, 12)],
+        'Baseline': [_val(raw, 126, 12), _val(raw, 127, 12)],
+        'Midline': [_val(raw, 126, 13), _val(raw, 127, 13)],
     })
     m['forest_current'] = pd.DataFrame({
         'Response': ['Yes', 'No'],
@@ -1355,8 +1355,8 @@ def load_men_data(filepath):
     })
     m['forest_support'] = pd.DataFrame({
         'Response': ['Yes', 'No', 'Somehow'],
-        'Baseline': [_val(raw, 132, 11), _val(raw, 133, 11), _val(raw, 134, 11)],
-        'Midline': [_val(raw, 132, 12), _val(raw, 133, 12), _val(raw, 134, 12)],
+        'Baseline': [_val(raw, 132, 12), _val(raw, 133, 12), _val(raw, 134, 12)],
+        'Midline': [_val(raw, 132, 13), _val(raw, 133, 13), _val(raw, 134, 13)],
     })
     m['forest_support_type'] = pd.DataFrame({
         'Type': support_labels,
@@ -1376,17 +1376,17 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, r, 2) for r in range(151, 161)],
         'Midline': [_val(raw, r, 3) for r in range(151, 161)],
     })
-    # Roles SHOULD — Women only (Excel R152-161 right, _val rows 151-160, cols 11-12)
+    # Roles SHOULD — Women only (Excel R152-161 right, _val rows 151-160, cols 12-13)
     m['roles_should_women'] = pd.DataFrame({
         'Role': role_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(151, 161)],
-        'Midline': [_val(raw, r, 12) for r in range(151, 161)],
+        'Baseline': [_val(raw, r, 12) for r in range(151, 161)],
+        'Midline': [_val(raw, r, 13) for r in range(151, 161)],
     })
-    # Roles SHOULD — Men only (Excel R152-161 right, _val rows 151-160, cols 13-14)
+    # Roles SHOULD — Men only (Excel R152-161 right, _val rows 151-160, cols 14-15)
     m['roles_should_men'] = pd.DataFrame({
         'Role': role_labels,
-        'Baseline': [_val(raw, r, 13) for r in range(151, 161)],
-        'Midline': [_val(raw, r, 14) for r in range(151, 161)],
+        'Baseline': [_val(raw, r, 14) for r in range(151, 161)],
+        'Midline': [_val(raw, r, 15) for r in range(151, 161)],
     })
 
     # Roles DOES — Joint % (Excel R166-175, _val rows 165-174, col 2-3)
@@ -1395,17 +1395,17 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, r, 2) for r in range(165, 175)],
         'Midline': [_val(raw, r, 3) for r in range(165, 175)],
     })
-    # Roles DOES — Men(Myself) (Excel R166-175 right, _val rows 165-174, cols 11-12)
+    # Roles DOES — Men(Myself) (Excel R166-175 right, _val rows 165-174, cols 12-13)
     m['roles_does_men'] = pd.DataFrame({
         'Role': role_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(165, 175)],
-        'Midline': [_val(raw, r, 12) for r in range(165, 175)],
+        'Baseline': [_val(raw, r, 12) for r in range(165, 175)],
+        'Midline': [_val(raw, r, 13) for r in range(165, 175)],
     })
-    # Roles DOES — Women(MySpouse) (Excel R166-175 right, _val rows 165-174, cols 13-14)
+    # Roles DOES — Women(MySpouse) (Excel R166-175 right, _val rows 165-174, cols 14-15)
     m['roles_does_women'] = pd.DataFrame({
         'Role': role_labels,
-        'Baseline': [_val(raw, r, 13) for r in range(165, 175)],
-        'Midline': [_val(raw, r, 14) for r in range(165, 175)],
+        'Baseline': [_val(raw, r, 14) for r in range(165, 175)],
+        'Midline': [_val(raw, r, 15) for r in range(165, 175)],
     })
 
     # Time use (hours per day)
@@ -1468,17 +1468,17 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, r, 2) for r in range(217, 228)],
         'Midline': [_val(raw, r, 3) for r in range(217, 228)],
     })
-    # Decision SHOULD — Women only (Excel R219-229 right, _val rows 218-228, cols 11-12)
+    # Decision SHOULD — Women only (Excel R219-229 right, _val rows 218-228, cols 12-13)
     m['decision_should_women'] = pd.DataFrame({
         'Decision': decision_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(218, 229)],
-        'Midline': [_val(raw, r, 12) for r in range(218, 229)],
+        'Baseline': [_val(raw, r, 12) for r in range(218, 229)],
+        'Midline': [_val(raw, r, 13) for r in range(218, 229)],
     })
-    # Decision SHOULD — Men only (Excel R219-229 right, _val rows 218-228, cols 13-14)
+    # Decision SHOULD — Men only (Excel R219-229 right, _val rows 218-228, cols 14-15)
     m['decision_should_men'] = pd.DataFrame({
         'Decision': decision_labels,
-        'Baseline': [_val(raw, r, 13) for r in range(218, 229)],
-        'Midline': [_val(raw, r, 14) for r in range(218, 229)],
+        'Baseline': [_val(raw, r, 14) for r in range(218, 229)],
+        'Midline': [_val(raw, r, 15) for r in range(218, 229)],
     })
 
     # Decision DOES — Joint (Excel R234-244, _val rows 233-243, col 2-3)
@@ -1487,17 +1487,17 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, r, 2) for r in range(233, 244)],
         'Midline': [_val(raw, r, 3) for r in range(233, 244)],
     })
-    # Decision DOES — Men(Myself) (Excel R234-244 right, _val rows 233-243, cols 11-12)
+    # Decision DOES — Men(Myself) (Excel R234-244 right, _val rows 233-243, cols 12-13)
     m['decision_does_men'] = pd.DataFrame({
         'Decision': decision_labels,
-        'Baseline': [_val(raw, r, 11) for r in range(233, 244)],
-        'Midline': [_val(raw, r, 12) for r in range(233, 244)],
+        'Baseline': [_val(raw, r, 12) for r in range(233, 244)],
+        'Midline': [_val(raw, r, 13) for r in range(233, 244)],
     })
-    # Decision DOES — Women(MySpouse) (Excel R234-244 right, _val rows 233-243, cols 13-14)
+    # Decision DOES — Women(MySpouse) (Excel R234-244 right, _val rows 233-243, cols 14-15)
     m['decision_does_women'] = pd.DataFrame({
         'Decision': decision_labels,
-        'Baseline': [_val(raw, r, 13) for r in range(233, 244)],
-        'Midline': [_val(raw, r, 14) for r in range(233, 244)],
+        'Baseline': [_val(raw, r, 14) for r in range(233, 244)],
+        'Midline': [_val(raw, r, 15) for r in range(233, 244)],
     })
 
     # ---- E. SOCIAL NORMS ----
@@ -1518,11 +1518,11 @@ def load_men_data(filepath):
         'Baseline': [_val(raw, r, 2) for r in sn_rows],
         'Midline': [_val(raw, r, 3) for r in sn_rows],
     })
-    # Strongly Agree only (Excel R251-263 right, _val rows 250-262, cols 11-12)
+    # Strongly Agree only (Excel R251-263 right, _val rows 250-262, cols 12-13)
     m['socialnorms_strong'] = pd.DataFrame({
         'Norm': sn_labels,
-        'Baseline': [_val(raw, r, 11) for r in sn_rows],
-        'Midline': [_val(raw, r, 12) for r in sn_rows],
+        'Baseline': [_val(raw, r, 12) for r in sn_rows],
+        'Midline': [_val(raw, r, 13) for r in sn_rows],
     })
 
     return m
@@ -1554,9 +1554,12 @@ def make_comparison_bar(df, cat_col, title, y_label="Percentage (%)",
     cb = color_baseline or COLORS["baseline"]
     cm = color_midline or COLORS["midline"]
     plot_df = df.copy()
+    # Ensure numeric — handles NaN from non-numeric Excel cells
+    for col in ['Baseline', 'Midline']:
+        plot_df[col] = pd.to_numeric(plot_df[col], errors='coerce').fillna(0)
     if multiply:
-        plot_df['Baseline'] = plot_df['Baseline'].apply(lambda x: x*100 if isinstance(x,(int,float)) else 0)
-        plot_df['Midline'] = plot_df['Midline'].apply(lambda x: x*100 if isinstance(x,(int,float)) else 0)
+        plot_df['Baseline'] = plot_df['Baseline'] * 100
+        plot_df['Midline'] = plot_df['Midline'] * 100
     if orientation == 'h':
         # Sort so longest bars appear at top (Plotly renders bottom-to-top)
         plot_df['_sort'] = plot_df[['Baseline', 'Midline']].max(axis=1)
@@ -1595,7 +1598,7 @@ def make_stacked_bar(df, cat_col, columns, colors_list, title,
     plot_df = df.copy()
     if multiply:
         for c in columns:
-            plot_df[c] = plot_df[c].apply(lambda x: x*100 if isinstance(x,(int,float)) else 0)
+            plot_df[c] = pd.to_numeric(plot_df[c], errors='coerce').fillna(0) * 100
     fig = go.Figure()
     for col, color in zip(columns, colors_list):
         label = col.replace('Baseline_','').replace('Midline_','')
@@ -1621,6 +1624,8 @@ def make_stacked_bar(df, cat_col, columns, colors_list, title,
 
 def make_delta_bar(df, cat_col, title, multiply=True, height=400):
     plot_df = df.copy()
+    for col in ['Baseline', 'Midline']:
+        plot_df[col] = pd.to_numeric(plot_df[col], errors='coerce').fillna(0)
     factor = 100 if multiply else 1
     plot_df['Change'] = (plot_df['Midline'] - plot_df['Baseline']) * factor
     plot_df = plot_df.sort_values('Change')
@@ -1640,6 +1645,12 @@ def make_delta_bar(df, cat_col, title, multiply=True, height=400):
 
 def make_two_col_bar(df1, df2, col1_name, col2_name, cat_col, title, height=450):
     """Side-by-side comparison of two related dataframes (e.g., norms vs experience)."""
+    # Ensure numeric values — guard against text leaking in from Excel parsing
+    df1 = df1.copy()
+    df2 = df2.copy()
+    for col in ['Baseline', 'Midline']:
+        df1[col] = pd.to_numeric(df1[col], errors='coerce').fillna(0)
+        df2[col] = pd.to_numeric(df2[col], errors='coerce').fillna(0)
     # Sort so longest bars appear at top (Plotly renders bottom-to-top)
     sort_vals = (df1[['Baseline','Midline']].max(axis=1)*100 + df2[['Baseline','Midline']].max(axis=1)*100) / 2
     sort_order = sort_vals.sort_values(ascending=True).index
@@ -3094,11 +3105,96 @@ def _gen_women_insights_inner(w, insights):
     return insights
 
 
-def _generate_cross_cutting_insights(f_data, w_data):
+def _generate_men_insights(m):
+    """Generate automated insights from men survey data."""
+    insights = []
+    try:
+        _gen_men_insights_inner(m, insights)
+    except Exception as e:
+        insights.append(("Men Survey Insight Note",
+                         f"Some men survey insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
+def _gen_men_insights_inner(m, insights):
+    # 1. Climate change awareness
+    cc = m['cc_heard']
+    cc_yes_bl = cc.loc[cc['Response'] == 'Yes', 'Baseline'].values[0]
+    cc_yes_ml = cc.loc[cc['Response'] == 'Yes', 'Midline'].values[0]
+    cc_change = _pp(cc_yes_bl, cc_yes_ml)
+    insights.append(("Men's CC Awareness",
+                     f"Men who have heard of climate change: "
+                     f"{cc_yes_bl*100:.1f}% (BL) to {cc_yes_ml*100:.1f}% (ML) ({cc_change:+.1f} pp). "
+                     f"{'Awareness is growing among men.' if cc_change > 0 else 'Additional outreach to men on climate literacy is needed.'}",
+                     "positive" if cc_change > 0 else "warning"))
+
+    # 2. NbS awareness
+    nbs = m['nbs_heard']
+    nbs_yes_bl = nbs.loc[nbs['Response'] == 'Yes', 'Baseline'].values[0]
+    nbs_yes_ml = nbs.loc[nbs['Response'] == 'Yes', 'Midline'].values[0]
+    nbs_change = _pp(nbs_yes_bl, nbs_yes_ml)
+    insights.append(("Men's NbS Awareness",
+                     f"Men aware of NbS: {nbs_yes_bl*100:.1f}% (BL) to {nbs_yes_ml*100:.1f}% (ML) "
+                     f"({nbs_change:+.1f} pp). "
+                     f"{'NbS concepts are reaching more men.' if nbs_change > 0 else 'NbS messaging to men needs strengthening.'}",
+                     "positive" if nbs_change > 0 else "warning"))
+
+    # 3. Support for women in NbS — mangrove & forest
+    man_sup = m['mangrove_support']
+    ms_yes_bl = man_sup.loc[man_sup['Response'] == 'Yes', 'Baseline'].values[0]
+    ms_yes_ml = man_sup.loc[man_sup['Response'] == 'Yes', 'Midline'].values[0]
+    ms_change = _pp(ms_yes_bl, ms_yes_ml)
+    insights.append(("Support for Women in Mangrove",
+                     f"Men supporting women in mangrove restoration: "
+                     f"{ms_yes_bl*100:.1f}% (BL) to {ms_yes_ml*100:.1f}% (ML) ({ms_change:+.1f} pp). "
+                     f"{'Male allyship is growing.' if ms_change > 0 else 'Engagement of men as allies needs strengthening.'}",
+                     "positive" if ms_change > 0 else "warning"))
+
+    # 4. Social norms — harmful norms (lower = better)
+    sn = m['socialnorms_agree']
+    harmful_norms = sn[~sn['Norm'].str.contains('Planting Crops|Restoring Ecosystems|Express Emotions|Supportive|Stronger Women', regex=True)]
+    sn_avg_bl = harmful_norms['Baseline'].mean()
+    sn_avg_ml = harmful_norms['Midline'].mean()
+    sn_change = _pp(sn_avg_bl, sn_avg_ml)
+    trend = "positive" if sn_change < 0 else ("negative" if sn_change > 2 else "neutral")
+    insights.append(("Men's Harmful Social Norms",
+                     f"Average men's agreement with harmful gender norms: "
+                     f"{sn_avg_bl*100:.1f}% (BL) to {sn_avg_ml*100:.1f}% (ML) ({sn_change:+.1f} pp). "
+                     f"{'Positive shift — harmful norms are weakening among men.' if sn_change < 0 else 'Masculine norms remain entrenched; continued engagement is critical.'}",
+                     trend))
+
+    # 5. Joint decision-making (SHOULD)
+    dj = m['decision_should_joint']
+    dj_avg_bl = dj['Baseline'].mean()
+    dj_avg_ml = dj['Midline'].mean()
+    dj_change = _pp(dj_avg_bl, dj_avg_ml)
+    insights.append(("Men's Joint Decision Preference",
+                     f"Average share of men saying decisions SHOULD be joint: "
+                     f"{dj_avg_bl*100:.1f}% (BL) to {dj_avg_ml*100:.1f}% (ML) ({dj_change:+.1f} pp). "
+                     f"{'Men increasingly support joint decision-making.' if dj_change > 0 else 'Shifting men toward shared decision-making needs attention.'}",
+                     "positive" if dj_change > 0 else "neutral"))
+
+    # 6. Time use — men's unpaid care work
+    ts = m['time_summary']
+    unpaid_bl = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Baseline'].values[0]
+    unpaid_ml = ts.loc[ts['Category'] == 'Unpaid Care Work', 'Midline'].values[0]
+    unpaid_diff = round(unpaid_ml - unpaid_bl, 2) if isinstance(unpaid_bl, (int, float)) else 0
+    insights.append(("Men's Unpaid Care Work",
+                     f"Men's average daily unpaid care work: {unpaid_bl:.1f}h (BL) to {unpaid_ml:.1f}h (ML) "
+                     f"({unpaid_diff:+.1f}h change). "
+                     + ("Men are taking on more care responsibilities — a positive shift." if unpaid_diff > 0
+                        else "Men's share of care work remains low; equitable sharing interventions are needed."),
+                     "positive" if unpaid_diff > 0 else "warning"))
+
+    return insights
+
+
+def _generate_cross_cutting_insights(f_data, w_data, m_data=None):
     """Generate insights that span both datasets."""
     insights = []
     try:
-        _gen_cross_cutting_inner(f_data, w_data, insights)
+        _gen_cross_cutting_inner(f_data, w_data, insights, m_data)
     except Exception as e:
         insights.append(("Insight Generation Note",
                          f"Some cross-cutting insights could not be generated: {e}",
@@ -3106,7 +3202,7 @@ def _generate_cross_cutting_insights(f_data, w_data):
     return insights
 
 
-def _gen_cross_cutting_inner(f_data, w_data, insights):
+def _gen_cross_cutting_inner(f_data, w_data, insights, m_data=None):
     # 1. Governance + Empowerment linkage
     fd = f_data['functionality_domain']
     gender_bl = fd.loc[fd['Timepoint'] == 'Baseline', 'Gender'].values[0]
@@ -3164,10 +3260,36 @@ def _gen_cross_cutting_inner(f_data, w_data, insights):
                      f"activities with individual savings programs can strengthen household resilience.",
                      "positive" if ig_yes_ml_pct > 50 and ps_yes_ml > 40 else "neutral"))
 
+    # 5. Men/Women CC awareness comparison (if men data available)
+    if m_data:
+        m_cc = m_data['cc_heard']
+        m_cc_ml = m_cc.loc[m_cc['Response'] == 'Yes', 'Midline'].values[0] * 100
+        w_cc = w_data['cc_heard']
+        w_cc_ml = w_cc.loc[w_cc['Response'] == 'Yes', 'Midline'].values[0] * 100
+        gap = round(m_cc_ml - w_cc_ml, 1)
+        insights.append(("Gender CC Awareness Gap",
+                         f"Men's CC awareness at midline: {m_cc_ml:.1f}%, Women's: {w_cc_ml:.1f}% "
+                         f"(gap: {gap:+.1f} pp). "
+                         + ("Men are more aware — targeted outreach can close the gap for women."
+                            if gap > 2 else ("Women are more aware — men's engagement may need reinforcing."
+                            if gap < -2 else "Awareness is broadly similar across genders.")),
+                         "neutral"))
+
+        # 6. Social norms — men vs women comparison
+        m_sn = m_data['socialnorms_agree']
+        w_sn = w_data['socialnorms_agree']
+        m_sn_avg_ml = m_sn['Midline'].mean() * 100
+        w_sn_avg_ml = w_sn['Midline'].mean() * 100
+        insights.append(("Gendered Norm Perceptions",
+                         f"Average midline agreement with social norms: Men {m_sn_avg_ml:.1f}%, "
+                         f"Women {w_sn_avg_ml:.1f}%. Comparing norms across genders reveals "
+                         f"where shifts are occurring and where further dialogue is needed.",
+                         "neutral"))
+
     return insights
 
 
-def _build_indicator_table(f_data, w_data):
+def _build_indicator_table(f_data, w_data, m_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -3223,6 +3345,37 @@ def _build_indicator_table(f_data, w_data):
                  'Baseline': round(di['Baseline'].mean() * 100, 1),
                  'Midline': round(di['Midline'].mean() * 100, 1)})
 
+    # Men indicators (optional — only if men data provided)
+    if m_data:
+        for label, df_key, resp_col, resp_val in [
+            ('Men CC Awareness', 'cc_heard', 'Response', 'Yes'),
+            ('Men NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
+        ]:
+            df = m_data[df_key]
+            b_m = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0]
+            m_m = df.loc[df[resp_col] == resp_val, 'Midline'].values[0]
+            rows.append({'Indicator': label, 'Dataset': 'Men',
+                         'Baseline': round(b_m * 100, 1), 'Midline': round(m_m * 100, 1)})
+
+        # Mangrove support
+        ms = m_data['mangrove_support']
+        b_ms = ms.loc[ms['Response'] == 'Yes', 'Baseline'].values[0]
+        m_ms = ms.loc[ms['Response'] == 'Yes', 'Midline'].values[0]
+        rows.append({'Indicator': 'Support Women (Mangrove)', 'Dataset': 'Men',
+                     'Baseline': round(b_ms * 100, 1), 'Midline': round(m_ms * 100, 1)})
+
+        # Joint decision preference
+        dj = m_data['decision_should_joint']
+        rows.append({'Indicator': 'Joint Decision (Should)', 'Dataset': 'Men',
+                     'Baseline': round(dj['Baseline'].mean() * 100, 1),
+                     'Midline': round(dj['Midline'].mean() * 100, 1)})
+
+        # Social norms average
+        sn = m_data['socialnorms_agree']
+        rows.append({'Indicator': 'Social Norms (avg agree)', 'Dataset': 'Men',
+                     'Baseline': round(sn['Baseline'].mean() * 100, 1),
+                     'Midline': round(sn['Midline'].mean() * 100, 1)})
+
     return rows
 
 
@@ -3262,24 +3415,26 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data):
-    """Render the Insights tab with automated analysis across both datasets."""
+def render_insights_tab(f_data, w_data, m_data=None):
+    """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
-    trends, changes, and patterns across both the Forestry Conservation Groups and Women's Survey
-    datasets. Insights are automatically derived from Baseline-to-Midline comparisons.
+    trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
+    and Men's Survey datasets. Insights are automatically derived from Baseline-to-Midline comparisons.
     </div>""", unsafe_allow_html=True)
 
     # Summary counters
     f_insights = _generate_forestry_insights(f_data)
     w_insights = _generate_women_insights(w_data)
-    cc_insights = _generate_cross_cutting_insights(f_data, w_data)
+    m_insights = _generate_men_insights(m_data) if m_data else []
+    cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data)
 
-    positive_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "positive")
-    warning_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t in ("warning", "negative"))
-    neutral_count = sum(1 for _, _, t in f_insights + w_insights + cc_insights if t == "neutral")
-    total = len(f_insights) + len(w_insights) + len(cc_insights)
+    all_insights_list = f_insights + w_insights + m_insights + cc_insights
+    positive_count = sum(1 for _, _, t in all_insights_list if t == "positive")
+    warning_count = sum(1 for _, _, t in all_insights_list if t in ("warning", "negative"))
+    neutral_count = sum(1 for _, _, t in all_insights_list if t == "neutral")
+    total = len(all_insights_list)
 
     # KPI summary
     c1, c2, c3, c4 = st.columns(4)
@@ -3289,8 +3444,11 @@ def render_insights_tab(f_data, w_data):
     c4.metric("Cross-cutting", len(cc_insights))
 
     st.markdown("---")
-    _quick_nav_pills(['Trend Overview', 'Forestry Insights', 'Women Survey Insights',
-                       'Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
+    nav_items = ['Trend Overview', 'Forestry Insights', 'Women Survey Insights']
+    if m_data:
+        nav_items.append('Men Survey Insights')
+    nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
+    _quick_nav_pills(nav_items)
 
     # ====================================================================
     # TREND OVERVIEW — Donut + Dumbbell Chart
@@ -3298,7 +3456,7 @@ def render_insights_tab(f_data, w_data):
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -3506,19 +3664,10 @@ def render_insights_tab(f_data, w_data):
     with we_col2:
         # Life skills by domain — grouped bar with trend lines
         ls_all = w_data['lifeskills_agree'].copy()
-        # Attempt to group by domain if Statement column contains domain hints
-        domain_map = {}
-        for _, row in ls_all.iterrows():
-            stmt = str(row.get('Statement', ''))
-            if any(k in stmt.lower() for k in ['confident', 'proud', 'worth', 'self']):
-                domain_map[stmt] = 'Self Esteem'
-            elif any(k in stmt.lower() for k in ['future', 'plan', 'goal', 'aspir']):
-                domain_map[stmt] = 'Aspirations'
-            else:
-                domain_map[stmt] = 'Leadership'
+        # Domain column is already set correctly in load_women_data()
+        # (Self Esteem ×3, Aspirations ×4, Leadership ×5)
 
         # Build domain averages
-        ls_all['Domain'] = ls_all['Statement'].map(domain_map)
         domain_avg = ls_all.groupby('Domain')[['Baseline', 'Midline']].mean().reset_index()
 
         # Add communication and conflict as extra domains
@@ -3572,6 +3721,63 @@ def render_insights_tab(f_data, w_data):
     st.markdown("---")
 
     # ====================================================================
+    # MEN SURVEY INSIGHTS (if data available)
+    # ====================================================================
+    if m_data and m_insights:
+        _section_header('', "Men's Survey Insights", 'Household Level')
+
+        # Men's key indicators slope chart
+        m_slope_data = []
+        for label, df_key, resp_col, resp_val in [
+            ('CC Awareness', 'cc_heard', 'Response', 'Yes'),
+            ('NbS Awareness', 'nbs_heard', 'Response', 'Yes'),
+            ('Mangrove Support', 'mangrove_support', 'Response', 'Yes'),
+            ('Forest Support', 'forest_support', 'Response', 'Yes'),
+        ]:
+            df = m_data[df_key]
+            b_m = df.loc[df[resp_col] == resp_val, 'Baseline'].values[0] * 100
+            m_m = df.loc[df[resp_col] == resp_val, 'Midline'].values[0] * 100
+            m_slope_data.append((label, b_m, m_m))
+
+        # Joint decision avg
+        dj = m_data['decision_should_joint']
+        m_slope_data.append(('Joint Decision', dj['Baseline'].mean() * 100, dj['Midline'].mean() * 100))
+
+        # Social norms avg
+        sn = m_data['socialnorms_agree']
+        m_slope_data.append(('Social Norms', sn['Baseline'].mean() * 100, sn['Midline'].mean() * 100))
+
+        ms_col1, ms_col2 = st.columns([1, 1])
+        with ms_col1:
+            fig_mslope = _make_slope_chart(m_slope_data, "Men's Key Indicator Trends")
+            st.plotly_chart(fig_mslope, use_container_width=True)
+
+        with ms_col2:
+            # Social norms change bar
+            sn_m = m_data['socialnorms_agree'].copy()
+            sn_m['Change'] = (sn_m['Midline'] - sn_m['Baseline']) * 100
+            sn_sorted = sn_m.sort_values('Change')
+            colors_sn = [COLORS['good'] if v <= 0 else COLORS['danger'] for v in sn_sorted['Change']]
+            fig_sn_m = go.Figure()
+            fig_sn_m.add_trace(go.Bar(
+                y=sn_sorted['Norm'], x=sn_sorted['Change'], orientation='h',
+                marker_color=colors_sn,
+                text=sn_sorted['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
+            fig_sn_m.update_layout(
+                title="Men's Social Norms Change (harmful: ↓ = positive)",
+                height=max(380, len(sn_m) * 28),
+                xaxis_title="Change (pp)",
+                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20))
+            st.plotly_chart(fig_sn_m, use_container_width=True)
+
+        for title, body, trend in m_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -3586,8 +3792,11 @@ def render_insights_tab(f_data, w_data):
     fig_quad = go.Figure()
 
     # Separate by dataset for color coding
-    for ds, color, symbol in [('Forestry', COLORS['baseline'], 'circle'),
-                               ('Women', COLORS['midline'], 'diamond')]:
+    dataset_styles = [('Forestry', COLORS['baseline'], 'circle'),
+                      ('Women', COLORS['midline'], 'diamond')]
+    if m_data:
+        dataset_styles.append(('Men', '#FF9800', 'square'))
+    for ds, color, symbol in dataset_styles:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -3735,7 +3944,7 @@ def render_insights_tab(f_data, w_data):
     # Auto-generate recommendations based on the insights
     recs = []
     # Check for negative trends
-    all_insights = f_insights + w_insights + cc_insights
+    all_insights = f_insights + w_insights + m_insights + cc_insights
     neg_areas = [title for title, _, trend in all_insights if trend in ('negative', 'warning')]
     pos_areas = [title for title, _, trend in all_insights if trend == 'positive']
 
@@ -3770,8 +3979,8 @@ def render_insights_tab(f_data, w_data):
                  f"donor reporting and community motivation. Document success stories in areas "
                  f"showing clear improvement."))
     recs.append(("Integrated M&E Approach",
-                 "Continue tracking both community-level (forestry) and household-level (women) indicators "
-                 "together. The cross-cutting insights show that progress at one level supports the other."))
+                 "Continue tracking community-level (forestry), women's household-level, and men's household-level "
+                 "indicators together. The cross-cutting insights show that progress at one level supports the other."))
 
     for title, body in recs:
         _insight_card(title, body, "neutral")
@@ -3781,12 +3990,12 @@ def render_insights_tab(f_data, w_data):
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data):
-    """Combined overview of both datasets — key headline indicators."""
+def render_synthesis_view(f_data, w_data, m_data=None):
+    """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
-    from both the Forestry Conservation Groups (community-level) and Women's Survey (household-level)
-    datasets. This view highlights key programme-wide trends.
+    from the Forestry Conservation Groups (community-level), Women's Survey, and Men's Survey
+    (household-level) datasets. This view highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -3868,6 +4077,47 @@ def render_synthesis_view(f_data, w_data):
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # ---- Men Survey Headline KPIs (if data available) ----
+    if m_data:
+        st.markdown('<h3> Men\'s Survey — Headlines</h3>', unsafe_allow_html=True)
+
+        # CC heard
+        m_cc_bl = m_data['cc_heard'].loc[m_data['cc_heard']['Response']=='Yes','Baseline'].values[0]
+        m_cc_ml = m_data['cc_heard'].loc[m_data['cc_heard']['Response']=='Yes','Midline'].values[0]
+        # NbS heard
+        m_nbs_bl = m_data['nbs_heard'].loc[m_data['nbs_heard']['Response']=='Yes','Baseline'].values[0]
+        m_nbs_ml = m_data['nbs_heard'].loc[m_data['nbs_heard']['Response']=='Yes','Midline'].values[0]
+        # Mangrove support
+        m_ms_bl = m_data['mangrove_support'].loc[m_data['mangrove_support']['Response']=='Yes','Baseline'].values[0]
+        m_ms_ml = m_data['mangrove_support'].loc[m_data['mangrove_support']['Response']=='Yes','Midline'].values[0]
+        # Social norms avg
+        m_sn_bl = m_data['socialnorms_agree']['Baseline'].mean()
+        m_sn_ml = m_data['socialnorms_agree']['Midline'].mean()
+
+        mc1, mc2, mc3, mc4 = st.columns(4)
+        mc1.markdown(f"""<div class="kpi-card">
+            <h3>Men CC Awareness</h3>
+            <div class="value">{m_cc_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_cc_ml>=m_cc_bl else 'negative'}">{(m_cc_ml-m_cc_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc2.markdown(f"""<div class="kpi-card">
+            <h3>Men NbS Awareness</h3>
+            <div class="value">{m_nbs_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_nbs_ml>=m_nbs_bl else 'negative'}">{(m_nbs_ml-m_nbs_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc3.markdown(f"""<div class="kpi-card">
+            <h3>Support Women (Mangrove)</h3>
+            <div class="value">{m_ms_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_ms_ml>=m_ms_bl else 'negative'}">{(m_ms_ml-m_ms_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+        mc4.markdown(f"""<div class="kpi-card">
+            <h3>Social Norms (Avg)</h3>
+            <div class="value">{m_sn_ml*100:.0f}%</div>
+            <div class="delta-{'positive' if m_sn_ml<=m_sn_bl else 'negative'}">{(m_sn_ml-m_sn_bl)*100:+.1f}pp</div>
+        </div>""", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
     # Side-by-side mini charts
     st.markdown('<h3>Comparative Snapshots</h3>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
@@ -3947,9 +4197,44 @@ def render_synthesis_view(f_data, w_data):
                              plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig_ts, use_container_width=True)
 
+    # Men's comparative charts (if data available)
+    if m_data:
+        c5, c6 = st.columns(2)
+        with c5:
+            # Men's social norms change
+            sn_m = m_data['socialnorms_agree'].copy()
+            sn_m['Change'] = (sn_m['Midline'] - sn_m['Baseline']) * 100
+            sn_m_sorted = sn_m.sort_values('Change')
+            colors_sn_m = [COLORS['good'] if v <= 0 else COLORS['danger'] for v in sn_m_sorted['Change']]
+            fig_sn_m = go.Figure()
+            fig_sn_m.add_trace(go.Bar(y=sn_m_sorted['Norm'], x=sn_m_sorted['Change'], orientation='h',
+                                      marker_color=colors_sn_m,
+                                      text=sn_m_sorted['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
+            fig_sn_m.update_layout(title="Men's Social Norms Change (↓ = positive)", height=400,
+                                   xaxis_title="Change (pp)",
+                                   font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                                   plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig_sn_m, use_container_width=True)
+        with c6:
+            # Men's time use
+            ts_m = m_data['time_summary'].copy()
+            fig_ts_m = go.Figure()
+            fig_ts_m.add_trace(go.Bar(x=ts_m['Category'], y=ts_m['Baseline'], name='Baseline',
+                                      marker_color=COLORS['baseline'],
+                                      text=ts_m['Baseline'].apply(lambda x: f"{x:.1f}h"), textposition='auto'))
+            fig_ts_m.add_trace(go.Bar(x=ts_m['Category'], y=ts_m['Midline'], name='Midline',
+                                      marker_color=COLORS['midline'],
+                                      text=ts_m['Midline'].apply(lambda x: f"{x:.1f}h"), textposition='auto'))
+            fig_ts_m.update_layout(title="Men's Time Use (hrs/day)", barmode='group', height=400,
+                                   yaxis_title='Hours',
+                                   legend=dict(orientation='h', yanchor='bottom', y=1.02),
+                                   font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                                   plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig_ts_m, use_container_width=True)
+
     st.markdown("""<div class="section-narrative" style="margin-top:1rem;">
-    <strong>Navigate deeper:</strong> Use the sidebar to select either <em>Forestry Groups</em>
-    or <em>Women Survey</em> for detailed breakdowns across all thematic areas.
+    <strong>Navigate deeper:</strong> Use the sidebar to select <em>Forestry Groups</em>,
+    <em>Women Survey</em>, or <em>Men Survey</em> for detailed breakdowns across all thematic areas.
     </div>""", unsafe_allow_html=True)
 
 
@@ -4250,6 +4535,7 @@ def main():
         <div class="sidebar-section">
             <span class="sidebar-nav-link">Forestry Insights</span>
             <span class="sidebar-nav-link">Women Survey Insights</span>
+            <span class="sidebar-nav-link">Men Survey Insights</span>
             <span class="sidebar-nav-link">Cross-Cutting Insights</span>
             <span class="sidebar-nav-link">Indicator Change Heatmap</span>
             <span class="sidebar-nav-link">Recommendations</span>
@@ -4273,6 +4559,7 @@ def main():
         <div class="sidebar-section">
             <span class="sidebar-nav-link">Forestry Headlines</span>
             <span class="sidebar-nav-link">Women Survey Headlines</span>
+            <span class="sidebar-nav-link">Men Survey Headlines</span>
             <span class="sidebar-nav-link">Comparative Snapshots</span>
         </div>
         """, unsafe_allow_html=True)
@@ -4449,7 +4736,7 @@ def main():
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry Conservation &amp; Women's Survey Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's &amp; Men's Survey Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -4458,22 +4745,24 @@ def main():
 
         f_data = load_forestry_data(forestry_path)
         w_data = load_women_data(women_path)
+        m_data = load_men_data(men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
             <div style="margin-bottom:0.3rem;">Forestry Groups (analysis)</div>
-            <div>Women Survey (analysis)</div>
+            <div style="margin-bottom:0.3rem;">Women Survey (analysis)</div>
+            <div>Men Survey (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data)
+        render_insights_tab(f_data, w_data, m_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Community Forest Conservation &amp; Women's Survey</p>
+            <p>Integrated M&amp;E Analysis | Forestry, Women's &amp; Men's Survey</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -4482,16 +4771,18 @@ def main():
 
         f_data = load_forestry_data(forestry_path)
         w_data = load_women_data(women_path)
+        m_data = load_men_data(men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
         <div class="sidebar-section">
             <div style="margin-bottom:0.3rem;">Forestry Groups</div>
-            <div>Women Survey</div>
+            <div style="margin-bottom:0.3rem;">Women Survey</div>
+            <div>Men Survey</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data)
+        render_synthesis_view(f_data, w_data, m_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
