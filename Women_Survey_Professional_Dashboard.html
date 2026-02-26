@@ -2770,12 +2770,12 @@
         .insight-stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 22px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
         .insight-stat-box {
             text-align: center;
-            padding: 14px;
+            padding: 10px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -2797,7 +2797,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 10px;
         }
         .insight-filter-chip {
             padding: 5px 12px;
@@ -2833,19 +2833,38 @@
 
         /* ── DOMAIN DEEP DIVE ── */
         #automated-insights-section .section {
-            margin-bottom: 14px;
-            padding: 22px;
+            margin-bottom: 10px;
+            padding: 16px;
         }
         #automated-insights-section .section-title {
-            margin: -22px -22px 16px -22px;
-            padding: 14px 20px;
-            font-size: 1.3em;
+            margin: -16px -16px 12px -16px;
+            padding: 12px 16px;
+            font-size: 1.2em;
+        }
+        #automated-insights-section .charts-grid {
+            gap: 14px;
+            margin-top: 10px;
+        }
+        #automated-insights-section .chart-wrapper {
+            padding: 12px;
+        }
+        #automated-insights-section .chart-container {
+            margin-bottom: 8px;
+        }
+        #automated-insights-section .insight-feed {
+            gap: 10px;
+        }
+        #automated-insights-section .insight-card {
+            padding: 14px 16px;
+        }
+        #automated-insights-section .insight-stats-row {
+            margin-bottom: 12px;
         }
         .domain-dive-card {
             background: #fff;
             border-radius: 12px;
-            padding: 22px 26px;
-            margin-bottom: 18px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             border-left: 5px solid #0072CE;
             transition: box-shadow 0.2s;
@@ -6618,7 +6637,7 @@
                 </div>
 
                 <!-- Executive narrative -->
-                <div id="insights-executive-summary" style="background:linear-gradient(135deg,#f0f4ff,#fff);border-radius:10px;padding:22px 26px;margin-bottom:24px;border-left:5px solid #0072CE;line-height:1.8;font-size:0.92em;color:#333;">
+                <div id="insights-executive-summary" style="background:linear-gradient(135deg,#f0f4ff,#fff);border-radius:10px;padding:14px 18px;margin-bottom:10px;border-left:5px solid #0072CE;line-height:1.6;font-size:0.88em;color:#333;">
                     <!-- Rendered by JS -->
                 </div>
             </div>
@@ -6659,7 +6678,7 @@
                 <div class="section-title">Detailed Insight Feed</div>
 
                 <!-- Controls row -->
-                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px;">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;">
                     <!-- Filter bar -->
                     <div class="insight-filter-bar" id="insights-filter-bar" style="margin-bottom:0;flex:1;">
                         <button class="insight-filter-chip active" data-cat="all" onclick="filterInsights('all', this)">All</button>
@@ -6685,7 +6704,7 @@
                 </div>
 
                 <!-- Search -->
-                <div style="margin-bottom:16px;">
+                <div style="margin-bottom:10px;">
                     <input type="text" id="insights-search" placeholder="Search insights..." oninput="searchInsights(this.value)" style="width:100%;padding:10px 16px;border-radius:8px;border:2px solid #e0e0e0;font-size:0.9em;transition:border-color 0.2s;box-sizing:border-box;" onfocus="this.style.borderColor='#0072CE'" onblur="this.style.borderColor='#e0e0e0'">
                 </div>
 
@@ -6701,7 +6720,7 @@
             <!-- DOMAIN DEEP DIVE -->
             <div class="section">
                 <div class="section-title">Domain Performance Deep Dive</div>
-                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Detailed breakdown of each thematic domain with indicator-level progress, health scoring, and target achievement status.</p>
+                <p style="color:#555;font-size:0.84em;margin-bottom:10px;">Detailed breakdown of each thematic domain with indicator-level progress, health scoring, and target achievement status.</p>
                 <div id="domain-deep-dive">
                     <!-- Rendered by JS -->
                 </div>
@@ -6710,7 +6729,7 @@
             <!-- INDICATOR PERFORMANCE TABLE -->
             <div class="section">
                 <div class="section-title">Complete Indicator Performance Matrix</div>
-                <p style="color:#555;font-size:0.88em;margin-bottom:14px;">All 26 outcome indicators and 5 training indicators with baseline, midline, change, target status, and confidence metrics.</p>
+                <p style="color:#555;font-size:0.84em;margin-bottom:8px;">All 26 outcome indicators and 5 training indicators with baseline, midline, change, target status, and confidence metrics.</p>
                 <div style="overflow-x:auto;">
                     <table class="perf-table" id="indicator-perf-table">
                         <!-- Rendered by JS -->
@@ -6721,18 +6740,18 @@
             <!-- GENDER PARITY ANALYSIS -->
             <div class="section">
                 <div class="section-title">Gender Parity Scorecard</div>
-                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Comparative analysis of women vs men outcomes across shared indicators, with parity index and gap trajectory from baseline to midline.</p>
+                <p style="color:#555;font-size:0.84em;margin-bottom:10px;">Comparative analysis of women vs men outcomes across shared indicators, with parity index and gap trajectory from baseline to midline.</p>
                 <div class="charts-grid">
                     <div class="chart-wrapper">
                         <div class="chart-title">Gender Parity Index by Indicator</div>
-                        <div class="chart-container" style="height:360px;"><canvas id="insights-chart-parity"></canvas></div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-parity"></canvas></div>
                     </div>
                     <div class="chart-wrapper">
                         <div class="chart-title">Gap Trajectory: Baseline vs Midline</div>
-                        <div class="chart-container" style="height:360px;"><canvas id="insights-chart-gap-trajectory"></canvas></div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-gap-trajectory"></canvas></div>
                     </div>
                 </div>
-                <div id="gender-parity-summary" style="background:linear-gradient(135deg,#fce4ec,#fff);border-radius:10px;padding:20px 24px;margin-top:18px;border-left:5px solid #E91E63;line-height:1.8;font-size:0.9em;color:#333;">
+                <div id="gender-parity-summary" style="background:linear-gradient(135deg,#fce4ec,#fff);border-radius:10px;padding:14px 18px;margin-top:10px;border-left:5px solid #E91E63;line-height:1.6;font-size:0.88em;color:#333;">
                     <!-- Rendered by JS -->
                 </div>
             </div>
@@ -6740,7 +6759,7 @@
             <!-- THEORY OF CHANGE PATHWAYS -->
             <div class="section">
                 <div class="section-title">Theory of Change Evidence Pathways</div>
-                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Evidence-based pathways showing how project interventions translate into outcomes, with data-validated connection strength.</p>
+                <p style="color:#555;font-size:0.84em;margin-bottom:10px;">Evidence-based pathways showing how project interventions translate into outcomes, with data-validated connection strength.</p>
                 <div id="toc-pathways">
                     <!-- Rendered by JS -->
                 </div>
@@ -6749,14 +6768,14 @@
             <!-- ENDLINE PROJECTIONS -->
             <div class="section">
                 <div class="section-title">Endline Projections & Scenario Analysis</div>
-                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Based on baseline-to-midline trajectories, projected endline values under three scenarios: maintained momentum, accelerated effort, and regression risk.</p>
+                <p style="color:#555;font-size:0.84em;margin-bottom:10px;">Based on baseline-to-midline trajectories, projected endline values under three scenarios: maintained momentum, accelerated effort, and regression risk.</p>
                 <div class="charts-grid">
                     <div class="chart-wrapper full-width">
                         <div class="chart-title">Key Indicator Endline Projections (3 Scenarios)</div>
-                        <div class="chart-container" style="height:420px;"><canvas id="insights-chart-projections"></canvas></div>
+                        <div class="chart-container" style="height:340px;"><canvas id="insights-chart-projections"></canvas></div>
                     </div>
                 </div>
-                <div id="projection-summary" style="background:linear-gradient(135deg,#e8f5e9,#fff);border-radius:10px;padding:20px 24px;margin-top:18px;border-left:5px solid #2e7d32;line-height:1.8;font-size:0.9em;color:#333;">
+                <div id="projection-summary" style="background:linear-gradient(135deg,#e8f5e9,#fff);border-radius:10px;padding:14px 18px;margin-top:10px;border-left:5px solid #2e7d32;line-height:1.6;font-size:0.88em;color:#333;">
                     <!-- Rendered by JS -->
                 </div>
             </div>
@@ -6764,28 +6783,28 @@
             <!-- METHODOLOGY & DATA QUALITY -->
             <div class="section">
                 <div class="section-title">Methodology & Data Quality Notes</div>
-                <div id="methodology-notes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;">
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #0072CE;">
+                <div id="methodology-notes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #0072CE;">
                         <strong style="color:#0072CE;font-size:0.95em;">Insight Generation Method</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Insights are generated algorithmically by comparing baseline and midline survey data across 26 outcome indicators and 5 training measures. The engine applies threshold-based detection (15pp for trends, 20pp for gaps, -5pp for anomalies) combined with statistical z-score outlier analysis (threshold: 1.8 SD).</p>
                     </div>
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #2e7d32;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;">
                         <strong style="color:#2e7d32;font-size:0.95em;">Confidence Scoring</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Each insight receives a confidence score (0-100%) based on: effect magnitude (+25 for >=30pp), logframe linkage (+10), dual-gender measurement triangulation (+10), and directional corroboration (+5). Scores are categorized as High (75-100%), Medium (50-74%), or Low (&lt;50%).</p>
                     </div>
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #f57c00;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #f57c00;">
                         <strong style="color:#f57c00;font-size:0.95em;">Domain Health Index</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Domain health scores (0-100) are computed as a weighted composite: 40% target exceedance ratio, 40% normalized average gain (capped at 50pp), and 20% anomaly-free bonus. Domains scoring below 70 receive automated strengthening recommendations.</p>
                     </div>
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #7b1fa2;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #7b1fa2;">
                         <strong style="color:#7b1fa2;font-size:0.95em;">Data Sources & Coverage</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments, Seaweed Farming data, and VSLA Monitoring records. Coverage spans 6 thematic domains across Kilifi County, Kenya.</p>
                     </div>
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #c62828;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #c62828;">
                         <strong style="color:#c62828;font-size:0.95em;">Limitations & Caveats</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Cross-link insights are based on temporal correlation, not established causation. Sample sizes vary across surveys. Self-reported data may introduce social desirability bias. Endline projections assume linear trajectories and equal intervention intensity. Seasonal and contextual factors are not controlled for in automated analysis.</p>
                     </div>
-                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #00838f;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #00838f;">
                         <strong style="color:#00838f;font-size:0.95em;">Recommendation Engine</strong>
                         <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Strategic recommendations are auto-generated from: (1) highest-magnitude anomalies requiring investigation, (2) gender gaps exceeding 20pp needing responsive programming, (3) domains with health scores below 70/100, and (4) endline preparation priorities. Recommendations combine data patterns with programmatic best practices.</p>
                     </div>
