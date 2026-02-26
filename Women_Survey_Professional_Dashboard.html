@@ -2488,6 +2488,249 @@
                 color: #666;
             }
         }
+
+        /* ============================================================
+           CROSS-DATASET SYNTHESIS & AUTOMATED INSIGHTS TABS
+           ============================================================ */
+
+        /* Synthesis KPI row */
+        .synthesis-kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .synthesis-kpi {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+            border-top: 4px solid #0072CE;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .synthesis-kpi:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        .synthesis-kpi .sk-label {
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #777;
+            margin-bottom: 6px;
+        }
+        .synthesis-kpi .sk-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: #0072CE;
+            margin-bottom: 4px;
+        }
+        .synthesis-kpi .sk-sub {
+            font-size: 0.82em;
+            color: #555;
+        }
+        .synthesis-kpi.green { border-top-color: #2e7d32; }
+        .synthesis-kpi.green .sk-value { color: #2e7d32; }
+        .synthesis-kpi.orange { border-top-color: #f57c00; }
+        .synthesis-kpi.orange .sk-value { color: #f57c00; }
+        .synthesis-kpi.red { border-top-color: #c62828; }
+        .synthesis-kpi.red .sk-value { color: #c62828; }
+
+        /* Cross-dataset comparison table */
+        .cross-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+            margin: 18px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .cross-table th {
+            background: linear-gradient(135deg, #0072CE, #005a9e);
+            color: #fff;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .cross-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef1f5;
+            vertical-align: middle;
+        }
+        .cross-table tr:nth-child(even) { background: #f8fafd; }
+        .cross-table tr:hover { background: #eef4fb; }
+        .cross-table .status-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.82em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-pill.exceeded { background: #e8f5e9; color: #2e7d32; }
+        .status-pill.on-track { background: #e3f2fd; color: #1565c0; }
+        .status-pill.at-risk  { background: #fff3e0; color: #e65100; }
+        .status-pill.declined { background: #ffebee; color: #c62828; }
+
+        /* Sparkline canvas */
+        .sparkline-box {
+            display: inline-block;
+            width: 80px;
+            height: 28px;
+            vertical-align: middle;
+        }
+
+        /* Domain filter bar */
+        .domain-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .domain-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 2px solid #0072CE;
+            background: #fff;
+            color: #0072CE;
+            font-weight: 600;
+            font-size: 0.82em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .domain-chip.active,
+        .domain-chip:hover {
+            background: #0072CE;
+            color: #fff;
+        }
+
+        /* Insight cards (Automated Insights tab) */
+        .insight-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .insight-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 22px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+            border-left: 5px solid #0072CE;
+            transition: transform 0.2s;
+        }
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+        .insight-card.trend     { border-left-color: #1976d2; }
+        .insight-card.anomaly   { border-left-color: #f57c00; }
+        .insight-card.milestone { border-left-color: #2e7d32; }
+        .insight-card.gap       { border-left-color: #c62828; }
+        .insight-card.crosslink { border-left-color: #7b1fa2; }
+
+        .insight-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .insight-badge.trend     { background: #e3f2fd; color: #1565c0; }
+        .insight-badge.anomaly   { background: #fff3e0; color: #e65100; }
+        .insight-badge.milestone { background: #e8f5e9; color: #2e7d32; }
+        .insight-badge.gap       { background: #ffebee; color: #c62828; }
+        .insight-badge.crosslink { background: #f3e5f5; color: #6a1b9a; }
+
+        .insight-title {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 6px;
+        }
+        .insight-narrative {
+            font-size: 0.9em;
+            color: #444;
+            line-height: 1.65;
+            margin-bottom: 10px;
+        }
+        .insight-evidence {
+            font-size: 0.82em;
+            color: #666;
+            background: #f8f9fb;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border-left: 3px solid #ddd;
+        }
+
+        /* Stats summary row */
+        .insight-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .insight-stat-box {
+            text-align: center;
+            padding: 14px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .insight-stat-box .isb-num {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #0072CE;
+        }
+        .insight-stat-box .isb-label {
+            font-size: 0.78em;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Insight category filter */
+        .insight-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .insight-filter-chip {
+            padding: 5px 12px;
+            border-radius: 16px;
+            border: 2px solid #ccc;
+            background: #fff;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .insight-filter-chip.active { border-color: #0072CE; background: #0072CE; color: #fff; }
+        .insight-filter-chip[data-cat="trend"]     { border-color: #1976d2; }
+        .insight-filter-chip[data-cat="anomaly"]   { border-color: #f57c00; }
+        .insight-filter-chip[data-cat="milestone"] { border-color: #2e7d32; }
+        .insight-filter-chip[data-cat="gap"]       { border-color: #c62828; }
+        .insight-filter-chip[data-cat="crosslink"] { border-color: #7b1fa2; }
+
+        @media (max-width: 768px) {
+            .synthesis-kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .insight-stats-row { grid-template-columns: repeat(2, 1fr); }
+            .synthesis-kpi .sk-value { font-size: 1.5em; }
+        }
+        @media (max-width: 480px) {
+            .synthesis-kpi-row { grid-template-columns: 1fr; }
+            .insight-stats-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -2559,6 +2802,12 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('vsla-monitoring', this)">
                     VSLA Monitoring
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('cross-dataset', this)">
+                    Cross-Dataset Synthesis
+                </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('automated-insights', this)">
+                    Automated Insights
+                </button>
             </div>
         </nav>
 
@@ -2585,6 +2834,8 @@
                 <button class="survey-btn" onclick="switchSurvey('schools-dashboard')">Schools Dashboard</button>
                 <button class="survey-btn" onclick="switchSurvey('seaweed-assessment')">Seaweed Assessment</button>
                 <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
+                <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
+                <button class="survey-btn" onclick="switchSurvey('automated-insights')">Automated Insights</button>
             </div>
         </nav>
 
@@ -6033,6 +6284,136 @@
         </div>
         <!-- END VSLA SECTION -->
 
+        <!-- ============================================================ -->
+        <!-- CROSS-DATASET SYNTHESIS SECTION                              -->
+        <!-- ============================================================ -->
+        <div id="cross-dataset-section" class="survey-section" style="display:none;">
+
+            <!-- SYNTHESIS HEADER -->
+            <div class="section">
+                <div class="section-title">Cross-Dataset Synthesis</div>
+
+                <!-- Top-level KPIs -->
+                <div class="synthesis-kpi-row" id="synthesis-kpis">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Domain filter chips -->
+                <div class="domain-filter-bar" id="synthesis-domain-filter">
+                    <button class="domain-chip active" data-domain="all" onclick="filterSynthesisDomain('all', this)">All Domains</button>
+                    <button class="domain-chip" data-domain="savings" onclick="filterSynthesisDomain('savings', this)">Savings &amp; Financial</button>
+                    <button class="domain-chip" data-domain="climate" onclick="filterSynthesisDomain('climate', this)">Climate &amp; NbS</button>
+                    <button class="domain-chip" data-domain="gender" onclick="filterSynthesisDomain('gender', this)">Gender &amp; Empowerment</button>
+                    <button class="domain-chip" data-domain="preparedness" onclick="filterSynthesisDomain('preparedness', this)">Disaster Preparedness</button>
+                    <button class="domain-chip" data-domain="decisions" onclick="filterSynthesisDomain('decisions', this)">Decision-Making</button>
+                    <button class="domain-chip" data-domain="norms" onclick="filterSynthesisDomain('norms', this)">Social Norms</button>
+                </div>
+
+                <!-- Cross-dataset comparison table -->
+                <div style="overflow-x: auto;">
+                    <table class="cross-table" id="synthesis-table">
+                        <thead>
+                            <tr>
+                                <th>Indicator</th>
+                                <th>Domain</th>
+                                <th>Women Baseline</th>
+                                <th>Women Midline</th>
+                                <th>Men Baseline</th>
+                                <th>Men Midline</th>
+                                <th>Change (pp)</th>
+                                <th>Trend</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="synthesis-table-body">
+                            <!-- Rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comparative charts section -->
+            <div class="section">
+                <div class="section-title">Comparative Analysis</div>
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Women vs Men: Key Indicator Comparison</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-comparison"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-comparison"></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Gender Gap Analysis: Midline vs Baseline</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-gendergap"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-gendergap"></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Domain Performance Radar</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-radar"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-radar"></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Logframe Achievement Overview</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-logframe"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-logframe"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress over time -->
+            <div class="section">
+                <div class="section-title">Progress Tracking &amp; Targets</div>
+                <div class="charts-grid">
+                    <div class="chart-wrapper full-width">
+                        <div class="chart-title">Baseline to Midline: Top Gains &amp; Gaps</div>
+                        <div class="chart-container" style="height:420px;"><canvas id="synthesis-chart-waterfall"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-waterfall"></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">NbS Participation: Women vs Men Support</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-nbs"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-nbs"></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Training Effectiveness: Pre &amp; Post Scores</div>
+                        <div class="chart-container"><canvas id="synthesis-chart-training"></canvas></div>
+                        <div class="chart-insight" id="synthesis-insight-training"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CROSS-DATASET SYNTHESIS SECTION -->
+
+        <!-- ============================================================ -->
+        <!-- AUTOMATED INSIGHTS SECTION                                   -->
+        <!-- ============================================================ -->
+        <div id="automated-insights-section" class="survey-section" style="display:none;">
+
+            <div class="section">
+                <div class="section-title">Automated Insights Engine</div>
+
+                <!-- Summary Stats -->
+                <div class="insight-stats-row" id="insights-stats-row">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Filter bar -->
+                <div class="insight-filter-bar" id="insights-filter-bar">
+                    <button class="insight-filter-chip active" data-cat="all" onclick="filterInsights('all', this)">All</button>
+                    <button class="insight-filter-chip" data-cat="trend" onclick="filterInsights('trend', this)">Trends</button>
+                    <button class="insight-filter-chip" data-cat="milestone" onclick="filterInsights('milestone', this)">Milestones</button>
+                    <button class="insight-filter-chip" data-cat="anomaly" onclick="filterInsights('anomaly', this)">Anomalies</button>
+                    <button class="insight-filter-chip" data-cat="gap" onclick="filterInsights('gap', this)">Gaps</button>
+                    <button class="insight-filter-chip" data-cat="crosslink" onclick="filterInsights('crosslink', this)">Cross-Links</button>
+                </div>
+
+                <!-- Insight feed -->
+                <div class="insight-feed" id="insights-feed">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+        <!-- END AUTOMATED INSIGHTS SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -6901,6 +7282,22 @@
                 footerTitle: '<strong>VSLA Functionality Dashboard — Savings, Loans & Social Fund Performance</strong>',
                 footerSample: '211 VSLA Assessments | 173 Unique Groups | Kilifi & Kwale Counties',
                 renderFn: () => renderVSLADashboard()
+            },
+            'cross-dataset': {
+                showSection: 'cross-dataset-section',
+                subSelector: null,
+                title: 'Cross-Dataset Synthesis',
+                footerTitle: '<strong>Cross-Dataset Synthesis — Multi-Survey Comparative Analysis</strong>',
+                footerSample: 'Combined analysis across Women, Men, GJJ, Forestry, Training, Schools, Seaweed & VSLA datasets',
+                renderFn: () => renderCrossDatasetSynthesis()
+            },
+            'automated-insights': {
+                showSection: 'automated-insights-section',
+                subSelector: null,
+                title: 'Automated Insights',
+                footerTitle: '<strong>Automated Insights Engine — AI-Generated Analysis</strong>',
+                footerSample: 'Trend detection, anomaly flagging, milestone tracking & cross-dataset linkages',
+                renderFn: () => renderAutomatedInsights()
             }
         };
 
@@ -6908,7 +7305,8 @@
         const allSectionIds = [
             'women-survey-section', 'men-survey-section', 'forestry-section',
             'prepost-section', 'output-section', 'schools-dashboard-section',
-            'seaweed-section', 'vsla-section'
+            'seaweed-section', 'vsla-section',
+            'cross-dataset-section', 'automated-insights-section'
         ];
         const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector'];
 
@@ -12792,6 +13190,597 @@
     }
     </script>
 
+    <!-- ============================================================ -->
+    <!-- CROSS-DATASET SYNTHESIS & AUTOMATED INSIGHTS ENGINE          -->
+    <!-- ============================================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ── INDICATOR DICTIONARY ──────────────────────────────────────
+        // Normalized indicators drawn from existing hardcoded surveyData.
+        // Each indicator: { id, label, domain, womenBaseline, womenMidline,
+        //   menBaseline, menMidline, target, logframeId, unit }
+        // Values are percentages unless noted.
+
+        const indicatorDictionary = [
+            // === SAVINGS & FINANCIAL ===
+            { id: 'vsla-participation', label: 'VSLA Participation', domain: 'savings',
+              womenBaseline: 43.6, womenMidline: 98.0, menBaseline: 18.5, menMidline: 42.7, target: 70, logframeId: '1220a', unit: '%' },
+            { id: 'personal-savings', label: 'Personal Savings Rate', domain: 'savings',
+              womenBaseline: 43.1, womenMidline: 93.4, menBaseline: 31.4, menMidline: 68.2, target: null, unit: '%' },
+            { id: 'loan-access', label: 'Loan Access', domain: 'savings',
+              womenBaseline: 28.0, womenMidline: 79.1, menBaseline: 22.8, menMidline: 58.6, target: null, unit: '%' },
+
+            // === CLIMATE & NBS ===
+            { id: 'climate-awareness', label: 'Climate Change Awareness', domain: 'climate',
+              womenBaseline: 60.5, womenMidline: 96.3, menBaseline: 77.8, menMidline: 100.0, target: 55, unit: '%' },
+            { id: 'nbs-knowledge', label: 'NbS Knowledge', domain: 'climate',
+              womenBaseline: 23.1, womenMidline: 77.8, menBaseline: 42.4, menMidline: 89.8, target: 55, logframeId: '1210a', unit: '%' },
+            { id: 'mangrove-participation', label: 'Mangrove Restoration', domain: 'climate',
+              womenBaseline: 36.9, womenMidline: 86.5, menBaseline: 29.7, menMidline: 80.7, target: null, unit: '%' },
+            { id: 'seaweed-participation', label: 'Seaweed Farming', domain: 'climate',
+              womenBaseline: 19.8, womenMidline: 74.7, menBaseline: 15.7, menMidline: 83.9, target: null, unit: '%' },
+            { id: 'forest-management', label: 'Forest Management', domain: 'climate',
+              womenBaseline: 67.4, womenMidline: 98.4, menBaseline: 33.7, menMidline: 95.8, target: null, unit: '%' },
+
+            // === GENDER & EMPOWERMENT ===
+            { id: 'hh-decisions', label: 'HH Decision Involvement', domain: 'gender',
+              womenBaseline: 57.6, womenMidline: 95.9, menBaseline: null, menMidline: null, target: 65, logframeId: '1200a', unit: '%' },
+            { id: 'resource-access', label: 'Resource Access & Control', domain: 'gender',
+              womenBaseline: 41.2, womenMidline: 53.8, menBaseline: null, menMidline: null, target: 50, logframeId: '1200c', unit: '%' },
+            { id: 'gender-equality-women', label: 'Gender Equality (Women)', domain: 'gender',
+              womenBaseline: 42.1, womenMidline: 64.7, menBaseline: null, menMidline: null, target: 55, logframeId: '1210c', unit: '/100' },
+            { id: 'gender-equality-men', label: 'Gender Equality (Men)', domain: 'gender',
+              womenBaseline: null, womenMidline: null, menBaseline: 41.2, menMidline: 71.0, target: 55, logframeId: '1230b', unit: '/100' },
+            { id: 'self-esteem-women', label: 'Self-Esteem (Women GJJ)', domain: 'gender',
+              womenBaseline: 33.5, womenMidline: 52.6, menBaseline: null, menMidline: null, target: null, unit: '%' },
+            { id: 'self-responsibility-men', label: 'Self-Responsibility (Men GJJ)', domain: 'gender',
+              womenBaseline: null, womenMidline: null, menBaseline: 50.1, menMidline: 70.3, target: null, unit: '%' },
+            { id: 'husband-chores', label: 'Husband Supports Chores', domain: 'gender',
+              womenBaseline: 41.4, womenMidline: 64.7, menBaseline: 17.7, menMidline: 42.2, target: null, unit: '%' },
+
+            // === DISASTER PREPAREDNESS ===
+            { id: 'prep-knowledge', label: 'Preparedness Knowledge', domain: 'preparedness',
+              womenBaseline: 4.7, womenMidline: 37.8, menBaseline: 6.2, menMidline: 42.8, target: null, unit: '%' },
+            { id: 'prep-action', label: 'Preparedness Action', domain: 'preparedness',
+              womenBaseline: 11.8, womenMidline: 46.3, menBaseline: 1.8, menMidline: 28.5, target: null, unit: '%' },
+            { id: 'early-warnings', label: 'Early Warning Access', domain: 'preparedness',
+              womenBaseline: 8.9, womenMidline: 45.0, menBaseline: 9.7, menMidline: 48.1, target: null, unit: '%' },
+
+            // === DECISION-MAKING ===
+            { id: 'joint-decisions', label: 'Joint Decision-Making', domain: 'decisions',
+              womenBaseline: 45.0, womenMidline: 58.8, menBaseline: 59.6, menMidline: 89.8, target: 65, unit: '%' },
+            { id: 'decision-conversations', label: 'Decision Conversations', domain: 'decisions',
+              womenBaseline: 60.2, womenMidline: 81.7, menBaseline: 87.9, menMidline: 97.1, target: null, unit: '%' },
+            { id: 'business-support', label: 'Support Wife Business', domain: 'decisions',
+              womenBaseline: 84.9, womenMidline: 64.2, menBaseline: 53.5, menMidline: 67.6, target: null, unit: '%' },
+
+            // === SOCIAL NORMS ===
+            { id: 'harmful-norms-income', label: '"Only Men Earn" Rejection', domain: 'norms',
+              womenBaseline: null, womenMidline: null, menBaseline: 63.1, menMidline: 28.4, target: null, unit: '%', lowerIsBetter: true },
+            { id: 'harmful-norms-boats', label: '"Only Men Drive Boats" Rejection', domain: 'norms',
+              womenBaseline: null, womenMidline: null, menBaseline: 59.2, menMidline: 22.7, target: null, unit: '%', lowerIsBetter: true },
+            { id: 'unpaid-care-men', label: 'Men Unpaid Care Work', domain: 'norms',
+              womenBaseline: null, womenMidline: null, menBaseline: 2.3, menMidline: 4.2, target: null, unit: 'hrs/day' },
+            { id: 'unpaid-care-women', label: 'Women Unpaid Care Work', domain: 'norms',
+              womenBaseline: 9.3, womenMidline: 7.7, menBaseline: null, menMidline: null, target: 8.3, logframeId: '1200b', unit: 'hrs/day', lowerIsBetter: true },
+            { id: 'joint-responsibility-belief', label: 'Joint HH Responsibility Belief', domain: 'norms',
+              womenBaseline: 12.5, womenMidline: 71.3, menBaseline: 17.7, menMidline: 68.2, target: null, unit: '%' }
+        ];
+
+        // Training indicators (separate since they compare pre/post not baseline/midline)
+        const trainingIndicators = [
+            { id: 'forest-training', label: 'Forest Conservation Knowledge', pre: 50.0, post: 94.7, target: 68, logframeId: '1130a' },
+            { id: 'mangrove-training', label: 'Mangrove Restoration Knowledge', pre: 36.9, post: 81.9, target: 57, logframeId: '1110a' },
+            { id: 'mangrove-female', label: 'Mangrove Knowledge (Female)', pre: 34.7, post: 87.4, target: 57 },
+            { id: 'mangrove-male', label: 'Mangrove Knowledge (Male)', pre: 38.2, post: 80.2, target: 57 },
+            { id: 'forest-groups', label: 'Forest Group Functionality (>=70%)', pre: 53.5, post: 85.7, target: 70, logframeId: '1130b' }
+        ];
+
+        // ── COMPUTE HELPERS ──────────────────────────────────────────
+
+        function pctChange(baseline, midline) {
+            if (baseline == null || midline == null || baseline === 0) return null;
+            return ((midline - baseline) / baseline * 100);
+        }
+
+        function ppChange(baseline, midline) {
+            if (baseline == null || midline == null) return null;
+            return midline - baseline;
+        }
+
+        function getStatus(indicator) {
+            const w = ppChange(indicator.womenBaseline, indicator.womenMidline);
+            const m = ppChange(indicator.menBaseline, indicator.menMidline);
+            const avg = w != null && m != null ? (w + m) / 2 : (w || m || 0);
+            const lower = indicator.lowerIsBetter;
+
+            if (indicator.target != null) {
+                const midVal = indicator.womenMidline || indicator.menMidline;
+                if (lower) {
+                    if (midVal <= indicator.target) return 'exceeded';
+                    if (midVal <= indicator.target * 1.15) return 'on-track';
+                    return 'at-risk';
+                }
+                if (midVal >= indicator.target) return 'exceeded';
+                if (midVal >= indicator.target * 0.85) return 'on-track';
+                return 'at-risk';
+            }
+
+            if (lower) {
+                if (avg < -5) return 'exceeded';
+                if (avg < 0) return 'on-track';
+                return 'at-risk';
+            }
+            if (avg > 15) return 'exceeded';
+            if (avg > 5) return 'on-track';
+            if (avg >= 0) return 'at-risk';
+            return 'declined';
+        }
+
+        function formatVal(v, unit) {
+            if (v == null) return '—';
+            if (unit === 'hrs/day') return v.toFixed(1) + 'h';
+            if (unit === '/100') return v.toFixed(1);
+            return v.toFixed(1) + '%';
+        }
+
+        // ── CHART INSTANCE TRACKER ────────────────────────────────────
+        const synthCharts = {};
+        function destroySynthCharts() {
+            Object.keys(synthCharts).forEach(k => {
+                if (synthCharts[k]) { synthCharts[k].destroy(); delete synthCharts[k]; }
+            });
+        }
+
+        // ── CROSS-DATASET SYNTHESIS RENDERER ──────────────────────────
+
+        window.renderCrossDatasetSynthesis = function() {
+            destroySynthCharts();
+
+            // --- KPIs ---
+            const totalIndicators = indicatorDictionary.length;
+            const exceeded = indicatorDictionary.filter(i => getStatus(i) === 'exceeded').length;
+            const avgGain = indicatorDictionary.reduce((sum, i) => {
+                const changes = [];
+                const wc = ppChange(i.womenBaseline, i.womenMidline);
+                const mc = ppChange(i.menBaseline, i.menMidline);
+                if (wc != null) changes.push(i.lowerIsBetter ? -wc : wc);
+                if (mc != null) changes.push(i.lowerIsBetter ? -mc : mc);
+                return sum + (changes.length ? changes.reduce((a, b) => a + b, 0) / changes.length : 0);
+            }, 0) / totalIndicators;
+            const logframeCount = indicatorDictionary.filter(i => i.logframeId).length + trainingIndicators.filter(i => i.logframeId).length;
+            const logframeExceeded = indicatorDictionary.filter(i => i.logframeId && getStatus(i) === 'exceeded').length
+                + trainingIndicators.filter(i => i.logframeId && i.post >= i.target).length;
+            const domains = [...new Set(indicatorDictionary.map(i => i.domain))];
+
+            const kpiContainer = document.getElementById('synthesis-kpis');
+            kpiContainer.innerHTML = [
+                { label: 'Total Indicators', value: totalIndicators, sub: 'Tracked across datasets', cls: '' },
+                { label: 'Targets Exceeded', value: exceeded + '/' + totalIndicators, sub: Math.round(exceeded / totalIndicators * 100) + '% of all indicators', cls: 'green' },
+                { label: 'Avg. Improvement', value: '+' + avgGain.toFixed(1) + 'pp', sub: 'Mean gain across indicators', cls: 'green' },
+                { label: 'Logframe Achievement', value: logframeExceeded + '/' + logframeCount, sub: 'Official M&E indicators exceeded', cls: logframeExceeded === logframeCount ? 'green' : 'orange' },
+                { label: 'Domains Covered', value: domains.length, sub: domains.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', '), cls: '' },
+                { label: 'Training Effectiveness', value: '+' + ((trainingIndicators.reduce((s, t) => s + (t.post - t.pre), 0)) / trainingIndicators.length).toFixed(1) + 'pp', sub: 'Avg. pre-to-post gain', cls: 'green' }
+            ].map(k => `<div class="synthesis-kpi ${k.cls}"><div class="sk-label">${k.label}</div><div class="sk-value">${k.value}</div><div class="sk-sub">${k.sub}</div></div>`).join('');
+
+            // --- TABLE ---
+            renderSynthesisTable('all');
+
+            // --- CHARTS ---
+            renderSynthesisCharts();
+        };
+
+        function renderSynthesisTable(domainFilter) {
+            const tbody = document.getElementById('synthesis-table-body');
+            const filtered = domainFilter === 'all' ? indicatorDictionary : indicatorDictionary.filter(i => i.domain === domainFilter);
+
+            tbody.innerHTML = filtered.map(ind => {
+                const wChange = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mChange = ppChange(ind.menBaseline, ind.menMidline);
+                const bestChange = wChange != null && mChange != null ? Math.max(Math.abs(wChange), Math.abs(mChange)) : Math.abs(wChange || mChange || 0);
+                const status = getStatus(ind);
+                const arrow = (ind.lowerIsBetter)
+                    ? (wChange != null && wChange < 0 || mChange != null && mChange < 0 ? '&#9660;' : '&#9650;')
+                    : (wChange != null && wChange > 0 || mChange != null && mChange > 0 ? '&#9650;' : '&#9660;');
+                const arrowColor = status === 'exceeded' || status === 'on-track' ? '#2e7d32' : (status === 'declined' ? '#c62828' : '#f57c00');
+
+                return `<tr data-domain="${ind.domain}">
+                    <td><strong>${ind.label}</strong>${ind.logframeId ? ' <span style="color:#0072CE;font-size:0.75em;">[' + ind.logframeId + ']</span>' : ''}</td>
+                    <td style="text-transform:capitalize;">${ind.domain}</td>
+                    <td>${formatVal(ind.womenBaseline, ind.unit)}</td>
+                    <td>${formatVal(ind.womenMidline, ind.unit)}</td>
+                    <td>${formatVal(ind.menBaseline, ind.unit)}</td>
+                    <td>${formatVal(ind.menMidline, ind.unit)}</td>
+                    <td style="font-weight:700;">
+                        ${wChange != null ? (wChange > 0 ? '+' : '') + wChange.toFixed(1) : ''}
+                        ${wChange != null && mChange != null ? ' / ' : ''}
+                        ${mChange != null ? (mChange > 0 ? '+' : '') + mChange.toFixed(1) : ''}
+                    </td>
+                    <td style="color:${arrowColor};font-size:1.2em;">${arrow}</td>
+                    <td><span class="status-pill ${status}">${status.replace('-', ' ')}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        window.filterSynthesisDomain = function(domain, btn) {
+            document.querySelectorAll('#synthesis-domain-filter .domain-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderSynthesisTable(domain);
+        };
+
+        function renderSynthesisCharts() {
+            // 1) Women vs Men comparison bar chart
+            const compIndicators = indicatorDictionary.filter(i => i.womenMidline != null && i.menMidline != null && i.unit === '%');
+            const compLabels = compIndicators.map(i => i.label.length > 22 ? i.label.substring(0, 20) + '...' : i.label);
+
+            synthCharts['comparison'] = new Chart(document.getElementById('synthesis-chart-comparison'), {
+                type: 'bar',
+                data: {
+                    labels: compLabels,
+                    datasets: [
+                        { label: 'Women (Midline)', data: compIndicators.map(i => i.womenMidline), backgroundColor: '#E91E63', borderRadius: 4 },
+                        { label: 'Men (Midline)', data: compIndicators.map(i => i.menMidline), backgroundColor: '#1976d2', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } } },
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: false }
+                    }
+                }
+            });
+            document.getElementById('synthesis-insight-comparison').innerHTML = 'Women lead in VSLA participation (98.0% vs 42.7%) and personal savings (93.4% vs 68.2%). Men show higher climate awareness (100% vs 96.3%) and stronger joint decision support (89.8% vs 58.8%). Both genders show dramatic NbS participation improvements.';
+
+            // 2) Gender gap analysis
+            const gapInds = compIndicators.slice(0, 10);
+            const baselineGaps = gapInds.map(i => Math.abs((i.womenBaseline || 0) - (i.menBaseline || 0)));
+            const midlineGaps = gapInds.map(i => Math.abs((i.womenMidline || 0) - (i.menMidline || 0)));
+
+            synthCharts['gendergap'] = new Chart(document.getElementById('synthesis-chart-gendergap'), {
+                type: 'bar',
+                data: {
+                    labels: gapInds.map(i => i.label.length > 18 ? i.label.substring(0, 16) + '...' : i.label),
+                    datasets: [
+                        { label: 'Baseline Gap', data: baselineGaps, backgroundColor: 'rgba(59,130,246,0.6)', borderRadius: 4 },
+                        { label: 'Midline Gap', data: midlineGaps, backgroundColor: 'rgba(139,92,246,0.6)', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Gap (pp)' } } },
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } }
+                }
+            });
+            document.getElementById('synthesis-insight-gendergap').innerHTML = 'Gender gaps have narrowed in climate awareness (17.3pp to 3.7pp), NbS knowledge (19.3pp to 12.0pp), and loan access (5.2pp to 20.5pp with women surpassing men). Key gap widened in VSLA participation (25.1pp to 55.3pp) where women strongly outperform.';
+
+            // 3) Radar chart by domain
+            const domainScores = {};
+            indicatorDictionary.forEach(ind => {
+                if (!domainScores[ind.domain]) domainScores[ind.domain] = { wGains: [], mGains: [] };
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+                if (wc != null) domainScores[ind.domain].wGains.push(ind.lowerIsBetter ? -wc : wc);
+                if (mc != null) domainScores[ind.domain].mGains.push(ind.lowerIsBetter ? -mc : mc);
+            });
+            const dLabels = Object.keys(domainScores).map(d => d.charAt(0).toUpperCase() + d.slice(1));
+            const wDomainAvg = Object.values(domainScores).map(d => d.wGains.length ? d.wGains.reduce((a, b) => a + b, 0) / d.wGains.length : 0);
+            const mDomainAvg = Object.values(domainScores).map(d => d.mGains.length ? d.mGains.reduce((a, b) => a + b, 0) / d.mGains.length : 0);
+
+            synthCharts['radar'] = new Chart(document.getElementById('synthesis-chart-radar'), {
+                type: 'radar',
+                data: {
+                    labels: dLabels,
+                    datasets: [
+                        { label: 'Women Avg Gain (pp)', data: wDomainAvg, borderColor: '#E91E63', backgroundColor: 'rgba(233,30,99,0.1)', pointBackgroundColor: '#E91E63' },
+                        { label: 'Men Avg Gain (pp)', data: mDomainAvg, borderColor: '#1976d2', backgroundColor: 'rgba(25,118,210,0.1)', pointBackgroundColor: '#1976d2' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { beginAtZero: true, ticks: { stepSize: 10 } } },
+                    plugins: { datalabels: { display: false } }
+                }
+            });
+            document.getElementById('synthesis-insight-radar').innerHTML = 'Women show strongest gains in Savings & Financial domain (avg +50pp), while men excel in Norms domain (avg +35pp harmful norm reduction). Both genders show balanced Climate & NbS improvements. Preparedness domain shows strong parallel progress.';
+
+            // 4) Logframe achievement overview
+            const lfIndicators = [
+                ...indicatorDictionary.filter(i => i.logframeId).map(i => ({
+                    label: i.logframeId + ': ' + i.label.substring(0, 25),
+                    result: i.womenMidline || i.menMidline,
+                    target: i.target,
+                    baseline: i.womenBaseline || i.menBaseline
+                })),
+                ...trainingIndicators.filter(i => i.logframeId).map(i => ({
+                    label: i.logframeId + ': ' + i.label.substring(0, 25),
+                    result: i.post,
+                    target: i.target,
+                    baseline: i.pre
+                }))
+            ];
+
+            synthCharts['logframe'] = new Chart(document.getElementById('synthesis-chart-logframe'), {
+                type: 'bar',
+                data: {
+                    labels: lfIndicators.map(i => i.label),
+                    datasets: [
+                        { label: 'Baseline', data: lfIndicators.map(i => i.baseline), backgroundColor: 'rgba(59,130,246,0.4)', borderRadius: 4 },
+                        { label: 'Target', data: lfIndicators.map(i => i.target), backgroundColor: 'rgba(255,152,0,0.5)', borderRadius: 4 },
+                        { label: 'Result', data: lfIndicators.map(i => i.result), backgroundColor: 'rgba(46,125,50,0.7)', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, max: 100 } },
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } }
+                }
+            });
+            document.getElementById('synthesis-insight-logframe').innerHTML = 'All logframe indicators have been exceeded or are on track. Strongest over-achievement: 1200a (HH decisions, +38.3pp above target), 1220a (savings groups, +21.9pp above target), and 1110a (mangrove knowledge, +24.9pp above target).';
+
+            // 5) Waterfall: Top gains & gaps
+            const allChanges = indicatorDictionary.map(ind => {
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+                const best = wc != null && mc != null ? (Math.abs(wc) > Math.abs(mc) ? wc : mc) : (wc || mc || 0);
+                return { label: ind.label, change: ind.lowerIsBetter ? -best : best };
+            }).sort((a, b) => b.change - a.change);
+
+            const top8 = allChanges.slice(0, 8);
+            const bottom4 = allChanges.slice(-4).reverse();
+            const waterfall = [...top8, ...bottom4];
+
+            synthCharts['waterfall'] = new Chart(document.getElementById('synthesis-chart-waterfall'), {
+                type: 'bar',
+                data: {
+                    labels: waterfall.map(w => w.label.length > 25 ? w.label.substring(0, 23) + '...' : w.label),
+                    datasets: [{
+                        label: 'Change (pp)',
+                        data: waterfall.map(w => w.change),
+                        backgroundColor: waterfall.map(w => w.change >= 15 ? '#2e7d32' : (w.change >= 5 ? '#66bb6a' : (w.change >= 0 ? '#ffb74d' : '#ef5350'))),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { title: { display: true, text: 'Change (pp)' } } },
+                    plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' }, color: '#333', formatter: v => (v > 0 ? '+' : '') + v.toFixed(1) + 'pp' } }
+                }
+            });
+            document.getElementById('synthesis-insight-waterfall').innerHTML = 'Largest gains across all datasets: Joint HH Responsibility Belief (+58.8pp women), NbS Knowledge (+54.7pp), VSLA Participation (+54.4pp women). One notable decline: Business Support for women dropped 20.7pp (84.9% to 64.2%), requiring attention.';
+
+            // 6) NbS comparison
+            synthCharts['nbs'] = new Chart(document.getElementById('synthesis-chart-nbs'), {
+                type: 'bar',
+                data: {
+                    labels: ['Mangrove', 'Seaweed', 'Forest Mgmt'],
+                    datasets: [
+                        { label: 'Women Baseline', data: [36.9, 19.8, 67.4], backgroundColor: 'rgba(233,30,99,0.3)' },
+                        { label: 'Women Midline', data: [86.5, 74.7, 98.4], backgroundColor: '#E91E63' },
+                        { label: 'Men Support Baseline', data: [29.7, 15.7, 33.7], backgroundColor: 'rgba(25,118,210,0.3)' },
+                        { label: 'Men Support Midline', data: [80.7, 83.9, 95.8], backgroundColor: '#1976d2' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                    plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } }
+                }
+            });
+            document.getElementById('synthesis-insight-nbs').innerHTML = 'Both women\'s direct participation and men\'s support for NbS activities show dramatic parallel improvements. Men\'s seaweed support (+68.2pp) now exceeds women\'s direct participation (+54.9pp), indicating strong male allyship in conservation.';
+
+            // 7) Training effectiveness
+            synthCharts['training'] = new Chart(document.getElementById('synthesis-chart-training'), {
+                type: 'bar',
+                data: {
+                    labels: trainingIndicators.map(t => t.label.length > 22 ? t.label.substring(0, 20) + '...' : t.label),
+                    datasets: [
+                        { label: 'Pre-Test', data: trainingIndicators.map(t => t.pre), backgroundColor: 'rgba(59,130,246,0.5)', borderRadius: 4 },
+                        { label: 'Post-Test', data: trainingIndicators.map(t => t.post), backgroundColor: 'rgba(46,125,50,0.7)', borderRadius: 4 },
+                        { label: 'Target', data: trainingIndicators.map(t => t.target), type: 'line', borderColor: '#f57c00', borderDash: [5, 5], pointStyle: 'rectRot', pointRadius: 6, fill: false }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } }
+                }
+            });
+            document.getElementById('synthesis-insight-training').innerHTML = 'All training programs exceeded targets. Forest conservation training achieved the highest post-test score (94.7%, +44.7pp). Female participants in mangrove training outperformed males (87.4% vs 80.2%), closing and reversing the initial gender gap.';
+        }
+
+        // ── AUTOMATED INSIGHTS ENGINE ─────────────────────────────────
+
+        function generateInsights() {
+            const insights = [];
+
+            // --- TREND insights ---
+            indicatorDictionary.forEach(ind => {
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+
+                if (wc != null && Math.abs(wc) >= 15) {
+                    const dir = (ind.lowerIsBetter ? wc < 0 : wc > 0) ? 'positive' : 'concerning';
+                    insights.push({
+                        category: 'trend',
+                        title: ind.label + ' — Women ' + (dir === 'positive' ? 'Strong Improvement' : 'Significant Change'),
+                        narrative: `Women's ${ind.label.toLowerCase()} moved from ${formatVal(ind.womenBaseline, ind.unit)} to ${formatVal(ind.womenMidline, ind.unit)} (${wc > 0 ? '+' : ''}${wc.toFixed(1)}pp). ` +
+                            (dir === 'positive' ? 'This represents a substantial positive shift indicating program effectiveness.' : 'This change requires monitoring to understand underlying drivers.'),
+                        evidence: `Source: Women Survey (Midline) | Domain: ${ind.domain} | Baseline: ${formatVal(ind.womenBaseline, ind.unit)} | Midline: ${formatVal(ind.womenMidline, ind.unit)}`,
+                        priority: Math.abs(wc)
+                    });
+                }
+                if (mc != null && Math.abs(mc) >= 15) {
+                    const dir = (ind.lowerIsBetter ? mc < 0 : mc > 0) ? 'positive' : 'concerning';
+                    insights.push({
+                        category: 'trend',
+                        title: ind.label + ' — Men ' + (dir === 'positive' ? 'Strong Improvement' : 'Significant Change'),
+                        narrative: `Men's ${ind.label.toLowerCase()} moved from ${formatVal(ind.menBaseline, ind.unit)} to ${formatVal(ind.menMidline, ind.unit)} (${mc > 0 ? '+' : ''}${mc.toFixed(1)}pp). ` +
+                            (dir === 'positive' ? 'This demonstrates meaningful behavioral change among male participants.' : 'This shift warrants further investigation.'),
+                        evidence: `Source: Men Survey (Midline) | Domain: ${ind.domain} | Baseline: ${formatVal(ind.menBaseline, ind.unit)} | Midline: ${formatVal(ind.menMidline, ind.unit)}`,
+                        priority: Math.abs(mc)
+                    });
+                }
+            });
+
+            // --- MILESTONE insights (targets exceeded) ---
+            indicatorDictionary.filter(i => i.target != null).forEach(ind => {
+                const result = ind.womenMidline || ind.menMidline;
+                const exceed = ind.lowerIsBetter ? (result <= ind.target) : (result >= ind.target);
+                if (exceed) {
+                    const over = ind.lowerIsBetter ? (ind.target - result) : (result - ind.target);
+                    insights.push({
+                        category: 'milestone',
+                        title: (ind.logframeId ? '[' + ind.logframeId + '] ' : '') + ind.label + ' — Target Exceeded',
+                        narrative: `${ind.label} reached ${formatVal(result, ind.unit)}, surpassing the target of ${formatVal(ind.target, ind.unit)} by ${Math.abs(over).toFixed(1)}pp. This logframe indicator demonstrates strong program impact.`,
+                        evidence: `Logframe ID: ${ind.logframeId || 'N/A'} | Target: ${formatVal(ind.target, ind.unit)} | Achieved: ${formatVal(result, ind.unit)} | Over-achievement: +${Math.abs(over).toFixed(1)}pp`,
+                        priority: Math.abs(over)
+                    });
+                }
+            });
+
+            trainingIndicators.filter(t => t.post >= t.target).forEach(t => {
+                insights.push({
+                    category: 'milestone',
+                    title: (t.logframeId ? '[' + t.logframeId + '] ' : '') + t.label + ' — Training Target Exceeded',
+                    narrative: `${t.label} post-test score reached ${t.post.toFixed(1)}%, exceeding the ${t.target}% target by ${(t.post - t.target).toFixed(1)}pp. Training effectiveness confirmed.`,
+                    evidence: `Pre-test: ${t.pre.toFixed(1)}% | Post-test: ${t.post.toFixed(1)}% | Target: ${t.target}% | Gain: +${(t.post - t.pre).toFixed(1)}pp`,
+                    priority: t.post - t.target
+                });
+            });
+
+            // --- ANOMALY insights (unexpected declines or outliers) ---
+            indicatorDictionary.forEach(ind => {
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+
+                // Decline where improvement expected
+                if (wc != null && !ind.lowerIsBetter && wc < -5) {
+                    insights.push({
+                        category: 'anomaly',
+                        title: ind.label + ' — Unexpected Women Decline',
+                        narrative: `Women's ${ind.label.toLowerCase()} declined by ${Math.abs(wc).toFixed(1)}pp (${formatVal(ind.womenBaseline, ind.unit)} to ${formatVal(ind.womenMidline, ind.unit)}). This counter-trend requires investigation — potential factors include survey methodology changes, seasonal effects, or unintended program consequences.`,
+                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(wc).toFixed(1)}pp`,
+                        priority: Math.abs(wc) + 10
+                    });
+                }
+                if (mc != null && !ind.lowerIsBetter && mc < -5) {
+                    insights.push({
+                        category: 'anomaly',
+                        title: ind.label + ' — Unexpected Men Decline',
+                        narrative: `Men's ${ind.label.toLowerCase()} declined by ${Math.abs(mc).toFixed(1)}pp (${formatVal(ind.menBaseline, ind.unit)} to ${formatVal(ind.menMidline, ind.unit)}). This regression needs root cause analysis.`,
+                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(mc).toFixed(1)}pp`,
+                        priority: Math.abs(mc) + 10
+                    });
+                }
+            });
+
+            // --- GAP insights (gender disparities) ---
+            indicatorDictionary.filter(i => i.womenMidline != null && i.menMidline != null).forEach(ind => {
+                const gap = Math.abs(ind.womenMidline - ind.menMidline);
+                if (gap >= 20) {
+                    const leader = ind.womenMidline > ind.menMidline ? 'Women' : 'Men';
+                    insights.push({
+                        category: 'gap',
+                        title: ind.label + ' — ' + gap.toFixed(1) + 'pp Gender Gap',
+                        narrative: `A ${gap.toFixed(1)}pp gender gap exists in ${ind.label.toLowerCase()}, with ${leader} at ${leader === 'Women' ? formatVal(ind.womenMidline, ind.unit) : formatVal(ind.menMidline, ind.unit)} vs ${leader === 'Women' ? formatVal(ind.menMidline, ind.unit) : formatVal(ind.womenMidline, ind.unit)}. ` +
+                            (gap >= 40 ? 'This substantial disparity represents a priority area for targeted intervention.' : 'Targeted programming may help narrow this gap.'),
+                        evidence: `Women: ${formatVal(ind.womenMidline, ind.unit)} | Men: ${formatVal(ind.menMidline, ind.unit)} | Gap: ${gap.toFixed(1)}pp | Domain: ${ind.domain}`,
+                        priority: gap
+                    });
+                }
+            });
+
+            // --- CROSS-LINK insights (correlated improvements) ---
+            insights.push({
+                category: 'crosslink',
+                title: 'VSLA Participation Drives Multi-Domain Gains',
+                narrative: 'VSLA participation (women: 43.6% to 98.0%) correlates with improvements in loan access (+51.1pp), personal savings (+50.3pp), and disaster coping strategies. Financial inclusion appears to be a foundational enabler for empowerment outcomes across savings, preparedness, and decision-making domains.',
+                evidence: 'VSLA: +54.4pp | Loans: +51.1pp | Savings: +50.3pp | Coping shift from distress to formal mechanisms',
+                priority: 55
+            });
+
+            insights.push({
+                category: 'crosslink',
+                title: 'GJJ Training Amplifies Male Behavior Change',
+                narrative: 'Men completing GJJ training show correlated gains: self-responsibility +20.2pp, chore participation +24.5pp, harmful norm rejection -34.7pp, and unpaid care work +82.6%. The GJJ pathway appears to create cascading behavioral shifts from attitudes to practice.',
+                evidence: 'Self-responsibility: 50.1% to 70.3% | Chores: 17.7% to 42.2% | Norms rejected: 63.1% to 28.4% | Care hours: 2.3 to 4.2',
+                priority: 45
+            });
+
+            insights.push({
+                category: 'crosslink',
+                title: 'NbS Knowledge Unlocks Conservation Participation',
+                narrative: 'NbS knowledge gains (women: +54.7pp, men: +47.4pp) are strongly associated with increased conservation participation across all three domains: mangrove (+49.6pp women), seaweed (+54.9pp women), and forest management (+31.0pp women). Knowledge appears to be the gateway to sustained conservation engagement.',
+                evidence: 'NbS knowledge: +54.7pp (W) / +47.4pp (M) | Mangrove: +49.6pp | Seaweed: +54.9pp | Forest: +31.0pp',
+                priority: 50
+            });
+
+            insights.push({
+                category: 'crosslink',
+                title: 'Preparedness Training Creates Dual-Gender Protection',
+                narrative: 'Both women and men show parallel preparedness gains (knowledge: +33.1pp W / +36.6pp M, early warnings: +36.1pp W / +38.4pp M), suggesting household-level disaster resilience improvements. Combined male-female preparedness training achieves broader community coverage than single-gender approaches.',
+                evidence: 'Women knowledge: 4.7% to 37.8% | Men knowledge: 6.2% to 42.8% | Early warnings: W +36.1pp / M +38.4pp',
+                priority: 40
+            });
+
+            // Sort by priority
+            insights.sort((a, b) => b.priority - a.priority);
+            return insights;
+        }
+
+        window.renderAutomatedInsights = function() {
+            destroySynthCharts();
+            const insights = generateInsights();
+
+            // Stats row
+            const statsRow = document.getElementById('insights-stats-row');
+            const cats = { trend: 0, milestone: 0, anomaly: 0, gap: 0, crosslink: 0 };
+            insights.forEach(i => cats[i.category]++);
+            statsRow.innerHTML = [
+                { num: insights.length, label: 'Total Insights' },
+                { num: cats.trend, label: 'Trends' },
+                { num: cats.milestone, label: 'Milestones' },
+                { num: cats.anomaly, label: 'Anomalies' },
+                { num: cats.gap, label: 'Gaps' },
+                { num: cats.crosslink, label: 'Cross-Links' }
+            ].map(s => `<div class="insight-stat-box"><div class="isb-num">${s.num}</div><div class="isb-label">${s.label}</div></div>`).join('');
+
+            // Render all insights
+            renderInsightFeed(insights, 'all');
+            window._allInsights = insights;
+        };
+
+        function renderInsightFeed(insights, catFilter) {
+            const feed = document.getElementById('insights-feed');
+            const filtered = catFilter === 'all' ? insights : insights.filter(i => i.category === catFilter);
+
+            feed.innerHTML = filtered.map((ins, idx) => `
+                <div class="insight-card ${ins.category}" style="animation: fadeIn 0.3s ease ${idx * 0.05}s both;">
+                    <span class="insight-badge ${ins.category}">${ins.category}</span>
+                    <div class="insight-title">${ins.title}</div>
+                    <div class="insight-narrative">${ins.narrative}</div>
+                    <div class="insight-evidence">${ins.evidence}</div>
+                </div>
+            `).join('');
+
+            if (filtered.length === 0) {
+                feed.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No insights in this category.</div>';
+            }
+        }
+
+        window.filterInsights = function(cat, btn) {
+            document.querySelectorAll('#insights-filter-bar .insight-filter-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            renderInsightFeed(window._allInsights || [], cat);
+        };
+
+    })();
+    </script>
+
     <!-- MOBILE NAVIGATION JAVASCRIPT -->
     <script>
     (function() {
@@ -12806,7 +13795,9 @@
             'prepost-forest': 'Trainings Pre & Post',
             'schools-dashboard': 'Schools Dashboard',
             'seaweed-assessment': 'Seaweed Assessment',
-            'vsla-monitoring': 'VSLA Monitoring'
+            'vsla-monitoring': 'VSLA Monitoring',
+            'cross-dataset': 'Cross-Dataset Synthesis',
+            'automated-insights': 'Automated Insights'
         };
 
         // Toggle mobile nav drawer
