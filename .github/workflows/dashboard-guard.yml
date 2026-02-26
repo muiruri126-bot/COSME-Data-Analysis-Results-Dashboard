@@ -1,0 +1,100 @@
+# Dashboard Integrity Guard
+# Prevents accidental removal of dashboard sections or major content loss.
+# Runs on every push to main/master — fails the build if dashboards are missing.
+
+name: Dashboard Integrity Guard
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'Women_Survey_Professional_Dashboard.html'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'Women_Survey_Professional_Dashboard.html'
+
+jobs:
+  validate-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate dashboard integrity
+        run: |
+          FILE="Women_Survey_Professional_Dashboard.html"
+
+          echo "=== Dashboard Integrity Check ==="
+
+          # 1. Minimum line count (current: ~12,500+ lines)
+          LINES=$(wc -l < "$FILE")
+          MIN_LINES=10000
+          echo "Line count: $LINES (minimum: $MIN_LINES)"
+          if [ "$LINES" -lt "$MIN_LINES" ]; then
+            echo "::error::BLOCKED — File has only $LINES lines (minimum $MIN_LINES). Possible data loss!"
+            exit 1
+          fi
+
+          # 2. Required dashboard sections must exist
+          REQUIRED_SECTIONS=(
+            "switchSurvey('project-outputs')"
+            "switchSurvey('women-cosme')"
+            "switchSurvey('men-cosme')"
+            "switchSurvey('gjj-women')"
+            "switchSurvey('gjj-men')"
+            "switchSurvey('forestry')"
+            "switchSurvey('prepost-forest')"
+            "switchSurvey('schools-dashboard')"
+            "switchSurvey('seaweed-assessment')"
+            "switchSurvey('vsla-monitoring')"
+          )
+
+          MISSING=0
+          for section in "${REQUIRED_SECTIONS[@]}"; do
+            if ! grep -q "$section" "$FILE"; then
+              echo "::error::MISSING dashboard: $section"
+              MISSING=$((MISSING + 1))
+            else
+              echo "  OK: $section"
+            fi
+          done
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "::error::BLOCKED — $MISSING dashboard section(s) missing! This push would corrupt the dashboard."
+            exit 1
+          fi
+
+          # 3. Required infrastructure must exist
+          REQUIRED_INFRA=(
+            "chart.js"
+            "chartjs-plugin-datalabels"
+            "firebase-app-compat"
+            "</body>"
+            "</html>"
+          )
+
+          for infra in "${REQUIRED_INFRA[@]}"; do
+            if ! grep -qi "$infra" "$FILE"; then
+              echo "::error::MISSING infrastructure: $infra"
+              exit 1
+            else
+              echo "  OK infra: $infra"
+            fi
+          done
+
+          # 4. File size check (should be >500KB)
+          SIZE=$(stat -c%s "$FILE")
+          MIN_SIZE=500000
+          echo "File size: $SIZE bytes (minimum: $MIN_SIZE)"
+          if [ "$SIZE" -lt "$MIN_SIZE" ]; then
+            echo "::error::BLOCKED — File is only $SIZE bytes (minimum $MIN_SIZE). Possible truncation!"
+            exit 1
+          fi
+
+          echo ""
+          echo "=== ALL CHECKS PASSED ==="
+          echo "  Lines: $LINES"
+          echo "  Size: $SIZE bytes"
+          echo "  Dashboards: ${#REQUIRED_SECTIONS[@]} found"
+          echo "  Infrastructure: ${#REQUIRED_INFRA[@]} verified"

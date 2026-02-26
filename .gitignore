@@ -36,6 +36,7 @@ Desktop.ini
 *_backup_*.html
 *_BACKUP_*.html
 *_restore.html
+backups/
 
 # Streamlit
 .streamlit/secrets.toml

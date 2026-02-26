@@ -1,0 +1,52 @@
+#!/bin/sh
+# Pre-push hook: Dashboard Integrity Guard
+# Prevents pushing if the dashboard file has lost critical sections.
+# Install: copy to .git/hooks/pre-push and chmod +x
+
+FILE="Women_Survey_Professional_Dashboard.html"
+
+if [ ! -f "$FILE" ]; then
+    echo "[GUARD] Dashboard file not found — skipping check."
+    exit 0
+fi
+
+LINES=$(wc -l < "$FILE" | tr -d ' ')
+MIN_LINES=10000
+
+if [ "$LINES" -lt "$MIN_LINES" ]; then
+    echo ""
+    echo "============================================"
+    echo "  PUSH BLOCKED — DASHBOARD INTEGRITY GUARD"
+    echo "============================================"
+    echo "  $FILE has only $LINES lines."
+    echo "  Minimum required: $MIN_LINES lines."
+    echo "  This looks like data loss / corruption."
+    echo ""
+    echo "  To force push anyway (NOT recommended):"
+    echo "    git push --no-verify"
+    echo "============================================"
+    exit 1
+fi
+
+MISSING=""
+for section in "schools-dashboard" "seaweed-assessment" "vsla-monitoring" "women-cosme" "men-cosme" "forestry" "prepost-forest"; do
+    if ! grep -q "switchSurvey('$section')" "$FILE"; then
+        MISSING="$MISSING  - $section\n"
+    fi
+done
+
+if [ -n "$MISSING" ]; then
+    echo ""
+    echo "============================================"
+    echo "  PUSH BLOCKED — MISSING DASHBOARDS"
+    echo "============================================"
+    printf "  Missing sections:\n$MISSING"
+    echo ""
+    echo "  To force push anyway (NOT recommended):"
+    echo "    git push --no-verify"
+    echo "============================================"
+    exit 1
+fi
+
+echo "[GUARD] Dashboard integrity OK ($LINES lines, all sections present)."
+exit 0
