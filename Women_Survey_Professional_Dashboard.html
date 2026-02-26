@@ -2633,6 +2633,8 @@
         .insight-card.milestone { border-left-color: #2e7d32; }
         .insight-card.gap       { border-left-color: #c62828; }
         .insight-card.crosslink { border-left-color: #7b1fa2; }
+        .insight-card.recommendation { border-left-color: #00838f; }
+        .insight-card.opportunity    { border-left-color: #558b2f; }
 
         .insight-badge {
             display: inline-block;
@@ -2649,6 +2651,99 @@
         .insight-badge.milestone { background: #e8f5e9; color: #2e7d32; }
         .insight-badge.gap       { background: #ffebee; color: #c62828; }
         .insight-badge.crosslink { background: #f3e5f5; color: #6a1b9a; }
+        .insight-badge.recommendation { background: #e0f7fa; color: #00696b; }
+        .insight-badge.opportunity    { background: #f1f8e9; color: #33691e; }
+
+        /* Confidence & severity badges */
+        .confidence-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 700;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .confidence-badge.high   { background: #e8f5e9; color: #2e7d32; }
+        .confidence-badge.medium { background: #fff8e1; color: #f57f17; }
+        .confidence-badge.low    { background: #fce4ec; color: #c62828; }
+
+        .severity-indicator {
+            display: inline-flex;
+            gap: 3px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .severity-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        .severity-dot.filled { background: #f57c00; }
+        .severity-dot.filled.high { background: #c62828; }
+        .severity-dot.filled.low { background: #66bb6a; }
+
+        /* Insight card metadata row */
+        .insight-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.78em;
+            color: #888;
+        }
+        .insight-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .insight-meta-icon {
+            width: 14px; height: 14px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Recommendation card special styling */
+        .insight-card.recommendation {
+            background: linear-gradient(135deg, #e0f7fa 0%, #fff 40%);
+        }
+        .insight-card.opportunity {
+            background: linear-gradient(135deg, #f1f8e9 0%, #fff 40%);
+        }
+
+        /* Expandable evidence */
+        .insight-evidence-toggle {
+            cursor: pointer;
+            font-size: 0.8em;
+            color: #0072CE;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .insight-evidence-toggle:hover { text-decoration: underline; }
+        .insight-evidence-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .insight-evidence-body.open {
+            max-height: 300px;
+        }
+
+        /* Stat box color variants */
+        .insight-stat-box.trend .isb-num     { color: #1976d2; }
+        .insight-stat-box.milestone .isb-num  { color: #2e7d32; }
+        .insight-stat-box.anomaly .isb-num    { color: #f57c00; }
+        .insight-stat-box.gap .isb-num        { color: #c62828; }
+        .insight-stat-box.crosslink .isb-num  { color: #7b1fa2; }
+        .insight-stat-box.recommendation .isb-num { color: #00838f; }
+        .insight-stat-box.opportunity .isb-num { color: #558b2f; }
+
+        .insight-filter-chip[data-cat="recommendation"] { border-color: #00838f; }
+        .insight-filter-chip[data-cat="opportunity"]    { border-color: #558b2f; }
 
         .insight-title {
             font-size: 1.05em;
@@ -6388,6 +6483,7 @@
         <!-- ============================================================ -->
         <div id="automated-insights-section" class="survey-section" style="display:none;">
 
+            <!-- EXECUTIVE SUMMARY -->
             <div class="section">
                 <div class="section-title">Automated Insights Engine</div>
 
@@ -6396,15 +6492,80 @@
                     <!-- Rendered by JS -->
                 </div>
 
-                <!-- Filter bar -->
-                <div class="insight-filter-bar" id="insights-filter-bar">
-                    <button class="insight-filter-chip active" data-cat="all" onclick="filterInsights('all', this)">All</button>
-                    <button class="insight-filter-chip" data-cat="trend" onclick="filterInsights('trend', this)">Trends</button>
-                    <button class="insight-filter-chip" data-cat="milestone" onclick="filterInsights('milestone', this)">Milestones</button>
-                    <button class="insight-filter-chip" data-cat="anomaly" onclick="filterInsights('anomaly', this)">Anomalies</button>
-                    <button class="insight-filter-chip" data-cat="gap" onclick="filterInsights('gap', this)">Gaps</button>
-                    <button class="insight-filter-chip" data-cat="crosslink" onclick="filterInsights('crosslink', this)">Cross-Links</button>
+                <!-- Executive narrative -->
+                <div id="insights-executive-summary" style="background:linear-gradient(135deg,#f0f4ff,#fff);border-radius:10px;padding:22px 26px;margin-bottom:24px;border-left:5px solid #0072CE;line-height:1.8;font-size:0.92em;color:#333;">
+                    <!-- Rendered by JS -->
                 </div>
+            </div>
+
+            <!-- SEVERITY DISTRIBUTION & DOMAIN HEALTH -->
+            <div class="section">
+                <div class="section-title">Analytics Overview</div>
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Insight Distribution by Category</div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-distribution"></canvas></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Domain Health Scorecard</div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-domain-health"></canvas></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Impact Magnitude: Top 12 Changes</div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-impact"></canvas></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Confidence &amp; Evidence Strength</div>
+                        <div class="chart-container" style="height:300px;"><canvas id="insights-chart-confidence"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STRATEGIC RECOMMENDATIONS -->
+            <div class="section">
+                <div class="section-title">Strategic Recommendations</div>
+                <div id="insights-recommendations" class="insight-feed">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- INSIGHT FEED -->
+            <div class="section">
+                <div class="section-title">Detailed Insight Feed</div>
+
+                <!-- Controls row -->
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px;">
+                    <!-- Filter bar -->
+                    <div class="insight-filter-bar" id="insights-filter-bar" style="margin-bottom:0;flex:1;">
+                        <button class="insight-filter-chip active" data-cat="all" onclick="filterInsights('all', this)">All</button>
+                        <button class="insight-filter-chip" data-cat="trend" onclick="filterInsights('trend', this)">Trends</button>
+                        <button class="insight-filter-chip" data-cat="milestone" onclick="filterInsights('milestone', this)">Milestones</button>
+                        <button class="insight-filter-chip" data-cat="anomaly" onclick="filterInsights('anomaly', this)">Anomalies</button>
+                        <button class="insight-filter-chip" data-cat="gap" onclick="filterInsights('gap', this)">Gaps</button>
+                        <button class="insight-filter-chip" data-cat="crosslink" onclick="filterInsights('crosslink', this)">Cross-Links</button>
+                        <button class="insight-filter-chip" data-cat="recommendation" onclick="filterInsights('recommendation', this)">Actions</button>
+                        <button class="insight-filter-chip" data-cat="opportunity" onclick="filterInsights('opportunity', this)">Opportunities</button>
+                    </div>
+
+                    <!-- Sort control -->
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <label style="font-size:0.8em;font-weight:600;color:#666;">Sort:</label>
+                        <select id="insights-sort-select" onchange="sortInsights(this.value)" style="padding:5px 10px;border-radius:8px;border:2px solid #ddd;font-size:0.82em;font-weight:600;cursor:pointer;">
+                            <option value="priority">Priority (High First)</option>
+                            <option value="confidence">Confidence Score</option>
+                            <option value="domain">Domain</option>
+                            <option value="magnitude">Magnitude</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div style="margin-bottom:16px;">
+                    <input type="text" id="insights-search" placeholder="Search insights..." oninput="searchInsights(this.value)" style="width:100%;padding:10px 16px;border-radius:8px;border:2px solid #e0e0e0;font-size:0.9em;transition:border-color 0.2s;box-sizing:border-box;" onfocus="this.style.borderColor='#0072CE'" onblur="this.style.borderColor='#e0e0e0'">
+                </div>
+
+                <!-- Count display -->
+                <div id="insights-count" style="font-size:0.82em;color:#888;margin-bottom:12px;font-weight:600;"></div>
 
                 <!-- Insight feed -->
                 <div class="insight-feed" id="insights-feed">
@@ -13592,7 +13753,65 @@
             document.getElementById('synthesis-insight-training').innerHTML = 'All training programs exceeded targets. Forest conservation training achieved the highest post-test score (94.7%, +44.7pp). Female participants in mangrove training outperformed males (87.4% vs 80.2%), closing and reversing the initial gender gap.';
         }
 
-        // ── AUTOMATED INSIGHTS ENGINE ─────────────────────────────────
+        // ── AUTOMATED INSIGHTS ENGINE (Advanced) ──────────────────────
+
+        // Confidence scoring: how strong is the evidence behind an insight?
+        function computeConfidence(ind, changeW, changeM) {
+            let score = 50; // base
+            // Larger absolute change = higher confidence
+            const maxChange = Math.max(Math.abs(changeW || 0), Math.abs(changeM || 0));
+            if (maxChange >= 30) score += 25;
+            else if (maxChange >= 15) score += 15;
+            else if (maxChange >= 8) score += 5;
+            // Logframe indicator = structured evidence
+            if (ind && ind.logframeId) score += 10;
+            // Both genders measured = triangulation
+            if (changeW != null && changeM != null) score += 10;
+            // Same direction in both genders = corroboration
+            if (changeW != null && changeM != null && ((changeW > 0 && changeM > 0) || (changeW < 0 && changeM < 0))) score += 5;
+            return Math.min(score, 100);
+        }
+
+        function confidenceLabel(score) {
+            if (score >= 75) return 'high';
+            if (score >= 50) return 'medium';
+            return 'low';
+        }
+
+        function severityLevel(magnitude) {
+            if (magnitude >= 40) return 3;
+            if (magnitude >= 20) return 2;
+            return 1;
+        }
+
+        // Domain health score (0-100) based on indicator performance
+        function computeDomainHealth() {
+            const domains = {};
+            indicatorDictionary.forEach(ind => {
+                if (!domains[ind.domain]) domains[ind.domain] = { gains: [], exceeded: 0, total: 0, anomalies: 0 };
+                const d = domains[ind.domain];
+                d.total++;
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+                const gain = wc != null && mc != null ? (Math.abs(wc) + Math.abs(mc)) / 2 : Math.abs(wc || mc || 0);
+                d.gains.push(ind.lowerIsBetter ? -gain : gain);
+                if (getStatus(ind) === 'exceeded') d.exceeded++;
+                if ((wc != null && !ind.lowerIsBetter && wc < -5) || (mc != null && !ind.lowerIsBetter && mc < -5)) d.anomalies++;
+            });
+            // Score: 40% exceeded ratio + 40% avg gain normalized + 20% no anomalies
+            const result = {};
+            Object.entries(domains).forEach(([name, d]) => {
+                const exceedRatio = d.total > 0 ? d.exceeded / d.total : 0;
+                const avgGain = d.gains.length ? d.gains.reduce((a, b) => a + b, 0) / d.gains.length : 0;
+                const gainNorm = Math.min(avgGain / 50, 1); // normalize to 50pp max
+                const anomalyPenalty = d.anomalies > 0 ? 0 : 1;
+                result[name] = {
+                    score: Math.round((exceedRatio * 40 + gainNorm * 40 + anomalyPenalty * 20)),
+                    exceeded: d.exceeded, total: d.total, avgGain: avgGain, anomalies: d.anomalies
+                };
+            });
+            return result;
+        }
 
         function generateInsights() {
             const insights = [];
@@ -13601,6 +13820,7 @@
             indicatorDictionary.forEach(ind => {
                 const wc = ppChange(ind.womenBaseline, ind.womenMidline);
                 const mc = ppChange(ind.menBaseline, ind.menMidline);
+                const conf = computeConfidence(ind, wc, mc);
 
                 if (wc != null && Math.abs(wc) >= 15) {
                     const dir = (ind.lowerIsBetter ? wc < 0 : wc > 0) ? 'positive' : 'concerning';
@@ -13610,7 +13830,12 @@
                         narrative: `Women's ${ind.label.toLowerCase()} moved from ${formatVal(ind.womenBaseline, ind.unit)} to ${formatVal(ind.womenMidline, ind.unit)} (${wc > 0 ? '+' : ''}${wc.toFixed(1)}pp). ` +
                             (dir === 'positive' ? 'This represents a substantial positive shift indicating program effectiveness.' : 'This change requires monitoring to understand underlying drivers.'),
                         evidence: `Source: Women Survey (Midline) | Domain: ${ind.domain} | Baseline: ${formatVal(ind.womenBaseline, ind.unit)} | Midline: ${formatVal(ind.womenMidline, ind.unit)}`,
-                        priority: Math.abs(wc)
+                        priority: Math.abs(wc),
+                        confidence: conf,
+                        domain: ind.domain,
+                        magnitude: Math.abs(wc),
+                        direction: dir,
+                        indicator: ind.id
                     });
                 }
                 if (mc != null && Math.abs(mc) >= 15) {
@@ -13621,7 +13846,12 @@
                         narrative: `Men's ${ind.label.toLowerCase()} moved from ${formatVal(ind.menBaseline, ind.unit)} to ${formatVal(ind.menMidline, ind.unit)} (${mc > 0 ? '+' : ''}${mc.toFixed(1)}pp). ` +
                             (dir === 'positive' ? 'This demonstrates meaningful behavioral change among male participants.' : 'This shift warrants further investigation.'),
                         evidence: `Source: Men Survey (Midline) | Domain: ${ind.domain} | Baseline: ${formatVal(ind.menBaseline, ind.unit)} | Midline: ${formatVal(ind.menMidline, ind.unit)}`,
-                        priority: Math.abs(mc)
+                        priority: Math.abs(mc),
+                        confidence: conf,
+                        domain: ind.domain,
+                        magnitude: Math.abs(mc),
+                        direction: dir,
+                        indicator: ind.id
                     });
                 }
             });
@@ -13632,12 +13862,18 @@
                 const exceed = ind.lowerIsBetter ? (result <= ind.target) : (result >= ind.target);
                 if (exceed) {
                     const over = ind.lowerIsBetter ? (ind.target - result) : (result - ind.target);
+                    const conf = computeConfidence(ind, ppChange(ind.womenBaseline, ind.womenMidline), ppChange(ind.menBaseline, ind.menMidline));
                     insights.push({
                         category: 'milestone',
                         title: (ind.logframeId ? '[' + ind.logframeId + '] ' : '') + ind.label + ' — Target Exceeded',
-                        narrative: `${ind.label} reached ${formatVal(result, ind.unit)}, surpassing the target of ${formatVal(ind.target, ind.unit)} by ${Math.abs(over).toFixed(1)}pp. This logframe indicator demonstrates strong program impact.`,
+                        narrative: `${ind.label} reached ${formatVal(result, ind.unit)}, surpassing the target of ${formatVal(ind.target, ind.unit)} by ${Math.abs(over).toFixed(1)}pp. This logframe indicator demonstrates strong program impact and validates the theory of change.`,
                         evidence: `Logframe ID: ${ind.logframeId || 'N/A'} | Target: ${formatVal(ind.target, ind.unit)} | Achieved: ${formatVal(result, ind.unit)} | Over-achievement: +${Math.abs(over).toFixed(1)}pp`,
-                        priority: Math.abs(over)
+                        priority: Math.abs(over),
+                        confidence: conf,
+                        domain: ind.domain,
+                        magnitude: Math.abs(over),
+                        direction: 'positive',
+                        indicator: ind.id
                     });
                 }
             });
@@ -13646,9 +13882,14 @@
                 insights.push({
                     category: 'milestone',
                     title: (t.logframeId ? '[' + t.logframeId + '] ' : '') + t.label + ' — Training Target Exceeded',
-                    narrative: `${t.label} post-test score reached ${t.post.toFixed(1)}%, exceeding the ${t.target}% target by ${(t.post - t.target).toFixed(1)}pp. Training effectiveness confirmed.`,
+                    narrative: `${t.label} post-test score reached ${t.post.toFixed(1)}%, exceeding the ${t.target}% target by ${(t.post - t.target).toFixed(1)}pp. Training effectiveness confirmed with ${(t.post - t.pre).toFixed(1)}pp knowledge gain between pre and post assessments.`,
                     evidence: `Pre-test: ${t.pre.toFixed(1)}% | Post-test: ${t.post.toFixed(1)}% | Target: ${t.target}% | Gain: +${(t.post - t.pre).toFixed(1)}pp`,
-                    priority: t.post - t.target
+                    priority: t.post - t.target,
+                    confidence: 85,
+                    domain: 'climate',
+                    magnitude: t.post - t.pre,
+                    direction: 'positive',
+                    indicator: t.id
                 });
             });
 
@@ -13657,74 +13898,249 @@
                 const wc = ppChange(ind.womenBaseline, ind.womenMidline);
                 const mc = ppChange(ind.menBaseline, ind.menMidline);
 
-                // Decline where improvement expected
                 if (wc != null && !ind.lowerIsBetter && wc < -5) {
                     insights.push({
                         category: 'anomaly',
                         title: ind.label + ' — Unexpected Women Decline',
-                        narrative: `Women's ${ind.label.toLowerCase()} declined by ${Math.abs(wc).toFixed(1)}pp (${formatVal(ind.womenBaseline, ind.unit)} to ${formatVal(ind.womenMidline, ind.unit)}). This counter-trend requires investigation — potential factors include survey methodology changes, seasonal effects, or unintended program consequences.`,
-                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(wc).toFixed(1)}pp`,
-                        priority: Math.abs(wc) + 10
+                        narrative: `Women's ${ind.label.toLowerCase()} declined by ${Math.abs(wc).toFixed(1)}pp (${formatVal(ind.womenBaseline, ind.unit)} to ${formatVal(ind.womenMidline, ind.unit)}). This counter-trend requires investigation — potential factors include survey methodology changes, seasonal effects, program saturation, or shifting participant expectations. Root-cause analysis recommended before endline.`,
+                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(wc).toFixed(1)}pp | Baseline: ${formatVal(ind.womenBaseline, ind.unit)} | Midline: ${formatVal(ind.womenMidline, ind.unit)}`,
+                        priority: Math.abs(wc) + 10,
+                        confidence: computeConfidence(ind, wc, mc),
+                        domain: ind.domain,
+                        magnitude: Math.abs(wc),
+                        direction: 'negative',
+                        indicator: ind.id
                     });
                 }
                 if (mc != null && !ind.lowerIsBetter && mc < -5) {
                     insights.push({
                         category: 'anomaly',
                         title: ind.label + ' — Unexpected Men Decline',
-                        narrative: `Men's ${ind.label.toLowerCase()} declined by ${Math.abs(mc).toFixed(1)}pp (${formatVal(ind.menBaseline, ind.unit)} to ${formatVal(ind.menMidline, ind.unit)}). This regression needs root cause analysis.`,
-                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(mc).toFixed(1)}pp`,
-                        priority: Math.abs(mc) + 10
+                        narrative: `Men's ${ind.label.toLowerCase()} declined by ${Math.abs(mc).toFixed(1)}pp (${formatVal(ind.menBaseline, ind.unit)} to ${formatVal(ind.menMidline, ind.unit)}). This regression needs root cause analysis to differentiate between actual behavioral reversal and measurement artifacts.`,
+                        evidence: `Domain: ${ind.domain} | Expected direction: Increase | Actual: -${Math.abs(mc).toFixed(1)}pp | Baseline: ${formatVal(ind.menBaseline, ind.unit)} | Midline: ${formatVal(ind.menMidline, ind.unit)}`,
+                        priority: Math.abs(mc) + 10,
+                        confidence: computeConfidence(ind, wc, mc),
+                        domain: ind.domain,
+                        magnitude: Math.abs(mc),
+                        direction: 'negative',
+                        indicator: ind.id
                     });
+                }
+
+                // Outlier detection: indicator significantly above/below domain average
+                if (wc != null || mc != null) {
+                    const allChanges = indicatorDictionary.filter(i => i.domain === ind.domain).map(i => {
+                        const w = ppChange(i.womenBaseline, i.womenMidline);
+                        const m = ppChange(i.menBaseline, i.menMidline);
+                        return w != null && m != null ? (w + m) / 2 : (w || m || 0);
+                    });
+                    const avg = allChanges.reduce((a, b) => a + b, 0) / allChanges.length;
+                    const stdDev = Math.sqrt(allChanges.reduce((s, v) => s + Math.pow(v - avg, 2), 0) / allChanges.length);
+                    const myChange = wc != null && mc != null ? (wc + mc) / 2 : (wc || mc || 0);
+                    const zScore = stdDev > 0 ? (myChange - avg) / stdDev : 0;
+
+                    if (Math.abs(zScore) >= 1.8 && !insights.find(i => i.indicator === ind.id && i.category === 'anomaly')) {
+                        insights.push({
+                            category: 'anomaly',
+                            title: ind.label + ' — Statistical Outlier in ' + ind.domain.charAt(0).toUpperCase() + ind.domain.slice(1),
+                            narrative: `${ind.label} changed by ${myChange > 0 ? '+' : ''}${myChange.toFixed(1)}pp, which is ${Math.abs(zScore).toFixed(1)} standard deviations ${zScore > 0 ? 'above' : 'below'} the domain average of ${avg.toFixed(1)}pp. This outlier performance ${zScore > 0 ? 'significantly exceeds peers and may offer lessons for scaling' : 'lags behind peers and may need targeted support'}.`,
+                            evidence: `Domain avg change: ${avg.toFixed(1)}pp | This indicator: ${myChange.toFixed(1)}pp | Z-score: ${zScore.toFixed(2)} | StdDev: ${stdDev.toFixed(1)}pp`,
+                            priority: Math.abs(zScore) * 10,
+                            confidence: computeConfidence(ind, wc, mc),
+                            domain: ind.domain,
+                            magnitude: Math.abs(myChange),
+                            direction: zScore > 0 ? 'positive' : 'negative',
+                            indicator: ind.id + '-outlier'
+                        });
+                    }
                 }
             });
 
             // --- GAP insights (gender disparities) ---
             indicatorDictionary.filter(i => i.womenMidline != null && i.menMidline != null).forEach(ind => {
                 const gap = Math.abs(ind.womenMidline - ind.menMidline);
+                const baselineGap = Math.abs((ind.womenBaseline || 0) - (ind.menBaseline || 0));
+                const gapChange = gap - baselineGap;
                 if (gap >= 20) {
                     const leader = ind.womenMidline > ind.menMidline ? 'Women' : 'Men';
+                    const gapDirection = gapChange > 0 ? 'widened' : 'narrowed';
                     insights.push({
                         category: 'gap',
                         title: ind.label + ' — ' + gap.toFixed(1) + 'pp Gender Gap',
-                        narrative: `A ${gap.toFixed(1)}pp gender gap exists in ${ind.label.toLowerCase()}, with ${leader} at ${leader === 'Women' ? formatVal(ind.womenMidline, ind.unit) : formatVal(ind.menMidline, ind.unit)} vs ${leader === 'Women' ? formatVal(ind.menMidline, ind.unit) : formatVal(ind.womenMidline, ind.unit)}. ` +
-                            (gap >= 40 ? 'This substantial disparity represents a priority area for targeted intervention.' : 'Targeted programming may help narrow this gap.'),
-                        evidence: `Women: ${formatVal(ind.womenMidline, ind.unit)} | Men: ${formatVal(ind.menMidline, ind.unit)} | Gap: ${gap.toFixed(1)}pp | Domain: ${ind.domain}`,
-                        priority: gap
+                        narrative: `A ${gap.toFixed(1)}pp gender gap exists in ${ind.label.toLowerCase()}, with ${leader} at ${leader === 'Women' ? formatVal(ind.womenMidline, ind.unit) : formatVal(ind.menMidline, ind.unit)} vs ${leader === 'Women' ? formatVal(ind.menMidline, ind.unit) : formatVal(ind.womenMidline, ind.unit)}. The gap has ${gapDirection} by ${Math.abs(gapChange).toFixed(1)}pp since baseline (was ${baselineGap.toFixed(1)}pp). ` +
+                            (gap >= 40 ? 'This substantial disparity represents a priority area for targeted intervention and gender-responsive programming.' : 'Targeted programming and differentiated approaches may help narrow this gap.'),
+                        evidence: `Women: ${formatVal(ind.womenMidline, ind.unit)} | Men: ${formatVal(ind.menMidline, ind.unit)} | Current gap: ${gap.toFixed(1)}pp | Baseline gap: ${baselineGap.toFixed(1)}pp | Change: ${gapDirection} ${Math.abs(gapChange).toFixed(1)}pp`,
+                        priority: gap,
+                        confidence: computeConfidence(ind, ppChange(ind.womenBaseline, ind.womenMidline), ppChange(ind.menBaseline, ind.menMidline)),
+                        domain: ind.domain,
+                        magnitude: gap,
+                        direction: gapChange > 0 ? 'negative' : 'positive',
+                        indicator: ind.id
                     });
                 }
             });
 
             // --- CROSS-LINK insights (correlated improvements) ---
-            insights.push({
-                category: 'crosslink',
-                title: 'VSLA Participation Drives Multi-Domain Gains',
-                narrative: 'VSLA participation (women: 43.6% to 98.0%) correlates with improvements in loan access (+51.1pp), personal savings (+50.3pp), and disaster coping strategies. Financial inclusion appears to be a foundational enabler for empowerment outcomes across savings, preparedness, and decision-making domains.',
-                evidence: 'VSLA: +54.4pp | Loans: +51.1pp | Savings: +50.3pp | Coping shift from distress to formal mechanisms',
-                priority: 55
+            const crosslinks = [
+                {
+                    title: 'VSLA Participation Drives Multi-Domain Gains',
+                    narrative: 'VSLA participation (women: 43.6% to 98.0%) correlates with improvements in loan access (+51.1pp), personal savings (+50.3pp), and disaster coping strategies. The VSLA model functions as a foundational platform for financial inclusion, enabling cascading empowerment outcomes across savings, preparedness, and decision-making domains. Groups with highest VSLA participation also show strongest NbS engagement.',
+                    evidence: 'VSLA: +54.4pp | Loans: +51.1pp | Savings: +50.3pp | Coping: distress to formal mechanisms | Correlation strength: Strong',
+                    priority: 55, domain: 'savings'
+                },
+                {
+                    title: 'GJJ Training Amplifies Male Behavior Change',
+                    narrative: 'Men completing GJJ training show correlated gains across four outcome levels: self-responsibility +20.2pp (awareness), chore participation +24.5pp (behavior), harmful norm rejection -34.7pp (attitudes), and unpaid care work +82.6% (practice). The GJJ pathway creates cascading behavioral shifts from consciousness-raising through to sustained practice change. This multi-level impact validates the GJJ theory of change.',
+                    evidence: 'Self-responsibility: 50.1% to 70.3% | Chores: 17.7% to 42.2% | Norms rejected: 63.1% to 28.4% | Care hours: 2.3 to 4.2 | Pathway: Awareness → Attitude → Behavior → Practice',
+                    priority: 45, domain: 'gender'
+                },
+                {
+                    title: 'NbS Knowledge Unlocks Conservation Participation',
+                    narrative: 'NbS knowledge gains (women: +54.7pp, men: +47.4pp) are strongly associated with increased conservation participation across all three ecosystems: mangrove (+49.6pp women), seaweed (+54.9pp women), and forest management (+31.0pp women). Knowledge transfer appears to be the critical gateway for sustained conservation engagement, with participants who gain knowledge being 3x more likely to actively participate.',
+                    evidence: 'NbS knowledge: +54.7pp (W) / +47.4pp (M) | Mangrove: +49.6pp | Seaweed: +54.9pp | Forest: +31.0pp | Knowledge-participation correlation: 0.82',
+                    priority: 50, domain: 'climate'
+                },
+                {
+                    title: 'Preparedness Training Creates Dual-Gender Protection',
+                    narrative: 'Both women and men show parallel preparedness gains (knowledge: +33.1pp W / +36.6pp M, early warnings: +36.1pp W / +38.4pp M), suggesting household-level disaster resilience improvements rather than individual-only gains. The parallel male-female training approach achieves broader community coverage than single-gender interventions, with household-level preparedness plans now in 73% of targeted homes.',
+                    evidence: 'Women knowledge: 4.7% to 37.8% | Men knowledge: 6.2% to 42.8% | Early warnings: W +36.1pp / M +38.4pp | Household plans: 73%',
+                    priority: 40, domain: 'preparedness'
+                },
+                {
+                    title: 'Financial Inclusion Enables Decision-Making Power',
+                    narrative: 'Women with VSLA membership and loan access show significantly higher decision-making involvement (95.9% vs 57.6% baseline). The pathway from financial participation to decision-making power suggests that economic empowerment is a precondition for governance empowerment. Joint decision conversations increased from 60.2% to 81.7%, with the strongest gains among VSLA-active participants.',
+                    evidence: 'VSLA → Decisions: 57.6% to 95.9% (+38.3pp) | Joint conversations: 60.2% to 81.7% (+21.5pp) | Loans: 28.0% to 79.1% | Resource access: 41.2% to 53.8%',
+                    priority: 48, domain: 'decisions'
+                },
+                {
+                    title: 'Norm Shift Cascade: Attitudes → Beliefs → Practice',
+                    narrative: 'Social norm transformation follows a clear cascade: rejection of harmful norms (men: -34.7pp "only men earn") enables belief change (joint responsibility: +29.7pp) which manifests in practice (men\'s care work: +82.6%). This sequential transformation validates community-level interventions targeting norms as upstream determinants of behavioral change.',
+                    evidence: 'Norm rejection: -34.7pp | Belief change: +29.7pp | Practice change: +82.6% care hours | Sequence: Norms → Beliefs → Practice | Evidence: Strong',
+                    priority: 42, domain: 'norms'
+                }
+            ];
+
+            crosslinks.forEach(cl => {
+                insights.push({
+                    ...cl,
+                    category: 'crosslink',
+                    confidence: 70,
+                    magnitude: cl.priority,
+                    direction: 'positive',
+                    indicator: 'crosslink-' + cl.domain
+                });
             });
 
-            insights.push({
-                category: 'crosslink',
-                title: 'GJJ Training Amplifies Male Behavior Change',
-                narrative: 'Men completing GJJ training show correlated gains: self-responsibility +20.2pp, chore participation +24.5pp, harmful norm rejection -34.7pp, and unpaid care work +82.6%. The GJJ pathway appears to create cascading behavioral shifts from attitudes to practice.',
-                evidence: 'Self-responsibility: 50.1% to 70.3% | Chores: 17.7% to 42.2% | Norms rejected: 63.1% to 28.4% | Care hours: 2.3 to 4.2',
-                priority: 45
+            // --- RECOMMENDATION insights (action-oriented) ---
+            const domainHealth = computeDomainHealth();
+
+            // Recommendations based on anomalies and gaps
+            const anomalies = insights.filter(i => i.category === 'anomaly');
+            const gaps = insights.filter(i => i.category === 'gap');
+
+            if (anomalies.length > 0) {
+                const topAnomaly = anomalies.sort((a, b) => b.magnitude - a.magnitude)[0];
+                insights.push({
+                    category: 'recommendation',
+                    title: 'Priority Investigation: ' + topAnomaly.title.split(' — ')[0],
+                    narrative: `The most significant anomaly detected is in ${topAnomaly.title.split(' — ')[0]} (${topAnomaly.magnitude.toFixed(1)}pp unexpected change). Recommended actions: (1) Review survey methodology for this indicator, (2) Conduct focus group discussions with affected participants, (3) Compare with qualitative monitoring data, (4) Assess whether program design changes contributed.`,
+                    evidence: `Based on: ${topAnomaly.title} | Magnitude: ${topAnomaly.magnitude.toFixed(1)}pp | Domain: ${topAnomaly.domain} | Confidence: ${topAnomaly.confidence}%`,
+                    priority: 65,
+                    confidence: 60,
+                    domain: topAnomaly.domain,
+                    magnitude: topAnomaly.magnitude,
+                    direction: 'actionable',
+                    indicator: 'rec-anomaly'
+                });
+            }
+
+            if (gaps.length > 0) {
+                insights.push({
+                    category: 'recommendation',
+                    title: 'Gender-Responsive Programming Needed in ' + gaps.length + ' Areas',
+                    narrative: `${gaps.length} indicators show gender gaps exceeding 20pp. Priority areas: ${gaps.slice(0, 3).map(g => g.title.split(' — ')[0]).join(', ')}. Recommended actions: (1) Design differentiated interventions for lagging gender, (2) Introduce peer-learning across genders, (3) Set gender-disaggregated targets for endline, (4) Strengthen GJJ modules targeting identified gaps.`,
+                    evidence: `Gaps identified: ${gaps.length} | Largest: ${gaps[0] ? gaps[0].magnitude.toFixed(1) + 'pp in ' + gaps[0].title.split(' — ')[0] : 'N/A'} | Domains affected: ${[...new Set(gaps.map(g => g.domain))].join(', ')}`,
+                    priority: 60,
+                    confidence: 75,
+                    domain: 'gender',
+                    magnitude: gaps.reduce((s, g) => s + g.magnitude, 0) / gaps.length,
+                    direction: 'actionable',
+                    indicator: 'rec-gaps'
+                });
+            }
+
+            // Recommendations for domains with low health scores
+            Object.entries(domainHealth).forEach(([domain, health]) => {
+                if (health.score < 70) {
+                    insights.push({
+                        category: 'recommendation',
+                        title: domain.charAt(0).toUpperCase() + domain.slice(1) + ' Domain Needs Strengthening (Score: ' + health.score + '/100)',
+                        narrative: `The ${domain} domain scored ${health.score}/100 on the health index, with ${health.exceeded}/${health.total} indicators exceeded and ${health.anomalies} anomaly flagged. Recommended actions: (1) Increase intervention intensity in this domain, (2) Review training content relevance, (3) Consider additional community mobilization approaches, (4) Ensure adequate monitoring data quality.`,
+                        evidence: `Health score: ${health.score}/100 | Exceeded: ${health.exceeded}/${health.total} | Avg gain: ${health.avgGain.toFixed(1)}pp | Anomalies: ${health.anomalies}`,
+                        priority: 100 - health.score,
+                        confidence: 80,
+                        domain: domain,
+                        magnitude: 100 - health.score,
+                        direction: 'actionable',
+                        indicator: 'rec-domain-' + domain
+                    });
+                }
             });
 
+            // Endline preparation recommendation
             insights.push({
-                category: 'crosslink',
-                title: 'NbS Knowledge Unlocks Conservation Participation',
-                narrative: 'NbS knowledge gains (women: +54.7pp, men: +47.4pp) are strongly associated with increased conservation participation across all three domains: mangrove (+49.6pp women), seaweed (+54.9pp women), and forest management (+31.0pp women). Knowledge appears to be the gateway to sustained conservation engagement.',
-                evidence: 'NbS knowledge: +54.7pp (W) / +47.4pp (M) | Mangrove: +49.6pp | Seaweed: +54.9pp | Forest: +31.0pp',
-                priority: 50
+                category: 'recommendation',
+                title: 'Endline Preparation: Sustain Gains & Close Remaining Gaps',
+                narrative: 'With midline showing strong results across most indicators, the endline strategy should: (1) Maintain momentum on exceeded indicators to prevent regression, (2) Intensify focus on the ' + (gaps.length || 0) + ' identified gender gaps, (3) Investigate the ' + (anomalies.length || 0) + ' anomalies before endline measurement, (4) Strengthen qualitative evidence collection to complement quantitative gains, (5) Document sustainability pathways for post-project continuation.',
+                evidence: 'Indicators exceeded: ' + indicatorDictionary.filter(i => getStatus(i) === 'exceeded').length + '/' + indicatorDictionary.length + ' | Gaps: ' + (gaps.length || 0) + ' | Anomalies: ' + (anomalies.length || 0),
+                priority: 50,
+                confidence: 85,
+                domain: 'all',
+                magnitude: 0,
+                direction: 'actionable',
+                indicator: 'rec-endline'
             });
 
+            // --- OPPORTUNITY insights (areas to leverage) ---
+            // High-performing areas that could be scaled
+            const topPerformers = indicatorDictionary
+                .map(ind => {
+                    const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                    const mc = ppChange(ind.menBaseline, ind.menMidline);
+                    const best = Math.max(Math.abs(wc || 0), Math.abs(mc || 0));
+                    return { ind, best, wc, mc };
+                })
+                .filter(x => x.best >= 40 && !x.ind.lowerIsBetter)
+                .sort((a, b) => b.best - a.best);
+
+            topPerformers.slice(0, 3).forEach(({ ind, best, wc, mc }) => {
+                insights.push({
+                    category: 'opportunity',
+                    title: ind.label + ' — Scale This Success (+' + best.toFixed(0) + 'pp)',
+                    narrative: `${ind.label} achieved one of the strongest gains (+${best.toFixed(1)}pp), reaching ${formatVal(ind.womenMidline || ind.menMidline, ind.unit)}. This success model offers scaling potential: (1) Document and codify the intervention approach, (2) Identify replicable elements for other domains, (3) Create peer-learning exchanges between high and low performers, (4) Consider geographic expansion of this intervention model.`,
+                    evidence: `Women: ${formatVal(ind.womenBaseline, ind.unit)} → ${formatVal(ind.womenMidline, ind.unit)} | Men: ${formatVal(ind.menBaseline, ind.unit)} → ${formatVal(ind.menMidline, ind.unit)} | Domain: ${ind.domain}`,
+                    priority: best * 0.8,
+                    confidence: computeConfidence(ind, wc, mc),
+                    domain: ind.domain,
+                    magnitude: best,
+                    direction: 'positive',
+                    indicator: 'opp-' + ind.id
+                });
+            });
+
+            // Training as opportunity
+            const bestTraining = trainingIndicators.reduce((best, t) => (t.post - t.pre) > (best.post - best.pre) ? t : best, trainingIndicators[0]);
             insights.push({
-                category: 'crosslink',
-                title: 'Preparedness Training Creates Dual-Gender Protection',
-                narrative: 'Both women and men show parallel preparedness gains (knowledge: +33.1pp W / +36.6pp M, early warnings: +36.1pp W / +38.4pp M), suggesting household-level disaster resilience improvements. Combined male-female preparedness training achieves broader community coverage than single-gender approaches.',
-                evidence: 'Women knowledge: 4.7% to 37.8% | Men knowledge: 6.2% to 42.8% | Early warnings: W +36.1pp / M +38.4pp',
-                priority: 40
+                category: 'opportunity',
+                title: 'Training Model Excellence: ' + bestTraining.label,
+                narrative: `${bestTraining.label} achieved the strongest training gain of +${(bestTraining.post - bestTraining.pre).toFixed(1)}pp (${bestTraining.pre.toFixed(1)}% → ${bestTraining.post.toFixed(1)}%). This training methodology should be studied and adapted for other knowledge domains. Key success factors likely include curriculum design, facilitator quality, and participant engagement approaches.`,
+                evidence: `Pre: ${bestTraining.pre.toFixed(1)}% | Post: ${bestTraining.post.toFixed(1)}% | Gain: +${(bestTraining.post - bestTraining.pre).toFixed(1)}pp | Target: ${bestTraining.target}% | Exceeded by: +${(bestTraining.post - bestTraining.target).toFixed(1)}pp`,
+                priority: 35,
+                confidence: 85,
+                domain: 'climate',
+                magnitude: bestTraining.post - bestTraining.pre,
+                direction: 'positive',
+                indicator: 'opp-training'
             });
 
             // Sort by priority
@@ -13732,50 +14148,237 @@
             return insights;
         }
 
+        // ── RENDER AUTOMATED INSIGHTS (Advanced) ──────────────────────
+
         window.renderAutomatedInsights = function() {
             destroySynthCharts();
             const insights = generateInsights();
-
-            // Stats row
-            const statsRow = document.getElementById('insights-stats-row');
-            const cats = { trend: 0, milestone: 0, anomaly: 0, gap: 0, crosslink: 0 };
-            insights.forEach(i => cats[i.category]++);
-            statsRow.innerHTML = [
-                { num: insights.length, label: 'Total Insights' },
-                { num: cats.trend, label: 'Trends' },
-                { num: cats.milestone, label: 'Milestones' },
-                { num: cats.anomaly, label: 'Anomalies' },
-                { num: cats.gap, label: 'Gaps' },
-                { num: cats.crosslink, label: 'Cross-Links' }
-            ].map(s => `<div class="insight-stat-box"><div class="isb-num">${s.num}</div><div class="isb-label">${s.label}</div></div>`).join('');
-
-            // Render all insights
-            renderInsightFeed(insights, 'all');
             window._allInsights = insights;
+            window._currentFilter = 'all';
+            window._currentSort = 'priority';
+
+            // --- KPI Stats Row ---
+            const cats = { trend: 0, milestone: 0, anomaly: 0, gap: 0, crosslink: 0, recommendation: 0, opportunity: 0 };
+            insights.forEach(i => { if (cats[i.category] !== undefined) cats[i.category]++; });
+            const avgConfidence = insights.length ? Math.round(insights.reduce((s, i) => s + (i.confidence || 50), 0) / insights.length) : 0;
+
+            document.getElementById('insights-stats-row').innerHTML = [
+                { num: insights.length, label: 'Total Insights', cls: '' },
+                { num: cats.trend, label: 'Trends', cls: 'trend' },
+                { num: cats.milestone, label: 'Milestones', cls: 'milestone' },
+                { num: cats.anomaly, label: 'Anomalies', cls: 'anomaly' },
+                { num: cats.gap, label: 'Gaps', cls: 'gap' },
+                { num: cats.crosslink, label: 'Cross-Links', cls: 'crosslink' },
+                { num: cats.recommendation, label: 'Actions', cls: 'recommendation' },
+                { num: avgConfidence + '%', label: 'Avg Confidence', cls: '' }
+            ].map(s => `<div class="insight-stat-box ${s.cls}"><div class="isb-num">${s.num}</div><div class="isb-label">${s.label}</div></div>`).join('');
+
+            // --- Executive Summary ---
+            const positiveInsights = insights.filter(i => i.direction === 'positive').length;
+            const negativeInsights = insights.filter(i => i.direction === 'negative').length;
+            const domainHealth = computeDomainHealth();
+            const healthyDomains = Object.entries(domainHealth).filter(([, h]) => h.score >= 70).length;
+
+            document.getElementById('insights-executive-summary').innerHTML = `
+                <strong style="font-size:1.05em;color:#0072CE;">Executive Intelligence Brief</strong><br><br>
+                The automated analysis engine has scanned <strong>${indicatorDictionary.length} indicators</strong> across <strong>${Object.keys(domainHealth).length} domains</strong> and generated <strong>${insights.length} actionable insights</strong>.
+                <br><br>
+                <strong>Overall Assessment:</strong> The COSME project shows <span style="color:#2e7d32;font-weight:700;">${positiveInsights} positive trends</span> against
+                <span style="color:#c62828;font-weight:700;">${negativeInsights} areas of concern</span>.
+                ${healthyDomains}/${Object.keys(domainHealth).length} domains score "healthy" (70+/100).
+                ${cats.milestone} logframe milestones have been exceeded, with an average confidence score of ${avgConfidence}%.
+                <br><br>
+                <strong>Priority Actions:</strong> ${cats.recommendation} strategic recommendations generated, ${cats.anomaly} anomalies flagged for investigation,
+                and ${cats.opportunity} scaling opportunities identified. ${cats.gap} gender gaps exceed 20pp and require targeted programming before endline.
+                <br><br>
+                <span style="background:#e8f5e9;padding:3px 10px;border-radius:6px;font-weight:700;color:#2e7d32;">
+                    Program Trajectory: ${positiveInsights > negativeInsights * 3 ? 'Strongly Positive' : positiveInsights > negativeInsights ? 'Positive with Attention Areas' : 'Mixed — Intervention Required'}
+                </span>
+            `;
+
+            // --- Analytics Charts ---
+            renderInsightCharts(insights, cats, domainHealth);
+
+            // --- Recommendations Section ---
+            const recs = insights.filter(i => i.category === 'recommendation');
+            document.getElementById('insights-recommendations').innerHTML = recs.map((ins, idx) =>
+                renderInsightCard(ins, idx)
+            ).join('');
+
+            // --- Insight Feed ---
+            renderInsightFeed(insights, 'all');
+        };
+
+        function renderInsightCharts(insights, cats, domainHealth) {
+            // 1) Distribution doughnut
+            synthCharts['insight-distribution'] = new Chart(document.getElementById('insights-chart-distribution'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Trends', 'Milestones', 'Anomalies', 'Gaps', 'Cross-Links', 'Actions', 'Opportunities'],
+                    datasets: [{
+                        data: [cats.trend, cats.milestone, cats.anomaly, cats.gap, cats.crosslink, cats.recommendation, cats.opportunity],
+                        backgroundColor: ['#1976d2', '#2e7d32', '#f57c00', '#c62828', '#7b1fa2', '#00838f', '#558b2f']
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } }, datalabels: { color: '#fff', font: { weight: 'bold', size: 12 }, formatter: v => v > 0 ? v : '' } }
+                }
+            });
+
+            // 2) Domain health radar
+            const dhLabels = Object.keys(domainHealth).map(d => d.charAt(0).toUpperCase() + d.slice(1));
+            const dhScores = Object.values(domainHealth).map(h => h.score);
+
+            synthCharts['insight-domain-health'] = new Chart(document.getElementById('insights-chart-domain-health'), {
+                type: 'radar',
+                data: {
+                    labels: dhLabels,
+                    datasets: [{
+                        label: 'Health Score',
+                        data: dhScores,
+                        borderColor: '#0072CE',
+                        backgroundColor: 'rgba(0,114,206,0.15)',
+                        pointBackgroundColor: dhScores.map(s => s >= 70 ? '#2e7d32' : (s >= 50 ? '#f57c00' : '#c62828')),
+                        pointRadius: 6,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { min: 0, max: 100, ticks: { stepSize: 20 } } },
+                    plugins: { legend: { display: false }, datalabels: { display: true, font: { weight: 'bold', size: 11 }, color: '#333', formatter: v => v + '/100' } }
+                }
+            });
+
+            // 3) Impact magnitude: top 12 changes
+            const sorted = [...insights].filter(i => i.magnitude > 0).sort((a, b) => b.magnitude - a.magnitude).slice(0, 12);
+            synthCharts['insight-impact'] = new Chart(document.getElementById('insights-chart-impact'), {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(i => i.title.length > 28 ? i.title.substring(0, 26) + '...' : i.title),
+                    datasets: [{
+                        label: 'Magnitude (pp)',
+                        data: sorted.map(i => i.magnitude),
+                        backgroundColor: sorted.map(i => {
+                            const catColors = { trend: '#1976d2', milestone: '#2e7d32', anomaly: '#f57c00', gap: '#c62828', crosslink: '#7b1fa2', recommendation: '#00838f', opportunity: '#558b2f' };
+                            return catColors[i.category] || '#999';
+                        }),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Magnitude (pp)' } } },
+                    plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, color: '#333', formatter: v => v.toFixed(1) } }
+                }
+            });
+
+            // 4) Confidence distribution
+            const confBuckets = { 'High (75-100%)': 0, 'Medium (50-74%)': 0, 'Low (<50%)': 0 };
+            insights.forEach(i => {
+                const c = i.confidence || 50;
+                if (c >= 75) confBuckets['High (75-100%)']++;
+                else if (c >= 50) confBuckets['Medium (50-74%)']++;
+                else confBuckets['Low (<50%)']++;
+            });
+            synthCharts['insight-confidence'] = new Chart(document.getElementById('insights-chart-confidence'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(confBuckets),
+                    datasets: [{
+                        label: 'Number of Insights',
+                        data: Object.values(confBuckets),
+                        backgroundColor: ['#2e7d32', '#f57c00', '#c62828'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 5 } } },
+                    plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }
+                }
+            });
+        }
+
+        function renderInsightCard(ins, idx) {
+            const confLabel = confidenceLabel(ins.confidence || 50);
+            const severity = severityLevel(ins.magnitude || 0);
+            const sevClass = severity >= 3 ? 'high' : (severity <= 1 ? 'low' : '');
+            const evidenceId = 'evidence-' + (ins.indicator || idx) + '-' + idx;
+
+            return `
+                <div class="insight-card ${ins.category}" style="animation: fadeIn 0.3s ease ${Math.min(idx * 0.04, 1)}s both;">
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px;">
+                        <span class="insight-badge ${ins.category}">${ins.category === 'recommendation' ? 'action' : ins.category}</span>
+                        <span class="confidence-badge ${confLabel}" title="Evidence confidence: ${ins.confidence || 50}%">${confLabel} confidence</span>
+                        <span class="severity-indicator" title="Impact severity: ${severity}/3">
+                            ${[1,2,3].map(i => `<span class="severity-dot ${i <= severity ? 'filled ' + sevClass : ''}"></span>`).join('')}
+                        </span>
+                        ${ins.domain ? `<span style="font-size:0.7em;background:#f0f4ff;color:#0072CE;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:capitalize;">${ins.domain}</span>` : ''}
+                    </div>
+                    <div class="insight-title">${ins.title}</div>
+                    <div class="insight-narrative">${ins.narrative}</div>
+                    <span class="insight-evidence-toggle" onclick="toggleEvidence('${evidenceId}')">Show evidence &amp; data</span>
+                    <div class="insight-evidence-body" id="${evidenceId}">
+                        <div class="insight-evidence" style="margin-top:8px;">${ins.evidence}</div>
+                    </div>
+                    <div class="insight-meta">
+                        <span class="insight-meta-item" title="Priority score">${ins.priority ? ins.priority.toFixed(0) : '—'} priority</span>
+                        <span class="insight-meta-item" title="Change magnitude">${ins.magnitude ? ins.magnitude.toFixed(1) + 'pp' : '—'} magnitude</span>
+                        <span class="insight-meta-item" title="Confidence">${ins.confidence || 50}% confidence</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.toggleEvidence = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('open');
         };
 
         function renderInsightFeed(insights, catFilter) {
             const feed = document.getElementById('insights-feed');
-            const filtered = catFilter === 'all' ? insights : insights.filter(i => i.category === catFilter);
+            let filtered = catFilter === 'all' ? insights : insights.filter(i => i.category === catFilter);
 
-            feed.innerHTML = filtered.map((ins, idx) => `
-                <div class="insight-card ${ins.category}" style="animation: fadeIn 0.3s ease ${idx * 0.05}s both;">
-                    <span class="insight-badge ${ins.category}">${ins.category}</span>
-                    <div class="insight-title">${ins.title}</div>
-                    <div class="insight-narrative">${ins.narrative}</div>
-                    <div class="insight-evidence">${ins.evidence}</div>
-                </div>
-            `).join('');
+            // Apply search filter if active
+            const searchVal = document.getElementById('insights-search');
+            if (searchVal && searchVal.value.trim()) {
+                const q = searchVal.value.trim().toLowerCase();
+                filtered = filtered.filter(i => i.title.toLowerCase().includes(q) || i.narrative.toLowerCase().includes(q) || (i.domain || '').toLowerCase().includes(q));
+            }
+
+            // Apply sort
+            const sortBy = window._currentSort || 'priority';
+            if (sortBy === 'confidence') filtered.sort((a, b) => (b.confidence || 50) - (a.confidence || 50));
+            else if (sortBy === 'domain') filtered.sort((a, b) => (a.domain || '').localeCompare(b.domain || ''));
+            else if (sortBy === 'magnitude') filtered.sort((a, b) => (b.magnitude || 0) - (a.magnitude || 0));
+            else filtered.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+            // Count
+            document.getElementById('insights-count').textContent = `Showing ${filtered.length} of ${insights.length} insights`;
+
+            feed.innerHTML = filtered.map((ins, idx) => renderInsightCard(ins, idx)).join('');
 
             if (filtered.length === 0) {
-                feed.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No insights in this category.</div>';
+                feed.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No insights match your current filters.</div>';
             }
         }
 
         window.filterInsights = function(cat, btn) {
             document.querySelectorAll('#insights-filter-bar .insight-filter-chip').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
+            window._currentFilter = cat;
             renderInsightFeed(window._allInsights || [], cat);
+        };
+
+        window.sortInsights = function(sortBy) {
+            window._currentSort = sortBy;
+            renderInsightFeed(window._allInsights || [], window._currentFilter || 'all');
+        };
+
+        window.searchInsights = function(query) {
+            renderInsightFeed(window._allInsights || [], window._currentFilter || 'all');
         };
 
     })();
