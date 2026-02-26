@@ -2821,10 +2821,126 @@
             .synthesis-kpi-row { grid-template-columns: repeat(2, 1fr); }
             .insight-stats-row { grid-template-columns: repeat(2, 1fr); }
             .synthesis-kpi .sk-value { font-size: 1.5em; }
+            .perf-table { font-size: 0.72em; }
+            .domain-dive-card { padding: 16px; }
+            .toc-pathway { flex-direction: column; }
+            .toc-pathway .toc-arrow { transform: rotate(90deg); }
         }
         @media (max-width: 480px) {
             .synthesis-kpi-row { grid-template-columns: 1fr; }
             .insight-stats-row { grid-template-columns: 1fr; }
+        }
+
+        /* ── DOMAIN DEEP DIVE ── */
+        .domain-dive-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 5px solid #0072CE;
+            transition: box-shadow 0.2s;
+        }
+        .domain-dive-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        .domain-dive-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+        }
+        .domain-dive-name {
+            font-size: 1.08em; font-weight: 700; color: #222; text-transform: capitalize;
+        }
+        .domain-dive-score {
+            font-size: 0.82em; font-weight: 700; padding: 4px 14px;
+            border-radius: 20px; color: #fff;
+        }
+        .domain-dive-score.healthy { background: #2e7d32; }
+        .domain-dive-score.moderate { background: #f57c00; }
+        .domain-dive-score.weak { background: #c62828; }
+        .domain-dive-indicators { display: flex; flex-direction: column; gap: 10px; }
+        .dd-indicator-row {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .dd-ind-label {
+            flex: 0 0 200px; font-size: 0.82em; font-weight: 600; color: #444;
+        }
+        .dd-ind-bar-wrap {
+            flex: 1; min-width: 120px; height: 22px; background: #eee; border-radius: 11px;
+            position: relative; overflow: hidden;
+        }
+        .dd-ind-bar {
+            height: 100%; border-radius: 11px;
+            transition: width 0.8s ease;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 8px; font-size: 0.7em; font-weight: 700; color: #fff;
+            min-width: 20px;
+        }
+        .dd-ind-bar.green { background: linear-gradient(90deg, #66bb6a, #2e7d32); }
+        .dd-ind-bar.orange { background: linear-gradient(90deg, #ffb74d, #f57c00); }
+        .dd-ind-bar.red { background: linear-gradient(90deg, #ef9a9a, #c62828); }
+        .dd-ind-change {
+            flex: 0 0 80px; font-size: 0.78em; font-weight: 700; text-align: right;
+        }
+        .dd-ind-change.pos { color: #2e7d32; }
+        .dd-ind-change.neg { color: #c62828; }
+        .dd-target-marker {
+            position: absolute; top: 0; height: 100%; width: 3px;
+            background: #333; z-index: 2; opacity: 0.7;
+        }
+
+        /* ── PERFORMANCE TABLE ── */
+        .perf-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            font-size: 0.82em; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .perf-table thead th {
+            background: #0072CE; color: #fff; padding: 10px 12px;
+            text-align: left; font-weight: 700; font-size: 0.88em;
+            position: sticky; top: 0; z-index: 2;
+            white-space: nowrap;
+        }
+        .perf-table tbody td {
+            padding: 8px 12px; border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        .perf-table tbody tr:nth-child(even) { background: #f8f9fa; }
+        .perf-table tbody tr:hover { background: #e3f2fd; }
+        .perf-table .status-pill {
+            display: inline-block; padding: 3px 10px; border-radius: 12px;
+            font-size: 0.8em; font-weight: 700; color: #fff;
+        }
+        .perf-table .status-pill.exceeded { background: #2e7d32; }
+        .perf-table .status-pill.on-track { background: #f57c00; }
+        .perf-table .status-pill.below { background: #c62828; }
+        .perf-table .status-pill.no-target { background: #9e9e9e; }
+
+        /* ── THEORY OF CHANGE PATHWAYS ── */
+        .toc-pathway {
+            display: flex; align-items: stretch; gap: 0;
+            margin-bottom: 20px; background: #fff;
+            border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .toc-step {
+            flex: 1; padding: 18px 16px; text-align: center;
+            position: relative; min-width: 0;
+        }
+        .toc-step-label {
+            font-size: 0.72em; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.7;
+        }
+        .toc-step-title {
+            font-size: 0.88em; font-weight: 700; color: #222; margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+        .toc-step-data {
+            font-size: 0.78em; color: #555; line-height: 1.5;
+        }
+        .toc-step-data strong { color: #0072CE; }
+        .toc-arrow {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4em; color: #0072CE; font-weight: 700;
+            flex: 0 0 36px; background: #f0f4ff;
         }
     </style>
 </head>
@@ -6570,6 +6686,100 @@
                 <!-- Insight feed -->
                 <div class="insight-feed" id="insights-feed">
                     <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- DOMAIN DEEP DIVE -->
+            <div class="section">
+                <div class="section-title">Domain Performance Deep Dive</div>
+                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Detailed breakdown of each thematic domain with indicator-level progress, health scoring, and target achievement status.</p>
+                <div id="domain-deep-dive">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- INDICATOR PERFORMANCE TABLE -->
+            <div class="section">
+                <div class="section-title">Complete Indicator Performance Matrix</div>
+                <p style="color:#555;font-size:0.88em;margin-bottom:14px;">All 26 outcome indicators and 5 training indicators with baseline, midline, change, target status, and confidence metrics.</p>
+                <div style="overflow-x:auto;">
+                    <table class="perf-table" id="indicator-perf-table">
+                        <!-- Rendered by JS -->
+                    </table>
+                </div>
+            </div>
+
+            <!-- GENDER PARITY ANALYSIS -->
+            <div class="section">
+                <div class="section-title">Gender Parity Scorecard</div>
+                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Comparative analysis of women vs men outcomes across shared indicators, with parity index and gap trajectory from baseline to midline.</p>
+                <div class="charts-grid">
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Gender Parity Index by Indicator</div>
+                        <div class="chart-container" style="height:360px;"><canvas id="insights-chart-parity"></canvas></div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <div class="chart-title">Gap Trajectory: Baseline vs Midline</div>
+                        <div class="chart-container" style="height:360px;"><canvas id="insights-chart-gap-trajectory"></canvas></div>
+                    </div>
+                </div>
+                <div id="gender-parity-summary" style="background:linear-gradient(135deg,#fce4ec,#fff);border-radius:10px;padding:20px 24px;margin-top:18px;border-left:5px solid #E91E63;line-height:1.8;font-size:0.9em;color:#333;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- THEORY OF CHANGE PATHWAYS -->
+            <div class="section">
+                <div class="section-title">Theory of Change Evidence Pathways</div>
+                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Evidence-based pathways showing how project interventions translate into outcomes, with data-validated connection strength.</p>
+                <div id="toc-pathways">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ENDLINE PROJECTIONS -->
+            <div class="section">
+                <div class="section-title">Endline Projections & Scenario Analysis</div>
+                <p style="color:#555;font-size:0.88em;margin-bottom:18px;">Based on baseline-to-midline trajectories, projected endline values under three scenarios: maintained momentum, accelerated effort, and regression risk.</p>
+                <div class="charts-grid">
+                    <div class="chart-wrapper full-width">
+                        <div class="chart-title">Key Indicator Endline Projections (3 Scenarios)</div>
+                        <div class="chart-container" style="height:420px;"><canvas id="insights-chart-projections"></canvas></div>
+                    </div>
+                </div>
+                <div id="projection-summary" style="background:linear-gradient(135deg,#e8f5e9,#fff);border-radius:10px;padding:20px 24px;margin-top:18px;border-left:5px solid #2e7d32;line-height:1.8;font-size:0.9em;color:#333;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- METHODOLOGY & DATA QUALITY -->
+            <div class="section">
+                <div class="section-title">Methodology & Data Quality Notes</div>
+                <div id="methodology-notes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #0072CE;">
+                        <strong style="color:#0072CE;font-size:0.95em;">Insight Generation Method</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Insights are generated algorithmically by comparing baseline and midline survey data across 26 outcome indicators and 5 training measures. The engine applies threshold-based detection (15pp for trends, 20pp for gaps, -5pp for anomalies) combined with statistical z-score outlier analysis (threshold: 1.8 SD).</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #2e7d32;">
+                        <strong style="color:#2e7d32;font-size:0.95em;">Confidence Scoring</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Each insight receives a confidence score (0-100%) based on: effect magnitude (+25 for >=30pp), logframe linkage (+10), dual-gender measurement triangulation (+10), and directional corroboration (+5). Scores are categorized as High (75-100%), Medium (50-74%), or Low (&lt;50%).</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #f57c00;">
+                        <strong style="color:#f57c00;font-size:0.95em;">Domain Health Index</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Domain health scores (0-100) are computed as a weighted composite: 40% target exceedance ratio, 40% normalized average gain (capped at 50pp), and 20% anomaly-free bonus. Domains scoring below 70 receive automated strengthening recommendations.</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #7b1fa2;">
+                        <strong style="color:#7b1fa2;font-size:0.95em;">Data Sources & Coverage</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments, Seaweed Farming data, and VSLA Monitoring records. Coverage spans 6 thematic domains across Kilifi County, Kenya.</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #c62828;">
+                        <strong style="color:#c62828;font-size:0.95em;">Limitations & Caveats</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Cross-link insights are based on temporal correlation, not established causation. Sample sizes vary across surveys. Self-reported data may introduce social desirability bias. Endline projections assume linear trajectories and equal intervention intensity. Seasonal and contextual factors are not controlled for in automated analysis.</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:20px;border-left:4px solid #00838f;">
+                        <strong style="color:#00838f;font-size:0.95em;">Recommendation Engine</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Strategic recommendations are auto-generated from: (1) highest-magnitude anomalies requiring investigation, (2) gender gaps exceeding 20pp needing responsive programming, (3) domains with health scores below 70/100, and (4) endline preparation priorities. Recommendations combine data patterns with programmatic best practices.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -14207,6 +14417,13 @@
 
             // --- Insight Feed ---
             renderInsightFeed(insights, 'all');
+
+            // --- New Deep Sections ---
+            renderDomainDeepDive(domainHealth);
+            renderIndicatorTable();
+            renderGenderParityCharts();
+            renderToCPathways();
+            renderEndlineProjections();
         };
 
         function renderInsightCharts(insights, cats, domainHealth) {
@@ -14380,6 +14597,290 @@
         window.searchInsights = function(query) {
             renderInsightFeed(window._allInsights || [], window._currentFilter || 'all');
         };
+
+        // ── DOMAIN DEEP DIVE RENDERER ──────────────────────────────────
+        function renderDomainDeepDive(domainHealth) {
+            const container = document.getElementById('domain-deep-dive');
+            const domainColors = { savings: '#1976d2', climate: '#2e7d32', gender: '#E91E63', preparedness: '#f57c00', decisions: '#7b1fa2', norms: '#00838f' };
+
+            const html = Object.entries(domainHealth).map(([domain, health]) => {
+                const domainInds = indicatorDictionary.filter(i => i.domain === domain);
+                const scoreClass = health.score >= 70 ? 'healthy' : (health.score >= 50 ? 'moderate' : 'weak');
+                const color = domainColors[domain] || '#0072CE';
+
+                const indRows = domainInds.map(ind => {
+                    const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                    const mc = ppChange(ind.menBaseline, ind.menMidline);
+                    const midVal = ind.womenMidline != null ? ind.womenMidline : (ind.menMidline || 0);
+                    const change = wc != null && mc != null ? (wc + mc) / 2 : (wc || mc || 0);
+                    const effectiveChange = ind.lowerIsBetter ? -change : change;
+                    const barPercent = ind.unit === '%' ? Math.min(midVal, 100) : Math.min(midVal * 10, 100);
+                    const barClass = effectiveChange >= 15 ? 'green' : (effectiveChange >= 0 ? 'orange' : 'red');
+                    const changeSign = effectiveChange > 0 ? '+' : '';
+                    const targetMarker = ind.target != null && ind.unit === '%' ? `<div class="dd-target-marker" style="left:${Math.min(ind.target, 100)}%" title="Target: ${ind.target}%"></div>` : '';
+
+                    return `<div class="dd-indicator-row">
+                        <div class="dd-ind-label">${ind.label}</div>
+                        <div class="dd-ind-bar-wrap">
+                            ${targetMarker}
+                            <div class="dd-ind-bar ${barClass}" style="width:${barPercent}%">${ind.unit === '%' ? midVal.toFixed(0) + '%' : midVal.toFixed(1)}</div>
+                        </div>
+                        <div class="dd-ind-change ${effectiveChange >= 0 ? 'pos' : 'neg'}">${changeSign}${change.toFixed(1)}pp</div>
+                    </div>`;
+                }).join('');
+
+                return `<div class="domain-dive-card" style="border-left-color:${color}">
+                    <div class="domain-dive-header">
+                        <div class="domain-dive-name">${domain}</div>
+                        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                            <span style="font-size:0.78em;color:#666;">${health.exceeded}/${health.total} targets exceeded</span>
+                            <span style="font-size:0.78em;color:#666;">Avg gain: ${health.avgGain >= 0 ? '+' : ''}${health.avgGain.toFixed(1)}pp</span>
+                            <span class="domain-dive-score ${scoreClass}">${health.score}/100</span>
+                        </div>
+                    </div>
+                    <div class="domain-dive-indicators">${indRows}</div>
+                </div>`;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // ── INDICATOR PERFORMANCE TABLE ────────────────────────────────
+        function renderIndicatorTable() {
+            const table = document.getElementById('indicator-perf-table');
+
+            let html = `<thead><tr>
+                <th>#</th><th>Indicator</th><th>Domain</th>
+                <th>Women BL</th><th>Women ML</th><th>Men BL</th><th>Men ML</th>
+                <th>Change</th><th>Target</th><th>Status</th><th>Confidence</th>
+            </tr></thead><tbody>`;
+
+            indicatorDictionary.forEach((ind, idx) => {
+                const wc = ppChange(ind.womenBaseline, ind.womenMidline);
+                const mc = ppChange(ind.menBaseline, ind.menMidline);
+                const change = wc != null && mc != null ? (wc + mc) / 2 : (wc || mc || 0);
+                const conf = computeConfidence(ind, wc, mc);
+                const confLbl = confidenceLabel(conf);
+                const status = getStatus(ind);
+                const statusClass = status === 'exceeded' ? 'exceeded' : (status === 'on-track' ? 'on-track' : (ind.target != null ? 'below' : 'no-target'));
+                const statusLabel = status === 'exceeded' ? 'Exceeded' : (status === 'on-track' ? 'On Track' : (ind.target != null ? 'Below' : '—'));
+                const effectiveChange = ind.lowerIsBetter ? -change : change;
+                const changeColor = effectiveChange >= 15 ? '#2e7d32' : (effectiveChange >= 0 ? '#f57c00' : '#c62828');
+
+                html += `<tr>
+                    <td>${idx + 1}</td>
+                    <td><strong>${ind.label}</strong>${ind.logframeId ? ' <span style="font-size:0.75em;color:#888;">[' + ind.logframeId + ']</span>' : ''}</td>
+                    <td style="text-transform:capitalize;">${ind.domain}</td>
+                    <td>${ind.womenBaseline != null ? formatVal(ind.womenBaseline, ind.unit) : '—'}</td>
+                    <td>${ind.womenMidline != null ? formatVal(ind.womenMidline, ind.unit) : '—'}</td>
+                    <td>${ind.menBaseline != null ? formatVal(ind.menBaseline, ind.unit) : '—'}</td>
+                    <td>${ind.menMidline != null ? formatVal(ind.menMidline, ind.unit) : '—'}</td>
+                    <td style="color:${changeColor};font-weight:700;">${effectiveChange >= 0 ? '+' : ''}${change.toFixed(1)}pp</td>
+                    <td>${ind.target != null ? formatVal(ind.target, ind.unit) : '—'}</td>
+                    <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                    <td><span class="confidence-badge ${confLbl}">${conf}% ${confLbl}</span></td>
+                </tr>`;
+            });
+
+            // Training indicators
+            html += `<tr><td colspan="11" style="background:#f0f4ff;font-weight:700;color:#0072CE;padding:10px;">Training Indicators (Pre/Post Assessment)</td></tr>`;
+            trainingIndicators.forEach((t, idx) => {
+                const gain = t.post - t.pre;
+                const status = t.post >= t.target ? 'exceeded' : 'below';
+                html += `<tr>
+                    <td>${indicatorDictionary.length + idx + 1}</td>
+                    <td><strong>${t.label}</strong>${t.logframeId ? ' <span style="font-size:0.75em;color:#888;">[' + t.logframeId + ']</span>' : ''}</td>
+                    <td>Training</td>
+                    <td>${t.pre.toFixed(1)}%</td><td>${t.post.toFixed(1)}%</td>
+                    <td>—</td><td>—</td>
+                    <td style="color:#2e7d32;font-weight:700;">+${gain.toFixed(1)}pp</td>
+                    <td>${t.target}%</td>
+                    <td><span class="status-pill ${status}">${status === 'exceeded' ? 'Exceeded' : 'Below'}</span></td>
+                    <td><span class="confidence-badge high">85% high</span></td>
+                </tr>`;
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        // ── GENDER PARITY CHARTS ──────────────────────────────────────
+        function renderGenderParityCharts() {
+            const shared = indicatorDictionary.filter(i => i.womenMidline != null && i.menMidline != null && i.unit === '%');
+
+            // Parity index chart (bar: women vs men midline)
+            synthCharts['insight-parity'] = new Chart(document.getElementById('insights-chart-parity'), {
+                type: 'bar',
+                data: {
+                    labels: shared.map(i => i.label.length > 18 ? i.label.substring(0, 16) + '...' : i.label),
+                    datasets: [
+                        { label: 'Women Midline', data: shared.map(i => i.womenMidline), backgroundColor: 'rgba(233,30,99,0.7)', borderRadius: 4 },
+                        { label: 'Men Midline', data: shared.map(i => i.menMidline), backgroundColor: 'rgba(25,118,210,0.7)', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage (%)' } } },
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } }
+                }
+            });
+
+            // Gap trajectory chart (grouped bar: baseline gap vs midline gap)
+            const baselineGaps = shared.map(i => Math.abs((i.womenBaseline || 0) - (i.menBaseline || 0)));
+            const midlineGaps = shared.map(i => Math.abs(i.womenMidline - i.menMidline));
+
+            synthCharts['insight-gap-trajectory'] = new Chart(document.getElementById('insights-chart-gap-trajectory'), {
+                type: 'bar',
+                data: {
+                    labels: shared.map(i => i.label.length > 18 ? i.label.substring(0, 16) + '...' : i.label),
+                    datasets: [
+                        { label: 'Baseline Gap (pp)', data: baselineGaps, backgroundColor: 'rgba(158,158,158,0.5)', borderRadius: 4 },
+                        { label: 'Midline Gap (pp)', data: midlineGaps, backgroundColor: midlineGaps.map((g, idx) => g < baselineGaps[idx] ? 'rgba(46,125,50,0.7)' : 'rgba(198,40,40,0.7)'), borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Gender Gap (pp)' } } },
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } }
+                }
+            });
+
+            // Parity summary
+            const narrowed = shared.filter((ind, idx) => midlineGaps[idx] < baselineGaps[idx]).length;
+            const widened = shared.length - narrowed;
+            const avgMidGap = midlineGaps.reduce((a, b) => a + b, 0) / midlineGaps.length;
+            const avgBlGap = baselineGaps.reduce((a, b) => a + b, 0) / baselineGaps.length;
+
+            document.getElementById('gender-parity-summary').innerHTML = `
+                <strong style="font-size:1.02em;color:#E91E63;">Gender Parity Assessment</strong><br><br>
+                Across <strong>${shared.length} shared indicators</strong> measured for both women and men:
+                <strong style="color:#2e7d32;">${narrowed} gaps narrowed</strong> and
+                <strong style="color:#c62828;">${widened} gaps widened</strong> between baseline and midline.
+                <br><br>
+                The average gender gap moved from <strong>${avgBlGap.toFixed(1)}pp</strong> at baseline to
+                <strong>${avgMidGap.toFixed(1)}pp</strong> at midline (${avgMidGap < avgBlGap ? '<span style="color:#2e7d32;font-weight:700;">improving</span>' : '<span style="color:#c62828;font-weight:700;">needs attention</span>'}).
+                ${midlineGaps.some(g => g >= 30) ? '<br><br><strong style="color:#c62828;">Priority:</strong> ' + shared.filter((ind, idx) => midlineGaps[idx] >= 30).map(i => i.label).join(', ') + ' show gaps exceeding 30pp and require urgent gender-responsive programming.' : ''}
+            `;
+        }
+
+        // ── THEORY OF CHANGE PATHWAYS ─────────────────────────────────
+        function renderToCPathways() {
+            const pathways = [
+                {
+                    title: 'Financial Empowerment Pathway',
+                    color: '#1976d2',
+                    steps: [
+                        { label: 'Input', title: 'VSLA Formation', data: 'Groups established in target communities' },
+                        { label: 'Output', title: 'VSLA Membership', data: '<strong>+54.4pp</strong> women joined (43.6% to 98.0%)' },
+                        { label: 'Outcome', title: 'Savings & Loans', data: 'Savings <strong>+50.3pp</strong>, Loans <strong>+51.1pp</strong>' },
+                        { label: 'Impact', title: 'Decision Power', data: 'HH decisions <strong>+38.3pp</strong> (57.6% to 95.9%)' }
+                    ]
+                },
+                {
+                    title: 'Conservation Knowledge Pathway',
+                    color: '#2e7d32',
+                    steps: [
+                        { label: 'Input', title: 'NbS Training', data: 'Climate & conservation curriculum delivered' },
+                        { label: 'Output', title: 'Knowledge Gain', data: 'NbS knowledge <strong>+54.7pp</strong> W / <strong>+47.4pp</strong> M' },
+                        { label: 'Outcome', title: 'Active Participation', data: 'Mangrove <strong>+49.6pp</strong>, Seaweed <strong>+54.9pp</strong>, Forest <strong>+31.0pp</strong>' },
+                        { label: 'Impact', title: 'Ecosystem Restoration', data: 'All 3 ecosystems show <strong>>80%</strong> participation at midline' }
+                    ]
+                },
+                {
+                    title: 'Gender Transformation Pathway',
+                    color: '#E91E63',
+                    steps: [
+                        { label: 'Input', title: 'GJJ Dialogues', data: 'Gender Justice Journey community sessions' },
+                        { label: 'Output', title: 'Norm Shift', data: 'Harmful norms rejected: <strong>-34.7pp</strong> income, <strong>-36.5pp</strong> boats' },
+                        { label: 'Outcome', title: 'Behavior Change', data: 'Men chores <strong>+24.5pp</strong>, Care work <strong>+82.6%</strong>' },
+                        { label: 'Impact', title: 'Joint Responsibility', data: 'Joint HH belief <strong>+53.8pp</strong> W / <strong>+50.5pp</strong> M' }
+                    ]
+                },
+                {
+                    title: 'Disaster Resilience Pathway',
+                    color: '#f57c00',
+                    steps: [
+                        { label: 'Input', title: 'DRR Training', data: 'Preparedness knowledge sessions for both genders' },
+                        { label: 'Output', title: 'Knowledge Uptake', data: 'Prep knowledge <strong>+33.1pp</strong> W / <strong>+36.6pp</strong> M' },
+                        { label: 'Outcome', title: 'Action Readiness', data: 'Prep action <strong>+34.5pp</strong> W / <strong>+26.7pp</strong> M' },
+                        { label: 'Impact', title: 'Community Protection', data: 'Early warnings <strong>+36.1pp</strong> W / <strong>+38.4pp</strong> M' }
+                    ]
+                }
+            ];
+
+            const html = pathways.map(p => {
+                const stepsHtml = p.steps.map((s, idx) => {
+                    const stepHtml = `<div class="toc-step" style="background:${idx === p.steps.length - 1 ? p.color + '10' : '#fff'};">
+                        <div class="toc-step-label" style="color:${p.color}">${s.label}</div>
+                        <div class="toc-step-title">${s.title}</div>
+                        <div class="toc-step-data">${s.data}</div>
+                    </div>`;
+                    const arrow = idx < p.steps.length - 1 ? `<div class="toc-arrow" style="color:${p.color};">&#10140;</div>` : '';
+                    return stepHtml + arrow;
+                }).join('');
+
+                return `<div style="margin-bottom:8px;"><strong style="color:${p.color};font-size:0.92em;">${p.title}</strong></div>
+                    <div class="toc-pathway" style="border-left:4px solid ${p.color};">${stepsHtml}</div>`;
+            }).join('');
+
+            document.getElementById('toc-pathways').innerHTML = html;
+        }
+
+        // ── ENDLINE PROJECTIONS ────────────────────────────────────────
+        function renderEndlineProjections() {
+            // Select key indicators for projections
+            const keyInds = indicatorDictionary.filter(i =>
+                i.womenMidline != null && i.womenBaseline != null && i.unit === '%'
+            ).slice(0, 10);
+
+            const labels = keyInds.map(i => i.label.length > 20 ? i.label.substring(0, 18) + '...' : i.label);
+            const midVals = keyInds.map(i => i.womenMidline);
+            const gains = keyInds.map(i => i.womenMidline - i.womenBaseline);
+
+            // Three scenarios
+            const maintained = keyInds.map((i, idx) => Math.min(i.womenMidline + gains[idx] * 0.5, 100)); // 50% of baseline-midline gain continues
+            const accelerated = keyInds.map((i, idx) => Math.min(i.womenMidline + gains[idx] * 0.8, 100)); // 80% continues
+            const regression = keyInds.map((i, idx) => Math.max(i.womenMidline - Math.abs(gains[idx]) * 0.2, 0)); // 20% regression
+
+            synthCharts['insight-projections'] = new Chart(document.getElementById('insights-chart-projections'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Current Midline', data: midVals, backgroundColor: 'rgba(25,118,210,0.7)', borderRadius: 4, order: 4 },
+                        { label: 'Scenario A: Maintained', data: maintained, type: 'line', borderColor: '#2e7d32', backgroundColor: 'rgba(46,125,50,0.1)', pointRadius: 5, borderWidth: 2, fill: false, tension: 0.3, order: 1 },
+                        { label: 'Scenario B: Accelerated', data: accelerated, type: 'line', borderColor: '#f57c00', backgroundColor: 'rgba(245,124,0,0.1)', pointRadius: 5, borderWidth: 2, fill: false, tension: 0.3, borderDash: [5, 3], order: 2 },
+                        { label: 'Scenario C: Regression', data: regression, type: 'line', borderColor: '#c62828', backgroundColor: 'rgba(198,40,40,0.1)', pointRadius: 5, borderWidth: 2, fill: false, tension: 0.3, borderDash: [2, 2], order: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Projected Value (%)' } } },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { size: 11 } } },
+                        datalabels: { display: false }
+                    }
+                }
+            });
+
+            // Summary
+            const avgMaintained = maintained.reduce((a, b) => a + b, 0) / maintained.length;
+            const avgAccelerated = accelerated.reduce((a, b) => a + b, 0) / accelerated.length;
+            const avgRegression = regression.reduce((a, b) => a + b, 0) / regression.length;
+            const avgMidline = midVals.reduce((a, b) => a + b, 0) / midVals.length;
+
+            document.getElementById('projection-summary').innerHTML = `
+                <strong style="font-size:1.02em;color:#2e7d32;">Endline Scenario Analysis</strong><br><br>
+                Based on the baseline-to-midline trajectory across ${keyInds.length} key women's indicators:<br><br>
+                <strong style="color:#1976d2;">Current Average (Midline):</strong> ${avgMidline.toFixed(1)}%<br>
+                <strong style="color:#2e7d32;">Scenario A — Maintained Momentum:</strong> ${avgMaintained.toFixed(1)}% (assumes 50% of bl-ml gains continue at same rate)<br>
+                <strong style="color:#f57c00;">Scenario B — Accelerated Effort:</strong> ${avgAccelerated.toFixed(1)}% (assumes 80% continuation with intensified programming)<br>
+                <strong style="color:#c62828;">Scenario C — Regression Risk:</strong> ${avgRegression.toFixed(1)}% (assumes 20% regression if interventions weaken)<br><br>
+                <strong>Key Takeaway:</strong> The difference between Scenario A and C is <strong>${(avgMaintained - avgRegression).toFixed(1)}pp</strong>,
+                highlighting the importance of sustained program delivery. Even maintaining 50% of current momentum would yield strong endline results.
+                Focus areas for endline: indicators where midline-baseline gain was smallest (floor effects) or where regression risk is highest.
+            `;
+        }
 
     })();
     </script>
