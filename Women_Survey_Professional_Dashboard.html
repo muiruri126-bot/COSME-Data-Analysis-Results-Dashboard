@@ -8,7 +8,6 @@
     <title>COSME & GJJ Surveys Dashboard | Professional Analysis</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -511,44 +510,6 @@
             top: 120px; /* JS updateSpacerHeight() overrides dynamically */
             z-index: 998;
             transition: top 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .section-title-text { flex: 1; }
-        /* Share Toolbar */
-        .share-toolbar { display:flex; gap:6px; flex-shrink:0; }
-        .share-btn {
-            background: rgba(255,255,255,.18);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,.25);
-            color: #fff;
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-size: .78rem;
-            cursor: pointer;
-            transition: background .2s, transform .15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
-        .share-btn:hover { background: rgba(255,255,255,.32); transform: translateY(-1px); }
-        .share-btn:active { transform: scale(.96); }
-        /* Toast notification */
-        .share-toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
-            background: #333; color: #fff; padding: 10px 24px; border-radius: 8px;
-            font-size: .85rem; z-index: 10001; opacity: 0;
-            transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s;
-            pointer-events: none;
-        }
-        .share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        @media print { .share-toolbar { display: none !important; } }
-        @media (max-width: 600px) {
-            .share-toolbar { flex-wrap: wrap; }
-            .share-btn { font-size: .7rem; padding: 4px 7px; }
         }
 
         .charts-grid {
@@ -13471,145 +13432,6 @@
         if (selector) {
             observer.observe(selector, { childList: true, subtree: true, attributes: true });
         }
-    })();
-    </script>
-
-    <div id="share-toast" class="share-toast"></div>
-
-    <script>
-    /* ── Sharing Engine ── */
-    (function() {
-        const ICONS = { link:'\u{1F517}', screenshot:'\u{1F4F8}', download:'\u{1F4E5}', whatsapp:'\u{1F4AC}', email:'\u2709\uFE0F', twitter:'\u{1D54F}', print:'\u{1F5A8}\uFE0F' };
-
-        function toast(msg) {
-            const el = document.getElementById('share-toast');
-            if (!el) return;
-            el.textContent = msg;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 2200);
-        }
-
-        function sectionTitle(sec) {
-            const t = sec.querySelector('.section-title-text');
-            return t ? t.textContent.trim() : sec.querySelector('.section-title') ? sec.querySelector('.section-title').textContent.trim() : 'Dashboard Section';
-        }
-
-        function shareURL() {
-            return window.location.href;
-        }
-
-        /* ── Actions ── */
-        function copyLink() {
-            navigator.clipboard.writeText(shareURL()).then(() => toast('Link copied!')).catch(() => toast('Copy failed'));
-        }
-
-        function screenshotSection(sec) {
-            if (typeof html2canvas === 'undefined') { toast('Screenshot library not loaded'); return; }
-            toast('Capturing...');
-            html2canvas(sec, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
-                const a = document.createElement('a');
-                a.download = sectionTitle(sec).replace(/[^a-z0-9]/gi,'_') + '.png';
-                a.href = canvas.toDataURL('image/png');
-                a.click();
-                toast('Screenshot saved!');
-            }).catch(() => toast('Screenshot failed'));
-        }
-
-        function downloadSummary(sec) {
-            const title = sectionTitle(sec);
-            const kpis = Array.from(sec.querySelectorAll('.kpi-card, .output-kpi')).map(k => {
-                const lbl = k.querySelector('.kpi-label, h4');
-                const val = k.querySelector('.kpi-value, .kpi-number');
-                return lbl && val ? lbl.textContent.trim() + ': ' + val.textContent.trim() : '';
-            }).filter(Boolean).join('\n');
-            const txt = 'COSME Dashboard — ' + title + '\n' + '='.repeat(40) + '\n\n' + (kpis || 'See dashboard for details.') + '\n\nGenerated: ' + new Date().toLocaleString() + '\nURL: ' + shareURL();
-            const blob = new Blob([txt], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.download = title.replace(/[^a-z0-9]/gi,'_') + '_summary.txt';
-            a.href = URL.createObjectURL(blob);
-            a.click();
-            toast('Summary downloaded!');
-        }
-
-        function shareWhatsApp(sec) {
-            const t = sectionTitle(sec);
-            window.open('https://wa.me/?text=' + encodeURIComponent(t + ' — COSME Dashboard\n' + shareURL()), '_blank');
-        }
-
-        function shareEmail(sec) {
-            const t = sectionTitle(sec);
-            window.location.href = 'mailto:?subject=' + encodeURIComponent(t + ' — COSME Dashboard') + '&body=' + encodeURIComponent('View the dashboard:\n' + shareURL());
-        }
-
-        function shareTwitter(sec) {
-            const t = sectionTitle(sec);
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(t + ' — COSME Dashboard') + '&url=' + encodeURIComponent(shareURL()), '_blank');
-        }
-
-        function printSection(sec) {
-            const sections = document.querySelectorAll('.survey-section, .dashboard-section');
-            sections.forEach(s => { if (s !== sec) s.style.display = 'none'; });
-            window.print();
-            sections.forEach(s => s.style.display = '');
-        }
-
-        /* ── Toolbar Builder ── */
-        function buildToolbar(sec) {
-            const bar = document.createElement('div');
-            bar.className = 'share-toolbar';
-            const actions = [
-                { key:'link', label:'Copy Link', fn: copyLink },
-                { key:'screenshot', label:'Screenshot', fn: () => screenshotSection(sec) },
-                { key:'download', label:'Summary', fn: () => downloadSummary(sec) },
-                { key:'whatsapp', label:'WhatsApp', fn: () => shareWhatsApp(sec) },
-                { key:'email', label:'Email', fn: () => shareEmail(sec) },
-                { key:'twitter', label:'X', fn: () => shareTwitter(sec) },
-                { key:'print', label:'Print', fn: () => printSection(sec) }
-            ];
-            actions.forEach(a => {
-                const btn = document.createElement('button');
-                btn.className = 'share-btn';
-                btn.type = 'button';
-                btn.innerHTML = ICONS[a.key] + ' ' + a.label;
-                btn.addEventListener('click', e => { e.stopPropagation(); a.fn(); });
-                bar.appendChild(btn);
-            });
-            return bar;
-        }
-
-        /* ── Inject toolbars into all section titles ── */
-        function injectToolbars() {
-            document.querySelectorAll('.section-title').forEach(title => {
-                if (title.querySelector('.share-toolbar')) return;
-                // Wrap existing text in span if not wrapped
-                if (!title.querySelector('.section-title-text')) {
-                    const text = title.innerHTML;
-                    title.innerHTML = '';
-                    const span = document.createElement('span');
-                    span.className = 'section-title-text';
-                    span.innerHTML = text;
-                    title.appendChild(span);
-                }
-                const sec = title.closest('.survey-section') || title.closest('.dashboard-section') || title.parentElement;
-                title.appendChild(buildToolbar(sec));
-            });
-        }
-
-        // Initial injection
-        injectToolbars();
-
-        // Re-inject on survey switch
-        const origSwitch = window.switchSurvey;
-        if (typeof origSwitch === 'function') {
-            window.switchSurvey = function() {
-                origSwitch.apply(this, arguments);
-                setTimeout(injectToolbars, 300);
-            };
-        }
-
-        // Observe for dynamic sections
-        const obs = new MutationObserver(() => setTimeout(injectToolbars, 200));
-        obs.observe(document.body, { childList: true, subtree: true });
     })();
     </script>
 </body>
