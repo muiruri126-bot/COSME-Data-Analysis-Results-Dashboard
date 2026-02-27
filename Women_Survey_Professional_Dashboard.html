@@ -2986,6 +2986,67 @@
             font-size: 1.8em; font-weight: 900;
             flex: 0 0 44px; background: #f0f4ff;
         }
+        .toc-group-label {
+            font-size: 0.82em; font-weight: 700; color: #555; text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 8px; margin-top: 4px;
+            padding-left: 2px;
+        }
+        .toc-connections-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+        }
+        .toc-connection-card {
+            background: #fff; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07); border: 1px solid rgba(0,0,0,0.06);
+        }
+        .toc-conn-header {
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .toc-conn-dot {
+            width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0;
+        }
+        .toc-conn-name {
+            font-size: 0.85em; font-weight: 700; color: #333;
+        }
+        .toc-conn-arrow {
+            font-size: 0.9em; color: #999; margin: 0 2px;
+        }
+        .toc-conn-strength {
+            font-size: 0.7em; font-weight: 700; color: #fff; padding: 2px 8px;
+            border-radius: 10px; margin-left: auto;
+        }
+        .toc-conn-detail {
+            font-size: 0.82em; color: #555; line-height: 1.55;
+        }
+        .toc-tensions-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+        }
+        .toc-tension-card {
+            background: #fff; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+        .toc-tension-title {
+            font-size: 0.95em; font-weight: 800; margin-bottom: 6px;
+        }
+        .toc-tension-detail {
+            font-size: 0.82em; color: #444; line-height: 1.55; margin-bottom: 8px;
+        }
+        .toc-tension-detail strong { color: #c62828; font-size: 1.02em; }
+        .toc-tension-pathways {
+            font-size: 0.78em; color: #777;
+        }
+        .toc-tension-tag {
+            display: inline-block; background: #f0f0f0; color: #555;
+            padding: 2px 8px; border-radius: 10px; font-weight: 600;
+            margin-right: 4px; font-size: 0.95em;
+        }
+        @media (max-width: 900px) {
+            .toc-pathway { flex-wrap: wrap; }
+            .toc-step { flex: 1 1 100%; }
+            .toc-arrow { flex: 0 0 100%; font-size: 1.4em; padding: 4px 0;
+                         background: transparent; transform: rotate(90deg); }
+            .toc-connections-grid, .toc-tensions-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -6646,7 +6707,7 @@
             <!-- THEORY OF CHANGE PATHWAYS -->
             <div class="section">
                 <div class="section-title">Theory of Change Evidence Pathways</div>
-                <p style="color:#444;font-size:0.92em;margin-bottom:14px;line-height:1.6;">Evidence-based pathways showing how project interventions translate into measurable outcomes, with data-validated connection strength across all COSME domains.</p>
+                <p style="color:#444;font-size:0.92em;margin-bottom:14px;line-height:1.6;">Evidence-based pathways showing how project interventions translate into measurable outcomes across 7 interconnected domains. Includes cross-pathway linkages validated against VSLA, seaweed, schools, forestry, and survey data — plus critical tensions requiring adaptive programming.</p>
                 <div id="toc-pathways">
                     <!-- Rendered by JS -->
                 </div>
@@ -14629,30 +14690,41 @@
                     title: 'Financial Empowerment Pathway',
                     color: '#1976d2',
                     steps: [
-                        { label: 'Input', title: 'VSLA Formation', data: 'Groups established in target communities' },
-                        { label: 'Output', title: 'VSLA Membership', data: '<strong>+54.4pp</strong> women joined (43.6% to 98.0%)' },
-                        { label: 'Outcome', title: 'Savings & Loans', data: 'Savings <strong>+50.3pp</strong>, Loans <strong>+51.1pp</strong>' },
-                        { label: 'Impact', title: 'Decision Power', data: 'HH decisions <strong>+38.3pp</strong> (57.6% to 95.9%)' }
+                        { label: 'Input', title: 'VSLA Formation', data: '173 savings groups established across coastal communities' },
+                        { label: 'Output', title: 'Membership Surge', data: 'Women <strong>+54.4pp</strong> (43.6% \u2192 98.0%); Men <strong>+24.2pp</strong> (18.5% \u2192 42.7%)' },
+                        { label: 'Outcome', title: 'Savings & Credit', data: 'Personal savings <strong>+50.3pp</strong> (93.4%); Loan access <strong>+51.1pp</strong> (79.1%)' },
+                        { label: 'Impact', title: 'Decision Power', data: 'HH decisions <strong>+38.3pp</strong> (57.6% \u2192 95.9%)' },
+                        { label: 'Gap', title: 'Resource Control Lags', data: 'Resource access only <strong>+12.6pp</strong> (53.8%) \u2014 lags decision power by 26pp' }
                     ]
                 },
                 {
-                    title: 'Conservation Knowledge Pathway',
+                    title: 'Conservation & Ecosystem Restoration',
                     color: '#2e7d32',
                     steps: [
-                        { label: 'Input', title: 'NbS Training', data: 'Climate & conservation curriculum delivered' },
-                        { label: 'Output', title: 'Knowledge Gain', data: 'NbS knowledge <strong>+54.7pp</strong> W / <strong>+47.4pp</strong> M' },
-                        { label: 'Outcome', title: 'Active Participation', data: 'Mangrove <strong>+49.6pp</strong>, Seaweed <strong>+54.9pp</strong>, Forest <strong>+31.0pp</strong>' },
-                        { label: 'Impact', title: 'Ecosystem Restoration', data: 'All 3 ecosystems show <strong>>80%</strong> participation at midline' }
+                        { label: 'Input', title: 'NbS Training & Capacity', data: 'Conservation curriculum + forest group institutional support' },
+                        { label: 'Output', title: 'Knowledge Transformation', data: 'NbS knowledge <strong>+54.7pp</strong> W / <strong>+47.4pp</strong> M; Climate awareness <strong>\u226596%</strong> both genders' },
+                        { label: 'Outcome', title: 'Multi-Ecosystem Action', data: 'Mangrove <strong>+49.6pp</strong>, Seaweed <strong>+54.9pp</strong>, Forest <strong>+31.0pp</strong>' },
+                        { label: 'Impact', title: 'Institutional Sustainability', data: 'All 3 ecosystems <strong>>80%</strong> participation; Forest group functionality <strong>+32.2pp</strong> (85.7%)' }
                     ]
                 },
                 {
-                    title: 'Gender Transformation Pathway',
+                    title: "Women's Agency & Empowerment",
                     color: '#E91E63',
                     steps: [
-                        { label: 'Input', title: 'GJJ Dialogues', data: 'Gender Justice Journey community sessions' },
-                        { label: 'Output', title: 'Norm Shift', data: 'Harmful norms rejected: <strong>-34.7pp</strong> income, <strong>-36.5pp</strong> boats' },
-                        { label: 'Outcome', title: 'Behavior Change', data: 'Men chores <strong>+24.5pp</strong>, Care work <strong>+82.6%</strong>' },
-                        { label: 'Impact', title: 'Joint Responsibility', data: 'Joint HH belief <strong>+53.8pp</strong> W / <strong>+50.5pp</strong> M' }
+                        { label: 'Input', title: 'GJJ Dialogues for Women', data: 'Gender Justice Journey community sessions' },
+                        { label: 'Output', title: 'Self-Esteem Growth', data: 'Self-esteem <strong>+19.1pp</strong> (33.5% \u2192 52.6%); Gender equality score <strong>+22.6</strong>/100' },
+                        { label: 'Outcome', title: 'Agency in Practice', data: 'HH decisions <strong>+38.3pp</strong> (95.9%); Decision conversations <strong>+21.5pp</strong> (81.7%)' },
+                        { label: 'Gap', title: 'Hollow Empowerment Risk', data: 'Business support <strong>-20.7pp</strong> (84.9% \u2192 64.2%); Resource access only <strong>+12.6pp</strong>' }
+                    ]
+                },
+                {
+                    title: 'Male Allyship & Norm Change',
+                    color: '#7B1FA2',
+                    steps: [
+                        { label: 'Input', title: 'GJJ Sessions for Men', data: 'Structured male engagement dialogues' },
+                        { label: 'Output', title: 'Harmful Norms Rejected', data: '"Only men earn" <strong>-34.7pp</strong> (63.1% \u2192 28.4%); "Only men drive boats" <strong>-36.5pp</strong>' },
+                        { label: 'Outcome', title: 'Care Redistribution', data: 'Men care work <strong>+82.6%</strong> (2.3 \u2192 4.2 hrs/day); Women <strong>-1.6 hrs</strong> (9.3 \u2192 7.7)' },
+                        { label: 'Impact', title: 'Shared Responsibility', data: 'Joint HH belief <strong>+53.8pp</strong> W / <strong>+50.5pp</strong> M; Self-responsibility <strong>+20.2pp</strong>' }
                     ]
                 },
                 {
@@ -14660,27 +14732,167 @@
                     color: '#f57c00',
                     steps: [
                         { label: 'Input', title: 'DRR Training', data: 'Preparedness knowledge sessions for both genders' },
-                        { label: 'Output', title: 'Knowledge Uptake', data: 'Prep knowledge <strong>+33.1pp</strong> W / <strong>+36.6pp</strong> M' },
-                        { label: 'Outcome', title: 'Action Readiness', data: 'Prep action <strong>+34.5pp</strong> W / <strong>+26.7pp</strong> M' },
-                        { label: 'Impact', title: 'Community Protection', data: 'Early warnings <strong>+36.1pp</strong> W / <strong>+38.4pp</strong> M' }
+                        { label: 'Output', title: 'Knowledge Uptake', data: 'Preparedness knowledge <strong>+33.1pp</strong> W / <strong>+36.6pp</strong> M' },
+                        { label: 'Outcome', title: 'Action Readiness', data: 'Preparedness action <strong>+34.5pp</strong> W / <strong>+26.7pp</strong> M' },
+                        { label: 'Impact', title: 'Community Protection', data: 'Early warning access <strong>+36.1pp</strong> W / <strong>+38.4pp</strong> M' }
+                    ]
+                },
+                {
+                    title: 'Seaweed Value Chain Development',
+                    color: '#00796b',
+                    steps: [
+                        { label: 'Input', title: 'Group Formation', data: '19 seaweed groups formed; 335 active farmers trained' },
+                        { label: 'Output', title: 'Women-Led Production', data: '<strong>610</strong> female members (77.7%); <strong>94.7%</strong> of groups women-led' },
+                        { label: 'Outcome', title: 'Value Addition', data: '<strong>26.3%</strong> practice value addition; Avg price KES 50/kg' },
+                        { label: 'Bottleneck', title: 'Commercialization Gap', data: 'Only <strong>47.4%</strong> selling; <strong>0%</strong> exports; <strong>84.2%</strong> report insufficient inputs' }
+                    ]
+                },
+                {
+                    title: 'Schools & Next Generation',
+                    color: '#303F9F',
+                    steps: [
+                        { label: 'Input', title: '4K Club Formation', data: 'School-based environmental clubs established' },
+                        { label: 'Output', title: 'Youth Enrollment', data: '<strong>5,065</strong> students enrolled (57.6% girls, 42.4% boys)' },
+                        { label: 'Outcome', title: 'Environmental Action', data: 'Tree planting in <strong>38</strong> schools; Farming in <strong>32</strong> schools' },
+                        { label: 'Impact', title: 'WASH & Resilience', data: 'Clean water composite score <strong>+39.1pp</strong>' }
                     ]
                 }
             ];
 
-            const html = pathways.map(p => {
-                const stepsHtml = p.steps.map((s, idx) => {
-                    const stepHtml = `<div class="toc-step" style="background:${idx === p.steps.length - 1 ? p.color + '12' : '#fff'};">
-                        <div class="toc-step-label" style="color:#fff;background:${p.color};">${s.label}</div>
-                        <div class="toc-step-title">${s.title}</div>
-                        <div class="toc-step-data">${s.data}</div>
-                    </div>`;
-                    const arrow = idx < p.steps.length - 1 ? `<div class="toc-arrow" style="color:${p.color};">&#10140;</div>` : '';
-                    return stepHtml + arrow;
-                }).join('');
+            // Cross-pathway connections — evidence of systemic impact
+            const connections = [
+                {
+                    from: 'Financial Empowerment', to: 'Seaweed Value Chain',
+                    fromColor: '#1976d2', toColor: '#00796b', strength: 'Strong',
+                    detail: 'Seaweed-named VSLAs (Bati, Chiromo, Kibuyuni, Mkwiro, Imani Gazi) provide start-up capital and risk pooling for seaweed farmers, directly linking savings to livelihood development.'
+                },
+                {
+                    from: 'Financial Empowerment', to: 'Conservation & Ecosystem',
+                    fromColor: '#1976d2', toColor: '#2e7d32', strength: 'Strong',
+                    detail: 'Conservation-named VSLAs (Kaya Chonyi, Kwale Environmental, Majoreni BMU, Kiwambale, Jipe Moyo) channel member savings into community-based environmental stewardship.'
+                },
+                {
+                    from: "Women's Agency", to: 'Seaweed Value Chain',
+                    fromColor: '#E91E63', toColor: '#00796b', strength: 'Moderate',
+                    detail: '94.7% of seaweed groups are women-led with 610 female members. Women\'s empowerment enables value chain leadership, but business support decline (-20.7pp) threatens long-term sustainability.'
+                },
+                {
+                    from: 'Male Allyship', to: 'Conservation & Ecosystem',
+                    fromColor: '#7B1FA2', toColor: '#2e7d32', strength: 'Strong',
+                    detail: 'Men\'s seaweed support surged +68.2pp (15.7% \u2192 83.9%), exceeding women\'s own participation growth (+54.9pp). Norm change enabled cross-gender conservation collaboration.'
+                },
+                {
+                    from: 'Financial Empowerment', to: 'Disaster Resilience',
+                    fromColor: '#1976d2', toColor: '#f57c00', strength: 'Enabling',
+                    detail: 'VSLA savings (93.4% participation) create financial buffers against climate shocks. Loan access (+51.1pp) enables faster post-disaster recovery and livelihood rebuilding.'
+                },
+                {
+                    from: 'Schools & Next Generation', to: 'Conservation & Ecosystem',
+                    fromColor: '#303F9F', toColor: '#2e7d32', strength: 'Emerging',
+                    detail: '4K clubs in 38 schools practice tree planting and in 32 schools practice farming, connecting youth environmental education to community-level ecosystem restoration.'
+                }
+            ];
 
-                return `<div class="toc-pathway-title" style="color:${p.color};background:${p.color}10;"><span style="background:${p.color};width:5px;height:24px;border-radius:3px;display:inline-block;"></span>${p.title}</div>
-                    <div class="toc-pathway" style="border-left:5px solid ${p.color};">${stepsHtml}</div>`;
-            }).join('');
+            // Tensions — critical cross-cutting gaps
+            const tensions = [
+                {
+                    title: 'Business Support Decline',
+                    color: '#c62828',
+                    detail: 'Women report <strong>-20.7pp</strong> (84.9% \u2192 64.2%) in spouse business support while men report <strong>+14.1pp</strong> (53.5% \u2192 67.6%). This 30pp perception gap suggests women\'s rising expectations outpace actual support changes.',
+                    tags: ["Women's Agency", 'Male Allyship']
+                },
+                {
+                    title: 'Resource Control Stagnation',
+                    color: '#e65100',
+                    detail: 'Decision power surged <strong>+38.3pp</strong> but resource access grew only <strong>+12.6pp</strong>. Women participate in decisions but may lack tangible control over assets \u2014 a "hollow empowerment" risk requiring asset-transfer interventions.',
+                    tags: ['Financial Empowerment', "Women's Agency"]
+                },
+                {
+                    title: 'Seaweed Commercialization Bottleneck',
+                    color: '#e65100',
+                    detail: 'Despite 335 active farmers and 94.7% women-led groups, only <strong>47.4%</strong> are selling, <strong>0%</strong> are exporting, and <strong>84.2%</strong> report insufficient inputs. The value chain stalls at the production-to-market transition.',
+                    tags: ['Seaweed Value Chain', 'Financial Empowerment']
+                },
+                {
+                    title: 'Joint Decision Perception Gap',
+                    color: '#f57c00',
+                    detail: 'Men report joint decision-making at <strong>89.8%</strong> vs women\'s <strong>58.8%</strong> \u2014 a 31pp perception gap suggesting men overestimate their inclusiveness or women undervalue their own participation.',
+                    tags: ["Women's Agency", 'Male Allyship']
+                }
+            ];
+
+            // --- Render all sections ---
+            function renderStep(step, pathway, idx, total) {
+                const isAlert = step.label === 'Gap' || step.label === 'Bottleneck';
+                const labelBg = isAlert ? '#c62828' : pathway.color;
+                const stepBg = idx === total - 1 ? (isAlert ? 'rgba(198,40,40,0.07)' : pathway.color + '12') : '#fff';
+                const html = '<div class="toc-step" style="background:' + stepBg + ';">' +
+                    '<div class="toc-step-label" style="color:#fff;background:' + labelBg + ';">' + step.label + '</div>' +
+                    '<div class="toc-step-title">' + step.title + '</div>' +
+                    '<div class="toc-step-data">' + step.data + '</div>' +
+                    '</div>';
+                const arrow = idx < total - 1 ? '<div class="toc-arrow" style="color:' + (isAlert ? '#c62828' : pathway.color) + ';">&#10140;</div>' : '';
+                return html + arrow;
+            }
+
+            let html = '';
+
+            // Core pathways (first 5)
+            html += '<div class="toc-group-label">Core Program Pathways</div>';
+            pathways.slice(0, 5).forEach(function(p) {
+                const stepsHtml = p.steps.map(function(s, idx) { return renderStep(s, p, idx, p.steps.length); }).join('');
+                html += '<div class="toc-pathway-title" style="color:' + p.color + ';background:' + p.color + '10;">' +
+                    '<span style="background:' + p.color + ';width:5px;height:24px;border-radius:3px;display:inline-block;"></span>' + p.title + '</div>' +
+                    '<div class="toc-pathway" style="border-left:5px solid ' + p.color + ';">' + stepsHtml + '</div>';
+            });
+
+            // Value chain & next generation pathways (last 2)
+            html += '<div class="toc-group-label" style="margin-top:22px;">Value Chain & Next Generation</div>';
+            pathways.slice(5).forEach(function(p) {
+                const stepsHtml = p.steps.map(function(s, idx) { return renderStep(s, p, idx, p.steps.length); }).join('');
+                html += '<div class="toc-pathway-title" style="color:' + p.color + ';background:' + p.color + '10;">' +
+                    '<span style="background:' + p.color + ';width:5px;height:24px;border-radius:3px;display:inline-block;"></span>' + p.title + '</div>' +
+                    '<div class="toc-pathway" style="border-left:5px solid ' + p.color + ';">' + stepsHtml + '</div>';
+            });
+
+            // Cross-pathway connections
+            html += '<div style="margin-top:28px;">' +
+                '<div style="font-size:1.05em;font-weight:800;color:#333;margin-bottom:6px;">Cross-Pathway Connections</div>' +
+                '<p style="color:#555;font-size:0.84em;margin-bottom:14px;line-height:1.5;">How program pathways reinforce each other \u2014 evidence of systemic, interconnected impact beyond linear cause-and-effect chains.</p>' +
+                '<div class="toc-connections-grid">';
+
+            connections.forEach(function(c) {
+                var sColor = c.strength === 'Strong' ? '#2e7d32' : (c.strength === 'Moderate' ? '#f57c00' : (c.strength === 'Enabling' ? '#1976d2' : '#7B1FA2'));
+                html += '<div class="toc-connection-card">' +
+                    '<div class="toc-conn-header">' +
+                    '<span class="toc-conn-dot" style="background:' + c.fromColor + ';"></span>' +
+                    '<span class="toc-conn-name">' + c.from + '</span>' +
+                    '<span class="toc-conn-arrow">&#10140;</span>' +
+                    '<span class="toc-conn-dot" style="background:' + c.toColor + ';"></span>' +
+                    '<span class="toc-conn-name">' + c.to + '</span>' +
+                    '<span class="toc-conn-strength" style="background:' + sColor + ';">' + c.strength + '</span>' +
+                    '</div>' +
+                    '<div class="toc-conn-detail">' + c.detail + '</div>' +
+                    '</div>';
+            });
+
+            html += '</div></div>';
+
+            // Tensions & watchpoints
+            html += '<div style="margin-top:28px;">' +
+                '<div style="font-size:1.05em;font-weight:800;color:#333;margin-bottom:6px;">Tensions & Watchpoints</div>' +
+                '<p style="color:#555;font-size:0.84em;margin-bottom:14px;line-height:1.5;">Critical gaps and contradictions requiring adaptive programming. These cross-cutting tensions span multiple pathways and indicate where theory of change assumptions need revisiting.</p>' +
+                '<div class="toc-tensions-grid">';
+
+            tensions.forEach(function(t) {
+                html += '<div class="toc-tension-card" style="border-left:4px solid ' + t.color + ';">' +
+                    '<div class="toc-tension-title" style="color:' + t.color + ';">' + t.title + '</div>' +
+                    '<div class="toc-tension-detail">' + t.detail + '</div>' +
+                    '<div class="toc-tension-pathways">Affects: ' + t.tags.map(function(tag) { return '<span class="toc-tension-tag">' + tag + '</span>'; }).join(' ') + '</div>' +
+                    '</div>';
+            });
+
+            html += '</div></div>';
 
             document.getElementById('toc-pathways').innerHTML = html;
         }
