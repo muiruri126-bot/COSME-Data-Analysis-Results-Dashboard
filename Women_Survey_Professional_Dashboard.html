@@ -6794,7 +6794,7 @@
     <footer class="footer" role="contentinfo">
         <p id="footer-title"><strong>Project Output Dashboard - Mangrove</strong></p>
         <p id="footer-sample">COSME Project Outputs and Deliverables Tracker</p>
-        <p>Dashboard Created: February 2026</p>
+        <p>Dashboard Created: February 2026 | Last Updated: <span id="footer-timestamp"></span></p>
     </footer>
 
     <!-- BACK TO TOP BUTTON -->
@@ -13335,6 +13335,13 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Set footer timestamp
+            const tsEl = document.getElementById('footer-timestamp');
+            if (tsEl) {
+                const now = new Date();
+                const opts = { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' };
+                tsEl.textContent = now.toLocaleDateString('en-US', opts);
+            }
             // Save original women survey content (highlights + chart insights)
             // so we can restore them when switching back from other surveys
             window.originalWomenContent = {};
