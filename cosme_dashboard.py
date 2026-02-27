@@ -4385,8 +4385,16 @@ def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None):
         for key in ['mangrove_support', 'seaweed_support', 'forest_support']:
             df = m_data[key]
             yes_rows = df[df['Response'] == 'Yes']
-            bl_v = float(yes_rows['Baseline'].values[0]) if len(yes_rows) else 0.0
-            ml_v = float(yes_rows['Midline'].values[0]) if len(yes_rows) else 0.0
+            try:
+                bl_v = float(yes_rows['Baseline'].values[0]) if len(yes_rows) else 0.0
+            except (ValueError, TypeError):
+                bl_v = 0.0
+            try:
+                ml_v = float(yes_rows['Midline'].values[0]) if len(yes_rows) else 0.0
+            except (ValueError, TypeError):
+                ml_v = 0.0
+            if pd.isna(bl_v): bl_v = 0.0
+            if pd.isna(ml_v): ml_v = 0.0
             support_bl.append(bl_v)
             support_ml.append(ml_v)
         rows.append({'Indicator': 'NbS Support for Women', 'Dataset': 'Men',
