@@ -4839,10 +4839,19 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
             sup_bl_vals, sup_ml_vals = [], []
             for key in sectors:
                 df = m_data[key]
-                yes_bl = df.loc[df['Response']=='Yes','Baseline'].values[0]*100 if len(df[df['Response']=='Yes']) else 0
-                yes_ml = df.loc[df['Response']=='Yes','Midline'].values[0]*100 if len(df[df['Response']=='Yes']) else 0
-                sup_bl_vals.append(yes_bl)
-                sup_ml_vals.append(yes_ml)
+                yes_df = df[df['Response']=='Yes']
+                try:
+                    _bl = float(yes_df['Baseline'].values[0])*100 if len(yes_df) else 0.0
+                except (ValueError, TypeError):
+                    _bl = 0.0
+                try:
+                    _ml = float(yes_df['Midline'].values[0])*100 if len(yes_df) else 0.0
+                except (ValueError, TypeError):
+                    _ml = 0.0
+                if pd.isna(_bl): _bl = 0.0
+                if pd.isna(_ml): _ml = 0.0
+                sup_bl_vals.append(_bl)
+                sup_ml_vals.append(_ml)
 
             fig_msup = go.Figure()
             fig_msup.add_trace(go.Bar(x=sector_labels, y=sup_bl_vals, name='Baseline',
