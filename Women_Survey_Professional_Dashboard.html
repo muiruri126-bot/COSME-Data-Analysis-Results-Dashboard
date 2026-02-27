@@ -2986,16 +2986,19 @@
             font-size: 1.8em; font-weight: 900;
             flex: 0 0 44px; background: #f0f4ff;
         }
-        .toc-group-label {
-            font-size: 0.82em; font-weight: 700; color: #555; text-transform: uppercase;
-            letter-spacing: 1.5px; margin-bottom: 8px; margin-top: 4px;
-            padding-left: 2px;
+        .toc-outcome-divider {
+            height: 2px; background: linear-gradient(90deg, transparent, #ccc 20%, #ccc 80%, transparent);
+            margin: 6px 0 2px 0;
+        }
+        .toc-conn-outcome-badge {
+            font-size: 0.68em; font-weight: 700; color: #fff; padding: 2px 8px;
+            border-radius: 8px; background: #555; white-space: nowrap;
         }
         .toc-outcome-header {
             padding: 14px 18px; border-radius: 10px; margin-bottom: 14px;
             margin-top: 26px; border-left: 5px solid;
         }
-        .toc-outcome-header:first-child { margin-top: 0; }
+        .toc-outcome-header:first-of-type { margin-top: 0; }
         .toc-outcome-id {
             font-size: 0.72em; font-weight: 800; text-transform: uppercase;
             letter-spacing: 1.5px; display: inline-block; padding: 2px 10px;
@@ -3062,6 +3065,14 @@
             .toc-arrow { flex: 0 0 100%; font-size: 1.4em; padding: 4px 0;
                          background: transparent; transform: rotate(90deg); }
             .toc-connections-grid, .toc-tensions-grid { grid-template-columns: 1fr; }
+        }
+        @media print {
+            .toc-pathway { flex-wrap: wrap; page-break-inside: avoid; }
+            .toc-step { flex: 1 1 45%; }
+            .toc-arrow { flex: 0 0 30px; font-size: 1.2em; background: transparent !important; }
+            .toc-outcome-header { page-break-inside: avoid; page-break-after: avoid; }
+            .toc-connections-grid, .toc-tensions-grid { grid-template-columns: 1fr; }
+            .toc-connection-card, .toc-tension-card { page-break-inside: avoid; box-shadow: none !important; border: 1px solid #ddd; }
         }
     </style>
 </head>
@@ -6716,7 +6727,7 @@
         <!-- END CROSS-DATASET SYNTHESIS SECTION -->
 
         <!-- ============================================================ -->
-        <!-- AUTOMATED INSIGHTS SECTION                                   -->
+        <!-- IMPACT & EVIDENCE SECTION                                    -->
         <!-- ============================================================ -->
         <div id="automated-insights-section" class="survey-section" style="display:none;">
 
@@ -6748,34 +6759,34 @@
             <div class="section">
                 <div class="section-title">Methodology & Data Quality Notes</div>
                 <div id="methodology-notes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
-                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #0072CE;">
-                        <strong style="color:#0072CE;font-size:0.95em;">Insight Generation Method</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Insights are generated algorithmically by comparing baseline and midline survey data across 26 outcome indicators and 5 training measures. The engine applies threshold-based detection (15pp for trends, 20pp for gaps, -5pp for anomalies) combined with statistical z-score outlier analysis (threshold: 1.8 SD).</p>
-                    </div>
                     <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;">
-                        <strong style="color:#2e7d32;font-size:0.95em;">Confidence Scoring</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Each insight receives a confidence score (0-100%) based on: effect magnitude (+25 for >=30pp), logframe linkage (+10), dual-gender measurement triangulation (+10), and directional corroboration (+5). Scores are categorized as High (75-100%), Medium (50-74%), or Low (&lt;50%).</p>
+                        <strong style="color:#2e7d32;font-size:0.95em;">Theory of Change Framework</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Evidence pathways are structured around COSME's three intermediate outcomes (1100: NbS Adoption, 1200: Women's Agency, 1300: Governance). Each pathway maps Input → Output → Outcome → Impact using baseline-to-midline data across 26 indicators and 5 training measures. Logframe indicator IDs are shown in brackets for traceability.</p>
+                    </div>
+                    <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #1976d2;">
+                        <strong style="color:#1976d2;font-size:0.95em;">Cross-Outcome Validation</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Cross-outcome connections are validated against multiple datasets: VSLA group names confirm financial-to-NbS linkages (e.g., seaweed-named and conservation-named VSLAs), seaweed assessment data confirms women's leadership in value chains, and schools data confirms intergenerational pathways. Connection strength is rated as Strong, Moderate, Enabling, or Emerging.</p>
                     </div>
                     <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #f57c00;">
-                        <strong style="color:#f57c00;font-size:0.95em;">Domain Health Index</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Domain health scores (0-100) are computed as a weighted composite: 40% target exceedance ratio, 40% normalized average gain (capped at 50pp), and 20% anomaly-free bonus. Domains scoring below 70 receive automated strengthening recommendations.</p>
+                        <strong style="color:#f57c00;font-size:0.95em;">Endline Projection Model</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Projections extrapolate baseline-to-midline trajectories under three scenarios: Maintained (50% of gains continue), Accelerated (80% with intensified programming), and Regression (20% loss if interventions weaken). Projections use strategic logframe indicators prioritized over arbitrary array ordering. All values are capped at 0-100%.</p>
                     </div>
                     <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #7b1fa2;">
                         <strong style="color:#7b1fa2;font-size:0.95em;">Data Sources & Coverage</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments, Seaweed Farming data, and VSLA Monitoring records. Coverage spans 6 thematic domains across Kilifi County, Kenya.</p>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from 10 sources: Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments, Seaweed Farming Assessment (3 levels), and VSLA Monitoring (211 assessments, 173 groups). Coverage spans Kilifi & Kwale Counties, Kenya.</p>
                     </div>
                     <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #c62828;">
                         <strong style="color:#c62828;font-size:0.95em;">Limitations & Caveats</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Cross-link insights are based on temporal correlation, not established causation. Sample sizes vary across surveys. Self-reported data may introduce social desirability bias. Endline projections assume linear trajectories and equal intervention intensity. Seasonal and contextual factors are not controlled for in automated analysis.</p>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Cross-outcome connections show temporal correlation, not established causation. Sample sizes vary across surveys, and self-reported data may introduce social desirability bias. Endline projections assume linear trajectories and equal intervention intensity. Tensions highlight where ToC assumptions diverge from observed data and may require adaptive programming.</p>
                     </div>
                     <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #00838f;">
-                        <strong style="color:#00838f;font-size:0.95em;">Recommendation Engine</strong>
-                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Strategic recommendations are auto-generated from: (1) highest-magnitude anomalies requiring investigation, (2) gender gaps exceeding 20pp needing responsive programming, (3) domains with health scores below 70/100, and (4) endline preparation priorities. Recommendations combine data patterns with programmatic best practices.</p>
+                        <strong style="color:#00838f;font-size:0.95em;">Tension Detection Method</strong>
+                        <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Tensions are identified when: (1) indicator pairs show contradictory trends (e.g., decision power +38pp vs resource access +12.6pp), (2) gender perception gaps exceed 20pp (e.g., business support: women -20.7pp vs men +14.1pp), or (3) value chain bottlenecks block impact conversion (e.g., 84.2% insufficient inputs in seaweed). Each tension is tagged to its affected outcome for accountability.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END AUTOMATED INSIGHTS SECTION -->
+        <!-- END IMPACT & EVIDENCE SECTION -->
 
     </div>
 
@@ -14900,7 +14911,8 @@
             let html = '';
 
             // Render each outcome pillar with its pathways
-            outcomes.forEach(function(oc) {
+            outcomes.forEach(function(oc, ocIdx) {
+                if (ocIdx > 0) html += '<div class="toc-outcome-divider"></div>';
                 html += '<div class="toc-outcome-header" style="border-left-color:' + oc.color + ';background:' + oc.color + '08;">' +
                     '<div><span class="toc-outcome-id" style="background:' + oc.color + ';">Outcome ' + oc.id + '</span></div>' +
                     '<div class="toc-outcome-title">' + oc.title + '</div>' +
@@ -14925,6 +14937,7 @@
                 var sColor = c.strength === 'Strong' ? '#2e7d32' : (c.strength === 'Moderate' ? '#f57c00' : (c.strength === 'Enabling' ? '#1976d2' : '#7B1FA2'));
                 html += '<div class="toc-connection-card">' +
                     '<div class="toc-conn-header">' +
+                    '<span class="toc-conn-outcome-badge" style="background:' + sColor + ';">' + c.outcomes + '</span>' +
                     '<span class="toc-conn-dot" style="background:' + c.fromColor + ';"></span>' +
                     '<span class="toc-conn-name">' + c.from + '</span>' +
                     '<span class="toc-conn-arrow">&#10140;</span>' +
@@ -14959,10 +14972,14 @@
 
         // ── ENDLINE PROJECTIONS ────────────────────────────────────────
         function renderEndlineProjections() {
-            // Select key indicators for projections
-            const keyInds = indicatorDictionary.filter(i =>
-                i.womenMidline != null && i.womenBaseline != null && i.unit === '%'
-            ).slice(0, 10);
+            // Select strategic logframe indicators first, then fill with highest-impact ones
+            const logframeFirst = indicatorDictionary.filter(i =>
+                i.womenMidline != null && i.womenBaseline != null && i.unit === '%' && i.logframeId
+            );
+            const nonLogframe = indicatorDictionary.filter(i =>
+                i.womenMidline != null && i.womenBaseline != null && i.unit === '%' && !i.logframeId
+            ).sort((a, b) => Math.abs(b.womenMidline - b.womenBaseline) - Math.abs(a.womenMidline - a.womenBaseline));
+            const keyInds = [...logframeFirst, ...nonLogframe].slice(0, 12);
 
             const labels = keyInds.map(i => i.label.length > 20 ? i.label.substring(0, 18) + '...' : i.label);
             const midVals = keyInds.map(i => i.womenMidline);
