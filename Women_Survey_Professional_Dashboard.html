@@ -3151,6 +3151,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('automated-insights', this)">
                     Impact & Evidence
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
+                    📄 Report Generation
+                </button>
             </div>
         </nav>
 
@@ -3179,6 +3182,7 @@
                 <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
                 <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
                 <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
+                <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
             </div>
         </nav>
 
@@ -6788,6 +6792,116 @@
         </div>
         <!-- END IMPACT & EVIDENCE SECTION -->
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- REPORT GENERATION SECTION                                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="report-generation-section" class="survey-section" style="display:none;">
+            <div style="max-width:960px;margin:0 auto;padding:20px 0;">
+
+                <!-- Hero card -->
+                <div style="background:linear-gradient(135deg,#0072CE 0%,#004E8C 100%);border-radius:16px;padding:40px 36px;color:#fff;margin-bottom:28px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+                    <div style="position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+                    <div style="font-size:2.8rem;margin-bottom:12px;">📄</div>
+                    <h2 style="font-size:1.8em;font-weight:700;margin-bottom:8px;">COSME Midline Report</h2>
+                    <p style="opacity:0.9;font-size:1.05em;line-height:1.6;max-width:600px;">Generate a comprehensive PDF report with charts, KPIs, logframe analysis, and recommendations covering all project datasets.</p>
+                </div>
+
+                <!-- Two-column layout -->
+                <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+
+                    <!-- Left: Generate + Contents -->
+                    <div>
+                        <!-- Generate card -->
+                        <div class="section" style="margin-bottom:20px;">
+                            <div class="section-title" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);color:#fff;">⚙️ Generate Report</div>
+                            <div style="padding:20px;">
+                                <p style="color:#555;line-height:1.7;margin-bottom:16px;">Click below to generate the full <strong>COSME Midline Analysis</strong> PDF. The report includes all survey dashboards, comparison charts, logframe summary, and strategic recommendations.</p>
+                                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                                    <button id="reportGenBtn" onclick="generateMidlineReport()" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);color:#fff;border:none;padding:14px 28px;border-radius:10px;font-size:1.05em;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.3s;box-shadow:0 4px 12px rgba(27,94,32,0.3);">
+                                        <span id="reportGenIcon">📄</span> <span id="reportGenText">Generate Report</span>
+                                    </button>
+                                    <span id="reportGenHint" style="color:#888;font-size:0.9em;">⏱ This may take 30–60 seconds</span>
+                                </div>
+                                <div id="reportGenStatus" style="margin-top:16px;display:none;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Report contents -->
+                        <div class="section">
+                            <div class="section-title">📋 Report Contents</div>
+                            <div style="padding:0;">
+                                <table style="width:100%;border-collapse:collapse;font-size:0.92em;">
+                                    <thead>
+                                        <tr style="background:#f0f4f8;">
+                                            <th style="padding:10px 14px;text-align:left;font-weight:600;color:#333;border-bottom:2px solid #dee2e6;width:36px;">#</th>
+                                            <th style="padding:10px 14px;text-align:left;font-weight:600;color:#333;border-bottom:2px solid #dee2e6;">Section</th>
+                                            <th style="padding:10px 14px;text-align:left;font-weight:600;color:#333;border-bottom:2px solid #dee2e6;">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportContentsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Status + Quick info -->
+                    <div>
+                        <!-- Status card -->
+                        <div id="reportStatusCard" class="section" style="margin-bottom:20px;border-left:4px solid #9e9e9e;">
+                            <div class="section-title" style="background:#f5f5f5;color:#666;">📊 Report Status</div>
+                            <div style="padding:24px;text-align:center;">
+                                <div style="font-size:3.5rem;opacity:0.6;margin-bottom:12px;">📄</div>
+                                <p style="color:#888;font-size:0.95em;">No report generated yet.</p>
+                                <p style="color:#aaa;font-size:0.85em;margin-top:6px;">Click <strong>Generate Report</strong> to create the PDF.</p>
+                            </div>
+                        </div>
+
+                        <!-- Download buttons (hidden initially) -->
+                        <div id="reportDownloadBtns" style="display:none;margin-bottom:20px;">
+                            <a id="reportDownloadLink" href="#" download="COSME_Midline_Report.pdf" style="display:block;background:linear-gradient(135deg,#0072CE,#004E8C);color:#fff;text-decoration:none;padding:14px 20px;border-radius:10px;text-align:center;font-weight:600;margin-bottom:10px;transition:all 0.3s;box-shadow:0 3px 10px rgba(0,114,206,0.3);">⬇️ Download PDF</a>
+                            <a id="reportViewLink" href="#" target="_blank" style="display:block;background:#fff;color:#0072CE;text-decoration:none;padding:12px 20px;border-radius:10px;text-align:center;font-weight:600;border:2px solid #0072CE;transition:all 0.3s;">👁️ View in Browser</a>
+                        </div>
+
+                        <!-- Quick info card -->
+                        <div class="section">
+                            <div class="section-title" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:#0d47a1;">ℹ️ Quick Info</div>
+                            <div style="padding:16px;">
+                                <div style="display:flex;flex-direction:column;gap:12px;">
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">👥</span><span><strong>1,213</strong> survey respondents</span></div>
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">📊</span><span><strong>12/13</strong> logframe indicators exceeded</span></div>
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">🌳</span><span><strong>28</strong> forestry groups monitored</span></div>
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">🏫</span><span><strong>65</strong> schools participating</span></div>
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">💰</span><span><strong>211</strong> VSLA assessments</span></div>
+                                    <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.2em;">🌊</span><span><strong>610</strong> women in seaweed farming</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive grid for small screens -->
+                <style>
+                    @media (max-width: 768px) {
+                        #report-generation-section [style*="grid-template-columns:1fr 340px"] {
+                            grid-template-columns: 1fr !important;
+                        }
+                    }
+                    .report-gen-btn {
+                        background: linear-gradient(135deg, #0072CE, #004E8C) !important;
+                        color: #fff !important;
+                        border: none !important;
+                        font-weight: 600 !important;
+                    }
+                    .report-gen-btn:hover {
+                        box-shadow: 0 3px 12px rgba(0,114,206,0.35) !important;
+                    }
+                </style>
+            </div>
+        </div>
+        <!-- END REPORT GENERATION SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -7672,6 +7786,14 @@
                 footerTitle: '<strong>Impact & Evidence — Theory of Change, Projections & Methodology</strong>',
                 footerSample: 'Cross-validated pathways, endline projections & data quality notes',
                 renderFn: () => renderAutomatedInsights()
+            },
+            'report-generation': {
+                showSection: 'report-generation-section',
+                subSelector: null,
+                title: 'Report Generation',
+                footerTitle: '<strong>COSME Midline Report — PDF Generation Centre</strong>',
+                footerSample: 'Generate, download & view the comprehensive COSME Midline Analysis PDF',
+                renderFn: () => renderReportGeneration()
             }
         };
 
@@ -7680,7 +7802,8 @@
             'women-survey-section', 'men-survey-section', 'forestry-section',
             'prepost-section', 'output-section', 'schools-dashboard-section',
             'seaweed-section', 'vsla-section',
-            'cross-dataset-section', 'automated-insights-section'
+            'cross-dataset-section', 'automated-insights-section',
+            'report-generation-section'
         ];
         const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector'];
 
@@ -15683,6 +15806,123 @@
             observer.observe(selector, { childList: true, subtree: true, attributes: true });
         }
     })();
+    </script>
+
+    <!-- REPORT GENERATION LOGIC -->
+    <script>
+        const reportSections = [
+            { n: 1, title: 'Executive Summary', detail: 'Overview, key findings & programme summary' },
+            { n: 2, title: 'Women COSME Survey', detail: 'n=345 – knowledge, attitudes, practices comparison' },
+            { n: 3, title: 'Men COSME Survey', detail: 'n=267 – awareness, willingness, participation' },
+            { n: 4, title: 'GJJ KAP Women', detail: 'n=312 – gender norms, rights awareness, decision-making' },
+            { n: 5, title: 'GJJ KAP Men', detail: 'n=289 – unpaid care work, joint decisions' },
+            { n: 6, title: 'Forestry Groups', detail: '28 groups – nurseries, replanting, survival rates' },
+            { n: 7, title: 'Pre/Post Tests', detail: 'Training effectiveness – knowledge gain analysis' },
+            { n: 8, title: 'Schools Initiatives', detail: '65 schools – eco-clubs, tree nurseries, waste mgmt' },
+            { n: 9, title: 'Seaweed Farming', detail: '19 groups, 610 women – production & income' },
+            { n: 10, title: 'VSLA Programme', detail: '211 assessments – savings, loan repayment' },
+            { n: 11, title: 'Training Outputs', detail: 'Sessions, participants, gender breakdown' },
+            { n: 12, title: 'Logframe Summary', detail: '13 indicators – achievement vs targets' },
+            { n: 13, title: 'Cross-Dataset Synthesis', detail: 'Integrated analysis across all datasets' },
+            { n: 14, title: 'Theory of Change', detail: 'Evidence mapping & pathway analysis' },
+            { n: 15, title: 'Recommendations', detail: 'Strategic recommendations by programme area' }
+        ];
+
+        function renderReportGeneration() {
+            // Populate contents table
+            const tbody = document.getElementById('reportContentsBody');
+            if (tbody && !tbody.hasChildNodes()) {
+                tbody.innerHTML = reportSections.map((s, i) =>
+                    `<tr style="background:${i % 2 === 0 ? '#fff' : '#f8f9fa'};">
+                        <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#888;font-weight:600;">${s.n}</td>
+                        <td style="padding:9px 14px;border-bottom:1px solid #eee;font-weight:500;color:#333;">${s.title}</td>
+                        <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#666;">${s.detail}</td>
+                    </tr>`
+                ).join('');
+            }
+            // Check if PDF already exists (via tracker app if running)
+            checkReportExists();
+        }
+
+        function checkReportExists() {
+            // Try to reach the tracker app to check PDF status
+            fetch('/reports/midline/view', { method: 'HEAD' })
+                .then(resp => {
+                    if (resp.ok && resp.headers.get('content-type')?.includes('pdf')) {
+                        showReportReady();
+                    }
+                })
+                .catch(() => { /* Tracker app not running — keep default state */ });
+        }
+
+        function showReportReady() {
+            const card = document.getElementById('reportStatusCard');
+            if (card) {
+                card.style.borderLeftColor = '#2e7d32';
+                card.querySelector('.section-title').style.background = 'linear-gradient(135deg,#1b5e20,#2e7d32)';
+                card.querySelector('.section-title').style.color = '#fff';
+                card.querySelector('.section-title').textContent = '✅ Report Ready';
+                const body = card.querySelector('[style*="text-align:center"]');
+                if (body) {
+                    body.innerHTML = `
+                        <div style="font-size:3.5rem;color:#2e7d32;margin-bottom:12px;">📄</div>
+                        <p style="font-weight:600;color:#333;">COSME_Midline_Report.pdf</p>
+                        <p style="color:#888;font-size:0.9em;margin-top:4px;">Report is available for download</p>
+                    `;
+                }
+            }
+            const btns = document.getElementById('reportDownloadBtns');
+            if (btns) {
+                btns.style.display = 'block';
+                document.getElementById('reportDownloadLink').href = '/reports/midline/download';
+                document.getElementById('reportViewLink').href = '/reports/midline/view';
+            }
+        }
+
+        function generateMidlineReport() {
+            const btn = document.getElementById('reportGenBtn');
+            const icon = document.getElementById('reportGenIcon');
+            const text = document.getElementById('reportGenText');
+            const hint = document.getElementById('reportGenHint');
+            const status = document.getElementById('reportGenStatus');
+
+            // Disable button, show spinner
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'wait';
+            icon.textContent = '⏳';
+            text.textContent = 'Generating…';
+            hint.textContent = 'Building charts and compiling report…';
+            status.style.display = 'block';
+            status.innerHTML = '<div style="background:#fff3e0;border-left:4px solid #ff9800;padding:12px 16px;border-radius:8px;color:#e65100;font-size:0.92em;">⏳ Report generation in progress. Please wait…</div>';
+
+            fetch('/reports/midline/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                }
+            })
+            .then(resp => {
+                if (resp.ok || resp.redirected) {
+                    status.innerHTML = '<div style="background:#e8f5e9;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:8px;color:#1b5e20;font-size:0.92em;">✅ Midline report generated successfully!</div>';
+                    showReportReady();
+                } else {
+                    throw new Error('Server returned ' + resp.status);
+                }
+            })
+            .catch(err => {
+                status.innerHTML = `<div style="background:#ffebee;border-left:4px solid #c62828;padding:12px 16px;border-radius:8px;color:#b71c1c;font-size:0.92em;">❌ Generation failed: ${err.message}. Make sure the Vehicle Tracker app is running at <a href="http://127.0.0.1:5000" target="_blank" style="color:#1565c0;">localhost:5000</a></div>`;
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                icon.textContent = '📄';
+                text.textContent = 'Generate Report';
+                hint.textContent = '⏱ This may take 30–60 seconds';
+            });
+        }
     </script>
 </body>
 </html>
