@@ -27,6 +27,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os, re
+from collections import Counter
 
 # ============================================================================
 # CONFIGURATION
@@ -6060,15 +6061,13 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
         _section_header('', 'Challenge Keyword Frequency', 'From free-text responses')
         ch_texts = df[df['Challenges_str'].notna() & (df['Challenges_str'].str.strip() != '')]
         if len(ch_texts):
-            import re as _re
             all_words = ' '.join(ch_texts['Challenges_str'].str.lower()).replace(',', ' ').replace('.', ' ')
-            words = _re.findall(r'\b[a-z]{3,}\b', all_words)
+            words = re.findall(r'\b[a-z]{3,}\b', all_words)
             stop_words = {'the', 'and', 'for', 'that', 'with', 'are', 'this', 'from', 'but',
                           'not', 'have', 'has', 'was', 'were', 'been', 'being', 'very', 'too',
                           'also', 'they', 'them', 'their', 'there', 'what', 'which', 'when',
                           'where', 'how', 'why', 'all', 'each', 'every', 'some', 'any', 'few'}
             filtered = [w for w in words if w not in stop_words]
-            from collections import Counter
             word_counts = Counter(filtered).most_common(20)
             if word_counts:
                 wc_df = pd.DataFrame(word_counts, columns=['Word', 'Count']).sort_values('Count', ascending=True)
