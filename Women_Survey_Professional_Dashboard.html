@@ -384,6 +384,9 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             text-align: left;
             border-top: 5px solid #0072CE;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
 
         .kpi-card.positive { border-top-color: #2e7d32; }
@@ -392,18 +395,22 @@
         .kpi-card.critical { border-top-color: #c62828; }
 
         .kpi-label {
-            font-size: 0.85em;
+            font-size: 0.8em;
             color: #999;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            flex-shrink: 0;
         }
 
         .kpi-value {
             font-size: 2.2em;
             font-weight: bold;
             color: #0072CE;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            line-height: 1.1;
+            flex-shrink: 0;
         }
 
         .kpi-change {
@@ -412,6 +419,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             display: inline-block;
+            margin-top: auto;
         }
 
         .kpi-change.positive { background: #e8f5e9; color: #2e7d32; }
@@ -689,18 +697,25 @@
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid #283593;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .output-kpi .kpi-label {
             font-size: 0.8em;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            line-height: 1.3;
+            flex-shrink: 0;
         }
         .output-kpi .kpi-value {
             font-size: 1.8em;
             font-weight: 700;
             color: #1a237e;
+            line-height: 1.1;
+            flex-shrink: 0;
         }
         .output-kpi .kpi-sub {
             font-size: 0.75em;
@@ -2509,6 +2524,9 @@
             border-top: 4px solid #0072CE;
             box-shadow: 0 3px 12px rgba(0,0,0,0.07);
             transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .synthesis-kpi:hover {
             transform: translateY(-3px);
@@ -2519,13 +2537,17 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #777;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            flex-shrink: 0;
         }
         .synthesis-kpi .sk-value {
             font-size: 2em;
             font-weight: 800;
             color: #0072CE;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1.1;
+            flex-shrink: 0;
         }
         .synthesis-kpi .sk-sub {
             font-size: 0.82em;
