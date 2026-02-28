@@ -7152,6 +7152,14 @@
                     </div>
                 </div>
 
+                <!-- Charts Row 4: Visitors by Location -->
+                <div class="an-card" style="margin-bottom:20px;">
+                    <h3 class="an-card-title">Visitors by Location</h3>
+                    <div style="height:300px;position:relative;">
+                        <canvas id="analytics-chart-location"></canvas>
+                    </div>
+                </div>
+
                 <!-- Recent Visitors Table -->
                 <div class="an-card" style="margin-bottom:20px;">
                     <h3 class="an-card-title">Recent Visitors</h3>
@@ -7163,10 +7171,11 @@
                                     <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Date & Time</th>
                                     <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Duration</th>
                                     <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Device</th>
+                                    <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#e65100;">Location</th>
                                 </tr>
                             </thead>
                             <tbody id="analytics-visitors-tbody">
-                                <tr><td colspan="4" style="text-align:center;color:#999;padding:28px;">Loading visitor data...</td></tr>
+                                <tr><td colspan="5" style="text-align:center;color:#999;padding:28px;">Loading visitor data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -13877,13 +13886,62 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Generate a session ID & display name
-        const sessionId = 'user_' + Math.random().toString(36).substr(2, 9);
-        const adjectives = ['Swift', 'Bright', 'Keen', 'Bold', 'Calm', 'Warm', 'Cool', 'Wise', 'Kind', 'Fair'];
-        const animals = ['Eagle', 'Lion', 'Fox', 'Owl', 'Hawk', 'Bear', 'Wolf', 'Deer', 'Hare', 'Dove'];
-        const displayName = adjectives[Math.floor(Math.random() * adjectives.length)] + ' ' + animals[Math.floor(Math.random() * animals.length)];
+        // ── Persistent Visitor Identity (localStorage) ──────────────
+        // Same person across sessions gets the same visitorId & displayName
+        function getOrCreateVisitorId() {
+            let vid = localStorage.getItem('cosme_visitor_id');
+            if (!vid) {
+                vid = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 8);
+                localStorage.setItem('cosme_visitor_id', vid);
+            }
+            return vid;
+        }
+        function getOrCreateDisplayName() {
+            let name = localStorage.getItem('cosme_display_name');
+            if (!name) {
+                const adjectives = ['Swift', 'Bright', 'Keen', 'Bold', 'Calm', 'Warm', 'Cool', 'Wise', 'Kind', 'Fair'];
+                const animals = ['Eagle', 'Lion', 'Fox', 'Owl', 'Hawk', 'Bear', 'Wolf', 'Deer', 'Hare', 'Dove'];
+                name = adjectives[Math.floor(Math.random() * adjectives.length)] + ' ' + animals[Math.floor(Math.random() * animals.length)];
+                localStorage.setItem('cosme_display_name', name);
+            }
+            return name;
+        }
 
-        // Reference to presence node
+        const visitorId = getOrCreateVisitorId();
+        const displayName = getOrCreateDisplayName();
+        // sessionId for individual tab session (presence cleanup)
+        const sessionId = visitorId + '_' + Math.random().toString(36).substr(2, 5);
+
+        // Expose visitorId globally for analytics engine
+        window.__cosmeVisitorId = visitorId;
+        window.__cosmeDisplayName = displayName;
+
+        // ── Geolocation (IP-based) ──────────────────────────────────
+        // Fetch once per session, cache in sessionStorage
+        let geoData = { city: 'Unknown', country: 'Unknown', region: '' };
+        function fetchGeoLocation() {
+            const cached = sessionStorage.getItem('cosme_geo');
+            if (cached) {
+                try { geoData = JSON.parse(cached); } catch(e) {}
+                return Promise.resolve(geoData);
+            }
+            return fetch('https://ipapi.co/json/', { mode: 'cors' })
+                .then(r => r.json())
+                .then(data => {
+                    geoData = {
+                        city: data.city || 'Unknown',
+                        country: data.country_name || 'Unknown',
+                        region: data.region || ''
+                    };
+                    sessionStorage.setItem('cosme_geo', JSON.stringify(geoData));
+                    return geoData;
+                })
+                .catch(() => geoData);
+        }
+        // Start geo lookup immediately
+        const geoPromise = fetchGeoLocation();
+
+        // Reference to presence node  — keyed by sessionId so multiple tabs show separately
         const presenceRef = db.ref('presence/' + sessionId);
         const allPresenceRef = db.ref('presence');
 
@@ -13900,15 +13958,24 @@
         const connectedRef = db.ref('.info/connected');
         connectedRef.on('value', (snap) => {
             if (snap.val() === true) {
-                // Write presence data
+                // Write presence data with persistent visitorId
                 presenceRef.set({
                     name: displayName,
+                    visitorId: visitorId,
                     tab: getCurrentTab(),
                     joinedAt: firebase.database.ServerValue.TIMESTAMP,
                     lastActive: firebase.database.ServerValue.TIMESTAMP
                 });
                 // Remove on disconnect
                 presenceRef.onDisconnect().remove();
+
+                // Update presence with geo data once available
+                geoPromise.then(geo => {
+                    presenceRef.update({
+                        city: geo.city,
+                        country: geo.country
+                    });
+                });
             }
         });
 
@@ -13934,7 +14001,10 @@
         // Listen for presence changes and update UI
         allPresenceRef.on('value', (snapshot) => {
             const viewers = snapshot.val() || {};
-            const count = Object.keys(viewers).length;
+            // Deduplicate live viewers by visitorId to get accurate count
+            const uniqueLiveIds = new Set();
+            Object.values(viewers).forEach(v => uniqueLiveIds.add(v.visitorId || v.name || 'anon'));
+            const count = uniqueLiveIds.size;
 
             // Update badge count
             const countEl = document.getElementById('viewer-count');
@@ -13949,15 +14019,26 @@
                 return;
             }
 
+            // Show deduplicated viewer list (pick latest session per visitorId)
+            const viewerMap = {};
+            Object.entries(viewers).forEach(([id, v]) => {
+                const vid = v.visitorId || v.name || id;
+                if (!viewerMap[vid] || (v.lastActive || 0) > (viewerMap[vid].lastActive || 0)) {
+                    viewerMap[vid] = { ...v, _sessionId: id };
+                }
+            });
+
             let html = '';
             const now = Date.now();
-            Object.entries(viewers).forEach(([id, v]) => {
-                const isYou = (id === sessionId);
+            Object.entries(viewerMap).forEach(([vid, v]) => {
+                const isYou = (vid === visitorId);
                 const ago = v.joinedAt ? Math.round((now - v.joinedAt) / 60000) : 0;
                 const timeStr = ago < 1 ? 'Just now' : ago + 'm ago';
+                const locStr = v.city && v.city !== 'Unknown' ? v.city : '';
                 html += '<div class="vp-item">';
                 html += '<span class="vp-name">' + (v.name || 'Anonymous') + (isYou ? ' (You)' : '') + '</span>';
                 html += '<span class="vp-tab">' + (v.tab || 'Dashboard') + '</span>';
+                if (locStr) html += '<span class="vp-loc" style="font-size:0.78em;color:#e65100;">' + locStr + '</span>';
                 html += '<span class="vp-time">' + timeStr + '</span>';
                 html += '</div>';
             });
@@ -13974,11 +14055,22 @@
 
         // === PERSISTENT VISIT LOG ===
         const visitLogRef = db.ref('visits/' + sessionId);
-        visitLogRef.set({
+        const visitData = {
             name: displayName,
+            visitorId: visitorId,
             visitedAt: firebase.database.ServerValue.TIMESTAMP,
             leftAt: null,
             userAgent: navigator.userAgent.substring(0, 80)
+        };
+        visitLogRef.set(visitData);
+
+        // Update visit log with location once geo is available
+        geoPromise.then(geo => {
+            visitLogRef.update({
+                city: geo.city,
+                country: geo.country,
+                region: geo.region
+            });
         });
 
         // Listen for visit history changes
@@ -13994,10 +14086,12 @@
             let totalVisits = entries.length;
             let todayCount = 0;
             let weekCount = 0;
-            const uniqueNames = new Set();
+            const uniqueVisitorIds = new Set();
 
             entries.forEach(v => {
-                if (v.name) uniqueNames.add(v.name);
+                // Deduplicate by persistent visitorId; fall back to name for legacy entries
+                if (v.visitorId) uniqueVisitorIds.add(v.visitorId);
+                else if (v.name) uniqueVisitorIds.add(v.name);
                 if (v.visitedAt >= todayStart.getTime()) todayCount++;
                 if (v.visitedAt >= weekStart.getTime()) weekCount++;
             });
@@ -14010,7 +14104,7 @@
             if (statTotal) statTotal.textContent = totalVisits;
             if (statToday) statToday.textContent = todayCount;
             if (statWeek) statWeek.textContent = weekCount;
-            if (statUnique) statUnique.textContent = uniqueNames.size;
+            if (statUnique) statUnique.textContent = uniqueVisitorIds.size;
 
             // Render history list (last 50)
             const histList = document.getElementById('visit-history-list');
@@ -16656,21 +16750,42 @@
         // ── Log enhanced visit data ─────────────────────────────
         const visitId = 'visit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
         const pUA = parseUA(navigator.userAgent);
-        db.ref('analytics/visits/' + visitId).set({
+        const eVisitData = {
             ts: firebase.database.ServerValue.TIMESTAMP,
+            visitorId: window.__cosmeVisitorId || null,
             device: pUA.device,
             browser: pUA.browser,
             screenW: screen.width,
             screenH: screen.height,
             referrer: document.referrer || 'direct',
             lang: navigator.language || 'en'
-        });
+        };
+        db.ref('analytics/visits/' + visitId).set(eVisitData);
+
+        // Update enhanced visit with geo location once available
+        const geoCached = sessionStorage.getItem('cosme_geo');
+        if (geoCached) {
+            try {
+                const geo = JSON.parse(geoCached);
+                db.ref('analytics/visits/' + visitId).update({ city: geo.city, country: geo.country, region: geo.region });
+            } catch(e) {}
+        } else {
+            setTimeout(() => {
+                const geoC = sessionStorage.getItem('cosme_geo');
+                if (geoC) {
+                    try {
+                        const geo = JSON.parse(geoC);
+                        db.ref('analytics/visits/' + visitId).update({ city: geo.city, country: geo.country, region: geo.region });
+                    } catch(e) {}
+                }
+            }, 3000);
+        }
 
         // ── Chart instances (for cleanup) ───────────────────────
-        let chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration;
+        let chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation;
 
         function destroyCharts() {
-            [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration].forEach(c => { if (c) c.destroy(); });
+            [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation].forEach(c => { if (c) c.destroy(); });
         }
 
         // ── Render Analytics Dashboard ──────────────────────────
@@ -16699,27 +16814,53 @@
 
                 // ── KPI calculations ────────────────────────────
                 let todayCount = 0, weekCount = 0, totalDuration = 0, durationCount = 0;
-                const uniqueNames = new Set();
+                const uniqueVisitors = new Set();
+                const locationMap = {};  // city/country → count
 
                 entries.forEach(v => {
-                    if (v.name) uniqueNames.add(v.name);
+                    // Deduplicate by persistent visitorId; fall back to name for legacy entries
+                    if (v.visitorId) uniqueVisitors.add(v.visitorId);
+                    else if (v.name) uniqueVisitors.add(v.name);
                     if (v.visitedAt >= todayStart.getTime()) todayCount++;
                     if (v.visitedAt >= weekStart.getTime()) weekCount++;
                     if (v.leftAt && v.visitedAt) {
                         const dur = v.leftAt - v.visitedAt;
                         if (dur > 0 && dur < 7200000) { totalDuration += dur; durationCount++; }
                     }
+                    // Collect location data
+                    if (v.city && v.city !== 'Unknown') {
+                        const locKey = v.city + ', ' + (v.country || '');
+                        locationMap[locKey] = (locationMap[locKey] || 0) + 1;
+                    } else if (v.country && v.country !== 'Unknown') {
+                        locationMap[v.country] = (locationMap[v.country] || 0) + 1;
+                    }
+                });
+
+                // Also pull location data from analytics/visits
+                Object.values(aVisits).forEach(v => {
+                    if (v.city && v.city !== 'Unknown') {
+                        const locKey = v.city + ', ' + (v.country || '');
+                        locationMap[locKey] = (locationMap[locKey] || 0) + 1;
+                    } else if (v.country && v.country !== 'Unknown') {
+                        locationMap[v.country] = (locationMap[v.country] || 0) + 1;
+                    }
+                });
+
+                // Deduplicate live viewers by visitorId
+                const liveVisitorIds = new Set();
+                Object.values(presence).forEach(p => {
+                    liveVisitorIds.add(p.visitorId || p.name || 'anon');
                 });
 
                 const avgDur = durationCount > 0 ? Math.round(totalDuration / durationCount / 60000) : 0;
-                const liveCount = Object.keys(presence).length;
+                const liveCount = liveVisitorIds.size;
 
                 // Update KPIs
                 const kpiMap = {
                     'an-kpi-total': entries.length,
                     'an-kpi-today': todayCount,
                     'an-kpi-week': weekCount,
-                    'an-kpi-unique': uniqueNames.size,
+                    'an-kpi-unique': uniqueVisitors.size,
                     'an-kpi-live': liveCount,
                     'an-kpi-avg-dur': avgDur + 'm'
                 };
@@ -16991,7 +17132,7 @@
                 const tbody = document.getElementById('analytics-visitors-tbody');
                 if (tbody) {
                     if (recentVisitors.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:28px;">No visitor data yet</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:28px;">No visitor data yet</td></tr>';
                     } else {
                         tbody.innerHTML = recentVisitors.map((v, i) => {
                             const date = v.visitedAt ? new Date(v.visitedAt) : null;
@@ -17002,13 +17143,52 @@
                                 durStr = mins < 1 ? '<1m' : mins + 'm';
                             }
                             const ua = v.userAgent ? parseUA(v.userAgent) : { device: '—', browser: '—' };
+                            const locStr = v.city && v.city !== 'Unknown' ? v.city + ', ' + (v.country || '') : (v.country && v.country !== 'Unknown' ? v.country : '—');
                             return `<tr style="background:${i % 2 === 0 ? '#fff' : '#f8f9fa'};">
                                 <td style="padding:9px 14px;border-bottom:1px solid #eee;font-weight:500;">${v.name || 'Anonymous'}</td>
                                 <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#555;">${dateStr}</td>
                                 <td style="padding:9px 14px;border-bottom:1px solid #eee;">${durStr}</td>
                                 <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#777;">${ua.device} / ${ua.browser}</td>
+                                <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#e65100;font-weight:500;">${locStr}</td>
                             </tr>`;
                         }).join('');
+                    }
+                }
+
+                // ── Visitors by Location chart ──────────────────
+                const locCtx = document.getElementById('analytics-chart-location');
+                if (locCtx) {
+                    const sortedLocs = Object.entries(locationMap)
+                        .map(([loc, count]) => ({ loc, count }))
+                        .sort((a, b) => b.count - a.count)
+                        .slice(0, 12);
+
+                    if (sortedLocs.length > 0) {
+                        const locColors = ['#1a237e','#283593','#303f9f','#3949ab','#3f51b5','#5c6bc0','#7986cb','#9fa8da','#c5cae9','#e8eaf6','#4caf50','#ff9800'];
+                        chartLocation = new Chart(locCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: sortedLocs.map(l => l.loc),
+                                datasets: [{
+                                    label: 'Visits',
+                                    data: sortedLocs.map(l => l.count),
+                                    backgroundColor: locColors.slice(0, sortedLocs.length),
+                                    borderRadius: 6,
+                                    borderSkipped: false
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { beginAtZero: true, ticks: { stepSize: 1 } },
+                                    y: { ticks: { font: { size: 11 } } }
+                                }
+                            }
+                        });
+                    } else {
+                        locCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;">No location data yet — visits will start showing locations shortly.</div>';
                     }
                 }
 
@@ -17017,8 +17197,11 @@
                 const totalTabs = Object.values(tabCounts).reduce((s, v) => s + v, 0);
                 const topTab = sortedTabs.length > 0 ? sortedTabs[0].name : '—';
                 const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
-                const returnRate = entries.length > 0 ? Math.round((1 - uniqueNames.size / entries.length) * 100) : 0;
+                const returnRate = entries.length > 0 ? Math.round((1 - uniqueVisitors.size / entries.length) * 100) : 0;
                 const mobileShare = entries.length > 0 ? Math.round(((deviceMap['Mobile'] || 0) / Object.values(deviceMap).reduce((s,v) => s+v, 0)) * 100) : 0;
+                const topLocation = Object.entries(locationMap).sort((a, b) => b[1] - a[1])[0];
+                const topLocStr = topLocation ? topLocation[0] : '—';
+                const uniqueLocations = Object.keys(locationMap).length;
 
                 const engGrid = document.getElementById('analytics-engagement-grid');
                 if (engGrid) {
@@ -17028,7 +17211,9 @@
                         { label: 'Most Popular Tab', value: topTab },
                         { label: 'Peak Hour', value: (peakHour < 10 ? '0' : '') + peakHour + ':00' },
                         { label: 'Return Visit Rate', value: returnRate + '%' },
-                        { label: 'Mobile Usage', value: mobileShare + '%' }
+                        { label: 'Mobile Usage', value: mobileShare + '%' },
+                        { label: 'Top Location', value: topLocStr },
+                        { label: 'Unique Locations', value: uniqueLocations }
                     ];
                     engGrid.innerHTML = engItems.map(item =>
                         `<div class="an-eng-item">
