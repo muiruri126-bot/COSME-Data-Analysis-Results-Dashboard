@@ -5692,11 +5692,17 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
             })
         if ach_rows:
             ach_table = pd.DataFrame(ach_rows)
-            st.dataframe(ach_table.style.format({
-                'Avg Achievement (%)': '{:.1f}%', '≥ Target (%)': '{:.1f}%',
-                '< 50% Target (%)': '{:.1f}%', 'Avg Production (kg)': '{:,.1f}',
-            }).background_gradient(subset=['Avg Achievement (%)'], cmap='RdYlGn', vmin=0, vmax=100),
-                         use_container_width=True)
+            try:
+                styled = ach_table.style.format({
+                    'Avg Achievement (%)': '{:.1f}%', '≥ Target (%)': '{:.1f}%',
+                    '< 50% Target (%)': '{:.1f}%', 'Avg Production (kg)': '{:,.1f}',
+                }).background_gradient(subset=['Avg Achievement (%)'], cmap='RdYlGn', vmin=0, vmax=100)
+            except ImportError:
+                styled = ach_table.style.format({
+                    'Avg Achievement (%)': '{:.1f}%', '≥ Target (%)': '{:.1f}%',
+                    '< 50% Target (%)': '{:.1f}%', 'Avg Production (kg)': '{:,.1f}',
+                })
+            st.dataframe(styled, use_container_width=True)
 
             # Stacked bar showing meeting vs not meeting
             fig_ab = go.Figure()
