@@ -43,6 +43,9 @@ MEN_SHEET = "Results Men"
 GJJ_KAP_WOMEN_EXCEL = "GJJ KAP Women Basline_endline results.xlsx"
 GJJ_KAP_WOMEN_SHEET = "Results KAP Women Endline"
 
+GJJ_KAP_MEN_EXCEL = "GJJ KAP Men Basline_endline results.xlsx"
+GJJ_KAP_MEN_SHEET = "Results KAP Men Endline"
+
 # ============================================================================
 # THEMES
 # ============================================================================
@@ -1797,6 +1800,181 @@ def load_gjj_kap_women_data(filepath):
         'Category': [_clean_label(_val(raw, r, 1)) for r in range(222, 228)],
         'Baseline': [_val(raw, r, 2) for r in range(222, 228)],
         'Endline': [_val(raw, r, 3) for r in range(222, 228)],
+    })
+
+    return g
+
+
+# ============================================================================
+# GJJ KAP MEN DATA LOADER
+# ============================================================================
+
+@st.cache_data
+def load_gjj_kap_men_data(filepath):
+    """
+    Parse the GJJ KAP Men Survey Excel file.
+    Sheet 'Results KAP Men Endline' — 148 rows x 7 columns.
+    All data in Col B (labels) + Cols C-G (values).
+    Proportions are 0-1 scale; charts multiply x100 for display.
+    Row references use 0-based indexing for _val() / iloc.
+    """
+    try:
+        raw = pd.read_excel(filepath, sheet_name=GJJ_KAP_MEN_SHEET, header=None)
+    except FileNotFoundError:
+        st.error(f"GJJ KAP Men Excel not found: {filepath}")
+        st.stop()
+
+    g = {}
+
+    def _men_label(r, c=1):
+        """Get label, replacing NaN with 'Other'."""
+        v = raw.iloc[r, c]
+        if pd.isna(v):
+            return 'Other'
+        return _clean_label(v)
+
+    # ---- A. SELF — Self-Esteem, Self-Compassion, Confidence ----
+    # 3 statements: R9-R11, BL Likert: SA(c2) A(c3) D(c4) SD(c5)
+    self_statements = [_men_label(r) for r in range(9, 12)]
+
+    g['self_baseline_likert'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Strongly agree': [_val(raw, r, 2) for r in range(9, 12)],
+        'Agree': [_val(raw, r, 3) for r in range(9, 12)],
+        'Disagree': [_val(raw, r, 4) for r in range(9, 12)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(9, 12)],
+    })
+
+    # EL Likert: R16-R18
+    g['self_endline_likert'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Strongly agree': [_val(raw, r, 2) for r in range(16, 19)],
+        'Agree': [_val(raw, r, 3) for r in range(16, 19)],
+        'Disagree': [_val(raw, r, 4) for r in range(16, 19)],
+        'Strongly disagree': [_val(raw, r, 5) for r in range(16, 19)],
+    })
+
+    # Agreement vs Disagreement: R23-R25
+    g['self_agreement'] = pd.DataFrame({
+        'Statement': self_statements,
+        'Agreement_BL': [_val(raw, r, 2) for r in range(23, 26)],
+        'Agreement_EL': [_val(raw, r, 3) for r in range(23, 26)],
+        'Disagreement_BL': [_val(raw, r, 4) for r in range(23, 26)],
+        'Disagreement_EL': [_val(raw, r, 5) for r in range(23, 26)],
+    })
+
+    # Self-compassion frequency: R30-R33, BL=c2, EL=c3
+    compassion_cats = [_men_label(r) for r in range(30, 34)]
+    g['self_compassion'] = pd.DataFrame({
+        'Category': compassion_cats,
+        'Baseline': [_val(raw, r, 2) for r in range(30, 34)],
+        'Endline': [_val(raw, r, 3) for r in range(30, 34)],
+    })
+
+    # ---- B. RELATIONAL WELLBEING ----
+    rel_statements = [_men_label(r) for r in range(41, 48)]
+
+    # BL frequency: R41-R47, Always(c2) Freq(c3) Sometimes(c4) Rarely(c5) Never(c6)
+    g['rel_baseline_freq'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'Always': [_val(raw, r, 2) for r in range(41, 48)],
+        'Frequently': [_val(raw, r, 3) for r in range(41, 48)],
+        'Sometimes': [_val(raw, r, 4) for r in range(41, 48)],
+        'Rarely': [_val(raw, r, 5) for r in range(41, 48)],
+        'Never': [_val(raw, r, 6) for r in range(41, 48)],
+    })
+
+    # EL frequency: R52-R58
+    g['rel_endline_freq'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'Always': [_val(raw, r, 2) for r in range(52, 59)],
+        'Frequently': [_val(raw, r, 3) for r in range(52, 59)],
+        'Sometimes': [_val(raw, r, 4) for r in range(52, 59)],
+        'Rarely': [_val(raw, r, 5) for r in range(52, 59)],
+        'Never': [_val(raw, r, 6) for r in range(52, 59)],
+    })
+
+    # Always/Frequently vs Rarely/Never comparison: R63-R69
+    g['rel_af_rn'] = pd.DataFrame({
+        'Statement': rel_statements,
+        'AF_Baseline': [_val(raw, r, 2) for r in range(63, 70)],
+        'AF_Endline': [_val(raw, r, 3) for r in range(63, 70)],
+        'RN_Baseline': [_val(raw, r, 4) for r in range(63, 70)],
+        'RN_Endline': [_val(raw, r, 5) for r in range(63, 70)],
+    })
+
+    # ---- GJJ Journey Support (Baseline only) ----
+    # R73-R76: Strongly Agree / Agree / Disagree / Strongly Disagree, col 2 only
+    gjj_cats = [_men_label(r) for r in range(73, 77)]
+    g['gjj_journey_support'] = pd.DataFrame({
+        'Category': gjj_cats,
+        'Baseline': [_val(raw, r, 2) for r in range(73, 77)],
+    })
+
+    # ---- C. SHARED RESPONSIBILITY ----
+    # Supports household chores Y/N: R83-R84
+    g['shared_chores_yn'] = pd.DataFrame({
+        'Response': [_men_label(r) for r in range(83, 85)],
+        'Baseline': [_val(raw, r, 2) for r in range(83, 85)],
+        'Endline': [_val(raw, r, 3) for r in range(83, 85)],
+    })
+
+    # Time since supporting: R89-R95
+    g['chore_duration'] = pd.DataFrame({
+        'Category': [_men_label(r) for r in range(89, 96)],
+        'Baseline': [_val(raw, r, 2) for r in range(89, 96)],
+        'Endline': [_val(raw, r, 3) for r in range(89, 96)],
+    })
+
+    # Frequency of chore support: R99-R103
+    g['chore_frequency'] = pd.DataFrame({
+        'Category': [_men_label(r) for r in range(99, 104)],
+        'Baseline': [_val(raw, r, 2) for r in range(99, 104)],
+        'Endline': [_val(raw, r, 3) for r in range(99, 104)],
+    })
+
+    # Discussed sharing unpaid chores: R107-R108
+    g['chore_discussed'] = pd.DataFrame({
+        'Response': [_men_label(r) for r in range(107, 109)],
+        'Baseline': [_val(raw, r, 2) for r in range(107, 109)],
+        'Endline': [_val(raw, r, 3) for r in range(107, 109)],
+    })
+
+    # Encourages wife to make time for self: R113-R114
+    g['support_self_time'] = pd.DataFrame({
+        'Response': [_men_label(r) for r in range(113, 115)],
+        'Baseline': [_val(raw, r, 2) for r in range(113, 115)],
+        'Endline': [_val(raw, r, 3) for r in range(113, 115)],
+    })
+
+    # ---- D. SHARED POWER ----
+    # Conversations to change decisions: R121-R122
+    g['decision_conversations'] = pd.DataFrame({
+        'Response': [_men_label(r) for r in range(121, 123)],
+        'Baseline': [_val(raw, r, 2) for r in range(121, 123)],
+        'Endline': [_val(raw, r, 3) for r in range(121, 123)],
+    })
+
+    # Made important decisions: R127-R128
+    g['decisions_made'] = pd.DataFrame({
+        'Response': [_men_label(r) for r in range(127, 129)],
+        'Baseline': [_val(raw, r, 2) for r in range(127, 129)],
+        'Endline': [_val(raw, r, 3) for r in range(127, 129)],
+    })
+
+    # ---- E. LEADERSHIP & BUSINESS SUPPORT ----
+    # Support wife becoming community leader: R133-R138 (R135 label is NaN → 'Other')
+    g['support_leader'] = pd.DataFrame({
+        'Category': [_men_label(r) for r in range(133, 139)],
+        'Baseline': [_val(raw, r, 2) for r in range(133, 139)],
+        'Endline': [_val(raw, r, 3) for r in range(133, 139)],
+    })
+
+    # Support wife starting/growing business: R143-R147 (R147 label is NaN → 'Other')
+    g['support_business'] = pd.DataFrame({
+        'Category': [_men_label(r) for r in range(143, 148)],
+        'Baseline': [_val(raw, r, 2) for r in range(143, 148)],
+        'Endline': [_val(raw, r, 3) for r in range(143, 148)],
     })
 
     return g
@@ -3683,6 +3861,367 @@ def render_gjj_tab5(g):
 
 
 # ============================================================================
+# GJJ KAP MEN — TAB RENDERERS
+# ============================================================================
+
+# ---- Men Tab 1: SELF ----
+def render_gjj_men_tab1(g):
+    """GJJ KAP Men — Tab 1: SELF (Self-Esteem, Self-Compassion, Confidence)."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Self-Efficacy &amp; Self-Beliefs:</strong> Men's agreement with self-esteem statements
+    (responsibility for feelings, learning from mistakes, gender equality) across baseline and
+    endline. Tracks shifts in agreement rates and self-compassion frequency to assess programme
+    impact on men's confidence and responsibility.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Likert Breakdown', 'Agreement vs Disagreement', 'Self-Compassion'])
+
+    # --- KPIs: pp increase in Agreement (BL → EL) ---
+    agr = g['self_agreement']
+    kpi_cols = st.columns(len(agr))
+    for i, row in agr.iterrows():
+        bl = float(row['Agreement_BL']) if isinstance(row['Agreement_BL'], (int, float)) else 0
+        el = float(row['Agreement_EL']) if isinstance(row['Agreement_EL'], (int, float)) else 0
+        change = (el - bl) * 100
+        label = _short_label(row['Statement'], 40)
+        kpi_cols[i].markdown(f"""<div class="kpi-card">
+            <h3>{label}</h3>
+            <div class="value">{el*100:.1f}%</div>
+            <div class="delta-{'positive' if change>=0 else 'negative'}">{change:+.1f}pp Agreement</div>
+        </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Likert stacked bars: Baseline vs Endline ---
+    _section_header('', 'Likert Breakdown — Baseline', 'SELF')
+    likert_cols = ['Strongly agree', 'Agree', 'Disagree', 'Strongly disagree']
+    likert_colors = ['#2E7D32', '#81C784', '#EF9A9A', '#C62828']
+    bl_likert = g['self_baseline_likert'].copy()
+    bl_likert['Statement'] = bl_likert['Statement'].apply(lambda s: _short_label(s))
+    st.plotly_chart(
+        _gjj_stacked_bar(bl_likert, 'Statement', likert_cols, likert_colors,
+                         'SELF Statements — Baseline Likert', height=300),
+        use_container_width=True)
+
+    _section_header('', 'Likert Breakdown — Endline', 'SELF')
+    el_likert = g['self_endline_likert'].copy()
+    el_likert['Statement'] = el_likert['Statement'].apply(lambda s: _short_label(s))
+    st.plotly_chart(
+        _gjj_stacked_bar(el_likert, 'Statement', likert_cols, likert_colors,
+                         'SELF Statements — Endline Likert', height=300),
+        use_container_width=True)
+
+    # --- Agreement vs Disagreement ---
+    st.markdown("---")
+    _section_header('', 'Agreement vs Disagreement', 'SELF')
+    agr_copy = g['self_agreement'].copy()
+    agr_copy['Statement'] = agr_copy['Statement'].apply(lambda s: _short_label(s))
+    agr_plot = agr_copy.rename(columns={
+        'Agreement_BL': 'Agree BL', 'Agreement_EL': 'Agree EL',
+        'Disagreement_BL': 'Disagree BL', 'Disagreement_EL': 'Disagree EL'})
+    agr_cols = ['Agree BL', 'Agree EL', 'Disagree BL', 'Disagree EL']
+    agr_colors = ['#5B8DB8', '#2E7D32', '#EF9A9A', '#C62828']
+    st.plotly_chart(
+        _gjj_stacked_bar(agr_plot, 'Statement', agr_cols, agr_colors,
+                         'Agreement vs Disagreement (Baseline & Endline)', height=300,
+                         multiply=True),
+        use_container_width=True)
+
+    # --- Self-compassion frequency ---
+    st.markdown("---")
+    _section_header('', 'Self-Compassion Frequency', 'SELF')
+    st.plotly_chart(_gjj_bar(g['self_compassion'], 'Category',
+                             'Self-Compassion: Frequency of Nurturing Self-Talk',
+                             height=350), use_container_width=True)
+
+
+# ---- Men Tab 2: RELATIONAL WELLBEING ----
+def render_gjj_men_tab2(g):
+    """GJJ KAP Men — Tab 2: Relational Wellbeing."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Relational Dynamics:</strong> Men's experience of partner support, respect, and
+    communication — from laughing together to comfort in sharing feelings. Tracks frequency shifts
+    (Always/Frequently vs Rarely/Never) from baseline to endline, plus men's perception of
+    GJJ community support for their gender justice journey.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Frequency (BL)', 'Frequency (EL)', 'Always/Frequently vs Rarely/Never',
+                       'GJJ Journey Support'])
+
+    def _shorten_rel(df):
+        out = df.copy()
+        out['Statement'] = out['Statement'].apply(lambda s: _short_label(s, 50))
+        return out
+
+    # --- Baseline frequency ---
+    _section_header('', 'Relational Frequency — Baseline', 'Relational')
+    freq_cols = ['Always', 'Frequently', 'Sometimes', 'Rarely', 'Never']
+    freq_colors = ['#1B5E20', '#43A047', '#FDD835', '#EF9A9A', '#C62828']
+    st.plotly_chart(
+        _gjj_stacked_bar(_shorten_rel(g['rel_baseline_freq']), 'Statement',
+                         freq_cols, freq_colors,
+                         'Relational Circumstances — Baseline Frequency', height=450),
+        use_container_width=True)
+
+    # --- Endline frequency ---
+    _section_header('', 'Relational Frequency — Endline', 'Relational')
+    st.plotly_chart(
+        _gjj_stacked_bar(_shorten_rel(g['rel_endline_freq']), 'Statement',
+                         freq_cols, freq_colors,
+                         'Relational Circumstances — Endline Frequency', height=450),
+        use_container_width=True)
+
+    # --- Always/Frequently vs Rarely/Never ---
+    st.markdown("---")
+    _section_header('', 'Always/Frequently vs Rarely/Never', 'Relational')
+    af_rn = g['rel_af_rn'].copy()
+    af_rn['Statement'] = af_rn['Statement'].apply(lambda s: _short_label(s, 50))
+
+    c1, c2 = st.columns(2)
+    with c1:
+        af_df = af_rn[['Statement', 'AF_Baseline', 'AF_Endline']].rename(
+            columns={'AF_Baseline': 'Baseline', 'AF_Endline': 'Endline'})
+        st.plotly_chart(_gjj_bar(af_df, 'Statement', 'Always / Frequently',
+                                 height=450, orientation='h'), use_container_width=True)
+    with c2:
+        rn_df = af_rn[['Statement', 'RN_Baseline', 'RN_Endline']].rename(
+            columns={'RN_Baseline': 'Baseline', 'RN_Endline': 'Endline'})
+        st.plotly_chart(_gjj_bar(rn_df, 'Statement', 'Rarely / Never',
+                                 height=450, orientation='h'), use_container_width=True)
+
+    # --- Difference chart (computed, since Men file lacks DIF columns) ---
+    st.markdown("---")
+    _section_header('', 'Difference: Always/Frequently Change (pp)', 'Relational')
+    dif_df = af_rn[['Statement']].copy()
+    dif_df['DIF_AF'] = (pd.to_numeric(af_rn['AF_Endline'], errors='coerce').fillna(0)
+                        - pd.to_numeric(af_rn['AF_Baseline'], errors='coerce').fillna(0)) * 100
+    dif_df = dif_df.sort_values('DIF_AF')
+    colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in dif_df['DIF_AF']]
+    fig_dif = go.Figure()
+    fig_dif.add_trace(go.Bar(y=dif_df['Statement'], x=dif_df['DIF_AF'], orientation='h',
+                             marker_color=colors,
+                             text=dif_df['DIF_AF'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto'))
+    fig_dif.update_layout(title='Change in Always/Frequently (Baseline to Endline)', height=400,
+                          xaxis_title='Change (pp)', yaxis=dict(categoryorder='trace'),
+                          font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                          plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                          margin=dict(l=20, r=20, t=60, b=20))
+    st.plotly_chart(fig_dif, use_container_width=True)
+
+    # --- GJJ Journey Support (Baseline only) ---
+    st.markdown("---")
+    _section_header('', 'GJJ Journey Support — Men Supported & Encouraged', 'Relational')
+    gjj_sup = g['gjj_journey_support'].copy()
+    fig_gjj = go.Figure()
+    fig_gjj.add_trace(go.Bar(
+        x=gjj_sup['Category'], y=[v * 100 for v in gjj_sup['Baseline']],
+        marker_color=['#2E7D32', '#81C784', '#EF9A9A', '#C62828'],
+        text=[f"{v*100:.1f}%" for v in gjj_sup['Baseline']], textposition='auto'))
+    fig_gjj.update_layout(
+        title='Men Supported on Gender Justice Journey (Baseline)',
+        yaxis_title='Percentage (%)', height=380,
+        font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20))
+    st.plotly_chart(fig_gjj, use_container_width=True)
+    st.info("ℹ️ GJJ Journey Support data is available for baseline only.")
+
+
+# ---- Men Tab 3: Shared Responsibility ----
+def render_gjj_men_tab3(g):
+    """GJJ KAP Men — Tab 3: Shared Responsibility (Household Chores)."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Shared Responsibility — Gender Transformation:</strong> Tracks men's self-reported
+    support with traditionally female household chores, duration of support, frequency, whether
+    chore-sharing has been discussed, and whether men encourage wives to make time for themselves.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Chore Support', 'Duration & Frequency', 'Discussion & Self-Time'])
+
+    # --- KPIs ---
+    yes_bl = g['shared_chores_yn'].loc[g['shared_chores_yn']['Response'] == 'Yes', 'Baseline'].values
+    yes_el = g['shared_chores_yn'].loc[g['shared_chores_yn']['Response'] == 'Yes', 'Endline'].values
+    yes_bl = float(yes_bl[0]) if len(yes_bl) > 0 else 0
+    yes_el = float(yes_el[0]) if len(yes_el) > 0 else 0
+    chg = (yes_el - yes_bl) * 100
+
+    disc_yes_bl = g['chore_discussed'].loc[g['chore_discussed']['Response'] == 'Yes', 'Baseline'].values
+    disc_yes_el = g['chore_discussed'].loc[g['chore_discussed']['Response'] == 'Yes', 'Endline'].values
+    disc_bl = float(disc_yes_bl[0]) if len(disc_yes_bl) > 0 else 0
+    disc_el = float(disc_yes_el[0]) if len(disc_yes_el) > 0 else 0
+    disc_chg = (disc_el - disc_bl) * 100
+
+    self_yes_bl = g['support_self_time'].loc[g['support_self_time']['Response'] == 'Yes', 'Baseline'].values
+    self_yes_el = g['support_self_time'].loc[g['support_self_time']['Response'] == 'Yes', 'Endline'].values
+    st_bl = float(self_yes_bl[0]) if len(self_yes_bl) > 0 else 0
+    st_el = float(self_yes_el[0]) if len(self_yes_el) > 0 else 0
+    st_chg = (st_el - st_bl) * 100
+
+    kc1, kc2, kc3 = st.columns(3)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>Supports Household Chores</h3>
+        <div class="value">{yes_el*100:.1f}%</div>
+        <div class="delta-{'positive' if chg>=0 else 'negative'}">{chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>Discussed Sharing Chores</h3>
+        <div class="value">{disc_el*100:.1f}%</div>
+        <div class="delta-{'positive' if disc_chg>=0 else 'negative'}">{disc_chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+    kc3.markdown(f"""<div class="kpi-card">
+        <h3>Encourages Wife Self-Time</h3>
+        <div class="value">{st_el*100:.1f}%</div>
+        <div class="delta-{'positive' if st_chg>=0 else 'negative'}">{st_chg:+.1f}pp from BL</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Supports chores Y/N + Discussed ---
+    _section_header('', 'Supports Household Chores & Discussion', 'Shared Responsibility')
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(_gjj_bar(g['shared_chores_yn'], 'Response',
+                                 'Men Supporting Household Chores (Yes/No)', height=300),
+                        use_container_width=True)
+    with c2:
+        st.plotly_chart(_gjj_bar(g['chore_discussed'], 'Response',
+                                 'Discussed Sharing Unpaid Chores', height=300),
+                        use_container_width=True)
+
+    # --- Duration & Frequency ---
+    st.markdown("---")
+    _section_header('', 'Duration & Frequency of Support', 'Shared Responsibility')
+    c3, c4 = st.columns(2)
+    with c3:
+        st.plotly_chart(_gjj_bar(g['chore_duration'], 'Category',
+                                 'Time Since Supporting Household Chores',
+                                 height=400, orientation='h'), use_container_width=True)
+    with c4:
+        st.plotly_chart(_gjj_bar(g['chore_frequency'], 'Category',
+                                 'Frequency of Carrying Out Household Chores',
+                                 height=400, orientation='h'), use_container_width=True)
+
+    # --- Encourages wife self-time ---
+    st.markdown("---")
+    _section_header('', 'Encouraging Wife to Make Time for Herself', 'Shared Responsibility')
+    st.plotly_chart(_gjj_bar(g['support_self_time'], 'Response',
+                             'Encourages Wife/Partner to Take Time for Themselves',
+                             height=300), use_container_width=True)
+
+
+# ---- Men Tab 4: Shared Power ----
+def render_gjj_men_tab4(g):
+    """GJJ KAP Men — Tab 4: Shared Power & Decision-Making."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Shared Power — Decision-Making:</strong> Household conversations about decision-making
+    and whether important decisions have been made in the past 6 months, as reported by men.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Decision Conversations', 'Decisions Made'])
+
+    # --- KPIs ---
+    conv_yes_bl = g['decision_conversations'].loc[
+        g['decision_conversations']['Response'] == 'Yes', 'Baseline'].values
+    conv_yes_el = g['decision_conversations'].loc[
+        g['decision_conversations']['Response'] == 'Yes', 'Endline'].values
+    conv_bl = float(conv_yes_bl[0]) if len(conv_yes_bl) > 0 else 0
+    conv_el = float(conv_yes_el[0]) if len(conv_yes_el) > 0 else 0
+
+    dec_yes_bl = g['decisions_made'].loc[
+        g['decisions_made']['Response'] == 'Yes', 'Baseline'].values
+    dec_yes_el = g['decisions_made'].loc[
+        g['decisions_made']['Response'] == 'Yes', 'Endline'].values
+    dec_bl = float(dec_yes_bl[0]) if len(dec_yes_bl) > 0 else 0
+    dec_el = float(dec_yes_el[0]) if len(dec_yes_el) > 0 else 0
+
+    kc1, kc2 = st.columns(2)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>Decision Conversations</h3>
+        <div class="value">{conv_el*100:.1f}%</div>
+        <div class="delta-{'positive' if conv_el>=conv_bl else 'negative'}">{(conv_el-conv_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>Decisions Made</h3>
+        <div class="value">{dec_el*100:.1f}%</div>
+        <div class="delta-{'positive' if dec_el>=dec_bl else 'negative'}">{(dec_el-dec_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Decision conversations & decisions made ---
+    _section_header('', 'Decision Conversations & Decisions Made', 'Shared Power')
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(_gjj_bar(g['decision_conversations'], 'Response',
+                                 'Conversations to Change Decision-Making', height=300),
+                        use_container_width=True)
+    with c2:
+        st.plotly_chart(_gjj_bar(g['decisions_made'], 'Response',
+                                 'Made Important Decisions (Past 6 Months)', height=300),
+                        use_container_width=True)
+
+
+# ---- Men Tab 5: Leadership & Business Support ----
+def render_gjj_men_tab5(g):
+    """GJJ KAP Men — Tab 5: Leadership & Business Support."""
+    st.markdown("""<div class="section-narrative">
+    <strong>Leadership &amp; Business Support:</strong> Men's willingness to support their wife
+    becoming a community leader or starting/growing a business. Tracks frequency of support from
+    baseline to endline across multiple response categories.
+    </div>""", unsafe_allow_html=True)
+
+    _quick_nav_pills(['Leadership Support', 'Business Support'])
+
+    # --- KPIs: Always support leadership + Definitely support business ---
+    lead_alw_bl = g['support_leader'].loc[
+        g['support_leader']['Category'].str.strip().str.lower() == 'always', 'Baseline'].values
+    lead_alw_el = g['support_leader'].loc[
+        g['support_leader']['Category'].str.strip().str.lower() == 'always', 'Endline'].values
+    l_bl = float(lead_alw_bl[0]) if len(lead_alw_bl) > 0 else 0
+    l_el = float(lead_alw_el[0]) if len(lead_alw_el) > 0 else 0
+
+    biz_def_bl = g['support_business'].loc[
+        g['support_business']['Category'].str.strip().str.lower() == 'definitely', 'Baseline'].values
+    biz_def_el = g['support_business'].loc[
+        g['support_business']['Category'].str.strip().str.lower() == 'definitely', 'Endline'].values
+    b_bl = float(biz_def_bl[0]) if len(biz_def_bl) > 0 else 0
+    b_el = float(biz_def_el[0]) if len(biz_def_el) > 0 else 0
+
+    kc1, kc2 = st.columns(2)
+    kc1.markdown(f"""<div class="kpi-card">
+        <h3>"Always" Support Leader</h3>
+        <div class="value">{l_el*100:.1f}%</div>
+        <div class="delta-{'positive' if l_el>=l_bl else 'negative'}">{(l_el-l_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+    kc2.markdown(f"""<div class="kpi-card">
+        <h3>"Definitely" Support Business</h3>
+        <div class="value">{b_el*100:.1f}%</div>
+        <div class="delta-{'positive' if b_el>=b_bl else 'negative'}">{(b_el-b_bl)*100:+.1f}pp</div>
+    </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --- Leadership support ---
+    _section_header('', 'Support for Wife Becoming Community Leader', 'Leadership')
+    st.plotly_chart(_gjj_bar(g['support_leader'], 'Category',
+                             'Would Support Wife Becoming Community Leader',
+                             height=380), use_container_width=True)
+    st.plotly_chart(_gjj_delta_bar(g['support_leader'], 'Category',
+                                   'Change in Leadership Support (Baseline to Endline)',
+                                   height=350), use_container_width=True)
+
+    # --- Business support ---
+    st.markdown("---")
+    _section_header('', 'Support for Wife Starting/Growing Business', 'Leadership')
+    st.plotly_chart(_gjj_bar(g['support_business'], 'Category',
+                             'Would Support Wife Starting/Growing Own Business',
+                             height=380), use_container_width=True)
+    st.plotly_chart(_gjj_delta_bar(g['support_business'], 'Category',
+                                   'Change in Business Support (Baseline to Endline)',
+                                   height=350), use_container_width=True)
+
+
+# ============================================================================
 # MAIN
 # ============================================================================
 
@@ -4154,6 +4693,119 @@ def _gen_gjj_insights_inner(g, insights):
     return insights
 
 
+# ============================================================================
+# GJJ KAP MEN — INSIGHTS GENERATOR
+# ============================================================================
+
+def _generate_gjj_men_insights(g):
+    """Generate automated insights from GJJ KAP Men (Baseline / Endline) data."""
+    insights = []
+    try:
+        _gen_gjj_men_insights_inner(g, insights)
+    except Exception as e:
+        insights.append(("GJJ Men Insight Generation Note",
+                         f"Some GJJ KAP Men insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
+def _gen_gjj_men_insights_inner(g, insights):
+    # 1. Self-esteem — Agreement shift (average across 3 statements)
+    agr = g['self_agreement']
+    agr_bl_avg = agr['Agreement_BL'].mean()
+    agr_el_avg = agr['Agreement_EL'].mean()
+    agr_change = (float(agr_el_avg) - float(agr_bl_avg)) * 100
+    insights.append(("GJJ Men: Self-Esteem (Agreement)",
+                     f"Average agreement with self-esteem statements: "
+                     f"{float(agr_bl_avg)*100:.1f}% (BL) to {float(agr_el_avg)*100:.1f}% (EL) ({agr_change:+.1f} pp). "
+                     + ("Men's self-responsibility and gender equality beliefs are growing." if agr_change > 0
+                        else "Self-esteem reinforcement for men needs attention."),
+                     "positive" if agr_change > 0 else "warning"))
+
+    # 2. Self-compassion — frequency shift (first category = Frequently)
+    comp = g['self_compassion']
+    comp_bl = float(comp['Baseline'].iloc[0]) if len(comp) else 0
+    comp_el = float(comp['Endline'].iloc[0]) if len(comp) else 0
+    comp_change = (comp_el - comp_bl) * 100
+    comp_label = comp['Category'].iloc[0] if len(comp) else 'Self-care'
+    insights.append(("GJJ Men: Self-Compassion",
+                     f"'{comp_label}' self-compassion frequency: "
+                     f"{comp_bl*100:.1f}% (BL) to {comp_el*100:.1f}% (EL) ({comp_change:+.1f} pp). "
+                     + ("More men are practising kind self-talk." if comp_change > 0
+                        else "Self-compassion practices for men need continued reinforcement."),
+                     "positive" if comp_change > 0 else "neutral"))
+
+    # 3. Relational wellbeing — Always/Frequently average
+    af_rn = g['rel_af_rn']
+    af_bl_avg = float(af_rn['AF_Baseline'].mean())
+    af_el_avg = float(af_rn['AF_Endline'].mean())
+    af_change = (af_el_avg - af_bl_avg) * 100
+    insights.append(("GJJ Men: Relational Wellbeing",
+                     f"Average 'Always/Frequently' for relational wellbeing: "
+                     f"{af_bl_avg*100:.1f}% (BL) to {af_el_avg*100:.1f}% (EL) ({af_change:+.1f} pp). "
+                     + ("Partner support and communication are improving among men." if af_change > 0
+                        else "Relational dynamics for men need more GJJ focus."),
+                     "positive" if af_change > 0 else "warning"))
+
+    # 4. Shared responsibility — supports chores (Yes)
+    chores = g['shared_chores_yn']
+    yes_rows = chores[chores['Response'].str.strip().str.lower() == 'yes']
+    if len(yes_rows):
+        ch_bl = float(yes_rows['Baseline'].values[0])
+        ch_el = float(yes_rows['Endline'].values[0])
+        ch_change = (ch_el - ch_bl) * 100
+        insights.append(("GJJ Men: Supports Household Chores",
+                         f"Men reporting they support household chores: "
+                         f"{ch_bl*100:.1f}% (BL) to {ch_el*100:.1f}% (EL) ({ch_change:+.1f} pp). "
+                         + ("More men are actively sharing household responsibilities." if ch_change > 0
+                            else "Men's participation in household chores needs strengthening."),
+                         "positive" if ch_change > 0 else "warning"))
+
+    # 5. Decision-making — conversations to change decisions (Yes)
+    dec_conv = g['decision_conversations']
+    dec_yes = dec_conv[dec_conv['Response'].str.strip().str.lower() == 'yes']
+    if len(dec_yes):
+        dc_bl = float(dec_yes['Baseline'].values[0])
+        dc_el = float(dec_yes['Endline'].values[0])
+        dc_change = (dc_el - dc_bl) * 100
+        insights.append(("GJJ Men: Decision Conversations",
+                         f"Men who had conversations to change decision-making: "
+                         f"{dc_bl*100:.1f}% (BL) to {dc_el*100:.1f}% (EL) ({dc_change:+.1f} pp). "
+                         + ("More men are engaging in shared decision-making discussions." if dc_change > 0
+                            else "Encouraging men's participation in joint decision-making needs attention."),
+                         "positive" if dc_change > 0 else "warning"))
+
+    # 6. Leadership — 'Always' support wife becoming leader
+    sup_ldr = g['support_leader']
+    alw_rows = sup_ldr[sup_ldr['Category'].str.strip().str.lower() == 'always']
+    if len(alw_rows):
+        sl_bl = float(alw_rows['Baseline'].values[0])
+        sl_el = float(alw_rows['Endline'].values[0])
+        sl_change = (sl_el - sl_bl) * 100
+        insights.append(("GJJ Men: Supports Wife Leadership",
+                         f"Men 'Always' supporting wife becoming leader: "
+                         f"{sl_bl*100:.1f}% (BL) to {sl_el*100:.1f}% (EL) ({sl_change:+.1f} pp). "
+                         + ("Male allyship for women's leadership is strengthening." if sl_change > 0
+                            else "More men need to be encouraged to support women's leadership."),
+                         "positive" if sl_change > 0 else "warning"))
+
+    # 7. Business — 'Definitely' support wife starting business
+    sup_biz = g['support_business']
+    def_rows = sup_biz[sup_biz['Category'].str.strip().str.lower() == 'definitely']
+    if len(def_rows):
+        sb_bl = float(def_rows['Baseline'].values[0])
+        sb_el = float(def_rows['Endline'].values[0])
+        sb_change = (sb_el - sb_bl) * 100
+        insights.append(("GJJ Men: Supports Wife Business",
+                         f"Men 'Definitely' supporting wife's business: "
+                         f"{sb_bl*100:.1f}% (BL) to {sb_el*100:.1f}% (EL) ({sb_change:+.1f} pp). "
+                         + ("Men are increasingly supportive of women's entrepreneurship." if sb_change > 0
+                            else "Encouraging men to support women's business ventures needs focus."),
+                         "positive" if sb_change > 0 else "warning"))
+
+    return insights
+
+
 def _generate_cross_cutting_insights(f_data, w_data, m_data=None, gjj_data=None):
     """Generate insights that span all datasets."""
     insights = []
@@ -4295,7 +4947,7 @@ def _gen_cross_cutting_inner(f_data, w_data, m_data, insights, gjj_data=None):
     return insights
 
 
-def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None):
+def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -4442,6 +5094,42 @@ def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None):
         except Exception:
             pass
 
+    # GJJ KAP Men indicators (if available)
+    if gjj_men_data is not None:
+        try:
+            agr = gjj_men_data['self_agreement']
+            rows.append({'Indicator': 'Self-Esteem Agreement (Men)', 'Dataset': 'GJJ Men',
+                         'Baseline': round(float(agr['Agreement_BL'].mean()) * 100, 1),
+                         'Midline': round(float(agr['Agreement_EL'].mean()) * 100, 1)})
+
+            af_rn = gjj_men_data['rel_af_rn']
+            rows.append({'Indicator': 'Relational Wellbeing AF (Men)', 'Dataset': 'GJJ Men',
+                         'Baseline': round(float(af_rn['AF_Baseline'].mean()) * 100, 1),
+                         'Midline': round(float(af_rn['AF_Endline'].mean()) * 100, 1)})
+
+            chores = gjj_men_data['shared_chores_yn']
+            ch_yes = chores[chores['Response'].str.strip().str.lower() == 'yes']
+            if len(ch_yes):
+                rows.append({'Indicator': 'Supports Chores (Men)', 'Dataset': 'GJJ Men',
+                             'Baseline': round(float(ch_yes['Baseline'].values[0]) * 100, 1),
+                             'Midline': round(float(ch_yes['Endline'].values[0]) * 100, 1)})
+
+            dc = gjj_men_data['decision_conversations']
+            dc_yes = dc[dc['Response'].str.strip().str.lower() == 'yes']
+            if len(dc_yes):
+                rows.append({'Indicator': 'Decision Conversations (Men)', 'Dataset': 'GJJ Men',
+                             'Baseline': round(float(dc_yes['Baseline'].values[0]) * 100, 1),
+                             'Midline': round(float(dc_yes['Endline'].values[0]) * 100, 1)})
+
+            lead = gjj_men_data['support_leader']
+            alw = lead[lead['Category'].str.strip().str.lower() == 'always']
+            if len(alw):
+                rows.append({'Indicator': 'Support Leadership (Men)', 'Dataset': 'GJJ Men',
+                             'Baseline': round(float(alw['Baseline'].values[0]) * 100, 1),
+                             'Midline': round(float(alw['Endline'].values[0]) * 100, 1)})
+        except Exception:
+            pass
+
     return rows
 
 
@@ -4481,13 +5169,13 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
+def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
     """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
     trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
-    Men's Survey, and GJJ KAP Women datasets. Insights are automatically derived from
+    Men's Survey, GJJ KAP Women, and GJJ KAP Men datasets. Insights are automatically derived from
     Baseline-to-Midline/Endline comparisons.
     </div>""", unsafe_allow_html=True)
 
@@ -4496,9 +5184,10 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
     w_insights = _generate_women_insights(w_data)
     m_insights = _generate_men_insights(m_data) if m_data is not None else []
     gjj_insights = _generate_gjj_insights(gjj_data) if gjj_data is not None else []
+    gjj_men_insights = _generate_gjj_men_insights(gjj_men_data) if gjj_men_data is not None else []
     cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data, gjj_data)
 
-    all_insights = f_insights + w_insights + m_insights + gjj_insights + cc_insights
+    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + cc_insights
     positive_count = sum(1 for _, _, t in all_insights if t == "positive")
     warning_count = sum(1 for _, _, t in all_insights if t in ("warning", "negative"))
     neutral_count = sum(1 for _, _, t in all_insights if t == "neutral")
@@ -4517,6 +5206,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
         nav_items.append('Men Survey Insights')
     if gjj_data is not None:
         nav_items.append('GJJ KAP Women Insights')
+    if gjj_men_data is not None:
+        nav_items.append('GJJ KAP Men Insights')
     nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
     _quick_nav_pills(nav_items)
 
@@ -4526,7 +5217,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -4947,6 +5638,81 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
         st.markdown("---")
 
     # ====================================================================
+    # GJJ KAP MEN INSIGHTS
+    # ====================================================================
+    if gjj_men_data is not None and gjj_men_insights:
+        _section_header('', 'GJJ KAP Men Insights', 'Baseline/Endline')
+
+        gjm_col1, gjm_col2 = st.columns([1, 1])
+        with gjm_col1:
+            # GJJ Men key indicators slope chart
+            gjm_slope_data = []
+            try:
+                agr = gjj_men_data['self_agreement']
+                gjm_slope_data.append(('Self-Esteem (Agree)',
+                                       float(agr['Agreement_BL'].mean())*100,
+                                       float(agr['Agreement_EL'].mean())*100))
+                af_rn = gjj_men_data['rel_af_rn']
+                gjm_slope_data.append(('Relational (AF)',
+                                       float(af_rn['AF_Baseline'].mean())*100,
+                                       float(af_rn['AF_Endline'].mean())*100))
+                chores = gjj_men_data['shared_chores_yn']
+                ch_yes = chores[chores['Response'].str.strip().str.lower() == 'yes']
+                if len(ch_yes):
+                    gjm_slope_data.append(('Supports Chores',
+                                           float(ch_yes['Baseline'].values[0])*100,
+                                           float(ch_yes['Endline'].values[0])*100))
+                dc = gjj_men_data['decision_conversations']
+                dc_yes = dc[dc['Response'].str.strip().str.lower() == 'yes']
+                if len(dc_yes):
+                    gjm_slope_data.append(('Decision Conversations',
+                                           float(dc_yes['Baseline'].values[0])*100,
+                                           float(dc_yes['Endline'].values[0])*100))
+            except Exception:
+                pass
+            if gjm_slope_data:
+                fig_gjmslope = _make_slope_chart(gjm_slope_data, "GJJ KAP Men: Key Indicator Trends")
+                st.plotly_chart(fig_gjmslope, use_container_width=True)
+
+        with gjm_col2:
+            # Leadership + business support comparison
+            try:
+                lead = gjj_men_data['support_leader']
+                biz = gjj_men_data['support_business']
+                cats = ['Always (Leader)', 'Definitely (Business)']
+                bl_vals, el_vals = [], []
+                alw = lead[lead['Category'].str.strip().str.lower() == 'always']
+                bl_vals.append(float(alw['Baseline'].values[0])*100 if len(alw) else 0)
+                el_vals.append(float(alw['Endline'].values[0])*100 if len(alw) else 0)
+                defn = biz[biz['Category'].str.strip().str.lower() == 'definitely']
+                bl_vals.append(float(defn['Baseline'].values[0])*100 if len(defn) else 0)
+                el_vals.append(float(defn['Endline'].values[0])*100 if len(defn) else 0)
+                fig_gjmsup = go.Figure()
+                fig_gjmsup.add_trace(go.Bar(x=cats, y=bl_vals, name='Baseline',
+                                            marker_color=COLORS['baseline'],
+                                            text=[f"{v:.1f}%" for v in bl_vals], textposition='auto'))
+                fig_gjmsup.add_trace(go.Bar(x=cats, y=el_vals, name='Endline',
+                                            marker_color=COLORS['midline'],
+                                            text=[f"{v:.1f}%" for v in el_vals], textposition='auto'))
+                fig_gjmsup.update_layout(
+                    title="Men's Support: Leadership & Business (BL vs EL)",
+                    barmode='group', height=380, yaxis_title='%',
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                    font=dict(size=13, color='#333'),
+                    title_font=dict(size=16, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=60, b=20),
+                )
+                st.plotly_chart(fig_gjmsup, use_container_width=True)
+            except Exception:
+                pass
+
+        for title, body, trend in gjj_men_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -4964,7 +5730,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
     for ds, color, symbol in [('Forestry', COLORS['baseline'], 'circle'),
                                ('Women', COLORS['midline'], 'diamond'),
                                ('Men', '#FF9800', 'square'),
-                               ('GJJ Women', '#9C27B0', 'star')]:
+                               ('GJJ Women', '#9C27B0', 'star'),
+                               ('GJJ Men', '#00BCD4', 'hexagram')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -5166,13 +5933,13 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None):
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None):
+def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
     """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
     from all programme datasets — Forestry Conservation Groups (community-level), Women's Survey,
-    Men's Survey (household-level), and GJJ KAP Women (Baseline/Endline). This view highlights
-    key programme-wide trends.
+    Men's Survey (household-level), GJJ KAP Women, and GJJ KAP Men (Baseline/Endline). This view
+    highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -5337,6 +6104,51 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None):
             </div>""", unsafe_allow_html=True)
         except Exception:
             st.info("Some GJJ KAP Women headline KPIs could not be computed.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ---- GJJ KAP Men Headline KPIs ----
+    if gjj_men_data is not None:
+        st.markdown('<h3> GJJ KAP Men — Headlines (Baseline/Endline)</h3>', unsafe_allow_html=True)
+        try:
+            agr = gjj_men_data['self_agreement']
+            agr_bl = float(agr['Agreement_BL'].mean())
+            agr_el = float(agr['Agreement_EL'].mean())
+            af_rn = gjj_men_data['rel_af_rn']
+            af_bl_m = float(af_rn['AF_Baseline'].mean())
+            af_el_m = float(af_rn['AF_Endline'].mean())
+            ch = gjj_men_data['shared_chores_yn']
+            ch_yes = ch[ch['Response'].str.strip().str.lower() == 'yes']
+            ch_bl_m = float(ch_yes['Baseline'].values[0]) if len(ch_yes) else 0.0
+            ch_el_m = float(ch_yes['Endline'].values[0]) if len(ch_yes) else 0.0
+            dc = gjj_men_data['decision_conversations']
+            dc_yes = dc[dc['Response'].str.strip().str.lower() == 'yes']
+            dc_bl_m = float(dc_yes['Baseline'].values[0]) if len(dc_yes) else 0.0
+            dc_el_m = float(dc_yes['Endline'].values[0]) if len(dc_yes) else 0.0
+
+            gmc1, gmc2, gmc3, gmc4 = st.columns(4)
+            gmc1.markdown(f"""<div class="kpi-card">
+                <h3>Self-Esteem (Men)</h3>
+                <div class="value">{agr_el*100:.0f}%</div>
+                <div class="delta-{'positive' if agr_el>=agr_bl else 'negative'}">{(agr_el-agr_bl)*100:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            gmc2.markdown(f"""<div class="kpi-card">
+                <h3>Relational AF (Men)</h3>
+                <div class="value">{af_el_m*100:.0f}%</div>
+                <div class="delta-{'positive' if af_el_m>=af_bl_m else 'negative'}">{(af_el_m-af_bl_m)*100:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            gmc3.markdown(f"""<div class="kpi-card">
+                <h3>Supports Chores (Men)</h3>
+                <div class="value">{ch_el_m*100:.0f}%</div>
+                <div class="delta-{'positive' if ch_el_m>=ch_bl_m else 'negative'}">{(ch_el_m-ch_bl_m)*100:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            gmc4.markdown(f"""<div class="kpi-card">
+                <h3>Decision Convos (Men)</h3>
+                <div class="value">{dc_el_m*100:.0f}%</div>
+                <div class="delta-{'positive' if dc_el_m>=dc_bl_m else 'negative'}">{(dc_el_m-dc_bl_m)*100:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+        except Exception:
+            st.info("Some GJJ KAP Men headline KPIs could not be computed.")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -5747,7 +6559,8 @@ def main():
     dataset = st.sidebar.radio(
         "Dataset View",
         ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey",
-         "GJJ KAP \u2013 Women (Baseline/Endline)", "Insights"],
+         "GJJ KAP \u2013 Women (Baseline/Endline)",
+         "GJJ KAP \u2013 Men (Baseline/Endline)", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
     )
@@ -5818,6 +6631,17 @@ def main():
             <span class="sidebar-nav-link">Autonomy & Leadership</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "GJJ KAP \u2013 Men (Baseline/Endline)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">SELF: Responsibility & Compassion</span>
+            <span class="sidebar-nav-link">Relational Wellbeing</span>
+            <span class="sidebar-nav-link">Shared Responsibility</span>
+            <span class="sidebar-nav-link">Shared Power & Decisions</span>
+            <span class="sidebar-nav-link">Leadership & Business Support</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -5839,6 +6663,7 @@ def main():
     women_path = os.path.join(script_dir, WOMEN_EXCEL)
     men_path = os.path.join(script_dir, MEN_EXCEL)
     gjj_kap_path = os.path.join(script_dir, GJJ_KAP_WOMEN_EXCEL)
+    gjj_kap_men_path = os.path.join(script_dir, GJJ_KAP_MEN_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -6056,10 +6881,65 @@ def main():
         with gt4: render_gjj_tab4(gjj)
         with gt5: render_gjj_tab5(gjj)
 
+    elif dataset == "GJJ KAP \u2013 Men (Baseline/Endline)":
+        st.markdown("""<div class="main-header">
+            <h1>GJJ KAP Men Dashboard</h1>
+            <p>Baseline vs Endline Assessment | Knowledge, Attitudes &amp; Practices — Gender Justice Journey (Men)</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">\u203a</span>'
+                    '<span class="active">GJJ KAP \u2013 Men</span></div>', unsafe_allow_html=True)
+
+        gjj_m = load_gjj_kap_men_data(gjj_kap_men_path)
+
+        # Sidebar dataset summary
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Survey Type</span>
+                <strong>KAP Men</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Timepoints</span>
+                <strong>Baseline &amp; Endline</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">GJJ KAP Men Excel</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CSV Download
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download GJJ KAP Men Data (CSV)",
+            data=_export_data_csv(gjj_m, 'gjj_kap_men'),
+            file_name='gjj_kap_men_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        gmt1, gmt2, gmt3, gmt4, gmt5 = st.tabs([
+            "SELF: Responsibility & Compassion",
+            "Relational Wellbeing",
+            "Shared Responsibility",
+            "Shared Power & Decisions",
+            "Leadership & Business Support"
+        ])
+        with gmt1: render_gjj_men_tab1(gjj_m)
+        with gmt2: render_gjj_men_tab2(gjj_m)
+        with gmt3: render_gjj_men_tab3(gjj_m)
+        with gmt4: render_gjj_men_tab4(gjj_m)
+        with gmt5: render_gjj_men_tab5(gjj_m)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry, Women's, Men's &amp; GJJ KAP Women Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -6070,6 +6950,7 @@ def main():
         w_data = load_women_data(women_path)
         m_data = load_men_data(men_path)
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
+        gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -6077,17 +6958,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Forestry Groups (analysis)</div>
             <div style="margin-bottom:0.3rem;">Women Survey (analysis)</div>
             <div style="margin-bottom:0.3rem;">Men Survey (analysis)</div>
-            <div>GJJ KAP Women (analysis)</div>
+            <div style="margin-bottom:0.3rem;">GJJ KAP Women (analysis)</div>
+            <div>GJJ KAP Men (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data, m_data, gjj_data)
+        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's &amp; GJJ KAP Women Survey</p>
+            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men Survey</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -6098,6 +6980,7 @@ def main():
         w_data = load_women_data(women_path)
         m_data = load_men_data(men_path)
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
+        gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -6105,17 +6988,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Forestry Groups</div>
             <div style="margin-bottom:0.3rem;">Women Survey</div>
             <div style="margin-bottom:0.3rem;">Men Survey</div>
-            <div>GJJ KAP Women</div>
+            <div style="margin-bottom:0.3rem;">GJJ KAP Women</div>
+            <div>GJJ KAP Men</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data, m_data, gjj_data)
+        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups, Women's Survey, Men's Survey &amp; GJJ KAP Women | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; GJJ KAP Men | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
@@ -6135,12 +7019,14 @@ if __name__ == "__main__":
 # 2. Women Survey Basline_midline results.xlsx (sheet: Results Women)
 # 3. Men Survey Basline_midline results.xlsx (sheet: Results Men)
 # 4. GJJ KAP Women Basline_endline results.xlsx (sheet: Results KAP Women Endline)
+# 5. GJJ KAP Men Basline_endline results.xlsx (sheet: Results KAP Men Endline)
 #
 # To adjust data mappings:
 # - load_forestry_data(): row/col positions for forestry indicators
 # - load_women_data(): row/col positions for women survey indicators
 # - load_men_data(): row/col positions for men survey indicators
 # - load_gjj_kap_women_data(): row/col positions for GJJ KAP women indicators
+# - load_gjj_kap_men_data(): row/col positions for GJJ KAP men indicators
 # - Each uses _val(raw, row_0based, col_0based)
 #
 # To add/remove indicators:
