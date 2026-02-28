@@ -16246,7 +16246,7 @@
             if (!container || container.hasChildNodes()) return;
             container.innerHTML = reportCategories.map(cat =>
                 `<button class="rpt-chip${cat.id === activeReportFilter ? ' active' : ''}" onclick="filterReports('${cat.id}')" title="${cat.label}">
-                    ${cat.icon} ${cat.label}
+                    ${cat.label}
                 </button>`
             ).join('');
         }
@@ -16255,9 +16255,9 @@
             activeReportFilter = category;
             // Update chip states
             document.querySelectorAll('#reportFilterChips .rpt-chip').forEach(chip => {
-                chip.classList.toggle('active', chip.textContent.trim().startsWith(
-                    reportCategories.find(c => c.id === category)?.icon || ''
-                ));
+                chip.classList.toggle('active', chip.textContent.trim() ===
+                    (reportCategories.find(c => c.id === category)?.label || '')
+                );
             });
             renderReportCards();
             // Close detail panel if selected report is hidden
@@ -16281,9 +16281,6 @@
             grid.innerHTML = filtered.map(r => `
                 <div class="rpt-card${selectedReportId === r.id ? ' selected' : ''}" onclick="selectReport('${r.id}')">
                     <div class="rpt-card-header">
-                        <div class="rpt-card-icon" style="background:${r.iconBg};color:#fff;">
-                            ${r.icon}
-                        </div>
                         <div>
                             <h4 style="margin:0;font-size:1em;color:#333;">${r.title}</h4>
                             <span class="rpt-card-badge" style="background:${r.badgeColor}15;color:${r.badgeColor};">${r.badge}</span>
@@ -16314,7 +16311,7 @@
             panel.style.display = 'block';
 
             // Title
-            document.getElementById('reportDetailTitle').innerHTML = `${r.icon} ${r.title}`;
+            document.getElementById('reportDetailTitle').innerHTML = `${r.title}`;
 
             // Description
             document.getElementById('reportDetailDesc').textContent = r.desc;
