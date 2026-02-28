@@ -49,6 +49,9 @@ GJJ_KAP_MEN_SHEET = "Results KAP Men Endline"
 FOREST_TRAINING_EXCEL = "Forest Training Pre_post results.xlsx"
 FOREST_TRAINING_SHEET = "Results"
 
+MANGROVE_TRAINING_EXCEL = "Mangrove Training Pre_post results.xlsx"
+MANGROVE_TRAINING_SHEET = "Results"
+
 # Domain-level question grouping for Forest Training
 FOREST_TRAINING_DOMAINS = {
     'PFM Concepts': [1, 2, 3, 4, 11],
@@ -2086,6 +2089,120 @@ def load_forest_training_data(filepath):
         'thresholds': thresholds_df,
         'scores': scores_df,
         'questions': questions_df,
+    }
+
+
+# ============================================================================
+# MANGROVE TRAINING DATA LOADER
+# ============================================================================
+
+def load_mangrove_training_data(filepath):
+    """Load Mangrove Training Pre/Post Knowledge Assessment data.
+
+    Returns dict with keys:
+        'thresholds'      – Pass thresholds by county (long-form)
+        'scores'          – Standardized scores by county & sex
+        'adequate_county'  – Adequate knowledge (≥60) by county (Pre/Post)
+        'adequate_sex'     – Adequate knowledge (≥60) by sex (Pre/Post)
+    """
+    import openpyxl
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb[MANGROVE_TRAINING_SHEET]
+
+    def _cell(r, c):
+        v = ws.cell(r, c).value
+        if v is None:
+            return 0.0
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return 0.0
+
+    def _cell_str(r, c):
+        v = ws.cell(r, c).value
+        return str(v).strip() if v is not None else ''
+
+    # ---- A. Pass Thresholds (rows 8-11, cols B-D) ----
+    # Header row 8 has threshold labels: >=50, >=55, >=60
+    threshold_labels = []
+    for c in range(3, 6):  # cols C, D, E
+        lbl = _cell_str(8, c)
+        if not lbl:
+            lbl = f'>={[50,55,60][c-3]}'
+        threshold_labels.append(lbl)
+
+    threshold_rows = []
+    for row_idx in [9, 10, 11]:  # Kilifi, Kwale, All
+        county = _cell_str(row_idx, 2)  # col B
+        if not county or 'follow' in county.lower():
+            continue
+        for i, thr_lbl in enumerate(threshold_labels):
+            val = _cell(row_idx, 3 + i)
+            threshold_rows.append({
+                'County': county, 'Threshold': thr_lbl, 'Value': val,
+            })
+    thresholds_df = pd.DataFrame(threshold_rows)
+
+    # ---- Also capture M/F values from rows 10-11 cols H-I ----
+    sex_threshold_rows = []
+    for row_idx in [10, 11]:
+        sex_label = _cell_str(row_idx, 8)  # col H (M or F)
+        sex_val = _cell(row_idx, 9)  # col I
+        if sex_label and sex_label in ('M', 'F'):
+            full_sex = 'Male' if sex_label == 'M' else 'Female'
+            sex_threshold_rows.append({
+                'Sex': full_sex,
+                'Value_60': sex_val,  # appears to be >=60 pass rate
+            })
+    sex_threshold_df = pd.DataFrame(sex_threshold_rows) if sex_threshold_rows else pd.DataFrame()
+
+    # ---- B. Standardized Scores (rows 15-18, cols B-F) ----
+    score_rows = []
+    for row_idx in [16, 17, 18]:  # Kilifi, Kwale, All
+        county = _cell_str(row_idx, 2)
+        if not county:
+            continue
+        score_rows.append({
+            'County': county,
+            'Respondents': int(_cell(row_idx, 3)),
+            'AvgScore': round(_cell(row_idx, 4), 2),
+            'MaxScore': round(_cell(row_idx, 5), 2),
+            'MinScore': round(_cell(row_idx, 6), 2),
+        })
+    scores_df = pd.DataFrame(score_rows)
+
+    # ---- C. Adequate Knowledge by County (rows 22-24, Pre/Post) ----
+    county_rows = []
+    for row_idx in [22, 23, 24]:
+        county = _cell_str(row_idx, 2)
+        if not county:
+            continue
+        pre_val = _cell(row_idx, 3)
+        post_val = _cell(row_idx, 4)
+        county_rows.append({'County': county, 'Timepoint': 'Pre-Test', 'Value': pre_val})
+        county_rows.append({'County': county, 'Timepoint': 'Post-Test', 'Value': post_val})
+    adequate_county_df = pd.DataFrame(county_rows)
+
+    # ---- D. Adequate Knowledge by Sex (rows 28-30, Pre/Post) ----
+    sex_rows = []
+    for row_idx in [28, 29, 30]:
+        sex = _cell_str(row_idx, 2)
+        if not sex:
+            continue
+        pre_val = _cell(row_idx, 3)
+        post_val = _cell(row_idx, 4)
+        sex_rows.append({'Sex': sex, 'Timepoint': 'Pre-Test', 'Value': pre_val})
+        sex_rows.append({'Sex': sex, 'Timepoint': 'Post-Test', 'Value': post_val})
+    adequate_sex_df = pd.DataFrame(sex_rows)
+
+    wb.close()
+
+    return {
+        'thresholds': thresholds_df,
+        'sex_threshold': sex_threshold_df,
+        'scores': scores_df,
+        'adequate_county': adequate_county_df,
+        'adequate_sex': adequate_sex_df,
     }
 
 
@@ -4689,6 +4806,371 @@ def render_forest_training_tabs(t_data, timepoint_filter='Combined'):
 
 
 # ============================================================================
+# MANGROVE TRAINING RENDERER
+# ============================================================================
+
+def render_mangrove_training_tabs(m_data, timepoint_filter='Combined'):
+    """Render the Mangrove Training Pre/Post Knowledge Assessment tabs."""
+
+    thresholds = m_data['thresholds']
+    scores = m_data['scores']
+    adequate_county = m_data['adequate_county']
+    adequate_sex = m_data['adequate_sex']
+    sex_threshold = m_data.get('sex_threshold', pd.DataFrame())
+
+    tab1, tab2, tab3 = st.tabs([
+        "Overview & Knowledge Gains",
+        "County-Level Performance",
+        "Sex Disaggregation",
+    ])
+
+    # ==================================================================
+    # TAB 1 — Overview & Knowledge Gains
+    # ==================================================================
+    with tab1:
+        st.markdown("""<div class="section-narrative">
+        <strong>Mangrove Training Overview:</strong> Key knowledge assessment results
+        comparing Pre-Test (Baseline) with Post-Test (Endline) performance on mangrove
+        restoration. The \u226560 points threshold indicates adequate knowledge.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- KPI cards ----
+        all_county = adequate_county[adequate_county['County'] == 'All']
+        pre_60 = float(all_county[all_county['Timepoint'] == 'Pre-Test']['Value'].values[0]) if len(all_county[all_county['Timepoint'] == 'Pre-Test']) else 0
+        post_60 = float(all_county[all_county['Timepoint'] == 'Post-Test']['Value'].values[0]) if len(all_county[all_county['Timepoint'] == 'Post-Test']) else 0
+        change_60 = (post_60 - pre_60) * 100
+
+        all_scores = scores[scores['County'] == 'All']
+        avg_score = float(all_scores['AvgScore'].values[0]) if len(all_scores) else 0
+        total_n = int(all_scores['Respondents'].values[0]) if len(all_scores) else 0
+
+        k1, k2, k3, k4 = st.columns(4)
+        k1.markdown(f"""<div class="kpi-card">
+            <h3>\u226560 Pass Rate (Post)</h3>
+            <div class="value">{post_60*100:.1f}%</div>
+            <div class="delta-{'positive' if change_60>0 else 'negative'}">{change_60:+.1f}pp vs Pre</div>
+        </div>""", unsafe_allow_html=True)
+        k2.markdown(f"""<div class="kpi-card">
+            <h3>\u226560 Pass Rate (Pre)</h3>
+            <div class="value">{pre_60*100:.1f}%</div>
+            <div class="delta-neutral">Baseline</div>
+        </div>""", unsafe_allow_html=True)
+        k3.markdown(f"""<div class="kpi-card">
+            <h3>Average Score</h3>
+            <div class="value">{avg_score:.1f}%</div>
+            <div class="delta-neutral">Overall</div>
+        </div>""", unsafe_allow_html=True)
+        k4.markdown(f"""<div class="kpi-card">
+            <h3>Total Respondents</h3>
+            <div class="value">{total_n:,}</div>
+            <div class="delta-neutral">All counties</div>
+        </div>""", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ---- Pass thresholds by county ----
+        _section_header('', 'Pass Rates by Threshold & County', 'Pre-Test')
+
+        thr_plot = thresholds.copy()
+        thr_plot['Pct'] = thr_plot['Value'] * 100
+        fig_thr = go.Figure()
+        county_colors = {'Kilifi': COLORS['baseline'], 'Kwale': COLORS['midline'], 'All': '#FF9800'}
+        for county in thr_plot['County'].unique():
+            sub = thr_plot[thr_plot['County'] == county]
+            fig_thr.add_trace(go.Bar(
+                x=sub['Threshold'], y=sub['Pct'], name=county,
+                marker_color=county_colors.get(county, '#666'),
+                text=sub['Pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto',
+            ))
+        fig_thr.update_layout(
+            title='Percentage of Participants Achieving Score Thresholds by County',
+            barmode='group', height=420, yaxis_title='% of Participants',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        st.plotly_chart(fig_thr, use_container_width=True)
+
+        # ---- Adequate knowledge Pre vs Post (all) ----
+        _section_header('', 'Adequate Knowledge (\u226560%) Pre vs Post', 'Overall')
+        all_pre_post = adequate_county[adequate_county['County'] == 'All'].copy()
+        all_pre_post['Pct'] = all_pre_post['Value'] * 100
+        fig_pp = go.Figure()
+        for _, row in all_pre_post.iterrows():
+            color = COLORS['baseline'] if row['Timepoint'] == 'Pre-Test' else COLORS['midline']
+            fig_pp.add_trace(go.Bar(
+                x=[row['Timepoint']], y=[row['Pct']],
+                name=row['Timepoint'], marker_color=color,
+                text=[f"{row['Pct']:.1f}%"], textposition='auto', width=0.5,
+            ))
+        fig_pp.update_layout(
+            title='Overall Adequate Knowledge (\u226560 points)',
+            height=350, yaxis_title='% of Participants', showlegend=False,
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=15, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=50, b=20), yaxis=dict(range=[0, 105]),
+        )
+        st.plotly_chart(fig_pp, use_container_width=True)
+
+    # ==================================================================
+    # TAB 2 — County-Level Performance
+    # ==================================================================
+    with tab2:
+        st.markdown("""<div class="section-narrative">
+        <strong>County Comparison:</strong> Comparing Kilifi and Kwale counties on
+        mangrove restoration knowledge test performance, including pre-to-post improvements
+        and score distributions.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- Adequate knowledge by county Pre vs Post ----
+        _section_header('', 'Adequate Knowledge (\u226560%) by County', 'Pre vs Post')
+
+        county_plot = adequate_county.copy()
+        county_plot['Pct'] = county_plot['Value'] * 100
+
+        if timepoint_filter == 'Combined':
+            plot_data = county_plot
+        elif timepoint_filter == 'Baseline':
+            plot_data = county_plot[county_plot['Timepoint'] == 'Pre-Test']
+        else:
+            plot_data = county_plot[county_plot['Timepoint'] == 'Post-Test']
+
+        fig_county = go.Figure()
+        for tp in plot_data['Timepoint'].unique():
+            sub = plot_data[plot_data['Timepoint'] == tp]
+            color = COLORS['baseline'] if tp == 'Pre-Test' else COLORS['midline']
+            fig_county.add_trace(go.Bar(
+                x=sub['County'], y=sub['Pct'], name=tp,
+                marker_color=color,
+                text=sub['Pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto',
+            ))
+        fig_county.update_layout(
+            title='Adequate Knowledge by County (Pre vs Post)',
+            barmode='group', height=420, yaxis_title='% of Participants',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20), yaxis=dict(range=[0, 105]),
+        )
+        st.plotly_chart(fig_county, use_container_width=True)
+
+        # ---- Change (pp) by county ----
+        change_data = []
+        for county in adequate_county['County'].unique():
+            c_data = adequate_county[adequate_county['County'] == county]
+            pre = c_data[c_data['Timepoint'] == 'Pre-Test']['Value'].values
+            post = c_data[c_data['Timepoint'] == 'Post-Test']['Value'].values
+            if len(pre) and len(post):
+                change_data.append({'County': county, 'Change': (float(post[0]) - float(pre[0])) * 100})
+        if change_data:
+            ch_df = pd.DataFrame(change_data)
+            ch_colors = [COLORS['good'] if c > 0 else COLORS['danger'] for c in ch_df['Change']]
+            fig_ch = go.Figure(go.Bar(
+                x=ch_df['County'], y=ch_df['Change'],
+                marker_color=ch_colors,
+                text=ch_df['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto',
+            ))
+            fig_ch.update_layout(
+                title='Knowledge Improvement by County (pp)',
+                height=350, yaxis_title='Percentage Point Change', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20),
+            )
+            fig_ch.add_hline(y=0, line_color='#666', line_width=1)
+            st.plotly_chart(fig_ch, use_container_width=True)
+
+        # ---- Standardized scores by county ----
+        _section_header('', 'Standardized Scores by County', 'Avg / Max / Min')
+
+        sc1, sc2 = st.columns(2)
+        with sc1:
+            fig_avg_c = go.Figure()
+            for _, row in scores.iterrows():
+                color = county_colors.get(row['County'], '#666')
+                fig_avg_c.add_trace(go.Bar(
+                    x=[row['County']], y=[row['AvgScore']],
+                    name=row['County'], marker_color=color,
+                    text=[f"{row['AvgScore']:.1f}%"], textposition='auto', width=0.5,
+                ))
+            fig_avg_c.update_layout(
+                title='Average Score by County', height=350,
+                yaxis_title='Score (%)', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20), yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_avg_c, use_container_width=True)
+
+        with sc2:
+            fig_range = go.Figure()
+            for _, row in scores.iterrows():
+                color = county_colors.get(row['County'], '#666')
+                fig_range.add_trace(go.Bar(
+                    x=[f"{row['County']} Min", f"{row['County']} Max"],
+                    y=[row['MinScore'], row['MaxScore']],
+                    name=row['County'], marker_color=color,
+                    text=[f"{row['MinScore']:.1f}", f"{row['MaxScore']:.1f}"],
+                    textposition='auto', width=0.5,
+                ))
+            fig_range.update_layout(
+                title='Score Range by County (Min & Max)', height=350,
+                yaxis_title='Score (%)', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20), yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_range, use_container_width=True)
+
+        # Respondent breakdown
+        _section_header('', 'Respondents by County', '')
+        resp_data = scores[['County', 'Respondents']].copy()
+        fig_resp = go.Figure(go.Bar(
+            x=resp_data['County'], y=resp_data['Respondents'],
+            marker_color=[county_colors.get(c, '#666') for c in resp_data['County']],
+            text=resp_data['Respondents'].apply(lambda x: f"{x:,}"), textposition='auto',
+        ))
+        fig_resp.update_layout(
+            title='Number of Respondents by County', height=320,
+            yaxis_title='Count', showlegend=False,
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=15, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
+        st.plotly_chart(fig_resp, use_container_width=True)
+
+        # Data table
+        with st.expander("View Scores Data Table"):
+            st.dataframe(scores.style.format({
+                'AvgScore': '{:.2f}%', 'MaxScore': '{:.1f}', 'MinScore': '{:.1f}',
+                'Respondents': '{:,.0f}'
+            }), use_container_width=True)
+
+    # ==================================================================
+    # TAB 3 — Sex Disaggregation
+    # ==================================================================
+    with tab3:
+        st.markdown("""<div class="section-narrative">
+        <strong>Sex Disaggregation:</strong> Comparing male and female participants'
+        adequate knowledge levels before and after training, highlighting improvements
+        and any gender gaps in mangrove restoration knowledge.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- Adequate knowledge by sex Pre vs Post ----
+        _section_header('', 'Adequate Knowledge (\u226560%) by Sex', 'Pre vs Post')
+
+        sex_plot = adequate_sex.copy()
+        sex_plot['Pct'] = sex_plot['Value'] * 100
+
+        fig_sex = go.Figure()
+        sex_colors = {'Pre-Test': COLORS['baseline'], 'Post-Test': COLORS['midline']}
+        for tp in ['Pre-Test', 'Post-Test']:
+            sub = sex_plot[sex_plot['Timepoint'] == tp]
+            fig_sex.add_trace(go.Bar(
+                x=sub['Sex'], y=sub['Pct'], name=tp,
+                marker_color=sex_colors[tp],
+                text=sub['Pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto',
+            ))
+        fig_sex.update_layout(
+            title='Adequate Knowledge by Sex (Pre vs Post)',
+            barmode='group', height=420, yaxis_title='% of Participants',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20), yaxis=dict(range=[0, 105]),
+        )
+        st.plotly_chart(fig_sex, use_container_width=True)
+
+        # ---- Improvement by sex ----
+        sex_change = []
+        for sex in adequate_sex['Sex'].unique():
+            s_data = adequate_sex[adequate_sex['Sex'] == sex]
+            pre = s_data[s_data['Timepoint'] == 'Pre-Test']['Value'].values
+            post = s_data[s_data['Timepoint'] == 'Post-Test']['Value'].values
+            if len(pre) and len(post):
+                sex_change.append({'Sex': sex, 'Change': (float(post[0]) - float(pre[0])) * 100})
+        if sex_change:
+            sch_df = pd.DataFrame(sex_change)
+            sch_colors = [COLORS['good'] if c > 0 else COLORS['danger'] for c in sch_df['Change']]
+            fig_sch = go.Figure(go.Bar(
+                x=sch_df['Sex'], y=sch_df['Change'],
+                marker_color=sch_colors,
+                text=sch_df['Change'].apply(lambda x: f"{x:+.1f}pp"), textposition='auto',
+            ))
+            fig_sch.update_layout(
+                title='Knowledge Improvement by Sex (pp)',
+                height=350, yaxis_title='Percentage Point Change', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20),
+            )
+            fig_sch.add_hline(y=0, line_color='#666', line_width=1)
+            st.plotly_chart(fig_sch, use_container_width=True)
+
+        # ---- Gender gap visualisation ----
+        _section_header('', 'Gender Gap Analysis', 'Post-Training')
+        sex_post = adequate_sex[adequate_sex['Timepoint'] == 'Post-Test'].copy()
+        sex_post['Pct'] = sex_post['Value'] * 100
+        male_post = sex_post[sex_post['Sex'] == 'Male']['Pct'].values
+        female_post = sex_post[sex_post['Sex'] == 'Female']['Pct'].values
+        if len(male_post) and len(female_post):
+            gap = float(female_post[0]) - float(male_post[0])
+            gap_color = COLORS['good'] if gap >= 0 else COLORS['danger']
+            gc1, gc2, gc3 = st.columns(3)
+            gc1.markdown(f"""<div class="kpi-card">
+                <h3>Male (Post)</h3>
+                <div class="value">{float(male_post[0]):.1f}%</div>
+            </div>""", unsafe_allow_html=True)
+            gc2.markdown(f"""<div class="kpi-card">
+                <h3>Female (Post)</h3>
+                <div class="value">{float(female_post[0]):.1f}%</div>
+            </div>""", unsafe_allow_html=True)
+            gc3.markdown(f"""<div class="kpi-card">
+                <h3>Gender Gap (F-M)</h3>
+                <div class="value" style="color:{gap_color}">{gap:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+
+        # ---- Sex-level threshold from pre-test (if available) ----
+        if not sex_threshold.empty:
+            st.markdown("<br>", unsafe_allow_html=True)
+            _section_header('', 'Pre-Test \u226560% Pass by Sex', 'Baseline')
+            sex_thr_plot = sex_threshold.copy()
+            sex_thr_plot['Pct'] = sex_thr_plot['Value_60'] * 100
+            fig_st = go.Figure(go.Bar(
+                x=sex_thr_plot['Sex'], y=sex_thr_plot['Pct'],
+                marker_color=[COLORS['baseline'], '#E91E63'],
+                text=sex_thr_plot['Pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto',
+            ))
+            fig_st.update_layout(
+                title='Pre-Test \u226560% Pass Rate by Sex',
+                height=320, yaxis_title='% of Participants', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20), yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_st, use_container_width=True)
+
+        # Data tables
+        with st.expander("View Adequate Knowledge Data"):
+            st.markdown("**By Sex (Pre/Post)**")
+            display_sex = adequate_sex.copy()
+            display_sex['Pct'] = display_sex['Value'] * 100
+            st.dataframe(display_sex[['Sex', 'Timepoint', 'Pct']].rename(
+                columns={'Pct': '% Adequate'}), use_container_width=True)
+
+
+# ============================================================================
 # MAIN
 # ============================================================================
 
@@ -5361,6 +5843,92 @@ def _generate_forest_training_insights(t_data):
     return insights
 
 
+# ---- Mangrove Training insights ----
+def _generate_mangrove_training_insights(mg_data):
+    """Generate automated insights for Mangrove Training Pre/Post data."""
+    insights = []
+    try:
+        adequate_county = mg_data['adequate_county']
+        adequate_sex = mg_data['adequate_sex']
+        scores = mg_data['scores']
+
+        # 1. Overall pass-rate improvement
+        all_county = adequate_county[adequate_county['County'] == 'All']
+        pre_val = float(all_county[all_county['Timepoint'] == 'Pre-Test']['Value'].values[0]) * 100
+        post_val = float(all_county[all_county['Timepoint'] == 'Post-Test']['Value'].values[0]) * 100
+        change = post_val - pre_val
+        sentiment = 'positive' if change > 20 else ('positive' if change > 0 else 'negative')
+        insights.append((
+            "Overall Knowledge Improvement",
+            f"Adequate mangrove restoration knowledge (≥60%) increased from {pre_val:.1f}% "
+            f"to {post_val:.1f}% ({change:+.1f}pp). {'Strong' if change > 30 else 'Meaningful'} "
+            f"effect observed from training intervention.",
+            sentiment))
+
+        # 2. County comparison
+        counties = [c for c in adequate_county['County'].unique() if c != 'All']
+        county_changes = {}
+        for c in counties:
+            c_data = adequate_county[adequate_county['County'] == c]
+            c_pre = float(c_data[c_data['Timepoint'] == 'Pre-Test']['Value'].values[0]) * 100
+            c_post = float(c_data[c_data['Timepoint'] == 'Post-Test']['Value'].values[0]) * 100
+            county_changes[c] = c_post - c_pre
+        if county_changes:
+            best = max(county_changes, key=county_changes.get)
+            worst = min(county_changes, key=county_changes.get)
+            insights.append((
+                "County Performance Gap",
+                f"{best} showed the largest improvement ({county_changes[best]:+.1f}pp), "
+                f"while {worst} improved by {county_changes[worst]:+.1f}pp. "
+                f"{'Consider targeted follow-up for ' + worst + '.' if county_changes[worst] < county_changes[best] - 10 else 'Both counties responded well to training.'}",
+                'positive' if county_changes[worst] > 15 else 'neutral'))
+
+        # 3. Gender analysis
+        sex_all = adequate_sex[adequate_sex['Sex'] != 'All']
+        male_data = sex_all[sex_all['Sex'] == 'Male']
+        female_data = sex_all[sex_all['Sex'] == 'Female']
+        if len(male_data) and len(female_data):
+            m_post = float(male_data[male_data['Timepoint'] == 'Post-Test']['Value'].values[0]) * 100
+            f_post = float(female_data[female_data['Timepoint'] == 'Post-Test']['Value'].values[0]) * 100
+            m_pre = float(male_data[male_data['Timepoint'] == 'Pre-Test']['Value'].values[0]) * 100
+            f_pre = float(female_data[female_data['Timepoint'] == 'Pre-Test']['Value'].values[0]) * 100
+            gender_gap = f_post - m_post
+            insights.append((
+                "Gender Equity in Knowledge",
+                f"Post-training: Female {f_post:.1f}% vs Male {m_post:.1f}% "
+                f"(gap: {gender_gap:+.1f}pp). Female improvement: {f_post-f_pre:+.1f}pp, "
+                f"Male improvement: {m_post-m_pre:+.1f}pp.",
+                'positive' if abs(gender_gap) < 10 else 'neutral'))
+
+        # 4. Score distribution
+        all_scores = scores[scores['County'] == 'All']
+        if len(all_scores):
+            avg = float(all_scores['AvgScore'].values[0])
+            max_s = float(all_scores['MaxScore'].values[0])
+            min_s = float(all_scores['MinScore'].values[0])
+            spread = max_s - min_s
+            insights.append((
+                "Score Distribution",
+                f"Average score: {avg:.1f}%, range {min_s:.1f}%–{max_s:.1f}% "
+                f"(spread: {spread:.1f}pp). "
+                f"{'Wide variation suggests need for differentiated support.' if spread > 60 else 'Moderate variation in participant performance.'}",
+                'neutral'))
+
+        # 5. Respondent coverage
+        total_n = int(all_scores['Respondents'].values[0]) if len(all_scores) else 0
+        insights.append((
+            "Assessment Coverage",
+            f"A total of {total_n:,} participants completed the mangrove "
+            f"restoration knowledge assessment across all counties.",
+            'neutral'))
+
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some Mangrove Training insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
 def _generate_cross_cutting_insights(f_data, w_data, m_data=None, gjj_data=None):
     """Generate insights that span all datasets."""
     insights = []
@@ -5502,7 +6070,7 @@ def _gen_cross_cutting_inner(f_data, w_data, m_data, insights, gjj_data=None):
     return insights
 
 
-def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
+def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -5726,6 +6294,29 @@ def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_d
         except Exception:
             pass
 
+    # ---- Mangrove Training indicators ----
+    if mg_data is not None:
+        try:
+            mg_county = mg_data['adequate_county']
+            mg_scores = mg_data['scores']
+            mg_all = mg_county[mg_county['County'] == 'All']
+            mg_pre = mg_all[mg_all['Timepoint'] == 'Pre-Test']['Value'].values
+            mg_post = mg_all[mg_all['Timepoint'] == 'Post-Test']['Value'].values
+            if len(mg_pre) and len(mg_post):
+                rows.append({'Indicator': 'Adequate Knowledge (≥60%)', 'Dataset': 'Mangrove Training',
+                             'Baseline': round(float(mg_pre[0]) * 100, 1),
+                             'Midline': round(float(mg_post[0]) * 100, 1)})
+            mg_all_scores = mg_scores[mg_scores['County'] == 'All']
+            if len(mg_all_scores):
+                rows.append({'Indicator': 'Average Test Score', 'Dataset': 'Mangrove Training',
+                             'Baseline': 0.0,
+                             'Midline': round(float(mg_all_scores['AvgScore'].values[0]), 1)})
+                rows.append({'Indicator': 'Total Respondents', 'Dataset': 'Mangrove Training',
+                             'Baseline': 0,
+                             'Midline': int(mg_all_scores['Respondents'].values[0])})
+        except Exception:
+            pass
+
     return rows
 
 
@@ -5765,14 +6356,14 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
+def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
     """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
     trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
-    Men's Survey, GJJ KAP Women, GJJ KAP Men, and Forest Training datasets. Insights are
-    automatically derived from Baseline-to-Midline/Endline comparisons.
+    Men's Survey, GJJ KAP Women, GJJ KAP Men, Forest Training, and Mangrove Training datasets.
+    Insights are automatically derived from Baseline-to-Midline/Endline comparisons.
     </div>""", unsafe_allow_html=True)
 
     # Summary counters
@@ -5782,9 +6373,10 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     gjj_insights = _generate_gjj_insights(gjj_data) if gjj_data is not None else []
     gjj_men_insights = _generate_gjj_men_insights(gjj_men_data) if gjj_men_data is not None else []
     ft_insights = _generate_forest_training_insights(ft_data) if ft_data is not None else []
+    mg_insights = _generate_mangrove_training_insights(mg_data) if mg_data is not None else []
     cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data, gjj_data)
 
-    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + ft_insights + cc_insights
+    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + ft_insights + mg_insights + cc_insights
     positive_count = sum(1 for _, _, t in all_insights if t == "positive")
     warning_count = sum(1 for _, _, t in all_insights if t in ("warning", "negative"))
     neutral_count = sum(1 for _, _, t in all_insights if t == "neutral")
@@ -5807,6 +6399,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         nav_items.append('GJJ KAP Men Insights')
     if ft_data is not None:
         nav_items.append('Forest Training Insights')
+    if mg_data is not None:
+        nav_items.append('Mangrove Training Insights')
     nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
     _quick_nav_pills(nav_items)
 
@@ -5816,7 +6410,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -6369,6 +6963,42 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         st.markdown("---")
 
     # ====================================================================
+    # MANGROVE TRAINING INSIGHTS
+    # ====================================================================
+    if mg_data is not None and mg_insights:
+        _section_header('', 'Mangrove Training Insights', 'Pre/Post')
+
+        # Summary chart — adequate knowledge pre vs post
+        try:
+            mg_county = mg_data['adequate_county']
+            mg_all = mg_county[mg_county['County'] == 'All'].copy()
+            mg_all['Pct'] = mg_all['Value'] * 100
+            fig_mg_bar = go.Figure()
+            for _, row in mg_all.iterrows():
+                color = COLORS['baseline'] if row['Timepoint'] == 'Pre-Test' else COLORS['midline']
+                fig_mg_bar.add_trace(go.Bar(
+                    x=[row['Timepoint']], y=[row['Pct']],
+                    name=row['Timepoint'], marker_color=color,
+                    text=[f"{row['Pct']:.1f}%"], textposition='auto', width=0.5,
+                ))
+            fig_mg_bar.update_layout(
+                title='Mangrove Training: Adequate Knowledge (≥60%) Pre vs Post',
+                height=350, yaxis_title='% of Participants', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20), yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_mg_bar, use_container_width=True)
+        except Exception:
+            pass
+
+        for title, body, trend in mg_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -6388,7 +7018,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
                                ('Men', '#FF9800', 'square'),
                                ('GJJ Women', '#9C27B0', 'star'),
                                ('GJJ Men', '#00BCD4', 'hexagram'),
-                               ('Forest Training', '#795548', 'cross')]:
+                               ('Forest Training', '#795548', 'cross'),
+                               ('Mangrove Training', '#009688', 'triangle-up')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -6590,13 +7221,13 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
+def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
     """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
     from all programme datasets — Forestry Conservation Groups (community-level), Women's Survey,
-    Men's Survey (household-level), GJJ KAP Women, GJJ KAP Men (Baseline/Endline), and Forest
-    Training (Pre/Post). This view highlights key programme-wide trends.
+    Men's Survey (household-level), GJJ KAP Women, GJJ KAP Men (Baseline/Endline), Forest
+    Training, and Mangrove Training (Pre/Post). This view highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -6853,6 +7484,47 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
             </div>""", unsafe_allow_html=True)
         except Exception:
             st.info("Some Forest Training headline KPIs could not be computed.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ---- Mangrove Training Headline KPIs ----
+    if mg_data is not None:
+        st.markdown("---")
+        st.markdown('<h3>🌊 Mangrove Training (Pre/Post)</h3>', unsafe_allow_html=True)
+        try:
+            mg_county = mg_data['adequate_county']
+            mg_scores = mg_data['scores']
+            mg_all = mg_county[mg_county['County'] == 'All']
+            mg_pre_val = float(mg_all[mg_all['Timepoint'] == 'Pre-Test']['Value'].values[0]) * 100
+            mg_post_val = float(mg_all[mg_all['Timepoint'] == 'Post-Test']['Value'].values[0]) * 100
+            mg_change = mg_post_val - mg_pre_val
+            mg_all_scores = mg_scores[mg_scores['County'] == 'All']
+            mg_avg = float(mg_all_scores['AvgScore'].values[0]) if len(mg_all_scores) else 0
+            mg_n = int(mg_all_scores['Respondents'].values[0]) if len(mg_all_scores) else 0
+
+            mk1, mk2, mk3, mk4 = st.columns(4)
+            mk1.markdown(f"""<div class="kpi-card">
+                <h3>≥60% Pass (Post)</h3>
+                <div class="value">{mg_post_val:.1f}%</div>
+                <div class="delta-{'positive' if mg_change>0 else 'negative'}">{mg_change:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            mk2.markdown(f"""<div class="kpi-card">
+                <h3>≥60% Pass (Pre)</h3>
+                <div class="value">{mg_pre_val:.1f}%</div>
+                <div class="delta-neutral">Baseline</div>
+            </div>""", unsafe_allow_html=True)
+            mk3.markdown(f"""<div class="kpi-card">
+                <h3>Avg Score</h3>
+                <div class="value">{mg_avg:.1f}%</div>
+                <div class="delta-neutral">Overall</div>
+            </div>""", unsafe_allow_html=True)
+            mk4.markdown(f"""<div class="kpi-card">
+                <h3>Respondents</h3>
+                <div class="value">{mg_n:,}</div>
+                <div class="delta-neutral">All counties</div>
+            </div>""", unsafe_allow_html=True)
+        except Exception:
+            st.info("Some Mangrove Training headline KPIs could not be computed.")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -7265,7 +7937,7 @@ def main():
         ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey",
          "GJJ KAP \u2013 Women (Baseline/Endline)",
          "GJJ KAP \u2013 Men (Baseline/Endline)",
-         "Forest Training (Pre/Post)", "Insights"],
+         "Forest Training (Pre/Post)", "Mangrove Training (Pre/Post)", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
     )
@@ -7310,6 +7982,7 @@ def main():
             <span class="sidebar-nav-link">GJJ KAP Women Insights</span>
             <span class="sidebar-nav-link">GJJ KAP Men Insights</span>
             <span class="sidebar-nav-link">Forest Training Insights</span>
+            <span class="sidebar-nav-link">Mangrove Training Insights</span>
             <span class="sidebar-nav-link">Cross-Cutting Insights</span>
             <span class="sidebar-nav-link">Indicator Change Heatmap</span>
             <span class="sidebar-nav-link">Recommendations</span>
@@ -7358,6 +8031,15 @@ def main():
             <span class="sidebar-nav-link">Domain-Level Grouping</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "Mangrove Training (Pre/Post)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Overview & Knowledge Gains</span>
+            <span class="sidebar-nav-link">County-Level Performance</span>
+            <span class="sidebar-nav-link">Sex Disaggregation</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -7368,6 +8050,7 @@ def main():
             <span class="sidebar-nav-link">GJJ KAP Women Headlines</span>
             <span class="sidebar-nav-link">GJJ KAP Men Headlines</span>
             <span class="sidebar-nav-link">Forest Training Headlines</span>
+            <span class="sidebar-nav-link">Mangrove Training Headlines</span>
             <span class="sidebar-nav-link">Comparative Snapshots</span>
             <span class="sidebar-nav-link">Men vs Women Comparisons</span>
         </div>
@@ -7383,6 +8066,7 @@ def main():
     gjj_kap_path = os.path.join(script_dir, GJJ_KAP_WOMEN_EXCEL)
     gjj_kap_men_path = os.path.join(script_dir, GJJ_KAP_MEN_EXCEL)
     forest_training_path = os.path.join(script_dir, FOREST_TRAINING_EXCEL)
+    mangrove_training_path = os.path.join(script_dir, MANGROVE_TRAINING_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -7714,10 +8398,66 @@ def main():
 
         render_forest_training_tabs(t_data, tp_filter)
 
+    elif dataset == "Mangrove Training (Pre/Post)":
+        st.markdown("""<div class="main-header">
+            <h1>Mangrove Training Knowledge Assessment</h1>
+            <p>Pre-Training vs Post-Training | Mangrove Restoration Knowledge Test Results</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">\u203a</span>'
+                    '<span class="active">Mangrove Training (Pre/Post)</span></div>', unsafe_allow_html=True)
+
+        mg_data = load_mangrove_training_data(mangrove_training_path)
+
+        # Sidebar dataset summary
+        mg_all_scores = mg_data['scores'][mg_data['scores']['County'] == 'All']
+        mg_n = int(mg_all_scores['Respondents'].values[0]) if len(mg_all_scores) else 0
+        counties_count = len([c for c in mg_data['scores']['County'].unique() if c != 'All'])
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown(f"""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Respondents</span>
+                <strong>{mg_n:,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Counties</span>
+                <strong>{counties_count}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">Mangrove Training Excel</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Timepoint filter
+        st.sidebar.markdown("---")
+        tp_filter = st.sidebar.radio(
+            "Timepoint View",
+            ["Combined", "Baseline", "Endline"],
+            index=0,
+            help="Show Pre-Test only, Post-Test only, or both side by side."
+        )
+
+        # CSV Download
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Mangrove Training Data (CSV)",
+            data=_export_data_csv(mg_data, 'mangrove_training'),
+            file_name='mangrove_training_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        render_mangrove_training_tabs(mg_data, tp_filter)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -7730,6 +8470,7 @@ def main():
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
         ft_data = load_forest_training_data(forest_training_path)
+        mg_data = load_mangrove_training_data(mangrove_training_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -7739,17 +8480,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Men Survey (analysis)</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Women (analysis)</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Men (analysis)</div>
-            <div>Forest Training (analysis)</div>
+            <div style="margin-bottom:0.3rem;">Forest Training (analysis)</div>
+            <div>Mangrove Training (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
+        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training</p>
+            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -7762,6 +8504,7 @@ def main():
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
         ft_data = load_forest_training_data(forest_training_path)
+        mg_data = load_mangrove_training_data(mangrove_training_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -7771,17 +8514,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Men Survey</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Women</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Men</div>
-            <div>Forest Training</div>
+            <div style="margin-bottom:0.3rem;">Forest Training</div>
+            <div>Mangrove Training</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
+        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; Men, Forest Training | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
