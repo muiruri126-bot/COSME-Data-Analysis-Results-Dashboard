@@ -8479,9 +8479,21 @@ def main():
     # ---- ENHANCED CSS ----
     st.markdown(f"""
     <style>
+    /* ---------- FORCE LIGHT MODE ---------- */
+    .stApp, .stApp > header, [data-testid="stAppViewContainer"],
+    [data-testid="stHeader"], [data-testid="stToolbar"],
+    .main, .main .block-container {{
+        background-color: #ffffff !important;
+        color: #333333 !important;
+    }}
+    [data-testid="stAppViewContainer"] > section > div {{
+        background-color: #ffffff !important;
+    }}
+
     /* ---------- GLOBAL TYPOGRAPHY ---------- */
     html, body, [class*="css"] {{
         font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #333333;
     }}
     .block-container {{
         max-width: 1200px;
