@@ -3176,6 +3176,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
                     📄 Report Generation
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('analytics-dashboard', this)">
+                    📊 Analytics
+                </button>
             </div>
         </nav>
 
@@ -3205,6 +3208,7 @@
                 <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
                 <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
                 <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
+                <button class="survey-btn" onclick="switchSurvey('analytics-dashboard')">📊 Analytics</button>
             </div>
         </nav>
 
@@ -7030,6 +7034,180 @@
         </div>
         <!-- END REPORT GENERATION SECTION -->
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- ANALYTICS DASHBOARD SECTION                                -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="analytics-dashboard-section" class="survey-section" style="display:none;">
+            <div style="max-width:1200px;margin:0 auto;padding:20px 0;">
+
+                <!-- Hero -->
+                <div style="background:linear-gradient(135deg,#1a237e 0%,#283593 100%);border-radius:16px;padding:40px 36px;color:#fff;margin-bottom:28px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+                    <div style="position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+                    <h2 style="font-size:1.8em;font-weight:700;margin-bottom:8px;">Dashboard Analytics</h2>
+                    <p style="opacity:0.9;font-size:1.05em;line-height:1.6;max-width:650px;">Real-time usage analytics, visitor engagement metrics, tab popularity, device breakdown, and report download tracking.</p>
+                </div>
+
+                <!-- Overview KPI Cards -->
+                <div id="analytics-kpi-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px;">
+                    <div class="an-kpi" id="an-kpi-total"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Total Visits</div></div>
+                    <div class="an-kpi" id="an-kpi-today"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Today</div></div>
+                    <div class="an-kpi" id="an-kpi-week"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">This Week</div></div>
+                    <div class="an-kpi" id="an-kpi-unique"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Unique Visitors</div></div>
+                    <div class="an-kpi" id="an-kpi-live"><div class="an-kpi-val" style="color:#2e7d32;">--</div><div class="an-kpi-lbl">Live Now</div></div>
+                    <div class="an-kpi" id="an-kpi-avg-dur"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Avg Duration</div></div>
+                </div>
+
+                <!-- Charts Row 1: Daily Visits + Tab Usage -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+                    <div class="an-card">
+                        <h3 class="an-card-title">Daily Visits (Last 14 Days)</h3>
+                        <div style="height:260px;position:relative;">
+                            <canvas id="analytics-chart-daily"></canvas>
+                        </div>
+                    </div>
+                    <div class="an-card">
+                        <h3 class="an-card-title">Tab Popularity</h3>
+                        <div style="height:260px;position:relative;">
+                            <canvas id="analytics-chart-tabs"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2: Device & Browser + Hourly -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+                    <div class="an-card">
+                        <h3 class="an-card-title">Device & Browser Breakdown</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div style="height:220px;position:relative;">
+                                <canvas id="analytics-chart-device"></canvas>
+                            </div>
+                            <div style="height:220px;position:relative;">
+                                <canvas id="analytics-chart-browser"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="an-card">
+                        <h3 class="an-card-title">Visits by Hour of Day</h3>
+                        <div style="height:260px;position:relative;">
+                            <canvas id="analytics-chart-hourly"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 3: Report Downloads + Session Duration -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+                    <div class="an-card">
+                        <h3 class="an-card-title">Report Downloads</h3>
+                        <div style="height:260px;position:relative;">
+                            <canvas id="analytics-chart-downloads"></canvas>
+                        </div>
+                    </div>
+                    <div class="an-card">
+                        <h3 class="an-card-title">Session Duration Distribution</h3>
+                        <div style="height:260px;position:relative;">
+                            <canvas id="analytics-chart-duration"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Visitors Table -->
+                <div class="an-card" style="margin-bottom:20px;">
+                    <h3 class="an-card-title">Recent Visitors</h3>
+                    <div style="overflow-x:auto;">
+                        <table id="analytics-visitors-table" style="width:100%;border-collapse:collapse;font-size:0.88em;">
+                            <thead>
+                                <tr style="background:#f5f5f5;text-align:left;">
+                                    <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Visitor</th>
+                                    <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Date & Time</th>
+                                    <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Duration</th>
+                                    <th style="padding:10px 14px;border-bottom:2px solid #e0e0e0;font-weight:600;color:#555;">Device</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-visitors-tbody">
+                                <tr><td colspan="4" style="text-align:center;color:#999;padding:28px;">Loading visitor data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Engagement Summary -->
+                <div class="an-card">
+                    <h3 class="an-card-title">Engagement Summary</h3>
+                    <div id="analytics-engagement-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+                    </div>
+                </div>
+
+                <style>
+                    .an-kpi {
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 22px 18px;
+                        text-align: center;
+                        box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+                        border-top: 4px solid #1a237e;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                    }
+                    .an-kpi:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+                    }
+                    .an-kpi-val {
+                        font-size: 2em;
+                        font-weight: 800;
+                        color: #1a237e;
+                        line-height: 1.1;
+                        margin-bottom: 6px;
+                    }
+                    .an-kpi-lbl {
+                        font-size: 0.78em;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        color: #777;
+                    }
+                    .an-card {
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 24px;
+                        box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+                    }
+                    .an-card-title {
+                        font-size: 1.05em;
+                        font-weight: 700;
+                        color: #333;
+                        margin-bottom: 16px;
+                        padding-bottom: 10px;
+                        border-bottom: 2px solid #e8eaf6;
+                    }
+                    .an-eng-item {
+                        background: #f8f9fa;
+                        border-radius: 10px;
+                        padding: 16px;
+                        text-align: center;
+                        border-left: 4px solid #1a237e;
+                    }
+                    .an-eng-val {
+                        font-size: 1.5em;
+                        font-weight: 700;
+                        color: #1a237e;
+                        margin-bottom: 4px;
+                    }
+                    .an-eng-lbl {
+                        font-size: 0.82em;
+                        color: #666;
+                    }
+                    @media (max-width: 768px) {
+                        #analytics-kpi-row { grid-template-columns: 1fr 1fr !important; }
+                        .an-card { padding: 16px; }
+                        #analytics-dashboard-section > div > div[style*="grid-template-columns:1fr 1fr"] {
+                            grid-template-columns: 1fr !important;
+                        }
+                    }
+                </style>
+            </div>
+        </div>
+        <!-- END ANALYTICS DASHBOARD SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -7922,6 +8100,14 @@
                 footerTitle: '<strong>COSME Midline Report — PDF Generation Centre</strong>',
                 footerSample: 'Generate, download & view the comprehensive COSME Midline Analysis PDF',
                 renderFn: () => renderReportGeneration()
+            },
+            'analytics-dashboard': {
+                showSection: 'analytics-dashboard-section',
+                subSelector: null,
+                title: 'Dashboard Analytics',
+                footerTitle: '<strong>COSME Dashboard — Usage Analytics & Engagement Insights</strong>',
+                footerSample: 'Real-time visitor tracking, tab usage, device breakdown & engagement metrics',
+                renderFn: () => renderAnalyticsDashboard()
             }
         };
 
@@ -7931,7 +8117,7 @@
             'prepost-section', 'output-section', 'schools-dashboard-section',
             'seaweed-section', 'vsla-section',
             'cross-dataset-section', 'automated-insights-section',
-            'report-generation-section'
+            'report-generation-section', 'analytics-dashboard-section'
         ];
         const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector'];
 
@@ -16372,6 +16558,451 @@
             // Smooth scroll to detail panel
             panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- ANALYTICS DASHBOARD ENGINE                                    -->
+    <!-- ============================================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        const db = firebase.database();
+
+        // ── Helper: parse user-agent ─────────────────────────────
+        function parseUA(ua) {
+            if (!ua) return { device: 'Unknown', browser: 'Unknown' };
+            let device = 'Desktop';
+            if (/mobile|android|iphone|ipad/i.test(ua)) device = /ipad|tablet/i.test(ua) ? 'Tablet' : 'Mobile';
+            let browser = 'Other';
+            if (/edg/i.test(ua)) browser = 'Edge';
+            else if (/chrome/i.test(ua)) browser = 'Chrome';
+            else if (/firefox/i.test(ua)) browser = 'Firefox';
+            else if (/safari/i.test(ua)) browser = 'Safari';
+            else if (/opera|opr/i.test(ua)) browser = 'Opera';
+            return { device, browser };
+        }
+
+        // ── Track tab switches ──────────────────────────────────
+        const origSwitch = window.switchSurvey;
+        if (typeof origSwitch === 'function') {
+            window.switchSurvey = function(key) {
+                origSwitch(key);
+                // Log tab switch event
+                const tabRef = db.ref('analytics/tabSwitches').push();
+                tabRef.set({
+                    tab: key,
+                    ts: firebase.database.ServerValue.TIMESTAMP
+                });
+                // Increment tab counter
+                db.ref('analytics/tabCounts/' + key).transaction(c => (c || 0) + 1);
+            };
+        }
+
+        // ── Track report downloads ──────────────────────────────
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[download]');
+            if (link) {
+                const fileName = link.getAttribute('download') || link.getAttribute('href') || 'unknown';
+                db.ref('analytics/downloads').push().set({
+                    file: fileName,
+                    ts: firebase.database.ServerValue.TIMESTAMP
+                });
+                db.ref('analytics/downloadCounts/' + fileName.replace(/[.#$/\[\]]/g, '_')).transaction(c => (c || 0) + 1);
+            }
+        });
+
+        // ── Log enhanced visit data ─────────────────────────────
+        const visitId = 'visit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        const pUA = parseUA(navigator.userAgent);
+        db.ref('analytics/visits/' + visitId).set({
+            ts: firebase.database.ServerValue.TIMESTAMP,
+            device: pUA.device,
+            browser: pUA.browser,
+            screenW: screen.width,
+            screenH: screen.height,
+            referrer: document.referrer || 'direct',
+            lang: navigator.language || 'en'
+        });
+
+        // ── Chart instances (for cleanup) ───────────────────────
+        let chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration;
+
+        function destroyCharts() {
+            [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration].forEach(c => { if (c) c.destroy(); });
+        }
+
+        // ── Render Analytics Dashboard ──────────────────────────
+        window.renderAnalyticsDashboard = function() {
+            destroyCharts();
+
+            // Fetch all analytics data
+            Promise.all([
+                db.ref('visits').orderByChild('visitedAt').limitToLast(500).once('value'),
+                db.ref('presence').once('value'),
+                db.ref('analytics/tabCounts').once('value'),
+                db.ref('analytics/downloadCounts').once('value'),
+                db.ref('analytics/visits').orderByKey().limitToLast(500).once('value')
+            ]).then(([visitsSnap, presenceSnap, tabCountsSnap, dlCountsSnap, aVisitsSnap]) => {
+
+                const visits = visitsSnap.val() || {};
+                const presence = presenceSnap.val() || {};
+                const tabCounts = tabCountsSnap.val() || {};
+                const dlCounts = dlCountsSnap.val() || {};
+                const aVisits = aVisitsSnap.val() || {};
+
+                const entries = Object.values(visits).filter(v => v.visitedAt);
+                const now = Date.now();
+                const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+                const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+
+                // ── KPI calculations ────────────────────────────
+                let todayCount = 0, weekCount = 0, totalDuration = 0, durationCount = 0;
+                const uniqueNames = new Set();
+
+                entries.forEach(v => {
+                    if (v.name) uniqueNames.add(v.name);
+                    if (v.visitedAt >= todayStart.getTime()) todayCount++;
+                    if (v.visitedAt >= weekStart.getTime()) weekCount++;
+                    if (v.leftAt && v.visitedAt) {
+                        const dur = v.leftAt - v.visitedAt;
+                        if (dur > 0 && dur < 7200000) { totalDuration += dur; durationCount++; }
+                    }
+                });
+
+                const avgDur = durationCount > 0 ? Math.round(totalDuration / durationCount / 60000) : 0;
+                const liveCount = Object.keys(presence).length;
+
+                // Update KPIs
+                const kpiMap = {
+                    'an-kpi-total': entries.length,
+                    'an-kpi-today': todayCount,
+                    'an-kpi-week': weekCount,
+                    'an-kpi-unique': uniqueNames.size,
+                    'an-kpi-live': liveCount,
+                    'an-kpi-avg-dur': avgDur + 'm'
+                };
+                Object.entries(kpiMap).forEach(([id, val]) => {
+                    const el = document.querySelector('#' + id + ' .an-kpi-val');
+                    if (el) el.textContent = val;
+                });
+
+                // ── Daily visits chart (last 14 days) ───────────
+                const dayLabels = [];
+                const dayCounts = [];
+                for (let i = 13; i >= 0; i--) {
+                    const d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
+                    const dEnd = new Date(d); dEnd.setDate(dEnd.getDate() + 1);
+                    dayLabels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
+                    dayCounts.push(entries.filter(v => v.visitedAt >= d.getTime() && v.visitedAt < dEnd.getTime()).length);
+                }
+
+                const dailyCtx = document.getElementById('analytics-chart-daily');
+                if (dailyCtx) {
+                    chartDaily = new Chart(dailyCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: dayLabels,
+                            datasets: [{
+                                label: 'Visits',
+                                data: dayCounts,
+                                backgroundColor: 'rgba(26,35,126,0.7)',
+                                borderRadius: 6,
+                                borderSkipped: false
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                                x: { ticks: { maxRotation: 45, font: { size: 10 } } }
+                            }
+                        }
+                    });
+                }
+
+                // ── Tab popularity chart ────────────────────────
+                const tabNames = {
+                    'project-outputs': 'Project Outputs',
+                    'women-cosme': 'Women Survey',
+                    'men-cosme': 'Men Survey',
+                    'gjj-women': 'GJJ Women',
+                    'gjj-men': 'GJJ Men',
+                    'forestry': 'Forestry',
+                    'prepost-forest': 'Pre/Post Training',
+                    'schools-dashboard': 'Schools',
+                    'seaweed-assessment': 'Seaweed',
+                    'vsla-monitoring': 'VSLA',
+                    'cross-dataset': 'Cross-Dataset',
+                    'automated-insights': 'Impact & Evidence',
+                    'report-generation': 'Reports',
+                    'analytics-dashboard': 'Analytics'
+                };
+
+                const sortedTabs = Object.entries(tabCounts)
+                    .map(([k, v]) => ({ name: tabNames[k] || k, count: v }))
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 10);
+
+                const tabCtx = document.getElementById('analytics-chart-tabs');
+                if (tabCtx && sortedTabs.length > 0) {
+                    const tabColors = ['#1a237e','#283593','#303f9f','#3949ab','#3f51b5','#5c6bc0','#7986cb','#9fa8da','#c5cae9','#e8eaf6'];
+                    chartTabs = new Chart(tabCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedTabs.map(t => t.name),
+                            datasets: [{
+                                label: 'Views',
+                                data: sortedTabs.map(t => t.count),
+                                backgroundColor: tabColors.slice(0, sortedTabs.length),
+                                borderRadius: 6,
+                                borderSkipped: false
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { beginAtZero: true, ticks: { stepSize: 1 } },
+                                y: { ticks: { font: { size: 11 } } }
+                            }
+                        }
+                    });
+                }
+
+                // ── Device & Browser breakdown ──────────────────
+                const deviceMap = {};
+                const browserMap = {};
+                Object.values(aVisits).forEach(v => {
+                    if (v.device) deviceMap[v.device] = (deviceMap[v.device] || 0) + 1;
+                    if (v.browser) browserMap[v.browser] = (browserMap[v.browser] || 0) + 1;
+                });
+                // Also parse from main visits userAgent
+                entries.forEach(v => {
+                    if (v.userAgent) {
+                        const p = parseUA(v.userAgent);
+                        deviceMap[p.device] = (deviceMap[p.device] || 0) + 1;
+                        browserMap[p.browser] = (browserMap[p.browser] || 0) + 1;
+                    }
+                });
+
+                const deviceCtx = document.getElementById('analytics-chart-device');
+                if (deviceCtx && Object.keys(deviceMap).length > 0) {
+                    const devColors = { Desktop: '#1a237e', Mobile: '#4caf50', Tablet: '#ff9800', Unknown: '#9e9e9e' };
+                    chartDevice = new Chart(deviceCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(deviceMap),
+                            datasets: [{
+                                data: Object.values(deviceMap),
+                                backgroundColor: Object.keys(deviceMap).map(k => devColors[k] || '#9e9e9e'),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } },
+                                title: { display: true, text: 'Device', font: { size: 12, weight: '600' }, color: '#555' }
+                            }
+                        }
+                    });
+                }
+
+                const browserCtx = document.getElementById('analytics-chart-browser');
+                if (browserCtx && Object.keys(browserMap).length > 0) {
+                    const brColors = { Chrome: '#4285f4', Firefox: '#ff7139', Safari: '#000', Edge: '#0078d7', Opera: '#ff1b2d', Other: '#9e9e9e' };
+                    chartBrowser = new Chart(browserCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(browserMap),
+                            datasets: [{
+                                data: Object.values(browserMap),
+                                backgroundColor: Object.keys(browserMap).map(k => brColors[k] || '#9e9e9e'),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } },
+                                title: { display: true, text: 'Browser', font: { size: 12, weight: '600' }, color: '#555' }
+                            }
+                        }
+                    });
+                }
+
+                // ── Hourly distribution ─────────────────────────
+                const hourCounts = new Array(24).fill(0);
+                entries.forEach(v => {
+                    if (v.visitedAt) {
+                        const h = new Date(v.visitedAt).getHours();
+                        hourCounts[h]++;
+                    }
+                });
+
+                const hourlyCtx = document.getElementById('analytics-chart-hourly');
+                if (hourlyCtx) {
+                    chartHourly = new Chart(hourlyCtx, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({length: 24}, (_, i) => (i < 10 ? '0' : '') + i + ':00'),
+                            datasets: [{
+                                label: 'Visits',
+                                data: hourCounts,
+                                borderColor: '#1a237e',
+                                backgroundColor: 'rgba(26,35,126,0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#1a237e'
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                                x: { ticks: { maxRotation: 45, font: { size: 9 }, maxTicksLimit: 12 } }
+                            }
+                        }
+                    });
+                }
+
+                // ── Report downloads chart ──────────────────────
+                const dlEntries = Object.entries(dlCounts)
+                    .map(([k, v]) => ({ name: k.replace(/_/g, '.').replace('COSME.', '').replace('.Report.pdf', '').replace('.pdf', ''), count: v }))
+                    .sort((a, b) => b.count - a.count);
+
+                const dlCtx = document.getElementById('analytics-chart-downloads');
+                if (dlCtx) {
+                    if (dlEntries.length > 0) {
+                        const dlColors = ['#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7','#c8e6c9','#e8f5e9','#f1f8e9','#f9fbe7'];
+                        chartDownloads = new Chart(dlCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: dlEntries.map(d => d.name),
+                                datasets: [{
+                                    label: 'Downloads',
+                                    data: dlEntries.map(d => d.count),
+                                    backgroundColor: dlColors.slice(0, dlEntries.length),
+                                    borderRadius: 6,
+                                    borderSkipped: false
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { beginAtZero: true, ticks: { stepSize: 1 } },
+                                    y: { ticks: { font: { size: 11 } } }
+                                }
+                            }
+                        });
+                    } else {
+                        dlCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;">No report downloads recorded yet</div>';
+                    }
+                }
+
+                // ── Session duration distribution ───────────────
+                const durBuckets = { '<1m': 0, '1-5m': 0, '5-15m': 0, '15-30m': 0, '30m+': 0 };
+                entries.forEach(v => {
+                    if (v.leftAt && v.visitedAt) {
+                        const mins = (v.leftAt - v.visitedAt) / 60000;
+                        if (mins < 0 || mins > 120) return;
+                        if (mins < 1) durBuckets['<1m']++;
+                        else if (mins < 5) durBuckets['1-5m']++;
+                        else if (mins < 15) durBuckets['5-15m']++;
+                        else if (mins < 30) durBuckets['15-30m']++;
+                        else durBuckets['30m+']++;
+                    }
+                });
+
+                const durCtx = document.getElementById('analytics-chart-duration');
+                if (durCtx) {
+                    chartDuration = new Chart(durCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(durBuckets),
+                            datasets: [{
+                                data: Object.values(durBuckets),
+                                backgroundColor: ['#e8eaf6','#9fa8da','#5c6bc0','#3949ab','#1a237e'],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } }
+                            }
+                        }
+                    });
+                }
+
+                // ── Recent visitors table ───────────────────────
+                const recentVisitors = entries
+                    .sort((a, b) => (b.visitedAt || 0) - (a.visitedAt || 0))
+                    .slice(0, 30);
+
+                const tbody = document.getElementById('analytics-visitors-tbody');
+                if (tbody) {
+                    if (recentVisitors.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:28px;">No visitor data yet</td></tr>';
+                    } else {
+                        tbody.innerHTML = recentVisitors.map((v, i) => {
+                            const date = v.visitedAt ? new Date(v.visitedAt) : null;
+                            const dateStr = date ? date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '—';
+                            let durStr = '<span style="color:#4caf50;font-weight:600;">Active</span>';
+                            if (v.leftAt && v.visitedAt) {
+                                const mins = Math.round((v.leftAt - v.visitedAt) / 60000);
+                                durStr = mins < 1 ? '<1m' : mins + 'm';
+                            }
+                            const ua = v.userAgent ? parseUA(v.userAgent) : { device: '—', browser: '—' };
+                            return `<tr style="background:${i % 2 === 0 ? '#fff' : '#f8f9fa'};">
+                                <td style="padding:9px 14px;border-bottom:1px solid #eee;font-weight:500;">${v.name || 'Anonymous'}</td>
+                                <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#555;">${dateStr}</td>
+                                <td style="padding:9px 14px;border-bottom:1px solid #eee;">${durStr}</td>
+                                <td style="padding:9px 14px;border-bottom:1px solid #eee;color:#777;">${ua.device} / ${ua.browser}</td>
+                            </tr>`;
+                        }).join('');
+                    }
+                }
+
+                // ── Engagement summary ──────────────────────────
+                const totalDownloads = Object.values(dlCounts).reduce((s, v) => s + v, 0);
+                const totalTabs = Object.values(tabCounts).reduce((s, v) => s + v, 0);
+                const topTab = sortedTabs.length > 0 ? sortedTabs[0].name : '—';
+                const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+                const returnRate = entries.length > 0 ? Math.round((1 - uniqueNames.size / entries.length) * 100) : 0;
+                const mobileShare = entries.length > 0 ? Math.round(((deviceMap['Mobile'] || 0) / Object.values(deviceMap).reduce((s,v) => s+v, 0)) * 100) : 0;
+
+                const engGrid = document.getElementById('analytics-engagement-grid');
+                if (engGrid) {
+                    const engItems = [
+                        { label: 'Total Reports Downloaded', value: totalDownloads },
+                        { label: 'Total Tab Switches', value: totalTabs },
+                        { label: 'Most Popular Tab', value: topTab },
+                        { label: 'Peak Hour', value: (peakHour < 10 ? '0' : '') + peakHour + ':00' },
+                        { label: 'Return Visit Rate', value: returnRate + '%' },
+                        { label: 'Mobile Usage', value: mobileShare + '%' }
+                    ];
+                    engGrid.innerHTML = engItems.map(item =>
+                        `<div class="an-eng-item">
+                            <div class="an-eng-val">${item.value}</div>
+                            <div class="an-eng-lbl">${item.label}</div>
+                        </div>`
+                    ).join('');
+                }
+
+            }).catch(err => {
+                console.error('Analytics load error:', err);
+            });
+        };
+
+    })();
     </script>
 </body>
 </html>
