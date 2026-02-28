@@ -2333,10 +2333,21 @@ def prepare_seaweed_aggregates(df):
         'n_groups': int(df['Group'].nunique()),
         'ropes_ocean': ropes_ocean,
         'ropes_total': total_ropes,
+        'target_ropes_total': float(df['Target_Ropes'].sum()),
         'avg_prod_per_rope': avg_prod,
         'casual_pct': casual_pct,
         'dried_kg': float(df['Dried_KG'].sum()),
         'wet_kg': float(df['Wet_KG'].sum()),
+        'dried_wet_ratio': round(float(df['Dried_KG'].sum()) / max(float(df['Wet_KG'].sum()), 1), 2),
+        'avg_achievement_pct': round(float(df['Ropes_Achievement_pct'].mean()), 1),
+        'pct_meeting_target': round(
+            len(df[df['Ropes_Total'] >= df['Target_Ropes']]) / max(len(df), 1) * 100, 1),
+        'avg_ropes_per_farmer': round(total_ropes / max(n_farmers, 1), 1),
+        'avg_production_per_farmer': round(total_kg / max(n_farmers, 1), 1),
+        'gap_total': float(df['Gap'].sum()),
+        'multi_challenge_pct': round(
+            len(df[df[flag_cols].sum(axis=1) >= 2]) / max(len(valid_df), 1) * 100, 1)
+            if all(fc in df.columns for fc in flag_cols) else 0.0,
     }
 
     return {
@@ -5311,23 +5322,13 @@ def render_mangrove_training_tabs(m_data, timepoint_filter='Combined'):
 
 
 # ============================================================================
-# SEAWEED PRODUCTION & CHALLENGES RENDERER — 5 TABS
+# SEAWEED PRODUCTION & CHALLENGES RENDERER — 5 TABS (ENHANCED)
 # ============================================================================
 
 def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                         challenge_filter=None, min_total_kg=0,
                         min_achievement_pct=0):
-    """Render the Seaweed Production & Challenges module with 5 tabs.
-
-    Parameters
-    ----------
-    sw_df : pd.DataFrame  – cleaned seaweed data (from load_seaweed_data)
-    group_filter : list or None – selected groups (None = all)
-    casual_filter : str – 'Yes', 'No', or 'All'
-    challenge_filter : list or None – challenge flag names to filter on
-    min_total_kg : float – minimum Total_KG threshold
-    min_achievement_pct : float – minimum Ropes_Achievement_pct threshold
-    """
+    """Render the Seaweed Production & Challenges module with 5 enhanced tabs."""
     # ---- Apply sidebar filters ----
     df = sw_df.copy()
     if group_filter:
@@ -5335,14 +5336,14 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
     if casual_filter != 'All':
         df = df[df['Casual_Workers'].str.lower() == casual_filter.lower()]
     if challenge_filter:
+        flag_map = {
+            'Transport': 'flag_transport', 'Market Access': 'flag_market',
+            'Disease': 'flag_disease', 'Equipment': 'flag_equipment',
+            'Storage': 'flag_storage', 'Labour': 'flag_labour',
+            'Sand / Tide': 'flag_sand_tide',
+        }
         for cf in challenge_filter:
-            flag_map = {
-                'Transport': 'flag_transport', 'Market Access': 'flag_market',
-                'Disease': 'flag_disease', 'Equipment': 'flag_equipment',
-                'Storage': 'flag_storage', 'Labour': 'flag_labour',
-                'Sand / Tide': 'flag_sand_tide',
-            }
-            fc = flag_map.get(cf)
+            fc = flag_map.get(cf) if isinstance(cf, str) and not cf.startswith('flag_') else cf
             if fc and fc in df.columns:
                 df = df[df[fc] == True]
     if min_total_kg > 0:
@@ -5350,10 +5351,21 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
     if min_achievement_pct > 0:
         df = df[df['Ropes_Achievement_pct'] >= min_achievement_pct]
 
+    if len(df) == 0:
+        st.warning("No data matches the current filters. Please adjust the sidebar filters.")
+        return
+
     agg = prepare_seaweed_aggregates(df)
     grp_df = agg['group_summary']
     ch_df = agg['challenge_counts']
     ov = agg['overall']
+
+    # Color palette used across tabs
+    palette = [COLORS['baseline'], COLORS['midline'], '#FF9800', '#9C27B0',
+               '#00BCD4', '#795548', '#E91E63', '#607D8B']
+    group_colors_map = {}
+    for i, g in enumerate(sorted(df['Group'].dropna().unique())):
+        group_colors_map[g] = palette[i % len(palette)]
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Overview & KPIs",
@@ -5364,16 +5376,16 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
     ])
 
     # ==================================================================
-    # TAB 1 — Overview & KPIs
+    # TAB 1 — Overview & KPIs (ENHANCED)
     # ==================================================================
     with tab1:
         st.markdown("""<div class="section-narrative">
         <strong>Seaweed Production Overview:</strong> High-level indicators summarising
-        production volume, rope deployment, farmer participation, and workforce composition
-        across all seaweed farming groups.
+        production volume, rope deployment, farmer participation, workforce composition,
+        target achievement, and production gaps across all seaweed farming groups.
         </div>""", unsafe_allow_html=True)
 
-        # ---- KPI cards ----
+        # ---- KPI cards — Row 1 (5 cards) ----
         k1, k2, k3, k4, k5 = st.columns(5)
         k1.markdown(f"""<div class="kpi-card">
             <h3>Total Production</h3>
@@ -5393,7 +5405,7 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
         k4.markdown(f"""<div class="kpi-card">
             <h3>Avg Prod / Rope</h3>
             <div class="value">{ov['avg_prod_per_rope']:.2f} kg</div>
-            <div class="delta-neutral">Overall</div>
+            <div class="delta-neutral">{ov['avg_production_per_farmer']:.1f} kg/farmer</div>
         </div>""", unsafe_allow_html=True)
         k5.markdown(f"""<div class="kpi-card">
             <h3>Casual Workers</h3>
@@ -5401,27 +5413,72 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
             <div class="delta-neutral">of farmers</div>
         </div>""", unsafe_allow_html=True)
 
+        # ---- KPI cards — Row 2 (4 cards) ----
+        r1, r2, r3, r4 = st.columns(4)
+        ach_trend = 'positive' if ov['avg_achievement_pct'] >= 70 else 'neutral'
+        r1.markdown(f"""<div class="kpi-card">
+            <h3>Target Achievement</h3>
+            <div class="value">{ov['avg_achievement_pct']:.1f}%</div>
+            <div class="delta-{ach_trend}">{ov['pct_meeting_target']:.0f}% meet target</div>
+        </div>""", unsafe_allow_html=True)
+        r2.markdown(f"""<div class="kpi-card">
+            <h3>Dried / Wet Ratio</h3>
+            <div class="value">{ov['dried_wet_ratio']:.2f}</div>
+            <div class="delta-neutral">{ov['dried_kg']:,.0f} vs {ov['wet_kg']:,.0f}</div>
+        </div>""", unsafe_allow_html=True)
+        r3.markdown(f"""<div class="kpi-card">
+            <h3>Rope Gap</h3>
+            <div class="value">{ov['gap_total']:,.0f}</div>
+            <div class="delta-negative">ropes needed</div>
+        </div>""", unsafe_allow_html=True)
+        r4.markdown(f"""<div class="kpi-card">
+            <h3>Multi-Challenge</h3>
+            <div class="value">{ov['multi_challenge_pct']:.1f}%</div>
+            <div class="delta-{'negative' if ov['multi_challenge_pct'] > 30 else 'neutral'}">face 2+ challenges</div>
+        </div>""", unsafe_allow_html=True)
+
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ---- Top groups by production ----
-        _section_header('', 'Top Groups by Total Production (kg)', '2025')
-        top_prod = grp_df.sort_values('Total_KG', ascending=False)
-        fig_tp = go.Figure(go.Bar(
-            x=top_prod['Group'], y=top_prod['Total_KG'],
-            marker_color=COLORS['baseline'],
-            text=top_prod['Total_KG'].apply(lambda v: f"{v:,.0f}"),
-            textposition='auto',
-        ))
-        fig_tp.update_layout(
-            title='Total Seaweed Production by Group (kg)',
-            height=420, yaxis_title='Total KG',
-            font=dict(size=13, color='#333'),
-            title_font=dict(size=16, color='#222'),
-            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=20, r=20, t=60, b=20),
-            xaxis_tickangle=-25,
-        )
-        st.plotly_chart(fig_tp, use_container_width=True)
+        # ---- Two-column: Production bar + Group share pie ----
+        col_bar, col_pie = st.columns([3, 2])
+        with col_bar:
+            _section_header('', 'Total Production by Group (kg)', '2025')
+            top_prod = grp_df.sort_values('Total_KG', ascending=False)
+            fig_tp = go.Figure(go.Bar(
+                x=top_prod['Group'], y=top_prod['Total_KG'],
+                marker_color=[group_colors_map.get(g, COLORS['baseline']) for g in top_prod['Group']],
+                text=top_prod['Total_KG'].apply(lambda v: f"{v:,.0f}"),
+                textposition='auto',
+            ))
+            fig_tp.update_layout(
+                title='Total Seaweed Production by Group (kg)',
+                height=420, yaxis_title='Total KG',
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20),
+                xaxis_tickangle=-25,
+            )
+            st.plotly_chart(fig_tp, use_container_width=True)
+
+        with col_pie:
+            _section_header('', 'Production Share by Group', '')
+            fig_pie = go.Figure(go.Pie(
+                labels=grp_df['Group'], values=grp_df['Total_KG'],
+                hole=0.4,
+                marker=dict(colors=[group_colors_map.get(g, '#999') for g in grp_df['Group']]),
+                textinfo='label+percent',
+                textposition='auto',
+                hovertemplate='<b>%{label}</b><br>%{value:,.0f} kg (%{percent})<extra></extra>',
+            ))
+            fig_pie.update_layout(
+                title='Production Share (%)',
+                height=420, showlegend=False,
+                font=dict(size=12, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                margin=dict(l=10, r=10, t=60, b=10),
+            )
+            st.plotly_chart(fig_pie, use_container_width=True)
 
         # ---- Ropes in Ocean vs Target ----
         _section_header('', 'Ropes in Ocean vs Target by Group', '')
@@ -5476,18 +5533,74 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                           annotation_text='Target 100%', annotation_position='top left')
         st.plotly_chart(fig_ach, use_container_width=True)
 
+        # ---- Gap Analysis Waterfall ----
+        _section_header('', 'Rope Gap Analysis by Group', 'Target vs Actual shortfall')
+        gap_df = grp_df.sort_values('Gap', ascending=False)
+        fig_gap = go.Figure(go.Waterfall(
+            x=gap_df['Group'],
+            y=gap_df['Gap'],
+            text=gap_df['Gap'].apply(lambda v: f"{v:,.0f}"),
+            textposition='auto',
+            connector=dict(line=dict(color='#ccc', width=1)),
+            increasing=dict(marker=dict(color=COLORS['danger'])),
+            decreasing=dict(marker=dict(color=COLORS['good'])),
+            totals=dict(marker=dict(color=COLORS['baseline'])),
+        ))
+        fig_gap.update_layout(
+            title='Rope Gap by Group (Target − Actual)',
+            height=380, yaxis_title='Gap (Ropes)',
+            font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=50, b=20), xaxis_tickangle=-25,
+        )
+        st.plotly_chart(fig_gap, use_container_width=True)
+
     # ==================================================================
-    # TAB 2 — Group Performance & Target Achievement
+    # TAB 2 — Group Performance & Target Achievement (ENHANCED)
     # ==================================================================
     with tab2:
         st.markdown("""<div class="section-narrative">
-        <strong>Group Performance:</strong> Comparing rope deployment, target achievement,
-        and production efficiency across seaweed farming groups. Identify groups exceeding
-        targets and those requiring support.
+        <strong>Group Performance:</strong> Multi-dimensional comparison of rope deployment,
+        target achievement, production efficiency, and workforce composition across seaweed
+        farming groups. Includes radar profiling and member-level performance analysis.
         </div>""", unsafe_allow_html=True)
 
+        # ---- Radar chart: multi-metric group comparison ----
+        _section_header('', 'Group Performance Radar', 'Normalised 0–100')
+        radar_metrics = ['Avg_Achievement_pct', 'Avg_Prod_per_Rope', 'Members',
+                         'Total_KG', 'Ropes_Total']
+        radar_labels = ['Target Achievement', 'Prod/Rope', 'Members', 'Total Production', 'Total Ropes']
+        if len(grp_df) >= 2:
+            # Normalise each metric 0-100
+            radar_norm = grp_df[radar_metrics].copy()
+            for c in radar_metrics:
+                cmax = radar_norm[c].max()
+                if cmax > 0:
+                    radar_norm[c] = (radar_norm[c] / cmax * 100).round(1)
+            fig_radar = go.Figure()
+            for idx, row in grp_df.iterrows():
+                vals = [radar_norm.loc[idx, c] for c in radar_metrics]
+                vals.append(vals[0])   # close polygon
+                fig_radar.add_trace(go.Scatterpolar(
+                    r=vals,
+                    theta=radar_labels + [radar_labels[0]],
+                    name=row['Group'],
+                    fill='toself',
+                    opacity=0.3,
+                    line=dict(color=group_colors_map.get(row['Group'], '#999')),
+                ))
+            fig_radar.update_layout(
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                height=500, showlegend=True,
+                legend=dict(orientation='h', yanchor='top', y=-0.05, x=0.5, xanchor='center'),
+                font=dict(size=12, color='#333'), title_font=dict(size=16, color='#222'),
+                title='Multi-Metric Group Comparison',
+                margin=dict(l=40, r=40, t=60, b=40),
+            )
+            st.plotly_chart(fig_radar, use_container_width=True)
+
         # ---- Grouped bar: Ropes_Total vs Target vs Required ----
-        _section_header('', 'Ropes Total vs Target vs Required by Group', '')
+        _section_header('', 'Ropes: Total vs Target vs Required', '')
         fig_rtr = go.Figure()
         fig_rtr.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Ropes_Total'],
                                   name='Ropes Total', marker_color=COLORS['baseline']))
@@ -5504,16 +5617,25 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
         )
         st.plotly_chart(fig_rtr, use_container_width=True)
 
-        # ---- Production per rope by group (box plot) ----
-        _section_header('', 'Production per Rope (kg) by Group', '')
+        # ---- Production per rope by group (box + violin toggle) ----
+        _section_header('', 'Production per Rope (kg) Distribution', '')
+        chart_type = st.radio("Chart type", ["Box Plot", "Violin Plot"],
+                              horizontal=True, key='sw_box_violin_toggle')
         fig_ppr = go.Figure()
         for grp_name in sorted(df['Group'].dropna().unique()):
             sub = df[df['Group'] == grp_name]
             valid = sub[sub['Production_per_rope_kg'] > 0]['Production_per_rope_kg']
             if len(valid):
-                fig_ppr.add_trace(go.Box(y=valid, name=grp_name, boxmean=True))
+                if chart_type == "Box Plot":
+                    fig_ppr.add_trace(go.Box(y=valid, name=grp_name, boxmean=True,
+                                             marker_color=group_colors_map.get(grp_name, '#999')))
+                else:
+                    fig_ppr.add_trace(go.Violin(y=valid, name=grp_name, box_visible=True,
+                                                meanline_visible=True,
+                                                fillcolor=group_colors_map.get(grp_name, '#999'),
+                                                opacity=0.6, line_color='#333'))
         fig_ppr.update_layout(
-            title='Distribution of Production per Rope by Group',
+            title=f'Production per Rope by Group ({chart_type})',
             height=420, yaxis_title='kg per Rope', showlegend=False,
             font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
             plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
@@ -5521,8 +5643,35 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
         )
         st.plotly_chart(fig_ppr, use_container_width=True)
 
-        # ---- Target achievement breakdown per group ----
-        _section_header('', 'Target Achievement Breakdown', 'Per group')
+        # ---- Member-level performance scatter ----
+        _section_header('', 'Member-Level Performance', 'Achievement % vs Production')
+        fig_mem = go.Figure()
+        for g in sorted(df['Group'].dropna().unique()):
+            sub = df[df['Group'] == g]
+            fig_mem.add_trace(go.Scatter(
+                x=sub['Ropes_Achievement_pct'], y=sub['Total_KG'],
+                mode='markers', name=g,
+                marker=dict(size=9, color=group_colors_map.get(g, '#999'),
+                            line=dict(width=0.5, color='white')),
+                hovertemplate=(
+                    '<b>%{customdata[0]}</b><br>Group: %{customdata[1]}<br>'
+                    'Achievement: %{x:.1f}%<br>Production: %{y:.1f} kg<extra></extra>'),
+                customdata=sub[['Member', 'Group']].values,
+            ))
+        fig_mem.update_layout(
+            title='Member Performance: Target Achievement vs Production',
+            height=480, xaxis_title='Ropes Achievement (%)', yaxis_title='Total Production (kg)',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        fig_mem.add_vline(x=100, line_dash='dash', line_color='#2E7D32', line_width=1,
+                          annotation_text='Target 100%')
+        st.plotly_chart(fig_mem, use_container_width=True)
+
+        # ---- Target achievement breakdown per group table + chart ----
+        _section_header('', 'Target Achievement Breakdown', 'Per group summary')
         ach_rows = []
         for grp_name in sorted(df['Group'].dropna().unique()):
             sub = df[df['Group'] == grp_name]
@@ -5531,18 +5680,24 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                 continue
             meeting = len(sub[sub['Ropes_Total'] >= sub['Target_Ropes']])
             below50 = len(sub[sub['Ropes_Achievement_pct'] < 50])
+            avg_ach = sub['Ropes_Achievement_pct'].mean()
+            avg_prod = sub['Total_KG'].mean()
             ach_rows.append({
                 'Group': grp_name, 'Members': n,
+                'Avg Achievement (%)': round(avg_ach, 1),
                 '≥ Target (%)': round(meeting / n * 100, 1),
                 '< 50% Target (%)': round(below50 / n * 100, 1),
+                'Avg Production (kg)': round(avg_prod, 1),
             })
         if ach_rows:
             ach_table = pd.DataFrame(ach_rows)
             st.dataframe(ach_table.style.format({
-                '≥ Target (%)': '{:.1f}%', '< 50% Target (%)': '{:.1f}%',
-            }), use_container_width=True)
+                'Avg Achievement (%)': '{:.1f}%', '≥ Target (%)': '{:.1f}%',
+                '< 50% Target (%)': '{:.1f}%', 'Avg Production (kg)': '{:,.1f}',
+            }).background_gradient(subset=['Avg Achievement (%)'], cmap='RdYlGn', vmin=0, vmax=100),
+                         use_container_width=True)
 
-            # chart
+            # Stacked bar showing meeting vs not meeting
             fig_ab = go.Figure()
             fig_ab.add_trace(go.Bar(
                 x=ach_table['Group'], y=ach_table['≥ Target (%)'],
@@ -5561,25 +5716,39 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
             )
             st.plotly_chart(fig_ab, use_container_width=True)
 
+        # ---- Top / Bottom 10 members ----
+        _section_header('', 'Top & Bottom Performers', 'By Total Production')
+        col_top, col_bot = st.columns(2)
+        ranked = df[['Member', 'Group', 'Total_KG', 'Ropes_Achievement_pct']].sort_values(
+            'Total_KG', ascending=False).reset_index(drop=True)
+        with col_top:
+            st.markdown("**Top 10 Producers**")
+            top10 = ranked.head(10).copy()
+            top10.index = range(1, len(top10) + 1)
+            st.dataframe(top10.style.format({
+                'Total_KG': '{:,.1f}', 'Ropes_Achievement_pct': '{:.1f}%',
+            }), use_container_width=True)
+        with col_bot:
+            st.markdown("**Bottom 10 Producers**")
+            bot10 = ranked.tail(10).copy()
+            bot10.index = range(1, len(bot10) + 1)
+            st.dataframe(bot10.style.format({
+                'Total_KG': '{:,.1f}', 'Ropes_Achievement_pct': '{:.1f}%',
+            }), use_container_width=True)
+
     # ==================================================================
-    # TAB 3 — Production & Yields
+    # TAB 3 — Production & Yields (ENHANCED)
     # ==================================================================
     with tab3:
         st.markdown("""<div class="section-narrative">
         <strong>Production Analysis:</strong> Exploring the relationship between rope
-        deployment and seaweed yields, comparing dried vs wet production, and production
-        efficiency across groups.
+        deployment and seaweed yields, production efficiency, Pareto analysis of farmer
+        contributions, and dried vs wet production breakdown.
         </div>""", unsafe_allow_html=True)
 
-        # ---- Scatter: Ropes_Total vs Total_KG ----
-        _section_header('', 'Ropes vs Production', 'Coloured by Group')
+        # ---- Scatter: Ropes_Total vs Total_KG with trendline ----
+        _section_header('', 'Ropes vs Production', 'With trendline')
         fig_sc = go.Figure()
-        group_colors_map = {}
-        palette = [COLORS['baseline'], COLORS['midline'], '#FF9800', '#9C27B0',
-                   '#00BCD4', '#795548', '#E91E63', '#607D8B']
-        for i, g in enumerate(sorted(df['Group'].dropna().unique())):
-            group_colors_map[g] = palette[i % len(palette)]
-
         for g in sorted(df['Group'].dropna().unique()):
             sub = df[df['Group'] == g]
             sizes = sub['Casual_Workers'].apply(
@@ -5594,6 +5763,32 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                     'Ropes: %{x:.0f}<br>Production: %{y:.1f} kg<extra></extra>'),
                 customdata=sub[['Member', 'Group']].values,
             ))
+
+        # Add OLS trendline
+        valid_scatter = df[(df['Ropes_Total'] > 0) & (df['Total_KG'] > 0)]
+        if len(valid_scatter) > 3:
+            x_vals = valid_scatter['Ropes_Total'].values
+            y_vals = valid_scatter['Total_KG'].values
+            z = np.polyfit(x_vals, y_vals, 1)
+            p = np.poly1d(z)
+            x_line = np.linspace(x_vals.min(), x_vals.max(), 50)
+            fig_sc.add_trace(go.Scatter(
+                x=x_line, y=p(x_line), mode='lines',
+                name=f'Trend (slope={z[0]:.2f})',
+                line=dict(color='#333', width=2, dash='dash'),
+                showlegend=True,
+            ))
+            # Compute R²
+            ss_res = ((y_vals - p(x_vals)) ** 2).sum()
+            ss_tot = ((y_vals - y_vals.mean()) ** 2).sum()
+            r_sq = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+            fig_sc.add_annotation(
+                x=0.02, y=0.98, xref='paper', yref='paper',
+                text=f'R² = {r_sq:.3f}', showarrow=False,
+                font=dict(size=13, color='#333'),
+                bgcolor='rgba(255,255,255,0.8)', bordercolor='#ccc',
+            )
+
         fig_sc.update_layout(
             title='Ropes (Total) vs Production (kg)',
             height=480, xaxis_title='Ropes Total', yaxis_title='Total KG',
@@ -5604,9 +5799,51 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
         )
         st.plotly_chart(fig_sc, use_container_width=True)
 
+        # ---- Pareto Analysis: Top farmers contributing 80% of production ----
+        _section_header('', 'Pareto Analysis', 'Which farmers contribute most?')
+        pareto = df[['Member', 'Group', 'Total_KG']].sort_values('Total_KG', ascending=False).reset_index(drop=True)
+        pareto['Cumulative_KG'] = pareto['Total_KG'].cumsum()
+        pareto['Cumulative_Pct'] = (pareto['Cumulative_KG'] / pareto['Total_KG'].sum() * 100).round(1)
+        pareto['Farmer_Pct'] = ((pareto.index + 1) / len(pareto) * 100).round(1)
+
+        n_80 = len(pareto[pareto['Cumulative_Pct'] <= 80]) + 1
+        pct_farmers_80 = round(n_80 / len(pareto) * 100, 1)
+
+        fig_pareto = go.Figure()
+        fig_pareto.add_trace(go.Bar(
+            x=list(range(1, len(pareto) + 1)),
+            y=pareto['Total_KG'],
+            name='Production (kg)',
+            marker_color=COLORS['baseline'],
+            opacity=0.7,
+        ))
+        fig_pareto.add_trace(go.Scatter(
+            x=list(range(1, len(pareto) + 1)),
+            y=pareto['Cumulative_Pct'],
+            name='Cumulative %',
+            yaxis='y2',
+            line=dict(color=COLORS['midline'], width=2.5),
+            mode='lines',
+        ))
+        fig_pareto.add_hline(y=80, line_dash='dot', line_color='red', line_width=1.5,
+                             annotation_text='80% threshold', annotation_position='top right',
+                             yref='y2')
+        fig_pareto.update_layout(
+            title=f'Pareto: {pct_farmers_80:.0f}% of farmers ({n_80}) produce 80% of output',
+            height=420,
+            xaxis_title='Farmers (ranked by production)',
+            yaxis_title='Production (kg)',
+            yaxis2=dict(title='Cumulative %', overlaying='y', side='right', range=[0, 105]),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=50, t=60, b=20),
+        )
+        st.plotly_chart(fig_pareto, use_container_width=True)
+
         # ---- Production per rope histogram ----
         _section_header('', 'Production per Rope Distribution', '')
-        sel_grp = st.selectbox('Select Group', ['All Groups'] + sorted(df['Group'].dropna().unique()),
+        sel_grp = st.selectbox('Select Group', ['All Groups'] + sorted(df['Group'].dropna().unique().tolist()),
                                key='sw_ppr_hist_grp')
         if sel_grp == 'All Groups':
             hist_data = df[df['Production_per_rope_kg'] > 0]['Production_per_rope_kg']
@@ -5619,8 +5856,11 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                 marker_color=COLORS['baseline'],
                 opacity=0.85,
             ))
+            avg_val = hist_data.mean()
+            fig_hist.add_vline(x=avg_val, line_dash='dash', line_color='red', line_width=1.5,
+                               annotation_text=f'Mean: {avg_val:.2f}')
             fig_hist.update_layout(
-                title=f'Production per Rope – {sel_grp}',
+                title=f'Production per Rope — {sel_grp}',
                 height=370, xaxis_title='kg / Rope', yaxis_title='Count',
                 font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
                 plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
@@ -5632,30 +5872,53 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
 
         # ---- Dried vs Wet by group ----
         _section_header('', 'Dried vs Wet Seaweed by Group', '')
-        fig_dw = go.Figure()
-        fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Dried_KG'],
-                                 name='Dried KG', marker_color=COLORS['baseline']))
-        fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Wet_KG'],
-                                 name='Wet KG', marker_color='#00BCD4'))
-        fig_dw.update_layout(
-            barmode='stack', height=420,
-            title='Dried vs Wet Seaweed Production by Group',
-            yaxis_title='KG',
-            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
-            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
-            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
-        )
-        st.plotly_chart(fig_dw, use_container_width=True)
+        col_stack, col_ratio = st.columns([3, 2])
+        with col_stack:
+            fig_dw = go.Figure()
+            fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Dried_KG'],
+                                     name='Dried KG', marker_color=COLORS['baseline']))
+            fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Wet_KG'],
+                                     name='Wet KG', marker_color='#00BCD4'))
+            fig_dw.update_layout(
+                barmode='stack', height=420,
+                title='Dried vs Wet Seaweed Production',
+                yaxis_title='KG',
+                legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+            )
+            st.plotly_chart(fig_dw, use_container_width=True)
+        with col_ratio:
+            # Dried/Wet ratio per group
+            grp_ratio = grp_df[['Group']].copy()
+            grp_ratio['Dried_Wet_Ratio'] = (grp_df['Dried_KG'] / grp_df['Wet_KG'].replace(0, np.nan)).round(2).fillna(0)
+            grp_ratio = grp_ratio.sort_values('Dried_Wet_Ratio', ascending=True)
+            fig_ratio = go.Figure(go.Bar(
+                x=grp_ratio['Dried_Wet_Ratio'], y=grp_ratio['Group'],
+                orientation='h', marker_color=COLORS['midline'],
+                text=grp_ratio['Dried_Wet_Ratio'].apply(lambda v: f"{v:.2f}"),
+                textposition='auto',
+            ))
+            fig_ratio.update_layout(
+                title='Dried / Wet Ratio by Group',
+                height=420, xaxis_title='Ratio (Dried ÷ Wet)',
+                font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20),
+            )
+            fig_ratio.add_vline(x=1, line_dash='dash', line_color='#888', line_width=1,
+                                annotation_text='Equal')
+            st.plotly_chart(fig_ratio, use_container_width=True)
 
     # ==================================================================
-    # TAB 4 — Challenges & Constraints
+    # TAB 4 — Challenges & Constraints (ENHANCED)
     # ==================================================================
     with tab4:
         st.markdown("""<div class="section-narrative">
-        <strong>Challenges Profile:</strong> Understanding the key barriers seaweed farmers
-        face — from market access and transport to disease and equipment — to inform targeted
-        programme support.
+        <strong>Challenges Profile:</strong> Comprehensive analysis of barriers facing seaweed
+        farmers — prevalence across groups, co-occurrence patterns, impact on production,
+        and qualitative free-text analysis.
         </div>""", unsafe_allow_html=True)
 
         # ---- Overall challenge bar chart ----
@@ -5697,11 +5960,132 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
             ))
             fig_hm.update_layout(
                 title='Challenge Prevalence by Group (%)',
-                height=max(350, len(heat_data) * 50 + 120),
+                height=max(350, len(heat_data) * 55 + 120),
                 font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
                 margin=dict(l=20, r=20, t=60, b=20),
             )
             st.plotly_chart(fig_hm, use_container_width=True)
+
+        # ---- Challenge Co-occurrence Matrix ----
+        _section_header('', 'Challenge Co-occurrence', 'How often challenges appear together')
+        flag_cols = ['flag_transport', 'flag_market', 'flag_disease',
+                     'flag_equipment', 'flag_storage', 'flag_labour', 'flag_sand_tide']
+        flag_labels_map = {
+            'flag_transport': 'Transport', 'flag_market': 'Market',
+            'flag_disease': 'Disease', 'flag_equipment': 'Equipment',
+            'flag_storage': 'Storage', 'flag_labour': 'Labour',
+            'flag_sand_tide': 'Sand/Tide',
+        }
+        available_flags = [f for f in flag_cols if f in df.columns]
+        if len(available_flags) >= 2:
+            flag_df = df[available_flags].fillna(False).astype(int)
+            cooccur = flag_df.T.dot(flag_df)
+            # Normalise by row total to get %
+            diag = np.diag(cooccur.values).copy()
+            diag[diag == 0] = 1
+            cooccur_pct = (cooccur.values / diag[:, None] * 100).round(1)
+            labels_co = [flag_labels_map.get(f, f) for f in available_flags]
+            fig_co = go.Figure(go.Heatmap(
+                z=cooccur_pct,
+                x=labels_co, y=labels_co,
+                colorscale='Blues',
+                text=cooccur_pct,
+                texttemplate='%{text:.0f}%',
+                hovertemplate='%{y} → %{x}: %{z:.1f}%<extra></extra>',
+            ))
+            fig_co.update_layout(
+                title='Challenge Co-occurrence (% of row challenge also having column challenge)',
+                height=max(380, len(labels_co) * 55 + 100),
+                font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+                margin=dict(l=20, r=20, t=60, b=20),
+            )
+            st.plotly_chart(fig_co, use_container_width=True)
+
+        # ---- Challenge Burden vs Production ----
+        _section_header('', 'Challenge Burden vs Production', 'Number of challenges per farmer')
+        if available_flags:
+            df_ch_burden = df.copy()
+            df_ch_burden['n_challenges'] = df_ch_burden[available_flags].fillna(False).astype(int).sum(axis=1)
+            burden_agg = df_ch_burden.groupby('n_challenges').agg(
+                n_farmers=('Member', 'count'),
+                avg_production=('Total_KG', 'mean'),
+                avg_achievement=('Ropes_Achievement_pct', 'mean'),
+            ).reset_index()
+
+            col_bur1, col_bur2 = st.columns(2)
+            with col_bur1:
+                fig_bur = go.Figure()
+                fig_bur.add_trace(go.Bar(
+                    x=burden_agg['n_challenges'], y=burden_agg['n_farmers'],
+                    name='Farmers', marker_color=COLORS['baseline'],
+                    text=burden_agg['n_farmers'], textposition='auto',
+                ))
+                fig_bur.update_layout(
+                    title='Farmers by Number of Challenges',
+                    height=380, xaxis_title='Number of Challenges', yaxis_title='Farmers',
+                    font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=50, b=20),
+                )
+                st.plotly_chart(fig_bur, use_container_width=True)
+            with col_bur2:
+                fig_impact = go.Figure()
+                fig_impact.add_trace(go.Scatter(
+                    x=burden_agg['n_challenges'], y=burden_agg['avg_production'],
+                    mode='lines+markers', name='Avg Production (kg)',
+                    marker=dict(size=12, color=COLORS['baseline']),
+                    line=dict(width=2.5),
+                ))
+                fig_impact.add_trace(go.Scatter(
+                    x=burden_agg['n_challenges'], y=burden_agg['avg_achievement'],
+                    mode='lines+markers', name='Avg Achievement (%)',
+                    yaxis='y2',
+                    marker=dict(size=12, color=COLORS['midline']),
+                    line=dict(width=2.5, dash='dot'),
+                ))
+                fig_impact.update_layout(
+                    title='Challenge Impact on Performance',
+                    height=380,
+                    xaxis_title='Number of Challenges',
+                    yaxis_title='Avg Production (kg)',
+                    yaxis2=dict(title='Avg Achievement (%)', overlaying='y', side='right'),
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                    font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=50, t=50, b=20),
+                )
+                st.plotly_chart(fig_impact, use_container_width=True)
+
+        # ---- Free-text challenge word frequency ----
+        _section_header('', 'Challenge Keyword Frequency', 'From free-text responses')
+        ch_texts = df[df['Challenges_str'].notna() & (df['Challenges_str'].str.strip() != '')]
+        if len(ch_texts):
+            import re as _re
+            all_words = ' '.join(ch_texts['Challenges_str'].str.lower()).replace(',', ' ').replace('.', ' ')
+            words = _re.findall(r'\b[a-z]{3,}\b', all_words)
+            stop_words = {'the', 'and', 'for', 'that', 'with', 'are', 'this', 'from', 'but',
+                          'not', 'have', 'has', 'was', 'were', 'been', 'being', 'very', 'too',
+                          'also', 'they', 'them', 'their', 'there', 'what', 'which', 'when',
+                          'where', 'how', 'why', 'all', 'each', 'every', 'some', 'any', 'few'}
+            filtered = [w for w in words if w not in stop_words]
+            from collections import Counter
+            word_counts = Counter(filtered).most_common(20)
+            if word_counts:
+                wc_df = pd.DataFrame(word_counts, columns=['Word', 'Count']).sort_values('Count', ascending=True)
+                fig_wc = go.Figure(go.Bar(
+                    x=wc_df['Count'], y=wc_df['Word'],
+                    orientation='h', marker_color=COLORS['baseline'],
+                    text=wc_df['Count'], textposition='auto',
+                ))
+                fig_wc.update_layout(
+                    title='Top 20 Challenge Keywords (from free-text)',
+                    height=max(350, len(wc_df) * 25 + 80),
+                    xaxis_title='Frequency',
+                    font=dict(size=12, color='#333'), title_font=dict(size=14, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=50, b=20),
+                )
+                st.plotly_chart(fig_wc, use_container_width=True)
 
         # ---- Free-text challenges table ----
         _section_header('', 'Reported Challenges (Free Text)', '')
@@ -5715,28 +6099,38 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
             st.info("No free-text challenge descriptions available for current filters.")
 
     # ==================================================================
-    # TAB 5 — Map View
+    # TAB 5 — Map View (ENHANCED)
     # ==================================================================
     with tab5:
         st.markdown("""<div class="section-narrative">
         <strong>Spatial Distribution:</strong> Geographic location of seaweed farming members.
         Point size reflects total production; colour represents farming group.
+        Toggle between production and challenge density views.
         </div>""", unsafe_allow_html=True)
 
         map_df = df.dropna(subset=['x', 'y']).copy()
         map_df = map_df[(map_df['x'] != 0) & (map_df['y'] != 0)]
 
         if len(map_df) > 0:
-            # Compute normalized sizes
-            max_kg = max(map_df['Total_KG'].max(), 1)
-            map_df['_size'] = (map_df['Total_KG'] / max_kg * 25).clip(lower=4)
+            # Map mode selector
+            map_mode = st.radio("Map View Mode",
+                                ["Production (size by kg)", "Challenge Density (size by # challenges)"],
+                                horizontal=True, key='sw_map_mode')
 
-            # Build tooltip
-            map_df['_tooltip'] = map_df.apply(
-                lambda r: (f"<b>{r['Member']}</b><br>Group: {r['Group']}<br>"
-                           f"Ropes: {r['Ropes_Total']:.0f}<br>"
-                           f"Production: {r['Total_KG']:.1f} kg<br>"
-                           f"Challenges: {r.get('Challenges_str', 'N/A')}"), axis=1)
+            if available_flags:
+                map_df['n_challenges'] = map_df[available_flags].fillna(False).astype(int).sum(axis=1)
+            else:
+                map_df['n_challenges'] = 0
+
+            # Compute sizes
+            if map_mode.startswith("Production"):
+                max_val = max(map_df['Total_KG'].max(), 1)
+                map_df['_size'] = (map_df['Total_KG'] / max_val * 25).clip(lower=4)
+                size_label = 'Production (kg)'
+            else:
+                max_val = max(map_df['n_challenges'].max(), 1)
+                map_df['_size'] = (map_df['n_challenges'] / max_val * 25).clip(lower=4)
+                size_label = '# Challenges'
 
             fig_map = go.Figure()
             for g in sorted(map_df['Group'].dropna().unique()):
@@ -5750,8 +6144,12 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                         opacity=0.8,
                     ),
                     name=g,
-                    hovertext=sub['_tooltip'],
-                    hoverinfo='text',
+                    hovertemplate=(
+                        '<b>%{customdata[0]}</b><br>Group: %{customdata[1]}<br>'
+                        f'Production: %{{customdata[2]:.1f}} kg<br>'
+                        f'Ropes: %{{customdata[3]:.0f}}<br>'
+                        f'Challenges: %{{customdata[4]}}<extra></extra>'),
+                    customdata=sub[['Member', 'Group', 'Total_KG', 'Ropes_Total', 'n_challenges']].values,
                 ))
 
             center_lat = map_df['y'].mean()
@@ -5765,10 +6163,24 @@ def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
                 height=600,
                 legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
                 margin=dict(l=0, r=0, t=30, b=0),
-                title='Seaweed Farmer Locations',
+                title=f'Seaweed Farmer Locations — {size_label}',
                 title_font=dict(size=16, color='#222'),
             )
             st.plotly_chart(fig_map, use_container_width=True)
+
+            # ---- Group cluster summary ----
+            _section_header('', 'Group Location Summary', '')
+            loc_summary = map_df.groupby('Group').agg(
+                Farmers=('Member', 'count'),
+                Avg_Lat=('y', 'mean'),
+                Avg_Lon=('x', 'mean'),
+                Total_KG=('Total_KG', 'sum'),
+                Avg_Challenges=('n_challenges', 'mean'),
+            ).round(3).reset_index()
+            st.dataframe(loc_summary.style.format({
+                'Avg_Lat': '{:.4f}', 'Avg_Lon': '{:.4f}',
+                'Total_KG': '{:,.0f}', 'Avg_Challenges': '{:.1f}',
+            }), use_container_width=True)
         else:
             st.info("No valid geographic coordinates available for the current filter selection.")
 
@@ -6562,7 +6974,8 @@ def _generate_seaweed_insights(sw_df):
             f"Across {ov['n_groups']} groups and {ov['n_farmers']:,} farmers, "
             f"total production is {ov['total_kg']:,.1f} kg "
             f"({ov['dried_kg']:,.0f} kg dried, {ov['wet_kg']:,.0f} kg wet). "
-            f"Average production per rope is {ov['avg_prod_per_rope']:.2f} kg.",
+            f"Average production per rope is {ov['avg_prod_per_rope']:.2f} kg "
+            f"and average per farmer is {ov['avg_production_per_farmer']:.1f} kg.",
             'neutral'))
 
         # 2. Top-producing group
@@ -6571,7 +6984,8 @@ def _generate_seaweed_insights(sw_df):
             insights.append((
                 "Highest-Producing Group",
                 f"{top_grp['Group']} leads production with {top_grp['Total_KG']:,.0f} kg "
-                f"from {int(top_grp['Members'])} members ({top_grp['Ropes_Total']:,.0f} ropes).",
+                f"from {int(top_grp['Members'])} members ({top_grp['Ropes_Total']:,.0f} ropes). "
+                f"Average achievement: {top_grp['Avg_Achievement_pct']:.1f}%.",
                 'positive'))
 
         # 3. Target achievement
@@ -6612,6 +7026,48 @@ def _generate_seaweed_insights(sw_df):
                 f"({worst_eff['Group']}) to {best_eff['Avg_Prod_per_Rope']:.2f} kg/rope "
                 f"({best_eff['Group']}). Knowledge sharing between groups could reduce this gap.",
                 'neutral'))
+
+        # 7. Rope Gap analysis
+        insights.append((
+            "Rope Gap Analysis",
+            f"Total rope gap across all groups: {ov['gap_total']:,.0f} ropes. "
+            f"Average ropes per farmer: {ov['avg_ropes_per_farmer']:.1f}. "
+            f"{'Significant rope shortfall — scaling up rope acquisition is critical.' if ov['gap_total'] > 500 else 'Moderate gap — targeted rope distribution can close it.'}",
+            'warning' if ov['gap_total'] > 500 else 'neutral'))
+
+        # 8. Dried vs Wet ratio interpretation
+        dw = ov['dried_wet_ratio']
+        dw_msg = ("Production is balanced between dried and wet seaweed."
+                  if 0.8 <= dw <= 1.2
+                  else ("Dried seaweed dominates — good market readiness."
+                        if dw > 1.2
+                        else "Wet seaweed dominates — post-harvest drying capacity may need strengthening."))
+        insights.append((
+            "Dried vs Wet Balance",
+            f"Overall dried-to-wet ratio is {dw:.2f}. {dw_msg} "
+            f"Total dried: {ov['dried_kg']:,.0f} kg, wet: {ov['wet_kg']:,.0f} kg.",
+            'positive' if dw > 1.0 else 'neutral'))
+
+        # 9. Multi-challenge burden
+        mc_pct = ov['multi_challenge_pct']
+        insights.append((
+            "Multi-Challenge Burden",
+            f"{mc_pct:.1f}% of farmers face 2 or more simultaneous challenges. "
+            f"{'This high burden requires integrated, multi-sector support interventions.' if mc_pct > 30 else 'Most farmers face single or no challenges — focused interventions can help.'}",
+            'warning' if mc_pct > 30 else 'neutral'))
+
+        # 10. Pareto observation
+        ranked = sw_df.sort_values('Total_KG', ascending=False)
+        cumul = ranked['Total_KG'].cumsum()
+        total_prod = ranked['Total_KG'].sum()
+        if total_prod > 0:
+            n_80 = int((cumul / total_prod <= 0.8).sum()) + 1
+            pct_80 = round(n_80 / max(len(ranked), 1) * 100, 1)
+            insights.append((
+                "Pareto Concentration",
+                f"The top {n_80} farmers ({pct_80}%) contribute 80% of total production. "
+                f"{'Output is highly concentrated — consider equity-focused scaling.' if pct_80 < 30 else 'Production is reasonably distributed across farmers.'}",
+                'neutral' if pct_80 >= 30 else 'warning'))
 
     except Exception as e:
         insights.append(("Insight Generation Note",
@@ -7713,25 +8169,68 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     if sw_data is not None and sw_insights:
         _section_header('', 'Seaweed Production Insights', '2025')
 
-        # Summary chart — top groups by production
+        # Summary charts — two columns
         try:
             sw_agg = prepare_seaweed_aggregates(sw_data)
             sw_grp = sw_agg['group_summary'].sort_values('Total_KG', ascending=False).head(7)
-            fig_sw_bar = go.Figure(go.Bar(
-                x=sw_grp['Group'], y=sw_grp['Total_KG'],
-                marker_color=COLORS['baseline'],
-                text=sw_grp['Total_KG'].apply(lambda v: f"{v:,.0f} kg"),
-                textposition='auto',
-            ))
-            fig_sw_bar.update_layout(
-                title='Top Seaweed Groups by Production (kg)',
-                height=350, yaxis_title='Total KG', showlegend=False,
-                font=dict(size=13, color='#333'),
-                title_font=dict(size=16, color='#222'),
-                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
-            )
-            st.plotly_chart(fig_sw_bar, use_container_width=True)
+            sw_ov = sw_agg['overall']
+
+            # KPI highlights
+            ik1, ik2, ik3, ik4 = st.columns(4)
+            ik1.markdown(f"""<div class="kpi-card">
+                <h3>Total Production</h3>
+                <div class="value">{sw_ov['total_kg']:,.0f} kg</div>
+            </div>""", unsafe_allow_html=True)
+            ik2.markdown(f"""<div class="kpi-card">
+                <h3>Avg Achievement</h3>
+                <div class="value">{sw_ov['avg_achievement_pct']:.1f}%</div>
+            </div>""", unsafe_allow_html=True)
+            ik3.markdown(f"""<div class="kpi-card">
+                <h3>Rope Gap</h3>
+                <div class="value">{sw_ov['gap_total']:,.0f}</div>
+            </div>""", unsafe_allow_html=True)
+            ik4.markdown(f"""<div class="kpi-card">
+                <h3>Multi-Challenge</h3>
+                <div class="value">{sw_ov['multi_challenge_pct']:.1f}%</div>
+            </div>""", unsafe_allow_html=True)
+
+            ci1, ci2 = st.columns(2)
+            with ci1:
+                fig_sw_bar = go.Figure(go.Bar(
+                    x=sw_grp['Group'], y=sw_grp['Total_KG'],
+                    marker_color=COLORS['baseline'],
+                    text=sw_grp['Total_KG'].apply(lambda v: f"{v:,.0f} kg"),
+                    textposition='auto',
+                ))
+                fig_sw_bar.update_layout(
+                    title='Top Seaweed Groups by Production (kg)',
+                    height=350, yaxis_title='Total KG', showlegend=False,
+                    font=dict(size=13, color='#333'),
+                    title_font=dict(size=16, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+                )
+                st.plotly_chart(fig_sw_bar, use_container_width=True)
+            with ci2:
+                # Challenge overview mini chart
+                sw_ch = sw_agg['challenge_counts']
+                if not sw_ch.empty:
+                    sw_ch_sorted = sw_ch.sort_values('Pct', ascending=True)
+                    fig_sw_ch = go.Figure(go.Bar(
+                        x=sw_ch_sorted['Pct'], y=sw_ch_sorted['Challenge'],
+                        orientation='h', marker_color='#FF9800',
+                        text=sw_ch_sorted['Pct'].apply(lambda v: f"{v:.1f}%"),
+                        textposition='auto',
+                    ))
+                    fig_sw_ch.update_layout(
+                        title='Challenge Prevalence (%)',
+                        height=350, xaxis_title='% of Farmers', showlegend=False,
+                        font=dict(size=13, color='#333'),
+                        title_font=dict(size=15, color='#222'),
+                        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                        margin=dict(l=20, r=20, t=60, b=20),
+                    )
+                    st.plotly_chart(fig_sw_ch, use_container_width=True)
         except Exception:
             pass
 
@@ -8279,9 +8778,12 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
         try:
             sw_agg = prepare_seaweed_aggregates(sw_data)
             sw_ov = sw_agg['overall']
+            sw_grp = sw_agg['group_summary']
+            sw_ch = sw_agg['challenge_counts']
             sw_avg_ach = sw_data['Ropes_Achievement_pct'].mean()
 
-            sk1, sk2, sk3, sk4 = st.columns(4)
+            # Row 1: 5 KPI cards
+            sk1, sk2, sk3, sk4, sk5 = st.columns(5)
             sk1.markdown(f"""<div class="kpi-card">
                 <h3>Total Production</h3>
                 <div class="value">{sw_ov['total_kg']:,.0f} kg</div>
@@ -8295,7 +8797,7 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
             sk3.markdown(f"""<div class="kpi-card">
                 <h3>Avg Production/Rope</h3>
                 <div class="value">{sw_ov['avg_prod_per_rope']:.2f} kg</div>
-                <div class="delta-neutral">Overall</div>
+                <div class="delta-neutral">{sw_ov['avg_production_per_farmer']:.1f} kg/farmer</div>
             </div>""", unsafe_allow_html=True)
             sk4.markdown(f"""<div class="kpi-card">
                 <h3>Target Achievement</h3>
@@ -8303,6 +8805,65 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
                 <div class="delta-{'positive' if sw_avg_ach >= 70 else 'neutral'}">
                     {'On track' if sw_avg_ach >= 70 else 'Below target'}</div>
             </div>""", unsafe_allow_html=True)
+            sk5.markdown(f"""<div class="kpi-card">
+                <h3>Rope Gap</h3>
+                <div class="value">{sw_ov['gap_total']:,.0f}</div>
+                <div class="delta-negative">ropes needed</div>
+            </div>""", unsafe_allow_html=True)
+
+            # Row 2: 3 more KPI cards
+            sr1, sr2, sr3 = st.columns(3)
+            sr1.markdown(f"""<div class="kpi-card">
+                <h3>Dried/Wet Ratio</h3>
+                <div class="value">{sw_ov['dried_wet_ratio']:.2f}</div>
+                <div class="delta-neutral">{sw_ov['dried_kg']:,.0f} vs {sw_ov['wet_kg']:,.0f}</div>
+            </div>""", unsafe_allow_html=True)
+            sr2.markdown(f"""<div class="kpi-card">
+                <h3>Meet Target</h3>
+                <div class="value">{sw_ov['pct_meeting_target']:.0f}%</div>
+                <div class="delta-{'positive' if sw_ov['pct_meeting_target'] >= 50 else 'neutral'}">of farmers</div>
+            </div>""", unsafe_allow_html=True)
+            sr3.markdown(f"""<div class="kpi-card">
+                <h3>Multi-Challenge</h3>
+                <div class="value">{sw_ov['multi_challenge_pct']:.1f}%</div>
+                <div class="delta-{'negative' if sw_ov['multi_challenge_pct'] > 30 else 'neutral'}">face 2+ challenges</div>
+            </div>""", unsafe_allow_html=True)
+
+            # Mini charts: production + top challenge
+            swc1, swc2 = st.columns(2)
+            with swc1:
+                fig_sw_mini = go.Figure(go.Bar(
+                    x=sw_grp.sort_values('Total_KG', ascending=False)['Group'],
+                    y=sw_grp.sort_values('Total_KG', ascending=False)['Total_KG'],
+                    marker_color=COLORS['baseline'],
+                    text=sw_grp.sort_values('Total_KG', ascending=False)['Total_KG'].apply(lambda v: f"{v:,.0f}"),
+                    textposition='auto',
+                ))
+                fig_sw_mini.update_layout(
+                    title='Production by Group (kg)', height=300,
+                    yaxis_title='Total KG', showlegend=False,
+                    font=dict(size=11, color='#333'), title_font=dict(size=14, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=10, r=10, t=40, b=10), xaxis_tickangle=-25,
+                )
+                st.plotly_chart(fig_sw_mini, use_container_width=True)
+            with swc2:
+                if not sw_ch.empty:
+                    fig_sw_ch_mini = go.Figure(go.Bar(
+                        x=sw_ch.sort_values('Pct', ascending=True)['Pct'],
+                        y=sw_ch.sort_values('Pct', ascending=True)['Challenge'],
+                        orientation='h', marker_color='#FF9800',
+                        text=sw_ch.sort_values('Pct', ascending=True)['Pct'].apply(lambda v: f"{v:.0f}%"),
+                        textposition='auto',
+                    ))
+                    fig_sw_ch_mini.update_layout(
+                        title='Challenges (% farmers)', height=300,
+                        xaxis_title='%', showlegend=False,
+                        font=dict(size=11, color='#333'), title_font=dict(size=14, color='#222'),
+                        plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                        margin=dict(l=10, r=10, t=40, b=10),
+                    )
+                    st.plotly_chart(fig_sw_ch_mini, use_container_width=True)
         except Exception:
             st.info("Some Seaweed headline KPIs could not be computed.")
 
