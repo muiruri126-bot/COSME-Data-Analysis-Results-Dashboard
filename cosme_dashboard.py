@@ -52,6 +52,8 @@ FOREST_TRAINING_SHEET = "Results"
 MANGROVE_TRAINING_EXCEL = "Mangrove Training Pre_post results.xlsx"
 MANGROVE_TRAINING_SHEET = "Results"
 
+SEAWEED_CSV = "Seaweed Data Collection_06.12.2025.csv"
+
 # Domain-level question grouping for Forest Training
 FOREST_TRAINING_DOMAINS = {
     'PFM Concepts': [1, 2, 3, 4, 11],
@@ -2203,6 +2205,144 @@ def load_mangrove_training_data(filepath):
         'scores': scores_df,
         'adequate_county': adequate_county_df,
         'adequate_sex': adequate_sex_df,
+    }
+
+
+# ============================================================================
+# SEAWEED DATA LOADER & AGGREGATOR
+# ============================================================================
+
+def load_seaweed_data(filepath):
+    """Load Seaweed Production & Challenges CSV and return cleaned DataFrame.
+
+    The CSV is UTF-16 encoded. Numeric columns stored as strings are converted.
+    Challenge flag columns are coerced to boolean.
+    Derived columns: Ropes_Achievement_pct, Production_per_rope_kg.
+    """
+    # Try utf-16 first, fall back to other encodings
+    for enc in ['utf-16', 'utf-16-le', 'latin1', 'utf-8']:
+        try:
+            df = pd.read_csv(filepath, encoding=enc)
+            break
+        except Exception:
+            continue
+    else:
+        df = pd.read_csv(filepath, encoding='latin1')
+
+    # Drop unnamed trailing columns
+    df = df[[c for c in df.columns if not c.startswith('Unnamed')]]
+
+    # Drop rows where key identifiers are missing
+    df = df.dropna(subset=['Group', 'Member'], how='all').copy()
+
+    # ---- Numeric coercion ----
+    num_cols = ['Ropes_Ocean', 'Ropes_Home', 'Ropes_Total', 'Target_Ropes',
+                'Ropes Required', 'Gap', 'Dried_KG', 'Wet_KG', 'Total_KG',
+                'x', 'y']
+    for c in num_cols:
+        if c in df.columns:
+            df[c] = pd.to_numeric(df[c], errors='coerce').fillna(0)
+
+    # ---- Boolean coercion for flag columns ----
+    flag_cols = ['flag_transport', 'flag_market', 'flag_disease',
+                 'flag_equipment', 'flag_storage', 'flag_labour', 'flag_sand_tide']
+    for c in flag_cols:
+        if c in df.columns:
+            df[c] = df[c].astype(str).str.strip().str.lower().isin(['true', '1', 'yes'])
+
+    # ---- Derived metrics ----
+    df['Ropes_Achievement_pct'] = df.apply(
+        lambda r: round(r['Ropes_Total'] / r['Target_Ropes'] * 100, 1)
+        if r['Target_Ropes'] > 0 else 0.0, axis=1)
+
+    df['Production_per_rope_kg'] = df.apply(
+        lambda r: round(r['Total_KG'] / r['Ropes_Total'], 2)
+        if r['Ropes_Total'] > 0 else 0.0, axis=1)
+
+    return df
+
+
+def prepare_seaweed_aggregates(df):
+    """Compute group-level aggregations and challenge counts.
+
+    Returns dict with:
+        'group_summary'   – DataFrame of per-group metrics
+        'challenge_counts' – DataFrame of challenge flag totals/percentages
+        'overall'          – dict of overall KPIs
+    """
+    flag_cols = ['flag_transport', 'flag_market', 'flag_disease',
+                 'flag_equipment', 'flag_storage', 'flag_labour', 'flag_sand_tide']
+    flag_labels = {
+        'flag_transport': 'Transport', 'flag_market': 'Market Access',
+        'flag_disease': 'Disease', 'flag_equipment': 'Equipment',
+        'flag_storage': 'Storage', 'flag_labour': 'Labour',
+        'flag_sand_tide': 'Sand / Tide',
+    }
+
+    # ---- Group-level summary ----
+    grp = df.groupby('Group', dropna=False).agg(
+        Members=('Member', 'count'),
+        Ropes_Ocean=('Ropes_Ocean', 'sum'),
+        Ropes_Home=('Ropes_Home', 'sum'),
+        Ropes_Total=('Ropes_Total', 'sum'),
+        Target_Ropes=('Target_Ropes', 'sum'),
+        Ropes_Required=('Ropes Required', 'sum'),
+        Gap=('Gap', 'sum'),
+        Dried_KG=('Dried_KG', 'sum'),
+        Wet_KG=('Wet_KG', 'sum'),
+        Total_KG=('Total_KG', 'sum'),
+        Avg_Ropes_per_Member=('Ropes_Total', 'mean'),
+        Avg_Achievement_pct=('Ropes_Achievement_pct', 'mean'),
+        Avg_Prod_per_Rope=('Production_per_rope_kg', 'mean'),
+    ).reset_index()
+    grp['Casual_Worker_pct'] = df.groupby('Group')['Casual_Workers'].apply(
+        lambda s: round((s.str.lower() == 'yes').sum() / max(len(s), 1) * 100, 1)
+    ).values
+
+    # Per-group challenge proportions
+    for fc in flag_cols:
+        if fc in df.columns:
+            lbl = flag_labels.get(fc, fc)
+            grp[f'pct_{lbl}'] = df.groupby('Group')[fc].apply(
+                lambda s: round(s.sum() / max(len(s), 1) * 100, 1)
+            ).values
+
+    # ---- Overall challenge counts ----
+    ch_rows = []
+    valid_df = df.dropna(subset=flag_cols[:1])  # rows with non-null flags
+    for fc in flag_cols:
+        if fc in df.columns:
+            lbl = flag_labels.get(fc, fc)
+            count = int(df[fc].sum())
+            pct = round(count / max(len(valid_df), 1) * 100, 1)
+            ch_rows.append({'Challenge': lbl, 'Count': count, 'Pct': pct})
+    challenge_df = pd.DataFrame(ch_rows)
+
+    # ---- Overall KPIs ----
+    total_kg = float(df['Total_KG'].sum())
+    n_farmers = int(df['Member'].nunique())
+    ropes_ocean = float(df['Ropes_Ocean'].sum())
+    total_ropes = float(df['Ropes_Total'].sum())
+    avg_prod = round(total_kg / max(total_ropes, 1), 2)
+    casual_pct = round(
+        (df['Casual_Workers'].str.lower() == 'yes').sum() / max(len(df), 1) * 100, 1)
+
+    overall = {
+        'total_kg': total_kg,
+        'n_farmers': n_farmers,
+        'n_groups': int(df['Group'].nunique()),
+        'ropes_ocean': ropes_ocean,
+        'ropes_total': total_ropes,
+        'avg_prod_per_rope': avg_prod,
+        'casual_pct': casual_pct,
+        'dried_kg': float(df['Dried_KG'].sum()),
+        'wet_kg': float(df['Wet_KG'].sum()),
+    }
+
+    return {
+        'group_summary': grp,
+        'challenge_counts': challenge_df,
+        'overall': overall,
     }
 
 
@@ -5171,6 +5311,483 @@ def render_mangrove_training_tabs(m_data, timepoint_filter='Combined'):
 
 
 # ============================================================================
+# SEAWEED PRODUCTION & CHALLENGES RENDERER — 5 TABS
+# ============================================================================
+
+def render_seaweed_tabs(sw_df, group_filter=None, casual_filter='All',
+                        challenge_filter=None, min_total_kg=0,
+                        min_achievement_pct=0):
+    """Render the Seaweed Production & Challenges module with 5 tabs.
+
+    Parameters
+    ----------
+    sw_df : pd.DataFrame  – cleaned seaweed data (from load_seaweed_data)
+    group_filter : list or None – selected groups (None = all)
+    casual_filter : str – 'Yes', 'No', or 'All'
+    challenge_filter : list or None – challenge flag names to filter on
+    min_total_kg : float – minimum Total_KG threshold
+    min_achievement_pct : float – minimum Ropes_Achievement_pct threshold
+    """
+    # ---- Apply sidebar filters ----
+    df = sw_df.copy()
+    if group_filter:
+        df = df[df['Group'].isin(group_filter)]
+    if casual_filter != 'All':
+        df = df[df['Casual_Workers'].str.lower() == casual_filter.lower()]
+    if challenge_filter:
+        for cf in challenge_filter:
+            flag_map = {
+                'Transport': 'flag_transport', 'Market Access': 'flag_market',
+                'Disease': 'flag_disease', 'Equipment': 'flag_equipment',
+                'Storage': 'flag_storage', 'Labour': 'flag_labour',
+                'Sand / Tide': 'flag_sand_tide',
+            }
+            fc = flag_map.get(cf)
+            if fc and fc in df.columns:
+                df = df[df[fc] == True]
+    if min_total_kg > 0:
+        df = df[df['Total_KG'] >= min_total_kg]
+    if min_achievement_pct > 0:
+        df = df[df['Ropes_Achievement_pct'] >= min_achievement_pct]
+
+    agg = prepare_seaweed_aggregates(df)
+    grp_df = agg['group_summary']
+    ch_df = agg['challenge_counts']
+    ov = agg['overall']
+
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "Overview & KPIs",
+        "Group Performance",
+        "Production & Yields",
+        "Challenges & Constraints",
+        "Map View",
+    ])
+
+    # ==================================================================
+    # TAB 1 — Overview & KPIs
+    # ==================================================================
+    with tab1:
+        st.markdown("""<div class="section-narrative">
+        <strong>Seaweed Production Overview:</strong> High-level indicators summarising
+        production volume, rope deployment, farmer participation, and workforce composition
+        across all seaweed farming groups.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- KPI cards ----
+        k1, k2, k3, k4, k5 = st.columns(5)
+        k1.markdown(f"""<div class="kpi-card">
+            <h3>Total Production</h3>
+            <div class="value">{ov['total_kg']:,.1f} kg</div>
+            <div class="delta-neutral">{ov['dried_kg']:,.0f} dried + {ov['wet_kg']:,.0f} wet</div>
+        </div>""", unsafe_allow_html=True)
+        k2.markdown(f"""<div class="kpi-card">
+            <h3>Seaweed Farmers</h3>
+            <div class="value">{ov['n_farmers']:,}</div>
+            <div class="delta-neutral">{ov['n_groups']} groups</div>
+        </div>""", unsafe_allow_html=True)
+        k3.markdown(f"""<div class="kpi-card">
+            <h3>Ropes in Ocean</h3>
+            <div class="value">{ov['ropes_ocean']:,.0f}</div>
+            <div class="delta-neutral">of {ov['ropes_total']:,.0f} total</div>
+        </div>""", unsafe_allow_html=True)
+        k4.markdown(f"""<div class="kpi-card">
+            <h3>Avg Prod / Rope</h3>
+            <div class="value">{ov['avg_prod_per_rope']:.2f} kg</div>
+            <div class="delta-neutral">Overall</div>
+        </div>""", unsafe_allow_html=True)
+        k5.markdown(f"""<div class="kpi-card">
+            <h3>Casual Workers</h3>
+            <div class="value">{ov['casual_pct']:.1f}%</div>
+            <div class="delta-neutral">of farmers</div>
+        </div>""", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ---- Top groups by production ----
+        _section_header('', 'Top Groups by Total Production (kg)', '2025')
+        top_prod = grp_df.sort_values('Total_KG', ascending=False)
+        fig_tp = go.Figure(go.Bar(
+            x=top_prod['Group'], y=top_prod['Total_KG'],
+            marker_color=COLORS['baseline'],
+            text=top_prod['Total_KG'].apply(lambda v: f"{v:,.0f}"),
+            textposition='auto',
+        ))
+        fig_tp.update_layout(
+            title='Total Seaweed Production by Group (kg)',
+            height=420, yaxis_title='Total KG',
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+            xaxis_tickangle=-25,
+        )
+        st.plotly_chart(fig_tp, use_container_width=True)
+
+        # ---- Ropes in Ocean vs Target ----
+        _section_header('', 'Ropes in Ocean vs Target by Group', '')
+        fig_rt = go.Figure()
+        fig_rt.add_trace(go.Bar(
+            x=grp_df['Group'], y=grp_df['Ropes_Ocean'],
+            name='Ropes in Ocean', marker_color=COLORS['baseline'],
+            text=grp_df['Ropes_Ocean'].apply(lambda v: f"{v:,.0f}"), textposition='auto',
+        ))
+        fig_rt.add_trace(go.Bar(
+            x=grp_df['Group'], y=grp_df['Target_Ropes'],
+            name='Target Ropes', marker_color=COLORS['midline'],
+            text=grp_df['Target_Ropes'].apply(lambda v: f"{v:,.0f}"), textposition='auto',
+        ))
+        fig_rt.update_layout(
+            barmode='group', height=420, yaxis_title='Ropes',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+        )
+        st.plotly_chart(fig_rt, use_container_width=True)
+
+        # ---- Achievement traffic-light ----
+        _section_header('', 'Target Achievement by Group', 'Avg % of target ropes')
+        ach_df = grp_df[['Group', 'Avg_Achievement_pct']].copy()
+        ach_colors = []
+        for v in ach_df['Avg_Achievement_pct']:
+            if v >= 90:
+                ach_colors.append(COLORS['good'])
+            elif v >= 60:
+                ach_colors.append('#FF9800')
+            else:
+                ach_colors.append(COLORS['danger'])
+        fig_ach = go.Figure(go.Bar(
+            x=ach_df['Group'], y=ach_df['Avg_Achievement_pct'],
+            marker_color=ach_colors,
+            text=ach_df['Avg_Achievement_pct'].apply(lambda v: f"{v:.1f}%"),
+            textposition='auto',
+        ))
+        fig_ach.update_layout(
+            title='Average Ropes Target Achievement by Group',
+            height=380, yaxis_title='% of Target',
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=15, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=50, b=20),
+            xaxis_tickangle=-25,
+        )
+        fig_ach.add_hline(y=100, line_dash='dash', line_color='#2E7D32', line_width=1,
+                          annotation_text='Target 100%', annotation_position='top left')
+        st.plotly_chart(fig_ach, use_container_width=True)
+
+    # ==================================================================
+    # TAB 2 — Group Performance & Target Achievement
+    # ==================================================================
+    with tab2:
+        st.markdown("""<div class="section-narrative">
+        <strong>Group Performance:</strong> Comparing rope deployment, target achievement,
+        and production efficiency across seaweed farming groups. Identify groups exceeding
+        targets and those requiring support.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- Grouped bar: Ropes_Total vs Target vs Required ----
+        _section_header('', 'Ropes Total vs Target vs Required by Group', '')
+        fig_rtr = go.Figure()
+        fig_rtr.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Ropes_Total'],
+                                  name='Ropes Total', marker_color=COLORS['baseline']))
+        fig_rtr.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Target_Ropes'],
+                                  name='Target Ropes', marker_color=COLORS['midline']))
+        fig_rtr.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Ropes_Required'],
+                                  name='Ropes Required', marker_color='#FF9800'))
+        fig_rtr.update_layout(
+            barmode='group', height=420, yaxis_title='Ropes',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+        )
+        st.plotly_chart(fig_rtr, use_container_width=True)
+
+        # ---- Production per rope by group (box plot) ----
+        _section_header('', 'Production per Rope (kg) by Group', '')
+        fig_ppr = go.Figure()
+        for grp_name in sorted(df['Group'].dropna().unique()):
+            sub = df[df['Group'] == grp_name]
+            valid = sub[sub['Production_per_rope_kg'] > 0]['Production_per_rope_kg']
+            if len(valid):
+                fig_ppr.add_trace(go.Box(y=valid, name=grp_name, boxmean=True))
+        fig_ppr.update_layout(
+            title='Distribution of Production per Rope by Group',
+            height=420, yaxis_title='kg per Rope', showlegend=False,
+            font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
+        st.plotly_chart(fig_ppr, use_container_width=True)
+
+        # ---- Target achievement breakdown per group ----
+        _section_header('', 'Target Achievement Breakdown', 'Per group')
+        ach_rows = []
+        for grp_name in sorted(df['Group'].dropna().unique()):
+            sub = df[df['Group'] == grp_name]
+            n = len(sub)
+            if n == 0:
+                continue
+            meeting = len(sub[sub['Ropes_Total'] >= sub['Target_Ropes']])
+            below50 = len(sub[sub['Ropes_Achievement_pct'] < 50])
+            ach_rows.append({
+                'Group': grp_name, 'Members': n,
+                '≥ Target (%)': round(meeting / n * 100, 1),
+                '< 50% Target (%)': round(below50 / n * 100, 1),
+            })
+        if ach_rows:
+            ach_table = pd.DataFrame(ach_rows)
+            st.dataframe(ach_table.style.format({
+                '≥ Target (%)': '{:.1f}%', '< 50% Target (%)': '{:.1f}%',
+            }), use_container_width=True)
+
+            # chart
+            fig_ab = go.Figure()
+            fig_ab.add_trace(go.Bar(
+                x=ach_table['Group'], y=ach_table['≥ Target (%)'],
+                name='≥ Target', marker_color=COLORS['good'],
+            ))
+            fig_ab.add_trace(go.Bar(
+                x=ach_table['Group'], y=ach_table['< 50% Target (%)'],
+                name='< 50% Target', marker_color=COLORS['danger'],
+            ))
+            fig_ab.update_layout(
+                barmode='group', height=380, yaxis_title='% of Members',
+                legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20), xaxis_tickangle=-25,
+            )
+            st.plotly_chart(fig_ab, use_container_width=True)
+
+    # ==================================================================
+    # TAB 3 — Production & Yields
+    # ==================================================================
+    with tab3:
+        st.markdown("""<div class="section-narrative">
+        <strong>Production Analysis:</strong> Exploring the relationship between rope
+        deployment and seaweed yields, comparing dried vs wet production, and production
+        efficiency across groups.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- Scatter: Ropes_Total vs Total_KG ----
+        _section_header('', 'Ropes vs Production', 'Coloured by Group')
+        fig_sc = go.Figure()
+        group_colors_map = {}
+        palette = [COLORS['baseline'], COLORS['midline'], '#FF9800', '#9C27B0',
+                   '#00BCD4', '#795548', '#E91E63', '#607D8B']
+        for i, g in enumerate(sorted(df['Group'].dropna().unique())):
+            group_colors_map[g] = palette[i % len(palette)]
+
+        for g in sorted(df['Group'].dropna().unique()):
+            sub = df[df['Group'] == g]
+            sizes = sub['Casual_Workers'].apply(
+                lambda v: 14 if str(v).lower() == 'yes' else 8)
+            fig_sc.add_trace(go.Scatter(
+                x=sub['Ropes_Total'], y=sub['Total_KG'],
+                mode='markers', name=g,
+                marker=dict(size=sizes, color=group_colors_map[g],
+                            line=dict(width=0.5, color='white')),
+                hovertemplate=(
+                    '<b>%{customdata[0]}</b><br>Group: %{customdata[1]}<br>'
+                    'Ropes: %{x:.0f}<br>Production: %{y:.1f} kg<extra></extra>'),
+                customdata=sub[['Member', 'Group']].values,
+            ))
+        fig_sc.update_layout(
+            title='Ropes (Total) vs Production (kg)',
+            height=480, xaxis_title='Ropes Total', yaxis_title='Total KG',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        st.plotly_chart(fig_sc, use_container_width=True)
+
+        # ---- Production per rope histogram ----
+        _section_header('', 'Production per Rope Distribution', '')
+        sel_grp = st.selectbox('Select Group', ['All Groups'] + sorted(df['Group'].dropna().unique()),
+                               key='sw_ppr_hist_grp')
+        if sel_grp == 'All Groups':
+            hist_data = df[df['Production_per_rope_kg'] > 0]['Production_per_rope_kg']
+        else:
+            hist_data = df[(df['Group'] == sel_grp) & (df['Production_per_rope_kg'] > 0)]['Production_per_rope_kg']
+
+        if len(hist_data):
+            fig_hist = go.Figure(go.Histogram(
+                x=hist_data, nbinsx=25,
+                marker_color=COLORS['baseline'],
+                opacity=0.85,
+            ))
+            fig_hist.update_layout(
+                title=f'Production per Rope – {sel_grp}',
+                height=370, xaxis_title='kg / Rope', yaxis_title='Count',
+                font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20),
+            )
+            st.plotly_chart(fig_hist, use_container_width=True)
+        else:
+            st.info("No data available for the selected filter.")
+
+        # ---- Dried vs Wet by group ----
+        _section_header('', 'Dried vs Wet Seaweed by Group', '')
+        fig_dw = go.Figure()
+        fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Dried_KG'],
+                                 name='Dried KG', marker_color=COLORS['baseline']))
+        fig_dw.add_trace(go.Bar(x=grp_df['Group'], y=grp_df['Wet_KG'],
+                                 name='Wet KG', marker_color='#00BCD4'))
+        fig_dw.update_layout(
+            barmode='stack', height=420,
+            title='Dried vs Wet Seaweed Production by Group',
+            yaxis_title='KG',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+        )
+        st.plotly_chart(fig_dw, use_container_width=True)
+
+    # ==================================================================
+    # TAB 4 — Challenges & Constraints
+    # ==================================================================
+    with tab4:
+        st.markdown("""<div class="section-narrative">
+        <strong>Challenges Profile:</strong> Understanding the key barriers seaweed farmers
+        face — from market access and transport to disease and equipment — to inform targeted
+        programme support.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- Overall challenge bar chart ----
+        _section_header('', 'Challenge Prevalence', '% of farmers reporting each challenge')
+        if not ch_df.empty:
+            ch_sorted = ch_df.sort_values('Pct', ascending=True)
+            fig_ch = go.Figure(go.Bar(
+                x=ch_sorted['Pct'], y=ch_sorted['Challenge'],
+                orientation='h', marker_color=COLORS['baseline'],
+                text=ch_sorted.apply(lambda r: f"{r['Pct']:.1f}% ({r['Count']})", axis=1),
+                textposition='auto',
+            ))
+            fig_ch.update_layout(
+                title='Prevalence of Challenges Among Seaweed Farmers',
+                height=400, xaxis_title='% of Farmers',
+                font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20),
+            )
+            st.plotly_chart(fig_ch, use_container_width=True)
+
+        # ---- Per-group challenge heatmap ----
+        _section_header('', 'Challenges by Group', 'Heatmap')
+        challenge_labels = ['Transport', 'Market Access', 'Disease', 'Equipment',
+                            'Storage', 'Labour', 'Sand / Tide']
+        pct_cols = [f'pct_{lbl}' for lbl in challenge_labels]
+        available_cols = [c for c in pct_cols if c in grp_df.columns]
+        if available_cols:
+            heat_data = grp_df.set_index('Group')[available_cols].copy()
+            heat_data.columns = [c.replace('pct_', '') for c in heat_data.columns]
+            fig_hm = go.Figure(go.Heatmap(
+                z=heat_data.values,
+                x=heat_data.columns.tolist(),
+                y=heat_data.index.tolist(),
+                colorscale='YlOrRd',
+                text=heat_data.values,
+                texttemplate='%{text:.0f}%',
+                hovertemplate='Group: %{y}<br>Challenge: %{x}<br>% Affected: %{z:.1f}%<extra></extra>',
+            ))
+            fig_hm.update_layout(
+                title='Challenge Prevalence by Group (%)',
+                height=max(350, len(heat_data) * 50 + 120),
+                font=dict(size=13, color='#333'), title_font=dict(size=15, color='#222'),
+                margin=dict(l=20, r=20, t=60, b=20),
+            )
+            st.plotly_chart(fig_hm, use_container_width=True)
+
+        # ---- Free-text challenges table ----
+        _section_header('', 'Reported Challenges (Free Text)', '')
+        ch_text_df = df[df['Challenges_str'].notna() & (df['Challenges_str'].str.strip() != '')][
+            ['Member', 'Group', 'Challenges_str']].copy()
+        ch_text_df = ch_text_df.rename(columns={'Challenges_str': 'Challenge Description'})
+        if len(ch_text_df):
+            with st.expander(f"View Free-Text Challenges ({len(ch_text_df)} entries)", expanded=False):
+                st.dataframe(ch_text_df, use_container_width=True, height=400)
+        else:
+            st.info("No free-text challenge descriptions available for current filters.")
+
+    # ==================================================================
+    # TAB 5 — Map View
+    # ==================================================================
+    with tab5:
+        st.markdown("""<div class="section-narrative">
+        <strong>Spatial Distribution:</strong> Geographic location of seaweed farming members.
+        Point size reflects total production; colour represents farming group.
+        </div>""", unsafe_allow_html=True)
+
+        map_df = df.dropna(subset=['x', 'y']).copy()
+        map_df = map_df[(map_df['x'] != 0) & (map_df['y'] != 0)]
+
+        if len(map_df) > 0:
+            # Compute normalized sizes
+            max_kg = max(map_df['Total_KG'].max(), 1)
+            map_df['_size'] = (map_df['Total_KG'] / max_kg * 25).clip(lower=4)
+
+            # Build tooltip
+            map_df['_tooltip'] = map_df.apply(
+                lambda r: (f"<b>{r['Member']}</b><br>Group: {r['Group']}<br>"
+                           f"Ropes: {r['Ropes_Total']:.0f}<br>"
+                           f"Production: {r['Total_KG']:.1f} kg<br>"
+                           f"Challenges: {r.get('Challenges_str', 'N/A')}"), axis=1)
+
+            fig_map = go.Figure()
+            for g in sorted(map_df['Group'].dropna().unique()):
+                sub = map_df[map_df['Group'] == g]
+                fig_map.add_trace(go.Scattermapbox(
+                    lat=sub['y'], lon=sub['x'],
+                    mode='markers',
+                    marker=dict(
+                        size=sub['_size'],
+                        color=group_colors_map.get(g, '#666'),
+                        opacity=0.8,
+                    ),
+                    name=g,
+                    hovertext=sub['_tooltip'],
+                    hoverinfo='text',
+                ))
+
+            center_lat = map_df['y'].mean()
+            center_lon = map_df['x'].mean()
+            fig_map.update_layout(
+                mapbox=dict(
+                    style='open-street-map',
+                    center=dict(lat=center_lat, lon=center_lon),
+                    zoom=10,
+                ),
+                height=600,
+                legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                margin=dict(l=0, r=0, t=30, b=0),
+                title='Seaweed Farmer Locations',
+                title_font=dict(size=16, color='#222'),
+            )
+            st.plotly_chart(fig_map, use_container_width=True)
+        else:
+            st.info("No valid geographic coordinates available for the current filter selection.")
+
+        # Data table
+        with st.expander("View Raw Data Table"):
+            display_cols = ['Member', 'Group', 'Ropes_Ocean', 'Ropes_Home', 'Ropes_Total',
+                            'Target_Ropes', 'Ropes_Achievement_pct', 'Dried_KG', 'Wet_KG',
+                            'Total_KG', 'Production_per_rope_kg', 'Casual_Workers']
+            available = [c for c in display_cols if c in df.columns]
+            st.dataframe(df[available].style.format({
+                'Ropes_Achievement_pct': '{:.1f}%',
+                'Production_per_rope_kg': '{:.2f}',
+                'Total_KG': '{:,.1f}',
+                'Dried_KG': '{:,.1f}',
+                'Wet_KG': '{:,.1f}',
+            }), use_container_width=True)
+
+
+# ============================================================================
 # MAIN
 # ============================================================================
 
@@ -5929,6 +6546,80 @@ def _generate_mangrove_training_insights(mg_data):
     return insights
 
 
+# ---- Seaweed Production insights ----
+def _generate_seaweed_insights(sw_df):
+    """Generate automated insights for the Seaweed Production & Challenges dataset."""
+    insights = []
+    try:
+        agg = prepare_seaweed_aggregates(sw_df)
+        ov = agg['overall']
+        grp_df = agg['group_summary']
+        ch_df = agg['challenge_counts']
+
+        # 1. Production headline
+        insights.append((
+            "Total Seaweed Production",
+            f"Across {ov['n_groups']} groups and {ov['n_farmers']:,} farmers, "
+            f"total production is {ov['total_kg']:,.1f} kg "
+            f"({ov['dried_kg']:,.0f} kg dried, {ov['wet_kg']:,.0f} kg wet). "
+            f"Average production per rope is {ov['avg_prod_per_rope']:.2f} kg.",
+            'neutral'))
+
+        # 2. Top-producing group
+        if len(grp_df):
+            top_grp = grp_df.loc[grp_df['Total_KG'].idxmax()]
+            insights.append((
+                "Highest-Producing Group",
+                f"{top_grp['Group']} leads production with {top_grp['Total_KG']:,.0f} kg "
+                f"from {int(top_grp['Members'])} members ({top_grp['Ropes_Total']:,.0f} ropes).",
+                'positive'))
+
+        # 3. Target achievement
+        avg_ach = sw_df['Ropes_Achievement_pct'].mean()
+        pct_meeting = len(sw_df[sw_df['Ropes_Total'] >= sw_df['Target_Ropes']]) / max(len(sw_df), 1) * 100
+        sentiment = 'positive' if pct_meeting > 60 else ('neutral' if pct_meeting > 30 else 'warning')
+        insights.append((
+            "Target Achievement",
+            f"Average rope target achievement is {avg_ach:.1f}%. "
+            f"{pct_meeting:.1f}% of farmers meet or exceed their target ropes. "
+            f"{'Strong progress toward targets.' if pct_meeting > 60 else 'Many farmers still below rope targets — consider support interventions.'}",
+            sentiment))
+
+        # 4. Top challenge
+        if not ch_df.empty:
+            top_ch = ch_df.loc[ch_df['Pct'].idxmax()]
+            insights.append((
+                "Primary Challenge",
+                f"The most common challenge is '{top_ch['Challenge']}', affecting "
+                f"{top_ch['Pct']:.1f}% of farmers ({int(top_ch['Count'])} members). "
+                f"Programme support should prioritise this barrier.",
+                'warning'))
+
+        # 5. Casual workers
+        insights.append((
+            "Casual Labour Usage",
+            f"{ov['casual_pct']:.1f}% of seaweed farmers report using casual workers. "
+            f"{'This is a significant proportion — workforce development may be needed.' if ov['casual_pct'] > 30 else 'Relatively low reliance on casual labour.'}",
+            'neutral'))
+
+        # 6. Group productivity variation
+        if len(grp_df) >= 2:
+            best_eff = grp_df.loc[grp_df['Avg_Prod_per_Rope'].idxmax()]
+            worst_eff = grp_df.loc[grp_df['Avg_Prod_per_Rope'].idxmin()]
+            insights.append((
+                "Productivity Variation",
+                f"Production efficiency varies from {worst_eff['Avg_Prod_per_Rope']:.2f} kg/rope "
+                f"({worst_eff['Group']}) to {best_eff['Avg_Prod_per_Rope']:.2f} kg/rope "
+                f"({best_eff['Group']}). Knowledge sharing between groups could reduce this gap.",
+                'neutral'))
+
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some Seaweed insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
 def _generate_cross_cutting_insights(f_data, w_data, m_data=None, gjj_data=None):
     """Generate insights that span all datasets."""
     insights = []
@@ -6070,7 +6761,7 @@ def _gen_cross_cutting_inner(f_data, w_data, m_data, insights, gjj_data=None):
     return insights
 
 
-def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
+def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None, sw_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -6317,6 +7008,21 @@ def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_d
         except Exception:
             pass
 
+    # ---- Seaweed Production indicators ----
+    if sw_data is not None:
+        try:
+            sw_agg = prepare_seaweed_aggregates(sw_data)
+            ov = sw_agg['overall']
+            avg_ach = sw_data['Ropes_Achievement_pct'].mean()
+            rows.append({'Indicator': 'Total Production (kg)', 'Dataset': 'Seaweed',
+                         'Baseline': 0.0, 'Midline': round(ov['total_kg'], 1)})
+            rows.append({'Indicator': 'Avg Target Achievement (%)', 'Dataset': 'Seaweed',
+                         'Baseline': 0.0, 'Midline': round(avg_ach, 1)})
+            rows.append({'Indicator': 'Avg Production/Rope (kg)', 'Dataset': 'Seaweed',
+                         'Baseline': 0.0, 'Midline': round(ov['avg_prod_per_rope'], 2)})
+        except Exception:
+            pass
+
     return rows
 
 
@@ -6356,14 +7062,14 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
+def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None, sw_data=None):
     """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
     trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
-    Men's Survey, GJJ KAP Women, GJJ KAP Men, Forest Training, and Mangrove Training datasets.
-    Insights are automatically derived from Baseline-to-Midline/Endline comparisons.
+    Men's Survey, GJJ KAP Women, GJJ KAP Men, Forest Training, Mangrove Training, and
+    Seaweed Production datasets. Insights are automatically derived from data comparisons.
     </div>""", unsafe_allow_html=True)
 
     # Summary counters
@@ -6374,9 +7080,10 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     gjj_men_insights = _generate_gjj_men_insights(gjj_men_data) if gjj_men_data is not None else []
     ft_insights = _generate_forest_training_insights(ft_data) if ft_data is not None else []
     mg_insights = _generate_mangrove_training_insights(mg_data) if mg_data is not None else []
+    sw_insights = _generate_seaweed_insights(sw_data) if sw_data is not None else []
     cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data, gjj_data)
 
-    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + ft_insights + mg_insights + cc_insights
+    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + ft_insights + mg_insights + sw_insights + cc_insights
     positive_count = sum(1 for _, _, t in all_insights if t == "positive")
     warning_count = sum(1 for _, _, t in all_insights if t in ("warning", "negative"))
     neutral_count = sum(1 for _, _, t in all_insights if t == "neutral")
@@ -6401,6 +7108,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         nav_items.append('Forest Training Insights')
     if mg_data is not None:
         nav_items.append('Mangrove Training Insights')
+    if sw_data is not None:
+        nav_items.append('Seaweed Production Insights')
     nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
     _quick_nav_pills(nav_items)
 
@@ -6410,7 +7119,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data, sw_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -6999,6 +7708,39 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         st.markdown("---")
 
     # ====================================================================
+    # SEAWEED PRODUCTION INSIGHTS
+    # ====================================================================
+    if sw_data is not None and sw_insights:
+        _section_header('', 'Seaweed Production Insights', '2025')
+
+        # Summary chart — top groups by production
+        try:
+            sw_agg = prepare_seaweed_aggregates(sw_data)
+            sw_grp = sw_agg['group_summary'].sort_values('Total_KG', ascending=False).head(7)
+            fig_sw_bar = go.Figure(go.Bar(
+                x=sw_grp['Group'], y=sw_grp['Total_KG'],
+                marker_color=COLORS['baseline'],
+                text=sw_grp['Total_KG'].apply(lambda v: f"{v:,.0f} kg"),
+                textposition='auto',
+            ))
+            fig_sw_bar.update_layout(
+                title='Top Seaweed Groups by Production (kg)',
+                height=350, yaxis_title='Total KG', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20), xaxis_tickangle=-25,
+            )
+            st.plotly_chart(fig_sw_bar, use_container_width=True)
+        except Exception:
+            pass
+
+        for title, body, trend in sw_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -7019,7 +7761,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
                                ('GJJ Women', '#9C27B0', 'star'),
                                ('GJJ Men', '#00BCD4', 'hexagram'),
                                ('Forest Training', '#795548', 'cross'),
-                               ('Mangrove Training', '#009688', 'triangle-up')]:
+                               ('Mangrove Training', '#009688', 'triangle-up'),
+                               ('Seaweed', '#2196F3', 'triangle-down')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -7221,13 +7964,14 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None):
+def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None, mg_data=None, sw_data=None):
     """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
     from all programme datasets — Forestry Conservation Groups (community-level), Women's Survey,
     Men's Survey (household-level), GJJ KAP Women, GJJ KAP Men (Baseline/Endline), Forest
-    Training, and Mangrove Training (Pre/Post). This view highlights key programme-wide trends.
+    Training, Mangrove Training (Pre/Post), and Seaweed Production. This view highlights key
+    programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -7525,6 +8269,42 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
             </div>""", unsafe_allow_html=True)
         except Exception:
             st.info("Some Mangrove Training headline KPIs could not be computed.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ---- Seaweed Production Headline KPIs ----
+    if sw_data is not None:
+        st.markdown("---")
+        st.markdown('<h3>\U0001f33f Seaweed Production & Challenges (2025)</h3>', unsafe_allow_html=True)
+        try:
+            sw_agg = prepare_seaweed_aggregates(sw_data)
+            sw_ov = sw_agg['overall']
+            sw_avg_ach = sw_data['Ropes_Achievement_pct'].mean()
+
+            sk1, sk2, sk3, sk4 = st.columns(4)
+            sk1.markdown(f"""<div class="kpi-card">
+                <h3>Total Production</h3>
+                <div class="value">{sw_ov['total_kg']:,.0f} kg</div>
+                <div class="delta-neutral">{sw_ov['n_farmers']:,} farmers</div>
+            </div>""", unsafe_allow_html=True)
+            sk2.markdown(f"""<div class="kpi-card">
+                <h3>Ropes in Ocean</h3>
+                <div class="value">{sw_ov['ropes_ocean']:,.0f}</div>
+                <div class="delta-neutral">of {sw_ov['ropes_total']:,.0f} total</div>
+            </div>""", unsafe_allow_html=True)
+            sk3.markdown(f"""<div class="kpi-card">
+                <h3>Avg Production/Rope</h3>
+                <div class="value">{sw_ov['avg_prod_per_rope']:.2f} kg</div>
+                <div class="delta-neutral">Overall</div>
+            </div>""", unsafe_allow_html=True)
+            sk4.markdown(f"""<div class="kpi-card">
+                <h3>Target Achievement</h3>
+                <div class="value">{sw_avg_ach:.1f}%</div>
+                <div class="delta-{'positive' if sw_avg_ach >= 70 else 'neutral'}">
+                    {'On track' if sw_avg_ach >= 70 else 'Below target'}</div>
+            </div>""", unsafe_allow_html=True)
+        except Exception:
+            st.info("Some Seaweed headline KPIs could not be computed.")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -7937,7 +8717,8 @@ def main():
         ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey",
          "GJJ KAP \u2013 Women (Baseline/Endline)",
          "GJJ KAP \u2013 Men (Baseline/Endline)",
-         "Forest Training (Pre/Post)", "Mangrove Training (Pre/Post)", "Insights"],
+         "Forest Training (Pre/Post)", "Mangrove Training (Pre/Post)",
+         "Seaweed Production & Challenges (2025)", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
     )
@@ -7983,6 +8764,7 @@ def main():
             <span class="sidebar-nav-link">GJJ KAP Men Insights</span>
             <span class="sidebar-nav-link">Forest Training Insights</span>
             <span class="sidebar-nav-link">Mangrove Training Insights</span>
+            <span class="sidebar-nav-link">Seaweed Production Insights</span>
             <span class="sidebar-nav-link">Cross-Cutting Insights</span>
             <span class="sidebar-nav-link">Indicator Change Heatmap</span>
             <span class="sidebar-nav-link">Recommendations</span>
@@ -8040,6 +8822,17 @@ def main():
             <span class="sidebar-nav-link">Sex Disaggregation</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "Seaweed Production & Challenges (2025)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Overview & KPIs</span>
+            <span class="sidebar-nav-link">Group Performance</span>
+            <span class="sidebar-nav-link">Production & Yields</span>
+            <span class="sidebar-nav-link">Challenges & Constraints</span>
+            <span class="sidebar-nav-link">Map View</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -8051,6 +8844,7 @@ def main():
             <span class="sidebar-nav-link">GJJ KAP Men Headlines</span>
             <span class="sidebar-nav-link">Forest Training Headlines</span>
             <span class="sidebar-nav-link">Mangrove Training Headlines</span>
+            <span class="sidebar-nav-link">Seaweed Production Headlines</span>
             <span class="sidebar-nav-link">Comparative Snapshots</span>
             <span class="sidebar-nav-link">Men vs Women Comparisons</span>
         </div>
@@ -8067,6 +8861,7 @@ def main():
     gjj_kap_men_path = os.path.join(script_dir, GJJ_KAP_MEN_EXCEL)
     forest_training_path = os.path.join(script_dir, FOREST_TRAINING_EXCEL)
     mangrove_training_path = os.path.join(script_dir, MANGROVE_TRAINING_EXCEL)
+    seaweed_path = os.path.join(script_dir, SEAWEED_CSV)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -8454,10 +9249,84 @@ def main():
 
         render_mangrove_training_tabs(mg_data, tp_filter)
 
+    elif dataset == "Seaweed Production & Challenges (2025)":
+        st.markdown("""<div class="main-header">
+            <h1>Seaweed Production & Challenges Dashboard</h1>
+            <p>Seaweed Group Performance, Production Metrics & Constraint Analysis | 2025 Data Collection</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">\u203a</span>'
+                    '<span class="active">Seaweed Production & Challenges (2025)</span></div>', unsafe_allow_html=True)
+
+        sw_df = load_seaweed_data(seaweed_path)
+
+        # Sidebar filters
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Seaweed Filters**")
+        all_groups = sorted(sw_df['Group'].dropna().unique().tolist())
+        sw_group_filter = st.sidebar.multiselect("Filter by Group", all_groups, default=all_groups)
+        sw_casual_filter = st.sidebar.radio("Casual Workers", ["All", "Yes", "No"], index=0,
+                                              help="Filter by whether farmer uses casual workers.")
+        # Challenge flag checkboxes
+        challenge_flags = [c for c in sw_df.columns if c.startswith('Challenge_')]
+        challenge_labels = [c.replace('Challenge_', '').replace('_', ' ') for c in challenge_flags]
+        sw_challenge_filter = st.sidebar.multiselect("Challenge Flags (include if any selected)",
+                                                      challenge_labels, default=[])
+        # Numeric sliders
+        max_kg = int(sw_df['Total_KG'].max()) + 1 if sw_df['Total_KG'].max() > 0 else 100
+        sw_min_kg = st.sidebar.slider("Min Total Production (kg)", 0, max_kg, 0)
+        sw_min_ach = st.sidebar.slider("Min Ropes Achievement (%)", 0, 100, 0)
+
+        # Sidebar dataset summary
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown(f"""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Farmers</span>
+                <strong>{len(sw_df):,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Groups</span>
+                <strong>{sw_df['Group'].nunique()}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Production</span>
+                <strong>{sw_df['Total_KG'].sum():,.0f} kg</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">Seaweed CSV (2025)</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CSV Download
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Seaweed Data (CSV)",
+            data=_export_data_csv({'seaweed_production': sw_df}, 'seaweed'),
+            file_name='seaweed_production_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        # Map challenge filter labels back to column names
+        sw_challenge_cols = [challenge_flags[i] for i, lbl in enumerate(challenge_labels)
+                             if lbl in sw_challenge_filter] if sw_challenge_filter else None
+
+        render_seaweed_tabs(sw_df, group_filter=sw_group_filter if sw_group_filter else None,
+                            casual_filter=sw_casual_filter,
+                            challenge_filter=sw_challenge_cols,
+                            min_total_kg=sw_min_kg,
+                            min_achievement_pct=sw_min_ach)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training, Seaweed Production Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -8471,6 +9340,7 @@ def main():
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
         ft_data = load_forest_training_data(forest_training_path)
         mg_data = load_mangrove_training_data(mangrove_training_path)
+        sw_data = load_seaweed_data(seaweed_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -8481,17 +9351,18 @@ def main():
             <div style="margin-bottom:0.3rem;">GJJ KAP Women (analysis)</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Men (analysis)</div>
             <div style="margin-bottom:0.3rem;">Forest Training (analysis)</div>
-            <div>Mangrove Training (analysis)</div>
+            <div style="margin-bottom:0.3rem;">Mangrove Training (analysis)</div>
+            <div>Seaweed Production (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
+        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data, sw_data=sw_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training</p>
+            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training, Seaweed Production</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -8505,6 +9376,7 @@ def main():
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
         ft_data = load_forest_training_data(forest_training_path)
         mg_data = load_mangrove_training_data(mangrove_training_path)
+        sw_data = load_seaweed_data(seaweed_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -8515,17 +9387,18 @@ def main():
             <div style="margin-bottom:0.3rem;">GJJ KAP Women</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Men</div>
             <div style="margin-bottom:0.3rem;">Forest Training</div>
-            <div>Mangrove Training</div>
+            <div style="margin-bottom:0.3rem;">Mangrove Training</div>
+            <div>Seaweed Production</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data)
+        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data, sw_data=sw_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; Men, Forest Training, Mangrove Training, Seaweed Production | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
