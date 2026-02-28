@@ -46,6 +46,20 @@ GJJ_KAP_WOMEN_SHEET = "Results KAP Women Endline"
 GJJ_KAP_MEN_EXCEL = "GJJ KAP Men Basline_endline results.xlsx"
 GJJ_KAP_MEN_SHEET = "Results KAP Men Endline"
 
+FOREST_TRAINING_EXCEL = "Forest Training Pre_post results.xlsx"
+FOREST_TRAINING_SHEET = "Results"
+
+# Domain-level question grouping for Forest Training
+FOREST_TRAINING_DOMAINS = {
+    'PFM Concepts': [1, 2, 3, 4, 11],
+    'Gender & Inclusivity': [6, 7, 8],
+    'Forest Management Practices': [9, 10, 12],
+    'Biodiversity Conservation': [13, 14, 15],
+    'Agroforestry': [16, 17, 18],
+    'Nursery Management': [19],
+    'Climate Change': [20, 21],
+}
+
 # ============================================================================
 # THEMES
 # ============================================================================
@@ -1978,6 +1992,101 @@ def load_gjj_kap_men_data(filepath):
     })
 
     return g
+
+
+# ============================================================================
+# FOREST TRAINING DATA LOADER
+# ============================================================================
+
+def load_forest_training_data(filepath):
+    """Load Forest Training Pre/Post Knowledge Assessment data.
+
+    Returns a dict with keys:
+        'thresholds'   – DataFrame with columns [Timepoint, Threshold, Proportion]
+        'scores'       – DataFrame with columns [Timepoint, Respondents, AverageScore, MaxScore, MinScore]
+        'questions'    – DataFrame with columns [QuestionNumber, QuestionText, Baseline, Endline]
+    """
+    import openpyxl
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb[FOREST_TRAINING_SHEET]
+
+    def _cell(r, c):
+        v = ws.cell(r, c).value
+        if v is None:
+            return 0.0
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return 0.0
+
+    def _cell_str(r, c):
+        v = ws.cell(r, c).value
+        return str(v).strip() if v is not None else ''
+
+    # ---- A. Pass Thresholds (rows 7-9, cols B-F) ----
+    threshold_labels = []
+    for c in range(3, 7):  # cols C..F  (>=50, >=60, >=70, >=80)
+        lbl = _cell_str(7, c)  # row 7 has header labels
+        if not lbl:
+            lbl = f'>={[50,60,70,80][c-3]}'
+        threshold_labels.append(lbl)
+
+    threshold_rows = []
+    for tp_row, tp_name in [(8, 'Baseline'), (9, 'Endline')]:
+        for i, lbl in enumerate(threshold_labels):
+            proportion = _cell(tp_row, 3 + i)
+            threshold_rows.append({'Timepoint': tp_name, 'Threshold': lbl, 'Proportion': proportion})
+    thresholds_df = pd.DataFrame(threshold_rows)
+
+    # ---- B. Standardized Scores (rows 13-15, cols B-F) ----
+    score_rows = []
+    for tp_row, tp_name in [(14, 'Baseline'), (15, 'Endline')]:
+        score_rows.append({
+            'Timepoint': tp_name,
+            'Respondents': int(_cell(tp_row, 3)),
+            'AverageScore': round(_cell(tp_row, 4), 2),
+            'MaxScore': round(_cell(tp_row, 5), 1),
+            'MinScore': round(_cell(tp_row, 6), 1),
+        })
+    scores_df = pd.DataFrame(score_rows)
+
+    # ---- C. Question-by-Question (rows 20-39+, cols B, L, M) ----
+    question_rows = []
+    r = 20
+    while r <= ws.max_row:
+        q_text = _cell_str(r, 2)  # col B
+        if not q_text or not q_text[0].isdigit():
+            r += 1
+            continue
+        # Extract question number from text like "1. Can you define..."
+        parts = q_text.split('.', 1)
+        try:
+            q_num = int(parts[0].strip())
+        except ValueError:
+            r += 1
+            continue
+        q_label = parts[1].strip() if len(parts) > 1 else q_text
+        bl_pct = _cell(r, 12)  # col L
+        el_pct = _cell(r, 13)  # col M
+        question_rows.append({
+            'QuestionNumber': q_num,
+            'QuestionText': q_label,
+            'Baseline': bl_pct,
+            'Endline': el_pct,
+        })
+        r += 1
+
+    questions_df = pd.DataFrame(question_rows)
+    if not questions_df.empty:
+        questions_df = questions_df.sort_values('QuestionNumber').reset_index(drop=True)
+
+    wb.close()
+
+    return {
+        'thresholds': thresholds_df,
+        'scores': scores_df,
+        'questions': questions_df,
+    }
 
 
 # ============================================================================
@@ -4222,6 +4331,364 @@ def render_gjj_men_tab5(g):
 
 
 # ============================================================================
+# FOREST TRAINING RENDERER
+# ============================================================================
+
+def render_forest_training_tabs(t_data, timepoint_filter='Combined'):
+    """Render the Forest Training Pre/Post Knowledge Assessment tabs."""
+
+    thresholds = t_data['thresholds']
+    scores = t_data['scores']
+    questions = t_data['questions']
+
+    tab1, tab2, tab3 = st.tabs([
+        "Overview of Training Outcomes",
+        "Knowledge Improvements by Question",
+        "Domain-Level Grouping",
+    ])
+
+    # ==================================================================
+    # TAB 1 — Overview
+    # ==================================================================
+    with tab1:
+        st.markdown("""<div class="section-narrative">
+        <strong>Training Outcomes Overview:</strong> Key performance indicators from the
+        forest conservation knowledge assessment, comparing Pre-training (Baseline) with
+        Post-training (Endline) results. The ≥70% threshold is the main PMF reporting
+        standard for adequate knowledge.
+        </div>""", unsafe_allow_html=True)
+
+        # ---- KPI metrics ----
+        bl_scores = scores[scores['Timepoint'] == 'Baseline'].iloc[0]
+        el_scores = scores[scores['Timepoint'] == 'Endline'].iloc[0]
+
+        # ≥70 threshold
+        t70 = thresholds[thresholds['Threshold'].str.contains('70')]
+        t70_bl = float(t70[t70['Timepoint'] == 'Baseline']['Proportion'].values[0]) if len(t70[t70['Timepoint'] == 'Baseline']) else 0
+        t70_el = float(t70[t70['Timepoint'] == 'Endline']['Proportion'].values[0]) if len(t70[t70['Timepoint'] == 'Endline']) else 0
+
+        k1, k2, k3, k4 = st.columns(4)
+        k1.markdown(f"""<div class="kpi-card">
+            <h3>≥70% Pass Rate (PMF)</h3>
+            <div class="value">{t70_el*100:.1f}%</div>
+            <div class="delta-{'positive' if t70_el>=t70_bl else 'negative'}">{(t70_el-t70_bl)*100:+.1f}pp vs Baseline</div>
+        </div>""", unsafe_allow_html=True)
+        k2.markdown(f"""<div class="kpi-card">
+            <h3>Average Score</h3>
+            <div class="value">{el_scores['AverageScore']:.1f}%</div>
+            <div class="delta-{'positive' if el_scores['AverageScore']>=bl_scores['AverageScore'] else 'negative'}">{el_scores['AverageScore']-bl_scores['AverageScore']:+.1f}pp vs Baseline</div>
+        </div>""", unsafe_allow_html=True)
+        k3.markdown(f"""<div class="kpi-card">
+            <h3>Baseline Respondents</h3>
+            <div class="value">{int(bl_scores['Respondents']):,}</div>
+            <div class="delta-neutral">Pre-training</div>
+        </div>""", unsafe_allow_html=True)
+        k4.markdown(f"""<div class="kpi-card">
+            <h3>Endline Respondents</h3>
+            <div class="value">{int(el_scores['Respondents']):,}</div>
+            <div class="delta-positive">Post-training</div>
+        </div>""", unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ---- Pass-rate chart by threshold ----
+        _section_header('', 'Pass Rates by Threshold', 'Pre vs Post')
+
+        if timepoint_filter == 'Combined':
+            plot_thresh = thresholds.copy()
+        else:
+            plot_thresh = thresholds[thresholds['Timepoint'] == timepoint_filter].copy()
+
+        plot_thresh['Pct'] = plot_thresh['Proportion'] * 100
+        fig_thresh = go.Figure()
+        for tp in plot_thresh['Timepoint'].unique():
+            sub = plot_thresh[plot_thresh['Timepoint'] == tp]
+            color = COLORS['baseline'] if tp == 'Baseline' else COLORS['midline']
+            fig_thresh.add_trace(go.Bar(
+                x=sub['Threshold'], y=sub['Pct'], name=tp,
+                marker_color=color,
+                text=sub['Pct'].apply(lambda x: f"{x:.1f}%"), textposition='auto',
+            ))
+        fig_thresh.update_layout(
+            title='Percentage of Participants Achieving Score Thresholds',
+            barmode='group', height=420, yaxis_title='% of Participants',
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+            font=dict(size=13, color='#333'),
+            title_font=dict(size=16, color='#222'),
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+        )
+        fig_thresh.add_hline(y=70, line_dash='dash', line_color='#E65100',
+                             annotation_text='PMF Threshold (70%)', annotation_position='top left')
+        st.plotly_chart(fig_thresh, use_container_width=True)
+
+        # ---- Standardized scores comparison ----
+        _section_header('', 'Standardized Scores', 'Avg / Max / Min')
+
+        col_a, col_b = st.columns(2)
+        with col_a:
+            # Average score comparison
+            fig_avg = go.Figure()
+            for _, row in scores.iterrows():
+                color = COLORS['baseline'] if row['Timepoint'] == 'Baseline' else COLORS['midline']
+                fig_avg.add_trace(go.Bar(
+                    x=[row['Timepoint']], y=[row['AverageScore']],
+                    name=row['Timepoint'], marker_color=color,
+                    text=[f"{row['AverageScore']:.1f}%"], textposition='auto',
+                    width=0.5,
+                ))
+            fig_avg.update_layout(
+                title='Average Test Score', height=350,
+                yaxis_title='Score (%)', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20),
+                yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_avg, use_container_width=True)
+
+        with col_b:
+            # Min score comparison
+            fig_minmax = go.Figure()
+            for _, row in scores.iterrows():
+                color = COLORS['baseline'] if row['Timepoint'] == 'Baseline' else COLORS['midline']
+                fig_minmax.add_trace(go.Bar(
+                    x=[f"{row['Timepoint']} Min", f"{row['Timepoint']} Max"],
+                    y=[row['MinScore'], row['MaxScore']],
+                    name=row['Timepoint'], marker_color=color,
+                    text=[f"{row['MinScore']:.1f}", f"{row['MaxScore']:.1f}"],
+                    textposition='auto', width=0.5,
+                ))
+            fig_minmax.update_layout(
+                title='Score Range (Min & Max)', height=350,
+                yaxis_title='Score (%)', showlegend=False,
+                font=dict(size=13, color='#333'),
+                title_font=dict(size=15, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=50, b=20),
+                yaxis=dict(range=[0, 105]),
+            )
+            st.plotly_chart(fig_minmax, use_container_width=True)
+
+        # Data table
+        with st.expander("View Scores Data Table"):
+            st.dataframe(scores.style.format({
+                'AverageScore': '{:.2f}%', 'MaxScore': '{:.1f}', 'MinScore': '{:.1f}',
+                'Respondents': '{:,.0f}'
+            }), use_container_width=True)
+
+    # ==================================================================
+    # TAB 2 — Knowledge Improvements by Question
+    # ==================================================================
+    with tab2:
+        st.markdown("""<div class="section-narrative">
+        <strong>Question-Level Analysis:</strong> Performance on each of the 21 knowledge
+        test questions, comparing Pre-training (Baseline) with Post-training (Endline)
+        results. Use the keyword filter to focus on specific topics.
+        </div>""", unsafe_allow_html=True)
+
+        if questions.empty:
+            st.warning("No question-level data available.")
+        else:
+            # Keyword filter
+            keyword = st.text_input(
+                "Filter questions by keyword",
+                placeholder="e.g. gender, agroforestry, PFM, climate",
+                help="Type a keyword to filter questions (case-insensitive)"
+            )
+            filtered_q = questions.copy()
+            if keyword:
+                filtered_q = filtered_q[filtered_q['QuestionText'].str.contains(
+                    keyword, case=False, na=False)]
+                if filtered_q.empty:
+                    st.info(f"No questions matching '{keyword}'.")
+                    filtered_q = questions.copy()
+
+            filtered_q['Baseline_Pct'] = filtered_q['Baseline'] * 100
+            filtered_q['Endline_Pct'] = filtered_q['Endline'] * 100
+            filtered_q['Change'] = filtered_q['Endline_Pct'] - filtered_q['Baseline_Pct']
+            filtered_q['Label'] = 'Q' + filtered_q['QuestionNumber'].astype(str)
+            filtered_q = filtered_q.sort_values('QuestionNumber')
+
+            _section_header('', 'Baseline vs Endline by Question', 'All 21 Questions')
+
+            # Horizontal grouped bar chart
+            plot_q = filtered_q.sort_values('QuestionNumber', ascending=True)
+            fig_q = go.Figure()
+            fig_q.add_trace(go.Bar(
+                y=plot_q['Label'], x=plot_q['Baseline_Pct'],
+                name='Baseline', orientation='h',
+                marker_color=COLORS['baseline'],
+                text=plot_q['Baseline_Pct'].apply(lambda x: f"{x:.1f}%"),
+                textposition='auto',
+            ))
+            fig_q.add_trace(go.Bar(
+                y=plot_q['Label'], x=plot_q['Endline_Pct'],
+                name='Endline', orientation='h',
+                marker_color=COLORS['midline'],
+                text=plot_q['Endline_Pct'].apply(lambda x: f"{x:.1f}%"),
+                textposition='auto',
+            ))
+            fig_q.update_layout(
+                title='% Correct by Question (Baseline vs Endline)',
+                barmode='group', height=max(500, len(plot_q) * 35),
+                xaxis_title='% Correct', yaxis=dict(autorange='reversed'),
+                legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                font=dict(size=12, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=60, r=20, t=60, b=20),
+            )
+            st.plotly_chart(fig_q, use_container_width=True)
+
+            # Change bar chart
+            _section_header('', 'Knowledge Improvement (Endline − Baseline)', 'Top Gains')
+            change_q = filtered_q.sort_values('Change', ascending=True)
+            colors_change = [COLORS['good'] if c > 5 else (COLORS['danger'] if c < 0 else '#FF9800')
+                             for c in change_q['Change']]
+            fig_change = go.Figure(go.Bar(
+                y=change_q['Label'],
+                x=change_q['Change'],
+                orientation='h',
+                marker_color=colors_change,
+                text=change_q['Change'].apply(lambda x: f"{x:+.1f}pp"),
+                textposition='auto',
+            ))
+            fig_change.update_layout(
+                title='Change in % Correct (Endline − Baseline)',
+                height=max(500, len(change_q) * 30),
+                xaxis_title='Percentage Point Change',
+                yaxis=dict(autorange='reversed'),
+                font=dict(size=12, color='#333'),
+                title_font=dict(size=16, color='#222'),
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=60, r=20, t=60, b=20),
+            )
+            fig_change.add_vline(x=0, line_color='#666', line_width=1)
+            st.plotly_chart(fig_change, use_container_width=True)
+
+            # Hover-expandable question text table
+            with st.expander("View Full Question Text & Scores"):
+                display_df = filtered_q[['QuestionNumber', 'QuestionText',
+                                          'Baseline_Pct', 'Endline_Pct', 'Change']].copy()
+                display_df.columns = ['Q#', 'Question', 'Baseline %', 'Endline %', 'Change (pp)']
+                st.dataframe(display_df.style.format({
+                    'Baseline %': '{:.1f}', 'Endline %': '{:.1f}', 'Change (pp)': '{:+.1f}'
+                }).applymap(
+                    lambda v: 'color: #2E7D32; font-weight:700' if isinstance(v, (int, float)) and v > 5
+                    else ('color: #C62828; font-weight:700' if isinstance(v, (int, float)) and v < 0
+                          else ''),
+                    subset=['Change (pp)']
+                ), use_container_width=True, height=600)
+
+    # ==================================================================
+    # TAB 3 — Domain-Level Grouping
+    # ==================================================================
+    with tab3:
+        st.markdown("""<div class="section-narrative">
+        <strong>Thematic Domain Analysis:</strong> Questions grouped into thematic areas
+        with average Baseline and Endline performance per domain. This helps identify
+        which knowledge areas improved most and which need further attention.
+        </div>""", unsafe_allow_html=True)
+
+        if questions.empty:
+            st.warning("No question-level data available for domain grouping.")
+        else:
+            domain_rows = []
+            for domain, q_nums in FOREST_TRAINING_DOMAINS.items():
+                dq = questions[questions['QuestionNumber'].isin(q_nums)]
+                if dq.empty:
+                    continue
+                bl_avg = dq['Baseline'].mean() * 100
+                el_avg = dq['Endline'].mean() * 100
+                domain_rows.append({
+                    'Domain': domain,
+                    'Questions': len(dq),
+                    'Baseline_Avg': round(bl_avg, 1),
+                    'Endline_Avg': round(el_avg, 1),
+                    'Change': round(el_avg - bl_avg, 1),
+                })
+            domain_df = pd.DataFrame(domain_rows)
+
+            if domain_df.empty:
+                st.info("Domain grouping could not be computed.")
+            else:
+                # KPI: best and weakest domains
+                best = domain_df.loc[domain_df['Change'].idxmax()]
+                weakest = domain_df.loc[domain_df['Change'].idxmin()]
+                dc1, dc2 = st.columns(2)
+                dc1.markdown(f"""<div class="kpi-card">
+                    <h3>Highest Improvement</h3>
+                    <div class="value">{best['Domain']}</div>
+                    <div class="delta-positive">{best['Change']:+.1f}pp gain</div>
+                </div>""", unsafe_allow_html=True)
+                dc2.markdown(f"""<div class="kpi-card">
+                    <h3>Needs Most Attention</h3>
+                    <div class="value">{weakest['Domain']}</div>
+                    <div class="delta-{'negative' if weakest['Change']<5 else 'positive'}">{weakest['Change']:+.1f}pp</div>
+                </div>""", unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                # Grouped bar by domain
+                _section_header('', 'Average Score by Domain', 'Pre vs Post')
+                dom_sorted = domain_df.sort_values('Change', ascending=True)
+                fig_dom = go.Figure()
+                fig_dom.add_trace(go.Bar(
+                    y=dom_sorted['Domain'], x=dom_sorted['Baseline_Avg'],
+                    name='Baseline', orientation='h',
+                    marker_color=COLORS['baseline'],
+                    text=dom_sorted['Baseline_Avg'].apply(lambda x: f"{x:.1f}%"),
+                    textposition='auto',
+                ))
+                fig_dom.add_trace(go.Bar(
+                    y=dom_sorted['Domain'], x=dom_sorted['Endline_Avg'],
+                    name='Endline', orientation='h',
+                    marker_color=COLORS['midline'],
+                    text=dom_sorted['Endline_Avg'].apply(lambda x: f"{x:.1f}%"),
+                    textposition='auto',
+                ))
+                fig_dom.update_layout(
+                    title='Average % Correct by Thematic Domain',
+                    barmode='group', height=420,
+                    xaxis_title='% Correct',
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                    font=dict(size=13, color='#333'),
+                    title_font=dict(size=16, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=60, b=20),
+                )
+                st.plotly_chart(fig_dom, use_container_width=True)
+
+                # Improvement bar
+                colors_dom = [COLORS['good'] if c > 10 else (COLORS['danger'] if c < 0 else '#FF9800')
+                              for c in dom_sorted['Change']]
+                fig_dom_chg = go.Figure(go.Bar(
+                    y=dom_sorted['Domain'], x=dom_sorted['Change'],
+                    orientation='h', marker_color=colors_dom,
+                    text=dom_sorted['Change'].apply(lambda x: f"{x:+.1f}pp"),
+                    textposition='auto',
+                ))
+                fig_dom_chg.update_layout(
+                    title='Knowledge Improvement by Domain (pp)',
+                    height=380, xaxis_title='Percentage Point Change',
+                    font=dict(size=13, color='#333'),
+                    title_font=dict(size=16, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=60, b=20),
+                )
+                fig_dom_chg.add_vline(x=0, line_color='#666', line_width=1)
+                st.plotly_chart(fig_dom_chg, use_container_width=True)
+
+                # Data table
+                with st.expander("View Domain Data Table"):
+                    st.dataframe(domain_df.style.format({
+                        'Baseline_Avg': '{:.1f}%', 'Endline_Avg': '{:.1f}%', 'Change': '{:+.1f}pp'
+                    }), use_container_width=True)
+
+
+# ============================================================================
 # MAIN
 # ============================================================================
 
@@ -4806,6 +5273,94 @@ def _gen_gjj_men_insights_inner(g, insights):
     return insights
 
 
+def _generate_forest_training_insights(t_data):
+    """Generate automated insights from Forest Training Pre/Post data."""
+    insights = []
+    if t_data is None:
+        return insights
+    try:
+        thresholds = t_data['thresholds']
+        scores = t_data['scores']
+        questions = t_data['questions']
+
+        # 1. PMF threshold (≥70%) improvement
+        t70 = thresholds[thresholds['Threshold'].str.contains('70')]
+        if len(t70) >= 2:
+            bl_70 = float(t70[t70['Timepoint'] == 'Baseline']['Proportion'].values[0]) * 100
+            el_70 = float(t70[t70['Timepoint'] == 'Endline']['Proportion'].values[0]) * 100
+            change_70 = el_70 - bl_70
+            insights.append(("Forest Training: PMF Pass Rate (≥70%)",
+                             f"Participants scoring ≥70%: {bl_70:.1f}% (Pre) → {el_70:.1f}% (Post), "
+                             f"a {change_70:+.1f} pp improvement. "
+                             + ("Training dramatically increased knowledge adequacy."
+                                if change_70 > 20 else "Steady improvement in knowledge adequacy."),
+                             "positive" if change_70 > 0 else "warning"))
+
+        # 2. Average score change
+        if len(scores) >= 2:
+            bl_avg = float(scores[scores['Timepoint'] == 'Baseline']['AverageScore'].values[0])
+            el_avg = float(scores[scores['Timepoint'] == 'Endline']['AverageScore'].values[0])
+            avg_change = el_avg - bl_avg
+            insights.append(("Forest Training: Average Score",
+                             f"Average score rose from {bl_avg:.1f}% to {el_avg:.1f}% "
+                             f"({avg_change:+.1f} pp). "
+                             + ("Strong knowledge gains across participants."
+                                if avg_change > 15 else "Moderate improvement in overall scores."),
+                             "positive" if avg_change > 0 else "warning"))
+
+        # 3. Minimum score improvement
+        if len(scores) >= 2:
+            bl_min = float(scores[scores['Timepoint'] == 'Baseline']['MinScore'].values[0])
+            el_min = float(scores[scores['Timepoint'] == 'Endline']['MinScore'].values[0])
+            insights.append(("Forest Training: Weakest Performers",
+                             f"Minimum score improved from {bl_min:.1f}% to {el_min:.1f}%. "
+                             + ("Even the weakest performers gained significantly."
+                                if el_min > bl_min + 10 else "Some participants still need additional support."),
+                             "positive" if el_min > bl_min else "warning"))
+
+        # 4. Best-improving question
+        if not questions.empty:
+            questions_c = questions.copy()
+            questions_c['Change'] = (questions_c['Endline'] - questions_c['Baseline']) * 100
+            best_q = questions_c.loc[questions_c['Change'].idxmax()]
+            insights.append(("Forest Training: Biggest Knowledge Gain",
+                             f"Q{int(best_q['QuestionNumber'])} ({best_q['QuestionText'][:80]}…) "
+                             f"improved by {best_q['Change']:+.1f} pp. "
+                             "This topic resonated most with participants.",
+                             "positive"))
+
+            # 5. Weakest endline question
+            weakest_q = questions_c.loc[questions_c['Endline'].idxmin()]
+            insights.append(("Forest Training: Area Needing Attention",
+                             f"Q{int(weakest_q['QuestionNumber'])} ({weakest_q['QuestionText'][:80]}…) "
+                             f"had the lowest post-training score ({weakest_q['Endline']*100:.1f}%). "
+                             "Consider reinforcing this topic in future training.",
+                             "warning" if weakest_q['Endline'] < 0.85 else "positive"))
+
+        # 6. Domain-level best improvement
+        if not questions.empty:
+            best_domain, best_gain = None, -999
+            for domain, q_nums in FOREST_TRAINING_DOMAINS.items():
+                dq = questions[questions['QuestionNumber'].isin(q_nums)]
+                if dq.empty:
+                    continue
+                gain = (dq['Endline'].mean() - dq['Baseline'].mean()) * 100
+                if gain > best_gain:
+                    best_gain = gain
+                    best_domain = domain
+            if best_domain:
+                insights.append(("Forest Training: Strongest Domain",
+                                 f"The '{best_domain}' domain showed the highest avg improvement "
+                                 f"of {best_gain:+.1f} pp across its questions.",
+                                 "positive"))
+
+    except Exception as e:
+        insights.append(("Insight Generation Note",
+                         f"Some Forest Training insights could not be generated: {e}",
+                         "neutral"))
+    return insights
+
+
 def _generate_cross_cutting_insights(f_data, w_data, m_data=None, gjj_data=None):
     """Generate insights that span all datasets."""
     insights = []
@@ -4947,7 +5502,7 @@ def _gen_cross_cutting_inner(f_data, w_data, m_data, insights, gjj_data=None):
     return insights
 
 
-def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
+def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
     """Build a master table of key indicators with BL/ML values for trend charts."""
     rows = []
 
@@ -5130,6 +5685,47 @@ def _build_indicator_table(f_data, w_data, m_data=None, gjj_data=None, gjj_men_d
         except Exception:
             pass
 
+    # Forest Training indicators (if available)
+    if ft_data is not None:
+        try:
+            thresholds = ft_data['thresholds']
+            scores = ft_data['scores']
+            questions = ft_data['questions']
+
+            # Pass rate >=70%
+            t70 = thresholds[thresholds['Threshold'].str.contains('70')]
+            if len(t70) >= 2:
+                rows.append({'Indicator': 'Pass Rate \u226570%', 'Dataset': 'Forest Training',
+                             'Baseline': round(float(t70[t70['Timepoint']=='Baseline']['Proportion'].values[0]) * 100, 1),
+                             'Midline': round(float(t70[t70['Timepoint']=='Endline']['Proportion'].values[0]) * 100, 1)})
+
+            # Pass rate >=80%
+            t80 = thresholds[thresholds['Threshold'].str.contains('80')]
+            if len(t80) >= 2:
+                rows.append({'Indicator': 'Pass Rate \u226580%', 'Dataset': 'Forest Training',
+                             'Baseline': round(float(t80[t80['Timepoint']=='Baseline']['Proportion'].values[0]) * 100, 1),
+                             'Midline': round(float(t80[t80['Timepoint']=='Endline']['Proportion'].values[0]) * 100, 1)})
+
+            # Average score
+            if len(scores) >= 2:
+                rows.append({'Indicator': 'Average Test Score', 'Dataset': 'Forest Training',
+                             'Baseline': round(float(scores[scores['Timepoint']=='Baseline']['AverageScore'].values[0]), 1),
+                             'Midline': round(float(scores[scores['Timepoint']=='Endline']['AverageScore'].values[0]), 1)})
+
+            # Min score
+            if len(scores) >= 2:
+                rows.append({'Indicator': 'Minimum Score', 'Dataset': 'Forest Training',
+                             'Baseline': round(float(scores[scores['Timepoint']=='Baseline']['MinScore'].values[0]), 1),
+                             'Midline': round(float(scores[scores['Timepoint']=='Endline']['MinScore'].values[0]), 1)})
+
+            # Avg % correct across all questions
+            if not questions.empty:
+                rows.append({'Indicator': 'Avg % Correct (All Qs)', 'Dataset': 'Forest Training',
+                             'Baseline': round(float(questions['Baseline'].mean()) * 100, 1),
+                             'Midline': round(float(questions['Endline'].mean()) * 100, 1)})
+        except Exception:
+            pass
+
     return rows
 
 
@@ -5169,14 +5765,14 @@ def _make_slope_chart(data_tuples, title):
     return fig
 
 
-def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
+def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
     """Render the Insights tab with automated analysis across all datasets."""
 
     st.markdown("""<div class="section-narrative">
     <strong>Automated Insights:</strong> This tab generates data-driven insights by analyzing
     trends, changes, and patterns across the Forestry Conservation Groups, Women's Survey,
-    Men's Survey, GJJ KAP Women, and GJJ KAP Men datasets. Insights are automatically derived from
-    Baseline-to-Midline/Endline comparisons.
+    Men's Survey, GJJ KAP Women, GJJ KAP Men, and Forest Training datasets. Insights are
+    automatically derived from Baseline-to-Midline/Endline comparisons.
     </div>""", unsafe_allow_html=True)
 
     # Summary counters
@@ -5185,9 +5781,10 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     m_insights = _generate_men_insights(m_data) if m_data is not None else []
     gjj_insights = _generate_gjj_insights(gjj_data) if gjj_data is not None else []
     gjj_men_insights = _generate_gjj_men_insights(gjj_men_data) if gjj_men_data is not None else []
+    ft_insights = _generate_forest_training_insights(ft_data) if ft_data is not None else []
     cc_insights = _generate_cross_cutting_insights(f_data, w_data, m_data, gjj_data)
 
-    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + cc_insights
+    all_insights = f_insights + w_insights + m_insights + gjj_insights + gjj_men_insights + ft_insights + cc_insights
     positive_count = sum(1 for _, _, t in all_insights if t == "positive")
     warning_count = sum(1 for _, _, t in all_insights if t in ("warning", "negative"))
     neutral_count = sum(1 for _, _, t in all_insights if t == "neutral")
@@ -5208,6 +5805,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         nav_items.append('GJJ KAP Women Insights')
     if gjj_men_data is not None:
         nav_items.append('GJJ KAP Men Insights')
+    if ft_data is not None:
+        nav_items.append('Forest Training Insights')
     nav_items.extend(['Cross-Cutting Insights', 'Change Heatmap', 'Recommendations'])
     _quick_nav_pills(nav_items)
 
@@ -5217,7 +5816,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     _section_header('', 'Trend Overview', 'At a Glance')
 
     # --- Build master indicator table used across multiple charts ---
-    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data)
+    indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
     ind_df = pd.DataFrame(indicator_rows)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
@@ -5713,6 +6312,63 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         st.markdown("---")
 
     # ====================================================================
+    # FOREST TRAINING INSIGHTS
+    # ====================================================================
+    if ft_data is not None and ft_insights:
+        _section_header('', 'Forest Training Insights', 'Pre/Post')
+
+        ft_col1, ft_col2 = st.columns([1, 1])
+        with ft_col1:
+            # Pass-rate slope chart
+            ft_slope_data = []
+            try:
+                thresholds = ft_data['thresholds']
+                for thr_lbl in thresholds['Threshold'].unique():
+                    thr_sub = thresholds[thresholds['Threshold'] == thr_lbl]
+                    bl_v = float(thr_sub[thr_sub['Timepoint'] == 'Baseline']['Proportion'].values[0]) * 100
+                    el_v = float(thr_sub[thr_sub['Timepoint'] == 'Endline']['Proportion'].values[0]) * 100
+                    ft_slope_data.append((f'Pass {thr_lbl}', bl_v, el_v))
+            except Exception:
+                pass
+            if ft_slope_data:
+                fig_ft_slope = _make_slope_chart(ft_slope_data, "Forest Training: Pass Rate Trends")
+                st.plotly_chart(fig_ft_slope, use_container_width=True)
+
+        with ft_col2:
+            # Average + min score comparison
+            try:
+                scores = ft_data['scores']
+                cats = ['Average Score', 'Min Score']
+                bl_vals = [float(scores[scores['Timepoint']=='Baseline']['AverageScore'].values[0]),
+                           float(scores[scores['Timepoint']=='Baseline']['MinScore'].values[0])]
+                el_vals = [float(scores[scores['Timepoint']=='Endline']['AverageScore'].values[0]),
+                           float(scores[scores['Timepoint']=='Endline']['MinScore'].values[0])]
+                fig_ft_bar = go.Figure()
+                fig_ft_bar.add_trace(go.Bar(x=cats, y=bl_vals, name='Pre-Training',
+                                            marker_color=COLORS['baseline'],
+                                            text=[f"{v:.1f}%" for v in bl_vals], textposition='auto'))
+                fig_ft_bar.add_trace(go.Bar(x=cats, y=el_vals, name='Post-Training',
+                                            marker_color=COLORS['midline'],
+                                            text=[f"{v:.1f}%" for v in el_vals], textposition='auto'))
+                fig_ft_bar.update_layout(
+                    title='Forest Training: Scores (Pre vs Post)',
+                    barmode='group', height=380, yaxis_title='Score (%)',
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
+                    font=dict(size=13, color='#333'),
+                    title_font=dict(size=16, color='#222'),
+                    plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(l=20, r=20, t=60, b=20),
+                )
+                st.plotly_chart(fig_ft_bar, use_container_width=True)
+            except Exception:
+                pass
+
+        for title, body, trend in ft_insights:
+            _insight_card(title, body, trend)
+
+        st.markdown("---")
+
+    # ====================================================================
     # CROSS-CUTTING INSIGHTS + Performance Quadrant
     # ====================================================================
     _section_header('', 'Cross-Cutting Insights', 'Integrated')
@@ -5731,7 +6387,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
                                ('Women', COLORS['midline'], 'diamond'),
                                ('Men', '#FF9800', 'square'),
                                ('GJJ Women', '#9C27B0', 'star'),
-                               ('GJJ Men', '#00BCD4', 'hexagram')]:
+                               ('GJJ Men', '#00BCD4', 'hexagram'),
+                               ('Forest Training', '#795548', 'cross')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
@@ -5933,13 +6590,13 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
 # CROSS-DATASET SYNTHESIS VIEW
 # ============================================================================
 
-def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None):
+def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data=None, ft_data=None):
     """Combined overview of all datasets — key headline indicators."""
     st.markdown("""<div class="section-narrative">
     <strong> Cross-Dataset Synthesis:</strong> A combined overview comparing headline indicators
     from all programme datasets — Forestry Conservation Groups (community-level), Women's Survey,
-    Men's Survey (household-level), GJJ KAP Women, and GJJ KAP Men (Baseline/Endline). This view
-    highlights key programme-wide trends.
+    Men's Survey (household-level), GJJ KAP Women, GJJ KAP Men (Baseline/Endline), and Forest
+    Training (Pre/Post). This view highlights key programme-wide trends.
     </div>""", unsafe_allow_html=True)
 
     # ---- Forestry Headline KPIs ----
@@ -6149,6 +6806,53 @@ def render_synthesis_view(f_data, w_data, m_data=None, gjj_data=None, gjj_men_da
             </div>""", unsafe_allow_html=True)
         except Exception:
             st.info("Some GJJ KAP Men headline KPIs could not be computed.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ---- Forest Training Headline KPIs ----
+    if ft_data is not None:
+        st.markdown('<h3> Forest Training — Headlines (Pre/Post)</h3>', unsafe_allow_html=True)
+        try:
+            t_scores = ft_data['scores']
+            t_thresh = ft_data['thresholds']
+            t_questions = ft_data['questions']
+
+            t_bl_avg = float(t_scores[t_scores['Timepoint']=='Baseline']['AverageScore'].values[0])
+            t_el_avg = float(t_scores[t_scores['Timepoint']=='Endline']['AverageScore'].values[0])
+
+            t70 = t_thresh[t_thresh['Threshold'].str.contains('70')]
+            t70_bl = float(t70[t70['Timepoint']=='Baseline']['Proportion'].values[0])
+            t70_el = float(t70[t70['Timepoint']=='Endline']['Proportion'].values[0])
+
+            t_bl_n = int(t_scores[t_scores['Timepoint']=='Baseline']['Respondents'].values[0])
+            t_el_n = int(t_scores[t_scores['Timepoint']=='Endline']['Respondents'].values[0])
+
+            t_avg_correct_bl = float(t_questions['Baseline'].mean()) * 100 if not t_questions.empty else 0
+            t_avg_correct_el = float(t_questions['Endline'].mean()) * 100 if not t_questions.empty else 0
+
+            ftc1, ftc2, ftc3, ftc4 = st.columns(4)
+            ftc1.markdown(f"""<div class="kpi-card">
+                <h3>\u226570% Pass (PMF)</h3>
+                <div class="value">{t70_el*100:.1f}%</div>
+                <div class="delta-{'positive' if t70_el>=t70_bl else 'negative'}">{(t70_el-t70_bl)*100:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            ftc2.markdown(f"""<div class="kpi-card">
+                <h3>Average Score</h3>
+                <div class="value">{t_el_avg:.1f}%</div>
+                <div class="delta-{'positive' if t_el_avg>=t_bl_avg else 'negative'}">{t_el_avg-t_bl_avg:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            ftc3.markdown(f"""<div class="kpi-card">
+                <h3>Avg % Correct</h3>
+                <div class="value">{t_avg_correct_el:.1f}%</div>
+                <div class="delta-{'positive' if t_avg_correct_el>=t_avg_correct_bl else 'negative'}">{t_avg_correct_el-t_avg_correct_bl:+.1f}pp</div>
+            </div>""", unsafe_allow_html=True)
+            ftc4.markdown(f"""<div class="kpi-card">
+                <h3>Post-Training N</h3>
+                <div class="value">{t_el_n:,}</div>
+                <div class="delta-positive">{t_el_n - t_bl_n:+,} vs Pre</div>
+            </div>""", unsafe_allow_html=True)
+        except Exception:
+            st.info("Some Forest Training headline KPIs could not be computed.")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -6560,7 +7264,8 @@ def main():
         "Dataset View",
         ["Combined Overview", "Forestry Groups", "Women Survey", "Men Survey",
          "GJJ KAP \u2013 Women (Baseline/Endline)",
-         "GJJ KAP \u2013 Men (Baseline/Endline)", "Insights"],
+         "GJJ KAP \u2013 Men (Baseline/Endline)",
+         "Forest Training (Pre/Post)", "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
     )
@@ -6603,6 +7308,8 @@ def main():
             <span class="sidebar-nav-link">Women Survey Insights</span>
             <span class="sidebar-nav-link">Men Survey Insights</span>
             <span class="sidebar-nav-link">GJJ KAP Women Insights</span>
+            <span class="sidebar-nav-link">GJJ KAP Men Insights</span>
+            <span class="sidebar-nav-link">Forest Training Insights</span>
             <span class="sidebar-nav-link">Cross-Cutting Insights</span>
             <span class="sidebar-nav-link">Indicator Change Heatmap</span>
             <span class="sidebar-nav-link">Recommendations</span>
@@ -6642,6 +7349,15 @@ def main():
             <span class="sidebar-nav-link">Leadership & Business Support</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "Forest Training (Pre/Post)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Overview of Training Outcomes</span>
+            <span class="sidebar-nav-link">Knowledge by Question</span>
+            <span class="sidebar-nav-link">Domain-Level Grouping</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -6650,6 +7366,8 @@ def main():
             <span class="sidebar-nav-link">Women Survey Headlines</span>
             <span class="sidebar-nav-link">Men Survey Headlines</span>
             <span class="sidebar-nav-link">GJJ KAP Women Headlines</span>
+            <span class="sidebar-nav-link">GJJ KAP Men Headlines</span>
+            <span class="sidebar-nav-link">Forest Training Headlines</span>
             <span class="sidebar-nav-link">Comparative Snapshots</span>
             <span class="sidebar-nav-link">Men vs Women Comparisons</span>
         </div>
@@ -6664,6 +7382,7 @@ def main():
     men_path = os.path.join(script_dir, MEN_EXCEL)
     gjj_kap_path = os.path.join(script_dir, GJJ_KAP_WOMEN_EXCEL)
     gjj_kap_men_path = os.path.join(script_dir, GJJ_KAP_MEN_EXCEL)
+    forest_training_path = os.path.join(script_dir, FOREST_TRAINING_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -6936,10 +7655,69 @@ def main():
         with gmt4: render_gjj_men_tab4(gjj_m)
         with gmt5: render_gjj_men_tab5(gjj_m)
 
+    elif dataset == "Forest Training (Pre/Post)":
+        st.markdown("""<div class="main-header">
+            <h1>Forest Training Knowledge Assessment</h1>
+            <p>Pre-Training vs Post-Training | Forest Conservation Knowledge Test Results</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">\u203a</span>'
+                    '<span class="active">Forest Training (Pre/Post)</span></div>', unsafe_allow_html=True)
+
+        t_data = load_forest_training_data(forest_training_path)
+
+        # Sidebar dataset summary
+        bl_n = int(t_data['scores'][t_data['scores']['Timepoint']=='Baseline']['Respondents'].values[0])
+        el_n = int(t_data['scores'][t_data['scores']['Timepoint']=='Endline']['Respondents'].values[0])
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown(f"""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Pre-Training N</span>
+                <strong>{bl_n:,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Post-Training N</span>
+                <strong>{el_n:,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Questions</span>
+                <strong>{len(t_data['questions'])}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">Forest Training Excel</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Timepoint filter
+        st.sidebar.markdown("---")
+        tp_filter = st.sidebar.radio(
+            "Timepoint View",
+            ["Combined", "Baseline", "Endline"],
+            index=0,
+            help="Show Baseline only, Endline only, or both side by side."
+        )
+
+        # CSV Download
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Export Data**")
+        st.sidebar.download_button(
+            label="Download Forest Training Data (CSV)",
+            data=_export_data_csv(t_data, 'forest_training'),
+            file_name='forest_training_data_export.csv',
+            mime='text/csv',
+            use_container_width=True,
+        )
+
+        render_forest_training_tabs(t_data, tp_filter)
+
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
             <h1>COSME Dashboard Insights</h1>
-            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men Analysis</p>
+            <p>Automated Data-Driven Insights | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training Analysis</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -6951,6 +7729,7 @@ def main():
         m_data = load_men_data(men_path)
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
+        ft_data = load_forest_training_data(forest_training_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -6959,17 +7738,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Women Survey (analysis)</div>
             <div style="margin-bottom:0.3rem;">Men Survey (analysis)</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Women (analysis)</div>
-            <div>GJJ KAP Men (analysis)</div>
+            <div style="margin-bottom:0.3rem;">GJJ KAP Men (analysis)</div>
+            <div>Forest Training (analysis)</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data)
+        render_insights_tab(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
 
     else:
         # Combined Overview
         st.markdown("""<div class="main-header">
             <h1>COSME Baseline–Midline Dashboard</h1>
-            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men Survey</p>
+            <p>Integrated M&amp;E Analysis | Forestry, Women's, Men's, GJJ KAP Women &amp; Men, Forest Training</p>
         </div>""", unsafe_allow_html=True)
 
         # Breadcrumb
@@ -6981,6 +7761,7 @@ def main():
         m_data = load_men_data(men_path)
         gjj_data = load_gjj_kap_women_data(gjj_kap_path)
         gjj_men_data = load_gjj_kap_men_data(gjj_kap_men_path)
+        ft_data = load_forest_training_data(forest_training_path)
 
         st.sidebar.markdown("**Datasets Loaded**")
         st.sidebar.markdown("""
@@ -6989,17 +7770,18 @@ def main():
             <div style="margin-bottom:0.3rem;">Women Survey</div>
             <div style="margin-bottom:0.3rem;">Men Survey</div>
             <div style="margin-bottom:0.3rem;">GJJ KAP Women</div>
-            <div>GJJ KAP Men</div>
+            <div style="margin-bottom:0.3rem;">GJJ KAP Men</div>
+            <div>Forest Training</div>
         </div>
         """, unsafe_allow_html=True)
 
-        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data)
+        render_synthesis_view(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data)
 
     # ---- FOOTER ----
     st.markdown(f"""
     <div class="dashboard-footer">
         <strong>COSME Baseline–Midline Dashboard</strong><br>
-        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; GJJ KAP Men | Built with Streamlit + Plotly<br>
+        Community Forest Conservation Groups, Women's Survey, Men's Survey, GJJ KAP Women &amp; Men, Forest Training | Built with Streamlit + Plotly<br>
         <span style="font-size:0.75rem;">Last updated: February 2026</span>
     </div>""", unsafe_allow_html=True)
 
@@ -7020,6 +7802,7 @@ if __name__ == "__main__":
 # 3. Men Survey Basline_midline results.xlsx (sheet: Results Men)
 # 4. GJJ KAP Women Basline_endline results.xlsx (sheet: Results KAP Women Endline)
 # 5. GJJ KAP Men Basline_endline results.xlsx (sheet: Results KAP Men Endline)
+# 6. Forest Training Pre_post results.xlsx (sheet: Results)
 #
 # To adjust data mappings:
 # - load_forestry_data(): row/col positions for forestry indicators
