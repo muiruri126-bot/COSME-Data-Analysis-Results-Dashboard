@@ -57,6 +57,9 @@ SEAWEED_CSV = "Seaweed Data Collection_06.12.2025.csv"
 
 PROJECT_OUTPUTS_EXCEL = "Project Outputs.xlsx"
 
+VSLA_EXCEL = "VSLA Functionality_(Q1-Q4) 2025.xlsx"
+VSLA_SHEET = "Results (Across Qs)"
+
 # Domain-level question grouping for Forest Training
 FOREST_TRAINING_DOMAINS = {
     'PFM Concepts': [1, 2, 3, 4, 11],
@@ -6983,6 +6986,827 @@ def render_project_outputs_tabs(po_data):
     _render_module_tab(tabs[4], 'gjj', 'GJJ')
 
 
+# ============================================================================
+# VSLA FUNCTIONALITY — Data Loader & Renderer
+# ============================================================================
+
+@st.cache_data(show_spinner=False)
+def load_vsla_data(filepath):
+    """Load VSLA Functionality Excel and return a structured dict.
+
+    Parses "Results (Across Qs)" sheet with dynamic row-scanning.
+    Sections: A (Membership/Meetings), B (Savings), C (Social Fund), D (Loans).
+    """
+    import openpyxl
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb[VSLA_SHEET]
+
+    def _c(r, c):
+        v = ws.cell(r, c).value
+        if v is None:
+            return 0
+        if isinstance(v, str):
+            v = v.strip()
+            if v in ('', '-', 'N/A', 'ND'):
+                return 0
+            try:
+                return float(v)
+            except ValueError:
+                return v
+        return v
+
+    def _num(v):
+        if v is None or (isinstance(v, str) and v.strip() in ('', '-', 'N/A', 'ND')):
+            return 0
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return 0
+
+    def _county_quarter(start):
+        """Read a simple county x quarter table (3 rows × Q2/Q3/Q4)."""
+        rows = []
+        for r in range(start, start + 3):
+            rows.append({
+                'county': str(_c(r, 2)),
+                'Q2': _num(_c(r, 3)),
+                'Q3': _num(_c(r, 4)),
+                'Q4': _num(_c(r, 5)),
+            })
+        return rows
+
+    def _sumavg(header_row):
+        """Read county table with Sum/Avg for Q2/Q3/Q4."""
+        rows = []
+        for r in range(header_row + 1, header_row + 4):
+            rows.append({
+                'county': str(_c(r, 2)),
+                'Q2': {'sum': _num(_c(r, 3)), 'average': _num(_c(r, 4))},
+                'Q3': {'sum': _num(_c(r, 5)), 'average': _num(_c(r, 6))},
+                'Q4': {'sum': _num(_c(r, 7)), 'average': _num(_c(r, 8))},
+            })
+        return rows
+
+    def _bands(start, end):
+        """Read a band distribution table."""
+        bands = []
+        for r in range(start, end + 1):
+            label = _c(r, 2)
+            if isinstance(label, (int, float)):
+                label = str(label)
+            bands.append({
+                'band': str(label),
+                'Q2': _num(_c(r, 3)),
+                'Q3': _num(_c(r, 4)),
+                'Q4': _num(_c(r, 5)),
+            })
+        return bands
+
+    data = {
+        'meta': {
+            'title': str(_c(2, 2) or 'VSLA Functionality'),
+            'date': str(_c(3, 2) or ''),
+            'outcome': str(_c(4, 2) or ''),
+        },
+        'vslasAssessed': _county_quarter(8),
+        'membership': {
+            'female': _sumavg(15),
+            'male': _sumavg(21),
+            'all': _sumavg(27),
+        },
+        'membersLeft': _county_quarter(34),
+        'percentLeftBands': _bands(40, 46),
+        'meetings': {
+            'frequency': _county_quarter(50),
+            'attendance': _county_quarter(56),
+        },
+        'savings': {
+            'membersSaving': _sumavg(65),
+            'proportionBands': _bands(72, 76),
+            'value': _sumavg(80),
+            'valueBands': _bands(87, 91),
+        },
+        'socialFund': {
+            'percentageWithFund': _county_quarter(97),
+            'value': _sumavg(103),
+            'valueBands': _bands(110, 115),
+        },
+        'loans': {
+            'disbursed': {
+                'count': _sumavg(122),
+                'countBands': _bands(129, 135),
+                'value': _sumavg(139),
+                'valueBands': _bands(146, 151),
+            },
+            'repaid': {
+                'count': _sumavg(155),
+                'countBands': _bands(162, 166),
+                'value': _sumavg(170),
+                'valueBands': _bands(177, 182),
+            },
+            'interest': {
+                'value': _sumavg(186),
+                'valueBands': _bands(193, 197),
+            },
+            'behaviour': [],
+            'failingToPay': _county_quarter(208),
+            'useDistribution': _bands(214, 218),
+        },
+    }
+
+    # Loan behaviour (special layout)
+    for r in range(202, 205):
+        data['loans']['behaviour'].append({
+            'county': str(_c(r, 2)),
+            'avgProportionRepaid': {'Q2': _num(_c(r, 3)), 'Q3': _num(_c(r, 4)), 'Q4': _num(_c(r, 5))},
+            'avgValueRepaid': {'Q2': _num(_c(r, 6)), 'Q3': _num(_c(r, 7)), 'Q4': _num(_c(r, 8))},
+            'avgROI': {'Q2': _num(_c(r, 9)), 'Q3': _num(_c(r, 10)), 'Q4': _num(_c(r, 11))},
+        })
+
+    wb.close()
+    return data
+
+
+# ── VSLA helper functions ──
+
+def _vsla_get_cq(rows, county, quarter):
+    """Get a value from a county-quarter list for a given county & quarter."""
+    target = county if county != 'All Counties' else 'All'
+    for r in rows:
+        if r['county'] == target:
+            return r.get(quarter, 0)
+    return 0
+
+
+def _vsla_get_sa(rows, county, quarter, field='sum'):
+    """Get sum or average from a SumAvg list."""
+    target = county if county != 'All Counties' else 'All'
+    for r in rows:
+        if r['county'] == target:
+            q = r.get(quarter, {})
+            if isinstance(q, dict):
+                return q.get(field, 0)
+    return 0
+
+
+def _vsla_trend(rows, county, field='sum'):
+    """Get Q2→Q4 trend for sum/avg rows."""
+    target = county if county != 'All Counties' else 'All'
+    for r in rows:
+        if r['county'] == target:
+            vals = []
+            for q in ['Q2', 'Q3', 'Q4']:
+                v = r.get(q, {})
+                if isinstance(v, dict):
+                    vals.append(v.get(field, 0))
+                else:
+                    vals.append(v)
+            return vals
+    return [0, 0, 0]
+
+
+def _vsla_cq_trend(rows, county):
+    """Get Q2→Q4 trend for simple county-quarter rows."""
+    target = county if county != 'All Counties' else 'All'
+    for r in rows:
+        if r['county'] == target:
+            return [r.get('Q2', 0), r.get('Q3', 0), r.get('Q4', 0)]
+    return [0, 0, 0]
+
+
+def _vsla_fmt_kes(v):
+    """Format KES amount."""
+    if abs(v) >= 1_000_000:
+        return f"KES {v / 1_000_000:,.1f}M"
+    if abs(v) >= 1_000:
+        return f"KES {v / 1_000:,.0f}K"
+    return f"KES {v:,.0f}"
+
+
+def _vsla_fmt_pct(v):
+    """Format percentage (0–1 → %)."""
+    return f"{v * 100:.0f}%" if abs(v) <= 1 else f"{v:.1f}%"
+
+
+def _vsla_band_data(bands, quarter):
+    """Get band values for a specific quarter."""
+    return [(b['band'], b.get(quarter, 0)) for b in bands]
+
+
+def _vsla_plotly_layout(title, height=400, **kwargs):
+    """Standard VSLA chart layout."""
+    layout = dict(
+        title=dict(text=title, font=dict(size=16, color='#222')),
+        height=height,
+        font=dict(size=13, color='#333'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=20, r=20, t=60, b=20),
+        legend=dict(orientation='h', yanchor='bottom', y=1.02,
+                    x=0.5, xanchor='center'),
+    )
+    layout.update(kwargs)
+    return layout
+
+
+def render_vsla_tabs(vsla_data, county_filter='All Counties', quarter_filter='Q4'):
+    """Render the VSLA Functionality module with 5 tabs."""
+
+    d = vsla_data
+    c = county_filter
+    q = quarter_filter
+    Q_LABELS = {'Q2': 'Q2 2025', 'Q3': 'Q3 2025', 'Q4': 'Q4 2025'}
+    ql = Q_LABELS.get(q, q)
+    QUARTERS = ['Q2', 'Q3', 'Q4']
+
+    tabs = st.tabs([
+        "📊 Overview",
+        "👥 Membership & Meetings",
+        "💰 Savings & Social Fund",
+        "🏦 Loans & Repayment",
+        "📈 County Comparison",
+    ])
+
+    # ================================================================
+    # TAB 1 — Overview
+    # ================================================================
+    with tabs[0]:
+        _section_header('', 'VSLA Functionality Overview', ql)
+
+        # KPI cards
+        vslas = _vsla_get_cq(d['vslasAssessed'], c, q)
+        total_members = _vsla_get_sa(d['membership']['all'], c, q, 'sum')
+        pct_women = 0
+        if total_members > 0:
+            female_m = _vsla_get_sa(d['membership']['female'], c, q, 'sum')
+            pct_women = female_m / total_members * 100
+        meeting_freq = _vsla_get_cq(d['meetings']['frequency'], c, q)
+        attendance = _vsla_get_cq(d['meetings']['attendance'], c, q)
+        total_savings = _vsla_get_sa(d['savings']['value'], c, q, 'sum')
+        loans_disbursed = _vsla_get_sa(d['loans']['disbursed']['value'], c, q, 'sum')
+        loans_repaid = _vsla_get_sa(d['loans']['repaid']['value'], c, q, 'sum')
+
+        # ROI
+        roi_val = 0
+        for r in d['loans']['behaviour']:
+            target = c if c != 'All Counties' else 'All'
+            if r['county'] == target:
+                roi_val = r['avgROI'].get(q, 0)
+                break
+
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1.markdown(f"""<div class="kpi-card"><h3>VSLAs Assessed</h3>
+            <div class="value">{int(vslas):,}</div></div>""", unsafe_allow_html=True)
+        c2.markdown(f"""<div class="kpi-card"><h3>Total Members</h3>
+            <div class="value">{int(total_members):,}</div>
+            <p style="color:#666">{pct_women:.0f}% women</p></div>""", unsafe_allow_html=True)
+        m_color = COLORS['good'] if attendance >= 0.7 else COLORS['danger']
+        c3.markdown(f"""<div class="kpi-card"><h3>Meeting Frequency</h3>
+            <div class="value">{meeting_freq:.1f}</div>
+            <p style="color:{m_color}">Attendance: {_vsla_fmt_pct(attendance)}</p></div>""", unsafe_allow_html=True)
+        c4.markdown(f"""<div class="kpi-card"><h3>Total Savings</h3>
+            <div class="value">{_vsla_fmt_kes(total_savings)}</div></div>""", unsafe_allow_html=True)
+        c5.markdown(f"""<div class="kpi-card"><h3>Loans Disbursed</h3>
+            <div class="value">{_vsla_fmt_kes(loans_disbursed)}</div>
+            <p style="color:#666">Repaid: {_vsla_fmt_kes(loans_repaid)}</p></div>""", unsafe_allow_html=True)
+        roi_color = COLORS['good'] if roi_val >= 0.05 else '#FF9800'
+        c6.markdown(f"""<div class="kpi-card"><h3>Average ROI</h3>
+            <div class="value">{_vsla_fmt_pct(roi_val)}</div></div>""", unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        # Trend Charts — 2×2 grid
+        _section_header('', 'Quarterly Trends', 'Q2 → Q4')
+        ch1, ch2 = st.columns(2)
+
+        with ch1:
+            # Members trend
+            m_trend = _vsla_trend(d['membership']['all'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=m_trend, mode='lines+markers+text',
+                name='Total Members', line=dict(color=COLORS['midline'], width=3),
+                text=[f"{int(v):,}" for v in m_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Total Members — Q2→Q4', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with ch2:
+            # Savings trend
+            s_trend = _vsla_trend(d['savings']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=s_trend, mode='lines+markers+text',
+                name='Total Savings', line=dict(color='#1B5E20', width=3),
+                text=[_vsla_fmt_kes(v) for v in s_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Total Savings (KES) — Q2→Q4', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        ch3, ch4 = st.columns(2)
+
+        with ch3:
+            # Loans disbursed vs repaid
+            ld_trend = _vsla_trend(d['loans']['disbursed']['value'], c, 'sum')
+            lr_trend = _vsla_trend(d['loans']['repaid']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=QUARTERS, y=ld_trend, name='Disbursed',
+                marker_color=COLORS['midline'],
+                text=[_vsla_fmt_kes(v) for v in ld_trend], textposition='auto',
+            ))
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=lr_trend, name='Repaid', mode='lines+markers',
+                line=dict(color=COLORS['good'], width=3),
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Loans Disbursed vs Repaid (KES)', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with ch4:
+            # Social fund coverage trend
+            sf_trend = _vsla_cq_trend(d['socialFund']['percentageWithFund'], c)
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=[v * 100 for v in sf_trend], mode='lines+markers+text',
+                name='% with Fund', line=dict(color='#FF9800', width=3),
+                text=[f"{v * 100:.0f}%" for v in sf_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('% VSLAs with Social Fund — Q2→Q4', height=350,
+                                                     yaxis_title='%'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("---")
+
+        # Distribution charts
+        _section_header('', 'Key Distributions', ql)
+        dc1, dc2 = st.columns(2)
+
+        with dc1:
+            loan_use = _vsla_band_data(d['loans']['useDistribution'], q)
+            lu_labels = [b[0] for b in loan_use]
+            lu_vals = [b[1] * 100 for b in loan_use]
+            fig = go.Figure(data=[go.Pie(
+                labels=lu_labels, values=lu_vals,
+                hole=0.45, textinfo='label+percent',
+                marker=dict(colors=['#1B5E20', '#0D47A1', '#FF9800', '#E53935', '#7B1FA2']),
+            )])
+            fig.update_layout(**_vsla_plotly_layout(f'Loan Use Distribution — {ql}', height=380))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with dc2:
+            sav_bands = _vsla_band_data(d['savings']['proportionBands'], q)
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=[b[0] for b in sav_bands], y=[b[1] * 100 for b in sav_bands],
+                name='% of VSLAs', marker_color=COLORS['midline'],
+                text=[f"{b[1] * 100:.0f}%" for b in sav_bands], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout(f'Members Saving Proportion Bands — {ql}', height=380,
+                                                     yaxis_title='% of VSLAs'))
+            st.plotly_chart(fig, use_container_width=True)
+
+    # ================================================================
+    # TAB 2 — Membership & Meetings
+    # ================================================================
+    with tabs[1]:
+        _section_header('', 'Membership Overview', ql)
+
+        female_sum = _vsla_get_sa(d['membership']['female'], c, q, 'sum')
+        male_sum = _vsla_get_sa(d['membership']['male'], c, q, 'sum')
+        all_sum = _vsla_get_sa(d['membership']['all'], c, q, 'sum')
+        left_count = _vsla_get_cq(d['membersLeft'], c, q)
+
+        k1, k2, k3, k4 = st.columns(4)
+        k1.markdown(f"""<div class="kpi-card"><h3>Total Members</h3>
+            <div class="value">{int(all_sum):,}</div></div>""", unsafe_allow_html=True)
+        k2.markdown(f"""<div class="kpi-card"><h3>Female Members</h3>
+            <div class="value">{int(female_sum):,}</div>
+            <p style="color:#666">{female_sum/max(all_sum,1)*100:.0f}% of total</p></div>""", unsafe_allow_html=True)
+        k3.markdown(f"""<div class="kpi-card"><h3>Male Members</h3>
+            <div class="value">{int(male_sum):,}</div></div>""", unsafe_allow_html=True)
+        k4.markdown(f"""<div class="kpi-card"><h3>Members Left</h3>
+            <div class="value">{int(left_count):,}</div></div>""", unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        # Membership trend by gender
+        _section_header('', 'Membership Trends by Gender', 'Q2 → Q4')
+        f_trend = _vsla_trend(d['membership']['female'], c, 'sum')
+        m_trend_g = _vsla_trend(d['membership']['male'], c, 'sum')
+        a_trend = _vsla_trend(d['membership']['all'], c, 'sum')
+
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=QUARTERS, y=f_trend, name='Female',
+                             marker_color='#E91E63', text=[f"{int(v):,}" for v in f_trend], textposition='auto'))
+        fig.add_trace(go.Bar(x=QUARTERS, y=m_trend_g, name='Male',
+                             marker_color='#1565C0', text=[f"{int(v):,}" for v in m_trend_g], textposition='auto'))
+        fig.update_layout(**_vsla_plotly_layout('Members by Gender — Q2→Q4', height=400, barmode='group',
+                                                 yaxis_title='Members'))
+        st.plotly_chart(fig, use_container_width=True)
+
+        # Gender split donut
+        gc1, gc2 = st.columns(2)
+        with gc1:
+            fig = go.Figure(data=[go.Pie(
+                labels=['Female', 'Male'], values=[female_sum, male_sum],
+                hole=0.5, marker=dict(colors=['#E91E63', '#1565C0']),
+                textinfo='label+percent+value',
+            )])
+            fig.update_layout(**_vsla_plotly_layout(f'Gender Split — {ql}', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with gc2:
+            # % left bands
+            left_bands = _vsla_band_data(d['percentLeftBands'], q)
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=[b[0] for b in left_bands], y=[b[1] * 100 for b in left_bands],
+                name='% of VSLAs', marker_color='#E53935',
+                text=[f"{b[1] * 100:.0f}%" for b in left_bands], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout(f'Members Left Proportion Bands — {ql}', height=350,
+                                                     yaxis_title='% of VSLAs'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("---")
+
+        # Meetings
+        _section_header('', 'Meetings & Attendance', ql)
+        mk1, mk2 = st.columns(2)
+        freq_trend = _vsla_cq_trend(d['meetings']['frequency'], c)
+        att_trend = _vsla_cq_trend(d['meetings']['attendance'], c)
+
+        with mk1:
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=QUARTERS, y=freq_trend, name='Avg Meetings/Month',
+                marker_color=COLORS['midline'],
+                text=[f"{v:.1f}" for v in freq_trend], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Average Meeting Frequency — Q2→Q4', height=350,
+                                                     yaxis_title='Meetings per Month'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with mk2:
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=[v * 100 for v in att_trend], mode='lines+markers+text',
+                name='Attendance %', line=dict(color=COLORS['good'], width=3),
+                text=[f"{v * 100:.0f}%" for v in att_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Meeting Attendance Rate — Q2→Q4', height=350,
+                                                     yaxis_title='% Attendance'))
+            st.plotly_chart(fig, use_container_width=True)
+
+    # ================================================================
+    # TAB 3 — Savings & Social Fund
+    # ================================================================
+    with tabs[2]:
+        _section_header('', 'Savings Analysis', ql)
+
+        sav_sum = _vsla_get_sa(d['savings']['value'], c, q, 'sum')
+        sav_avg = _vsla_get_sa(d['savings']['value'], c, q, 'average')
+        members_saving = _vsla_get_sa(d['savings']['membersSaving'], c, q, 'sum')
+        high_savers = 0
+        for b in d['savings']['proportionBands']:
+            if '81-100' in b['band']:
+                high_savers = b.get(q, 0)
+                break
+
+        sk1, sk2, sk3, sk4 = st.columns(4)
+        sk1.markdown(f"""<div class="kpi-card"><h3>Members Saving</h3>
+            <div class="value">{int(members_saving):,}</div></div>""", unsafe_allow_html=True)
+        sk2.markdown(f"""<div class="kpi-card"><h3>Total Savings</h3>
+            <div class="value">{_vsla_fmt_kes(sav_sum)}</div></div>""", unsafe_allow_html=True)
+        sk3.markdown(f"""<div class="kpi-card"><h3>Avg per VSLA</h3>
+            <div class="value">{_vsla_fmt_kes(sav_avg)}</div></div>""", unsafe_allow_html=True)
+        sk4.markdown(f"""<div class="kpi-card"><h3>High Savers (81-100%)</h3>
+            <div class="value">{_vsla_fmt_pct(high_savers)}</div></div>""", unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        sc1, sc2 = st.columns(2)
+        with sc1:
+            s_trend = _vsla_trend(d['savings']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=s_trend, mode='lines+markers+text',
+                name='Total Savings', line=dict(color='#1B5E20', width=3),
+                text=[_vsla_fmt_kes(v) for v in s_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Total Savings Value (KES) — Q2→Q4', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with sc2:
+            savg_trend = _vsla_trend(d['savings']['value'], c, 'average')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=savg_trend, mode='lines+markers+text',
+                name='Avg Savings', line=dict(color='#0D47A1', width=3),
+                text=[_vsla_fmt_kes(v) for v in savg_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Average Savings per VSLA (KES) — Q2→Q4', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Savings bands
+        sc3, sc4 = st.columns(2)
+        with sc3:
+            sp_bands = _vsla_band_data(d['savings']['proportionBands'], q)
+            fig = go.Figure(data=[go.Pie(
+                labels=[b[0] for b in sp_bands], values=[b[1] * 100 for b in sp_bands],
+                hole=0.45, textinfo='label+percent',
+            )])
+            fig.update_layout(**_vsla_plotly_layout(f'Savings Proportion Bands — {ql}', height=380))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with sc4:
+            sv_bands = _vsla_band_data(d['savings']['valueBands'], q)
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=[b[0] for b in sv_bands], y=[b[1] * 100 for b in sv_bands],
+                marker_color='#1B5E20',
+                text=[f"{b[1] * 100:.0f}%" for b in sv_bands], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout(f'Savings Amount Bands — {ql}', height=380,
+                                                     yaxis_title='% of VSLAs'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Savings data table
+        _section_header('', 'Savings by County & Quarter', '')
+        tbl_data = []
+        for county_name in ['Kilifi', 'Kwale', 'All']:
+            row = {'County': county_name}
+            for qq in QUARTERS:
+                s = _vsla_get_sa(d['savings']['value'], county_name if county_name != 'All' else 'All Counties', qq, 'sum')
+                a = _vsla_get_sa(d['savings']['value'], county_name if county_name != 'All' else 'All Counties', qq, 'average')
+                row[f'{qq} Total'] = _vsla_fmt_kes(s)
+                row[f'{qq} Avg'] = _vsla_fmt_kes(a)
+            tbl_data.append(row)
+        st.dataframe(pd.DataFrame(tbl_data), use_container_width=True, hide_index=True)
+
+        st.markdown("---")
+
+        # Social Fund section
+        _section_header('', 'Social Fund Analysis', ql)
+
+        pct_fund = _vsla_get_cq(d['socialFund']['percentageWithFund'], c, q)
+        sf_sum = _vsla_get_sa(d['socialFund']['value'], c, q, 'sum')
+        sf_avg = _vsla_get_sa(d['socialFund']['value'], c, q, 'average')
+
+        sfk1, sfk2, sfk3 = st.columns(3)
+        sfk1.markdown(f"""<div class="kpi-card"><h3>VSLAs with Social Fund</h3>
+            <div class="value">{_vsla_fmt_pct(pct_fund)}</div></div>""", unsafe_allow_html=True)
+        sfk2.markdown(f"""<div class="kpi-card"><h3>Total Social Fund</h3>
+            <div class="value">{_vsla_fmt_kes(sf_sum)}</div></div>""", unsafe_allow_html=True)
+        sfk3.markdown(f"""<div class="kpi-card"><h3>Avg per VSLA</h3>
+            <div class="value">{_vsla_fmt_kes(sf_avg)}</div></div>""", unsafe_allow_html=True)
+
+        sf1, sf2 = st.columns(2)
+        with sf1:
+            sf_pct_trend = _vsla_cq_trend(d['socialFund']['percentageWithFund'], c)
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=[v * 100 for v in sf_pct_trend], mode='lines+markers+text',
+                name='% with Fund', line=dict(color='#FF9800', width=3),
+                text=[f"{v * 100:.0f}%" for v in sf_pct_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('% VSLAs with Social Fund — Q2→Q4', height=350,
+                                                     yaxis_title='%'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with sf2:
+            sf_val_trend = _vsla_trend(d['socialFund']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=sf_val_trend, mode='lines+markers+text',
+                name='Fund Value', line=dict(color='#1B5E20', width=3),
+                text=[_vsla_fmt_kes(v) for v in sf_val_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Total Social Fund Value (KES) — Q2→Q4', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Social fund bands
+        sf_bands = _vsla_band_data(d['socialFund']['valueBands'], q)
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=[b[0] for b in sf_bands], y=[b[1] * 100 for b in sf_bands],
+            marker_color='#FF9800',
+            text=[f"{b[1] * 100:.0f}%" for b in sf_bands], textposition='auto',
+        ))
+        fig.update_layout(**_vsla_plotly_layout(f'Social Fund Amount Bands — {ql}', height=380,
+                                                 yaxis_title='% of VSLAs'))
+        st.plotly_chart(fig, use_container_width=True)
+
+    # ================================================================
+    # TAB 4 — Loans & Repayment
+    # ================================================================
+    with tabs[3]:
+        _section_header('', 'Loans Overview', ql)
+
+        ld_count = _vsla_get_sa(d['loans']['disbursed']['count'], c, q, 'sum')
+        ld_val = _vsla_get_sa(d['loans']['disbursed']['value'], c, q, 'sum')
+        lr_count = _vsla_get_sa(d['loans']['repaid']['count'], c, q, 'sum')
+        lr_val = _vsla_get_sa(d['loans']['repaid']['value'], c, q, 'sum')
+        interest_val = _vsla_get_sa(d['loans']['interest']['value'], c, q, 'sum')
+        failing_pct = _vsla_get_cq(d['loans']['failingToPay'], c, q)
+
+        lk1, lk2, lk3 = st.columns(3)
+        lk1.markdown(f"""<div class="kpi-card"><h3>Loans Disbursed</h3>
+            <div class="value">{int(ld_count):,}</div>
+            <p style="color:#666">Value: {_vsla_fmt_kes(ld_val)}</p></div>""", unsafe_allow_html=True)
+        lk2.markdown(f"""<div class="kpi-card"><h3>Loans Repaid</h3>
+            <div class="value">{int(lr_count):,}</div>
+            <p style="color:#666">Value: {_vsla_fmt_kes(lr_val)}</p></div>""", unsafe_allow_html=True)
+        repay_rate = lr_val / max(ld_val, 1) * 100
+        rr_color = COLORS['good'] if repay_rate >= 70 else COLORS['danger']
+        lk3.markdown(f"""<div class="kpi-card"><h3>Repayment Rate</h3>
+            <div class="value" style="color:{rr_color}">{repay_rate:.0f}%</div>
+            <p style="color:#666">Interest: {_vsla_fmt_kes(interest_val)}</p></div>""", unsafe_allow_html=True)
+
+        lk4, lk5, lk6 = st.columns(3)
+        lk4.markdown(f"""<div class="kpi-card"><h3>Avg ROI</h3>
+            <div class="value">{_vsla_fmt_pct(roi_val)}</div></div>""", unsafe_allow_html=True)
+        fail_color = COLORS['good'] if failing_pct <= 0.1 else COLORS['danger']
+        lk5.markdown(f"""<div class="kpi-card"><h3>Failing to Pay</h3>
+            <div class="value" style="color:{fail_color}">{_vsla_fmt_pct(failing_pct)}</div></div>""",
+            unsafe_allow_html=True)
+        lk6.markdown(f"""<div class="kpi-card"><h3>Avg Value Repaid</h3>
+            <div class="value">{_vsla_fmt_kes(_vsla_get_sa(d['loans']['repaid']['value'], c, q, 'average'))}</div></div>""",
+            unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        # Loan trends
+        _section_header('', 'Loan Trends', 'Q2 → Q4')
+        lt1, lt2 = st.columns(2)
+
+        with lt1:
+            ld_trend = _vsla_trend(d['loans']['disbursed']['value'], c, 'sum')
+            lr_trend = _vsla_trend(d['loans']['repaid']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=QUARTERS, y=ld_trend, name='Disbursed',
+                marker_color=COLORS['midline'],
+                text=[_vsla_fmt_kes(v) for v in ld_trend], textposition='auto',
+            ))
+            fig.add_trace(go.Bar(
+                x=QUARTERS, y=lr_trend, name='Repaid',
+                marker_color=COLORS['good'],
+                text=[_vsla_fmt_kes(v) for v in lr_trend], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Loan Value: Disbursed vs Repaid — Q2→Q4', height=400,
+                                                     barmode='group', yaxis_title='KES'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with lt2:
+            int_trend = _vsla_trend(d['loans']['interest']['value'], c, 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=QUARTERS, y=int_trend, mode='lines+markers+text',
+                name='Interest', line=dict(color='#FF9800', width=3),
+                text=[_vsla_fmt_kes(v) for v in int_trend], textposition='top center',
+                marker=dict(size=10),
+            ))
+            fig.update_layout(**_vsla_plotly_layout('Interest Income (KES) — Q2→Q4', height=400))
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Loan distribution charts
+        st.markdown("---")
+        _section_header('', 'Loan Distributions', ql)
+        ld1, ld2 = st.columns(2)
+
+        with ld1:
+            loan_use = _vsla_band_data(d['loans']['useDistribution'], q)
+            fig = go.Figure(data=[go.Pie(
+                labels=[b[0] for b in loan_use], values=[b[1] * 100 for b in loan_use],
+                hole=0.45, textinfo='label+percent',
+                marker=dict(colors=['#1B5E20', '#0D47A1', '#FF9800', '#E53935', '#7B1FA2']),
+            )])
+            fig.update_layout(**_vsla_plotly_layout(f'Loan Use Purpose — {ql}', height=380))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with ld2:
+            lv_bands = _vsla_band_data(d['loans']['disbursed']['valueBands'], q)
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=[b[0] for b in lv_bands], y=[b[1] * 100 for b in lv_bands],
+                marker_color=COLORS['midline'],
+                text=[f"{b[1] * 100:.0f}%" for b in lv_bands], textposition='auto',
+            ))
+            fig.update_layout(**_vsla_plotly_layout(f'Loan Value Bands — {ql}', height=380,
+                                                     yaxis_title='% of VSLAs'))
+            st.plotly_chart(fig, use_container_width=True)
+
+        # ROI behaviour table
+        _section_header('', 'Loan Behaviour by County', '')
+        beh_rows = []
+        for br in d['loans']['behaviour']:
+            beh_rows.append({
+                'County': br['county'],
+                'Avg % Repaid (Q2)': f"{br['avgProportionRepaid']['Q2'] * 100:.0f}%",
+                'Avg % Repaid (Q3)': f"{br['avgProportionRepaid']['Q3'] * 100:.0f}%",
+                'Avg % Repaid (Q4)': f"{br['avgProportionRepaid']['Q4'] * 100:.0f}%",
+                'Avg ROI (Q2)': f"{br['avgROI']['Q2'] * 100:.1f}%",
+                'Avg ROI (Q3)': f"{br['avgROI']['Q3'] * 100:.1f}%",
+                'Avg ROI (Q4)': f"{br['avgROI']['Q4'] * 100:.1f}%",
+            })
+        st.dataframe(pd.DataFrame(beh_rows), use_container_width=True, hide_index=True)
+
+    # ================================================================
+    # TAB 5 — County Comparison
+    # ================================================================
+    with tabs[4]:
+        _section_header('', 'Kilifi vs Kwale Comparison', ql)
+
+        compare_indicators = [
+            ('VSLAs Assessed', lambda cn: _vsla_get_cq(d['vslasAssessed'], cn, q)),
+            ('Total Members', lambda cn: _vsla_get_sa(d['membership']['all'], cn, q, 'sum')),
+            ('Female Members', lambda cn: _vsla_get_sa(d['membership']['female'], cn, q, 'sum')),
+            ('Total Savings (KES)', lambda cn: _vsla_get_sa(d['savings']['value'], cn, q, 'sum')),
+            ('Avg Savings / VSLA', lambda cn: _vsla_get_sa(d['savings']['value'], cn, q, 'average')),
+            ('Social Fund %', lambda cn: _vsla_get_cq(d['socialFund']['percentageWithFund'], cn, q) * 100),
+            ('Loans Disbursed (KES)', lambda cn: _vsla_get_sa(d['loans']['disbursed']['value'], cn, q, 'sum')),
+            ('Loans Repaid (KES)', lambda cn: _vsla_get_sa(d['loans']['repaid']['value'], cn, q, 'sum')),
+            ('Meeting Attendance', lambda cn: _vsla_get_cq(d['meetings']['attendance'], cn, q) * 100),
+        ]
+
+        comp_data = []
+        for label, fn in compare_indicators:
+            kilifi_val = fn('Kilifi')
+            kwale_val = fn('Kwale')
+            comp_data.append({
+                'Indicator': label,
+                'Kilifi': kilifi_val,
+                'Kwale': kwale_val,
+                'Difference': kilifi_val - kwale_val,
+            })
+
+        # Grouped horizontal bar
+        fig = go.Figure()
+        indicator_labels = [r['Indicator'] for r in comp_data]
+        kilifi_vals = [r['Kilifi'] for r in comp_data]
+        kwale_vals = [r['Kwale'] for r in comp_data]
+
+        fig.add_trace(go.Bar(
+            y=indicator_labels, x=kilifi_vals, name='Kilifi',
+            orientation='h', marker_color='#1B5E20',
+        ))
+        fig.add_trace(go.Bar(
+            y=indicator_labels, x=kwale_vals, name='Kwale',
+            orientation='h', marker_color='#0D47A1',
+        ))
+        fig.update_layout(**_vsla_plotly_layout(f'County Comparison — {ql}', height=500,
+                                                 barmode='group',
+                                                 yaxis=dict(categoryorder='array',
+                                                            categoryarray=list(reversed(indicator_labels)))))
+        st.plotly_chart(fig, use_container_width=True)
+
+        # Comparison table
+        st.markdown("---")
+        _section_header('', 'Detailed Comparison Table', '')
+        comp_df = pd.DataFrame(comp_data)
+        # Format large numbers
+        for col in ['Kilifi', 'Kwale', 'Difference']:
+            comp_df[col] = comp_df[col].apply(lambda v: f"{v:,.0f}")
+        st.dataframe(comp_df, use_container_width=True, hide_index=True)
+
+        # Per-indicator trend comparison
+        st.markdown("---")
+        _section_header('', 'Trend Comparison: Kilifi vs Kwale', 'Q2 → Q4')
+
+        tc1, tc2 = st.columns(2)
+        with tc1:
+            ki_sav = _vsla_trend(d['savings']['value'], 'Kilifi', 'sum')
+            kw_sav = _vsla_trend(d['savings']['value'], 'Kwale', 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=QUARTERS, y=ki_sav, name='Kilifi',
+                                     mode='lines+markers', line=dict(color='#1B5E20', width=3)))
+            fig.add_trace(go.Scatter(x=QUARTERS, y=kw_sav, name='Kwale',
+                                     mode='lines+markers', line=dict(color='#0D47A1', width=3)))
+            fig.update_layout(**_vsla_plotly_layout('Savings Trend — Kilifi vs Kwale', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with tc2:
+            ki_loan = _vsla_trend(d['loans']['disbursed']['value'], 'Kilifi', 'sum')
+            kw_loan = _vsla_trend(d['loans']['disbursed']['value'], 'Kwale', 'sum')
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=QUARTERS, y=ki_loan, name='Kilifi',
+                                     mode='lines+markers', line=dict(color='#1B5E20', width=3)))
+            fig.add_trace(go.Scatter(x=QUARTERS, y=kw_loan, name='Kwale',
+                                     mode='lines+markers', line=dict(color='#0D47A1', width=3)))
+            fig.update_layout(**_vsla_plotly_layout('Loans Disbursed Trend — Kilifi vs Kwale', height=350))
+            st.plotly_chart(fig, use_container_width=True)
+
+
 def _generate_forestry_insights(data):
     """Generate automated insights from forestry data."""
     insights = []
@@ -10054,6 +10878,7 @@ def main():
          "Forest Training (Pre/Post)", "Mangrove Training (Pre/Post)",
          "Seaweed Production & Challenges (2025)",
          "Project Outputs & Activity Indicators",
+         "VSLA Functionality (Q1-Q4 2025)",
          "Insights"],
         index=0,
         help="Combined Overview shows headline KPIs from all datasets side by side."
@@ -10180,6 +11005,17 @@ def main():
             <span class="sidebar-nav-link">GJJ Outputs</span>
         </div>
         """, unsafe_allow_html=True)
+    elif dataset == "VSLA Functionality (Q1-Q4 2025)":
+        st.sidebar.markdown("**Quick Navigate**")
+        st.sidebar.markdown("""
+        <div class="sidebar-section">
+            <span class="sidebar-nav-link">Overview</span>
+            <span class="sidebar-nav-link">Membership & Meetings</span>
+            <span class="sidebar-nav-link">Savings & Social Fund</span>
+            <span class="sidebar-nav-link">Loans & Repayment</span>
+            <span class="sidebar-nav-link">County Comparison</span>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.sidebar.markdown("**Quick Navigate**")
         st.sidebar.markdown("""
@@ -10210,6 +11046,7 @@ def main():
     mangrove_training_path = os.path.join(script_dir, MANGROVE_TRAINING_EXCEL)
     seaweed_path = os.path.join(script_dir, SEAWEED_CSV)
     project_outputs_path = os.path.join(script_dir, PROJECT_OUTPUTS_EXCEL)
+    vsla_path = os.path.join(script_dir, VSLA_EXCEL)
 
     # ---- HEADER ----
     if dataset == "Forestry Groups":
@@ -10694,6 +11531,53 @@ def main():
         """, unsafe_allow_html=True)
 
         render_project_outputs_tabs(po_data)
+
+    elif dataset == "VSLA Functionality (Q1-Q4 2025)":
+        st.markdown("""<div class="main-header">
+            <h1>VSLA Functionality Dashboard</h1>
+            <p>VSLA Savings, Loans, Social Fund & Membership Tracking | Q2–Q4 2025 | Kilifi & Kwale Counties</p>
+        </div>""", unsafe_allow_html=True)
+
+        # Breadcrumb
+        st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
+                    '<span class="active">VSLA Functionality (Q1-Q4 2025)</span></div>', unsafe_allow_html=True)
+
+        vsla_data = load_vsla_data(vsla_path)
+
+        # Sidebar filters
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**VSLA Filters**")
+        vsla_county = st.sidebar.selectbox("County", ['All Counties', 'Kilifi', 'Kwale'], index=0)
+        vsla_quarter = st.sidebar.selectbox("Quarter", ['Q4', 'Q3', 'Q2'], index=0)
+
+        # Sidebar summary
+        all_vslas_q4 = _vsla_get_cq(vsla_data['vslasAssessed'], 'All Counties', 'Q4')
+        all_mem_q4 = _vsla_get_sa(vsla_data['membership']['all'], 'All Counties', 'Q4', 'sum')
+        all_sav_q4 = _vsla_get_sa(vsla_data['savings']['value'], 'All Counties', 'Q4', 'sum')
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("**Dataset Summary**")
+        st.sidebar.markdown(f"""
+        <div class="sidebar-section">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">VSLAs (Q4)</span>
+                <strong>{int(all_vslas_q4):,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Members (Q4)</span>
+                <strong>{int(all_mem_q4):,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Savings (Q4)</span>
+                <strong>{_vsla_fmt_kes(all_sav_q4)}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">VSLA Excel (2025)</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        render_vsla_tabs(vsla_data, county_filter=vsla_county, quarter_filter=vsla_quarter)
 
     elif dataset == "Insights":
         st.markdown("""<div class="main-header">
