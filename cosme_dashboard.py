@@ -6476,12 +6476,26 @@ def prepare_project_outputs_tables(po_data):
       'strict_training': Strict threshold training summary
       'soft_completion': Long-format soft threshold module completion
     """
-    # --- Cross-module summary ---
+    # --- Helper: extract Grand Total row from soft DataFrame ---
+    def _soft_grand_total(df):
+        if df is not None and not df.empty and 'Grand Total' in df['Module'].values:
+            return df[df['Module'] == 'Grand Total'].iloc[0]
+        return None
+
+    # --- Cross-module summary (using soft threshold for training) ---
     summary_rows = []
+    soft_train_rows = []
     module_labels = {'mangrove': 'Mangrove', 'seaweed': 'Seaweed',
                      'forestry': 'Forestry', 'gjj': 'GJJ'}
     for key, label in module_labels.items():
         d = po_data[key]
+        gt_all = _soft_grand_total(d.get('soft_all'))
+        gt_m = _soft_grand_total(d.get('soft_male'))
+        gt_f = _soft_grand_total(d.get('soft_female'))
+        trained_y3 = int(gt_all['Completed']) if gt_all is not None else 0
+        trained_target = int(gt_all['Target']) if gt_all is not None else 0
+        trained_pct = float(gt_all['Target_Pct']) if gt_all is not None else 0.0
+
         summary_rows.append({
             'Module': label,
             'Groups_Y2': d['groups']['Y2'],
@@ -6498,11 +6512,20 @@ def prepare_project_outputs_tables(po_data):
             'Modules_Y3': d['modules_imparted']['Y3_SA'],
             'Modules_Target': d['modules_imparted']['Target'],
             'Modules_Pct': d['modules_imparted']['Pct_Achieved'],
-            'Trained_Y3': d['strict_target']['Y3_All'],
-            'Trained_Target': d['strict_target']['Target_All'],
-            'Trained_Pct': d['strict_target']['Pct_Achieved'],
+            'Trained_Y3': trained_y3,
+            'Trained_Target': trained_target,
+            'Trained_Pct': trained_pct,
+        })
+        soft_train_rows.append({
+            'Module': label,
+            'Y3_Female': int(gt_f['Completed']) if gt_f is not None else 0,
+            'Y3_Male': int(gt_m['Completed']) if gt_m is not None else 0,
+            'Y3_All': trained_y3,
+            'Target_All': trained_target,
+            'Pct_Achieved': trained_pct,
         })
     summary = pd.DataFrame(summary_rows)
+    soft_training = pd.DataFrame(soft_train_rows)
 
     # --- Sex-disaggregated members ---
     mem_rows = []
@@ -6513,18 +6536,6 @@ def prepare_project_outputs_tables(po_data):
                              'Female': m[f'{prefix}_F'], 'Male': m[f'{prefix}_M'],
                              'Total': m[f'{prefix}_All']})
     members_sex = pd.DataFrame(mem_rows)
-
-    # --- Strict training by sex ---
-    strict_rows = []
-    for key, label in module_labels.items():
-        s = po_data[key]['strict_target']
-        strict_rows.append({
-            'Module': label,
-            'Y3_Female': s['Y3_F'], 'Y3_Male': s['Y3_M'], 'Y3_All': s['Y3_All'],
-            'Target_All': s['Target_All'],
-            'Pct_Achieved': s['Pct_Achieved'],
-        })
-    strict_training = pd.DataFrame(strict_rows)
 
     # --- Long-format soft completion ---
     soft_rows = []
@@ -6548,7 +6559,7 @@ def prepare_project_outputs_tables(po_data):
     return {
         'summary': summary,
         'members_sex': members_sex,
-        'strict_training': strict_training,
+        'soft_training': soft_training,
         'soft_completion': soft_completion,
     }
 
@@ -6558,7 +6569,7 @@ def render_project_outputs_tabs(po_data):
     tables = prepare_project_outputs_tables(po_data)
     summary = tables['summary']
     members_sex = tables['members_sex']
-    strict_training = tables['strict_training']
+    soft_training = tables['soft_training']
     soft_completion = tables['soft_completion']
 
     tabs = st.tabs([
@@ -6573,42 +6584,6 @@ def render_project_outputs_tabs(po_data):
     # TAB 1 — High-Level KPIs (Cross-Module)
     # ================================================================
     with tabs[0]:
-        _section_header('', 'Cross-Module Output Summary', 'SAR Y3')
-
-        # Top KPI row: totals across all modules
-        total_groups_y3 = summary['Groups_Y3'].sum()
-        total_groups_target = summary['Groups_Target'].sum()
-        total_members_y3 = summary['Members_Y3'].sum()
-        total_members_target = summary['Members_Target'].sum()
-        total_trained_y3 = summary['Trained_Y3'].sum()
-        total_trained_target = summary['Trained_Target'].sum()
-
-        k1, k2, k3, k4 = st.columns(4)
-        k1.markdown(f"""<div class="kpi-card">
-            <h3>Total Groups (Y3)</h3>
-            <div class="value">{total_groups_y3:,}</div>
-            <p>Target: {total_groups_target:,}</p>
-        </div>""", unsafe_allow_html=True)
-        k2.markdown(f"""<div class="kpi-card">
-            <h3>Members Registered (Y3)</h3>
-            <div class="value">{total_members_y3:,}</div>
-            <p>Target: {total_members_target:,}</p>
-        </div>""", unsafe_allow_html=True)
-        k3.markdown(f"""<div class="kpi-card">
-            <h3>Trained (Strict, Y3)</h3>
-            <div class="value">{total_trained_y3:,}</div>
-            <p>Target: {total_trained_target:,}</p>
-        </div>""", unsafe_allow_html=True)
-        overall_pct = round(total_trained_y3 / total_trained_target * 100, 1) if total_trained_target else 0
-        pct_color = COLORS['good'] if overall_pct >= 60 else (COLORS['danger'] if overall_pct < 40 else '#FF9800')
-        k4.markdown(f"""<div class="kpi-card">
-            <h3>Overall Training %</h3>
-            <div class="value" style="color:{pct_color}">{overall_pct:.1f}%</div>
-            <p>Strict threshold achieved</p>
-        </div>""", unsafe_allow_html=True)
-
-        st.markdown("---")
-
         # Per-module KPI cards
         _section_header('', 'Module-Level Progress', 'Y3 (SA) vs Target')
         for _, row in summary.iterrows():
@@ -6625,7 +6600,7 @@ def render_project_outputs_tabs(po_data):
             mc4.markdown(f"""<div class="kpi-card"><h3>Modules</h3><div class="value">{row['Modules_Y3']}</div>
                 <p style="color:{mod_color}">{row['Modules_Pct']:.1f}% of target</p></div>""", unsafe_allow_html=True)
             t_color = COLORS['good'] if row['Trained_Pct'] >= 60 else COLORS['danger']
-            mc5.markdown(f"""<div class="kpi-card"><h3>Trained (Strict)</h3><div class="value">{row['Trained_Y3']:,}</div>
+            mc5.markdown(f"""<div class="kpi-card"><h3>Trained (Soft)</h3><div class="value">{row['Trained_Y3']:,}</div>
                 <p style="color:{t_color}">{row['Trained_Pct']:.1f}% achieved</p></div>""", unsafe_allow_html=True)
 
         st.markdown("---")
@@ -6722,21 +6697,21 @@ def render_project_outputs_tabs(po_data):
             )
             st.plotly_chart(fig_chg, use_container_width=True)
 
-        # Training progress: Strict threshold bar
-        _section_header('', 'Training Progress (Strict Threshold)', 'Y3 (SA)')
+        # Training progress: Soft threshold bar
+        _section_header('', 'Training Progress (Soft Threshold)', 'Y3 (SA)')
         fig_train = go.Figure()
         fig_train.add_trace(go.Bar(
-            x=strict_training['Module'], y=strict_training['Y3_All'],
+            x=soft_training['Module'], y=soft_training['Y3_All'],
             name='Trained (Y3)', marker_color=COLORS['midline'],
-            text=strict_training['Y3_All'].apply(lambda v: f"{v:,}"), textposition='auto',
+            text=soft_training['Y3_All'].apply(lambda v: f"{v:,}"), textposition='auto',
         ))
         fig_train.add_trace(go.Bar(
-            x=strict_training['Module'], y=strict_training['Target_All'],
+            x=soft_training['Module'], y=soft_training['Target_All'],
             name='Target', marker_color='rgba(0,0,0,0.15)',
-            text=strict_training['Target_All'].apply(lambda v: f"{v:,}"), textposition='auto',
+            text=soft_training['Target_All'].apply(lambda v: f"{v:,}"), textposition='auto',
         ))
         fig_train.update_layout(
-            title="Strict Threshold Training: Y3 (SA) vs Target", barmode='group', height=380,
+            title="Soft Threshold Training: Y3 (SA) vs Target", barmode='group', height=380,
             yaxis_title="Members Trained",
             legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
             font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
@@ -6754,9 +6729,22 @@ def render_project_outputs_tabs(po_data):
     # ================================================================
     # TAB 2-5 — Module-Specific Outputs
     # ================================================================
-    def _render_module_tab(tab, module_key, module_label, strict_threshold_label):
+    def _render_module_tab(tab, module_key, module_label):
         """Render a single module output tab."""
         d = po_data[module_key]
+
+        # Extract soft Grand Total for KPI
+        def _sgt(df):
+            if df is not None and not df.empty and 'Grand Total' in df['Module'].values:
+                return df[df['Module'] == 'Grand Total'].iloc[0]
+            return None
+        sgt_all = _sgt(d.get('soft_all'))
+        sgt_m = _sgt(d.get('soft_male'))
+        sgt_f = _sgt(d.get('soft_female'))
+        soft_trained = int(sgt_all['Completed']) if sgt_all is not None else 0
+        soft_target = int(sgt_all['Target']) if sgt_all is not None else 0
+        soft_pct = float(sgt_all['Target_Pct']) if sgt_all is not None else 0.0
+
         with tab:
             _section_header('', f'{module_label} Output & Activity Summary', 'SAR Y3')
 
@@ -6786,12 +6774,11 @@ def render_project_outputs_tabs(po_data):
                 <p style="color:{mi_color}">{mi['Pct_Achieved']:.1f}% achieved</p>
             </div>""", unsafe_allow_html=True)
 
-            st_d = d['strict_target']
-            st_color = COLORS['good'] if st_d['Pct_Achieved'] >= 60 else COLORS['danger']
+            st_color = COLORS['good'] if soft_pct >= 60 else COLORS['danger']
             k4.markdown(f"""<div class="kpi-card">
-                <h3>Trained ({strict_threshold_label})</h3>
-                <div class="value">{st_d['Y3_All']:,}</div>
-                <p style="color:{st_color}">{st_d['Pct_Achieved']:.1f}% of target</p>
+                <h3>Trained (Soft)</h3>
+                <div class="value">{soft_trained:,}</div>
+                <p style="color:{st_color}">{soft_pct:.1f}% of target</p>
             </div>""", unsafe_allow_html=True)
 
             if g['Notes']:
@@ -6845,55 +6832,57 @@ def render_project_outputs_tabs(po_data):
 
             st.markdown("---")
 
-            # --- Training Section ---
-            _section_header('', f'Training Achievement ({strict_threshold_label})', 'Strict Threshold')
+            # --- Training Section (Soft Threshold) ---
+            _section_header('', f'Training Achievement (Soft Threshold)', 'Completion')
             tr_col1, tr_col2 = st.columns(2)
 
             with tr_col1:
-                # Strict by sex
-                s = d['strict_target']
-                fig_strict = go.Figure()
+                # Soft training by sex
+                fig_soft_sex = go.Figure()
                 sex_cats = ['Female', 'Male', 'All']
-                trained_vals = [s['Y3_F'], s['Y3_M'], s['Y3_All']]
-                target_vals = [s['Target_F'], s['Target_M'], s['Target_All']]
-                fig_strict.add_trace(go.Bar(x=sex_cats, y=trained_vals, name='Trained (Y3)',
-                                            marker_color=COLORS['midline'],
-                                            text=[f"{v:,}" for v in trained_vals], textposition='auto'))
-                fig_strict.add_trace(go.Bar(x=sex_cats, y=target_vals, name='Target',
-                                            marker_color='rgba(0,0,0,0.15)',
-                                            text=[f"{v:,}" for v in target_vals], textposition='auto'))
-                fig_strict.update_layout(
-                    title=f"{module_label}: Strict Training by Sex", barmode='group', height=350,
+                trained_vals = [
+                    int(sgt_f['Completed']) if sgt_f is not None else 0,
+                    int(sgt_m['Completed']) if sgt_m is not None else 0,
+                    soft_trained,
+                ]
+                target_vals = [soft_target] * 3  # same overall target
+                fig_soft_sex.add_trace(go.Bar(x=sex_cats, y=trained_vals, name='Completed (Y3)',
+                                              marker_color=COLORS['midline'],
+                                              text=[f"{v:,}" for v in trained_vals], textposition='auto'))
+                fig_soft_sex.add_trace(go.Bar(x=sex_cats, y=target_vals, name='Target',
+                                              marker_color='rgba(0,0,0,0.15)',
+                                              text=[f"{v:,}" for v in target_vals], textposition='auto'))
+                fig_soft_sex.update_layout(
+                    title=f"{module_label}: Soft Training by Sex", barmode='group', height=350,
                     yaxis_title="Members",
                     legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
                     font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                     plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                     margin=dict(l=20, r=20, t=60, b=20),
                 )
-                st.plotly_chart(fig_strict, use_container_width=True)
+                st.plotly_chart(fig_soft_sex, use_container_width=True)
 
             with tr_col2:
-                # County disaggregation
-                c = d['strict_county']
-                fig_county = go.Figure()
-                county_cats = ['Kilifi', 'Kwale', 'All']
-                c_trained = [c['Y3_Kilifi'], c['Y3_Kwale'], c['Y3_All']]
-                c_target = [c['Target_Kilifi'], c['Target_Kwale'], c['Target_All']]
-                fig_county.add_trace(go.Bar(x=county_cats, y=c_trained, name='Trained (Y3)',
-                                            marker_color=COLORS['midline'],
-                                            text=[f"{v:,}" for v in c_trained], textposition='auto'))
-                fig_county.add_trace(go.Bar(x=county_cats, y=c_target, name='Target',
-                                            marker_color='rgba(0,0,0,0.15)',
-                                            text=[f"{v:,}" for v in c_target], textposition='auto'))
-                fig_county.update_layout(
-                    title=f"{module_label}: Training by County", barmode='group', height=350,
+                # Soft threshold: Completed vs Registered vs Target
+                fig_overview = go.Figure()
+                soft_reg = int(sgt_all['Registered']) if sgt_all is not None else 0
+                overview_cats = ['Target', 'Registered', 'Completed']
+                overview_vals = [soft_target, soft_reg, soft_trained]
+                overview_colors = ['rgba(0,0,0,0.15)', COLORS['baseline'], COLORS['midline']]
+                fig_overview.add_trace(go.Bar(
+                    x=overview_cats, y=overview_vals,
+                    marker_color=overview_colors,
+                    text=[f"{v:,}" for v in overview_vals], textposition='auto',
+                    showlegend=False,
+                ))
+                fig_overview.update_layout(
+                    title=f"{module_label}: Training Pipeline", height=350,
                     yaxis_title="Members",
-                    legend=dict(orientation='h', yanchor='bottom', y=1.02, x=0.5, xanchor='center'),
                     font=dict(size=13, color='#333'), title_font=dict(size=16, color='#222'),
                     plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                     margin=dict(l=20, r=20, t=60, b=20),
                 )
-                st.plotly_chart(fig_county, use_container_width=True)
+                st.plotly_chart(fig_overview, use_container_width=True)
 
             st.markdown("---")
 
@@ -6988,10 +6977,10 @@ def render_project_outputs_tabs(po_data):
                 st.warning(f"No soft-threshold module completion data available for {module_label}.")
 
     # Render each module tab
-    _render_module_tab(tabs[1], 'mangrove', 'Mangrove', '3+ modules')
-    _render_module_tab(tabs[2], 'seaweed', 'Seaweed', '3+ modules')
-    _render_module_tab(tabs[3], 'forestry', 'Forestry', '5+ modules')
-    _render_module_tab(tabs[4], 'gjj', 'GJJ', '3+ modules')
+    _render_module_tab(tabs[1], 'mangrove', 'Mangrove')
+    _render_module_tab(tabs[2], 'seaweed', 'Seaweed')
+    _render_module_tab(tabs[3], 'forestry', 'Forestry')
+    _render_module_tab(tabs[4], 'gjj', 'GJJ')
 
 
 def _generate_forestry_insights(data):
