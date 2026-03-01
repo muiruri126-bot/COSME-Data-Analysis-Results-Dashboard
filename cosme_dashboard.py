@@ -7591,6 +7591,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
         lambda x: 'Improving' if x > 0.5 else ('Declining' if x < -0.5 else 'Stable'))
+    # Descriptive label combining dataset + indicator for chart readability
+    ind_df['Label'] = ind_df['Dataset'] + ': ' + ind_df['Indicator']
 
     # --- Row 1: Donut (trend distribution) + Dumbbell overview ---
     ov_col1, ov_col2 = st.columns([1, 2])
@@ -7631,7 +7633,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
             line_color = COLORS['good'] if row['Change'] >= 0 else COLORS['danger']
             fig_dumb.add_trace(go.Scatter(
                 x=[row['Baseline'], row['Midline']],
-                y=[row['Indicator'], row['Indicator']],
+                y=[row['Label'], row['Label']],
                 mode='lines',
                 line=dict(color=line_color, width=2.5),
                 showlegend=False,
@@ -7639,7 +7641,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
             ))
         # Baseline dots
         fig_dumb.add_trace(go.Scatter(
-            x=dumb_df['Baseline'], y=dumb_df['Indicator'],
+            x=dumb_df['Baseline'], y=dumb_df['Label'],
             mode='markers',
             marker=dict(size=10, color=COLORS['baseline'], symbol='circle',
                         line=dict(width=1.5, color='white')),
@@ -7648,7 +7650,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         ))
         # Midline dots
         fig_dumb.add_trace(go.Scatter(
-            x=dumb_df['Midline'], y=dumb_df['Indicator'],
+            x=dumb_df['Midline'], y=dumb_df['Label'],
             mode='markers',
             marker=dict(size=10, color=COLORS['midline'], symbol='diamond',
                         line=dict(width=1.5, color='white')),
@@ -8279,7 +8281,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
             mode='markers+text',
             marker=dict(size=12, color=color, symbol=symbol,
                         line=dict(width=1.5, color='white')),
-            text=subset['Indicator'],
+            text=subset['Label'],
             textposition='top center',
             textfont=dict(size=10),
             name=ds,
@@ -8349,7 +8351,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         colors_bar = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in hm_sorted['Change']]
         fig_hm = go.Figure()
         fig_hm.add_trace(go.Bar(
-            y=hm_sorted['Indicator'] + ' (' + hm_sorted['Dataset'] + ')',
+            y=hm_sorted['Label'],
             x=hm_sorted['Change'],
             orientation='h',
             marker_color=colors_bar,
@@ -8374,7 +8376,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
         wf_sorted = heatmap_df.sort_values('Change', ascending=False).reset_index(drop=True)
         wf_colors = [COLORS['good'] if v >= 0 else COLORS['danger'] for v in wf_sorted['Change']]
         fig_wf = go.Figure(go.Waterfall(
-            x=wf_sorted['Indicator'],
+            x=wf_sorted['Label'],
             y=wf_sorted['Change'],
             measure=['relative'] * len(wf_sorted),
             text=wf_sorted['Change'].apply(lambda x: f"{x:+.1f}"),
