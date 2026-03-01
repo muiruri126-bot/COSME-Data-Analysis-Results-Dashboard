@@ -7586,6 +7586,8 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     # values (kg, counts) not percentages, and have no Baseline comparison,
     # which distorts the scale of charts designed for % indicators.
     ind_df = ind_df[ind_df['Dataset'] != 'Seaweed'].reset_index(drop=True)
+    # Also exclude raw-count indicators that distort percentage-based charts
+    ind_df = ind_df[ind_df['Indicator'] != 'Total Respondents'].reset_index(drop=True)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
         lambda x: 'Improving' if x > 0.5 else ('Declining' if x < -0.5 else 'Stable'))
