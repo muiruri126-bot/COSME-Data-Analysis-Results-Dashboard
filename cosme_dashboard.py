@@ -7582,6 +7582,10 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
     # --- Build master indicator table used across multiple charts ---
     indicator_rows = _build_indicator_table(f_data, w_data, m_data, gjj_data, gjj_men_data, ft_data, mg_data, sw_data)
     ind_df = pd.DataFrame(indicator_rows)
+    # Exclude Seaweed from trend/quadrant/heatmap charts — its metrics are raw
+    # values (kg, counts) not percentages, and have no Baseline comparison,
+    # which distorts the scale of charts designed for % indicators.
+    ind_df = ind_df[ind_df['Dataset'] != 'Seaweed'].reset_index(drop=True)
     ind_df['Change'] = round(ind_df['Midline'] - ind_df['Baseline'], 1)
     ind_df['Direction'] = ind_df['Change'].apply(
         lambda x: 'Improving' if x > 0.5 else ('Declining' if x < -0.5 else 'Stable'))
@@ -8265,8 +8269,7 @@ def render_insights_tab(f_data, w_data, m_data=None, gjj_data=None, gjj_men_data
                                ('GJJ Women', '#9C27B0', 'star'),
                                ('GJJ Men', '#00BCD4', 'hexagram'),
                                ('Forest Training', '#795548', 'cross'),
-                               ('Mangrove Training', '#009688', 'triangle-up'),
-                               ('Seaweed', '#2196F3', 'triangle-down')]:
+                               ('Mangrove Training', '#009688', 'triangle-up')]:
         subset = ind_df[ind_df['Dataset'] == ds]
         fig_quad.add_trace(go.Scatter(
             x=subset['Midline'],
