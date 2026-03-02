@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="COSME & GJJ Professional Survey Dashboard - Comprehensive analysis of Women, Men, Forestry, Schools, Seaweed, and VSLA monitoring data across Kilifi & Kwale counties.">
-    <meta name="theme-color" content="#0072CE">
-    <title>COSME & GJJ Surveys Dashboard | Professional Analysis</title>
+    <meta name="theme-color" content="#004B87">
+    <title>COSME & GJJ Surveys Dashboard | Plan International</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <!-- Firebase Compat SDKs -->
@@ -196,6 +196,7 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.97);
+            border-top: 4px solid #F5C518;
         }
 
         .survey-selector.scrolled {
@@ -222,9 +223,9 @@
 
         .survey-btn {
             padding: 10px 20px;
-            border: 2px solid #0072CE;
+            border: 2px solid #004B87;
             background: white;
-            color: #0072CE;
+            color: #004B87;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -233,28 +234,68 @@
         }
 
         .survey-btn:hover {
-            background: #f0f0f0;
+            background: #e8f0f8;
         }
 
         .survey-btn.active {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
-            border-color: #0072CE;
+            border-color: #004B87;
         }
 
         /* HEADER */
         .header {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
             padding: 20px 40px;
             border-radius: 12px;
             margin-bottom: 15px;
-            box-shadow: 0 8px 32px rgba(0, 114, 206, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 75, 135, 0.3);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 5px solid #F5C518;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(245, 197, 24, 0.08) 100%);
+            pointer-events: none;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 4px;
+        }
+
+        .plan-logo {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .plan-logo svg {
+            width: 100%;
+            height: 100%;
         }
 
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 0;
+        }
+
+        .header .plan-tagline {
+            font-size: 0.85em;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
 
         .header-subtitle {
@@ -286,9 +327,9 @@
 
         .summary-title {
             font-size: 1.5em;
-            color: #0072CE;
+            color: #004B87;
             margin-bottom: 20px;
-            border-bottom: 3px solid #0072CE;
+            border-bottom: 3px solid #F5C518;
             padding-bottom: 10px;
         }
 
@@ -302,8 +343,8 @@
             background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
             padding: 24px 22px;
             border-radius: 12px;
-            border-left: 5px solid #0072CE;
-            box-shadow: 0 4px 16px rgba(0, 114, 206, 0.10);
+            border-left: 5px solid #004B87;
+            box-shadow: 0 4px 16px rgba(0, 75, 135, 0.10);
             text-align: left;
             transition: transform 0.22s ease, box-shadow 0.22s ease;
             position: relative;
@@ -315,13 +356,13 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #0072CE, #005a9e);
+            background: linear-gradient(90deg, #004B87, #003B6F);
             border-radius: 12px 12px 0 0;
         }
 
         .finding-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(0, 114, 206, 0.18);
+            box-shadow: 0 8px 28px rgba(0, 75, 135, 0.18);
         }
 
         .finding-card.negative {
@@ -340,7 +381,7 @@
 
         .finding-title {
             font-weight: 700;
-            color: #0072CE;
+            color: #004B87;
             margin-bottom: 10px;
             font-size: 1.05em;
             letter-spacing: 0.01em;
@@ -383,7 +424,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             text-align: left;
-            border-top: 5px solid #0072CE;
+            border-top: 5px solid #004B87;
             display: flex;
             flex-direction: column;
             gap: 0;
@@ -391,7 +432,7 @@
 
         .kpi-card.positive { border-top-color: #2e7d32; }
         .kpi-card.negative { border-top-color: #c62828; }
-        .kpi-card.warning { border-top-color: #f57c00; }
+        .kpi-card.warning { border-top-color: #F5C518; }
         .kpi-card.critical { border-top-color: #c62828; }
 
         .kpi-label {
@@ -407,7 +448,7 @@
         .kpi-value {
             font-size: 2.2em;
             font-weight: bold;
-            color: #0072CE;
+            color: #004B87;
             margin-bottom: 8px;
             line-height: 1.1;
             flex-shrink: 0;
@@ -458,13 +499,13 @@
         }
 
         .tab-button:hover {
-            color: #0072CE;
+            color: #004B87;
             background: #f5f7fa;
         }
 
         .tab-button.active {
-            color: #0072CE;
-            border-bottom-color: #0072CE;
+            color: #004B87;
+            border-bottom-color: #004B87;
         }
 
         .tab-content {
@@ -511,7 +552,7 @@
         .section-title {
             font-size: 1.5em;
             color: white;
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             padding: 20px;
             border-radius: 8px 8px 0 0;
             margin: -30px -30px 20px -30px;
@@ -519,6 +560,7 @@
             top: 120px; /* JS updateSpacerHeight() overrides dynamically */
             z-index: 998;
             transition: top 0.3s ease;
+            border-left: 5px solid #F5C518;
         }
 
         .charts-grid {
@@ -545,7 +587,7 @@
             color: #333;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #0072CE;
+            border-bottom: 2px solid #F5C518;
         }
 
         .chart-container {
@@ -561,10 +603,10 @@
             font-size: 0.88em;
             color: #3a3d4a;
             margin-top: 14px;
-            border-left: 5px solid #0072CE;
+            border-left: 5px solid #004B87;
             line-height: 1.7;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0, 114, 206, 0.06);
+            box-shadow: 0 2px 8px rgba(0, 75, 135, 0.06);
         }
 
         .chart-insight::before {
@@ -584,9 +626,9 @@
         }
 
         .insight-highlight {
-            color: #0072CE;
+            color: #004B87;
             font-weight: 700;
-            background: linear-gradient(135deg, rgba(0, 114, 206,0.1), rgba(0, 90, 158,0.1));
+            background: linear-gradient(135deg, rgba(0, 75, 135, 0.1), rgba(0, 59, 111, 0.1));
             padding: 1px 6px;
             border-radius: 4px;
         }
@@ -599,7 +641,7 @@
         }
 
         .comparison-table th {
-            background: #0072CE;
+            background: #004B87;
             color: white;
             padding: 15px;
             text-align: left;
@@ -980,7 +1022,7 @@
 
         /* COLLAPSIBLE SECTION */
         .collapsible-header {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
             padding: 15px 20px;
             border-radius: 8px;
@@ -997,8 +1039,8 @@
         }
 
         .collapsible-header:hover {
-            background: linear-gradient(135deg, #005a9e 0%, #0072CE 100%);
-            box-shadow: 0 4px 12px rgba(0, 114, 206, 0.3);
+            background: linear-gradient(135deg, #003B6F 0%, #004B87 100%);
+            box-shadow: 0 4px 12px rgba(0, 75, 135, 0.3);
         }
 
         .collapsible-header::after {
@@ -1025,7 +1067,7 @@
 
         /* OVERRIDE EXECUTIVE SUMMARY COLLAPSIBLE STYLING */
         .executive-summary .collapsible-header {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             margin: -30px -30px 0 -30px;
             border-radius: 12px 12px 0 0;
             padding: 20px;
@@ -1049,7 +1091,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
             border: none;
             width: 50px;
@@ -1063,13 +1105,13 @@
             font-size: 20px;
             line-height: 1;
             padding: 0;
-            box-shadow: 0 4px 15px rgba(0, 114, 206, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 75, 135, 0.4);
         }
 
         #backToTop:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 114, 206, 0.6);
-            background: linear-gradient(135deg, #005a9e 0%, #0072CE 100%);
+            box-shadow: 0 6px 20px rgba(0, 75, 135, 0.6);
+            background: linear-gradient(135deg, #003B6F 0%, #004B87 100%);
         }
 
         #backToTop.show {
@@ -1087,7 +1129,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             font-size: 0.9em;
-            color: #0072CE;
+            color: #004B87;
             font-weight: 600;
             z-index: 500;
             max-width: 200px;
@@ -1104,7 +1146,7 @@
         /* ======================================== */
         .mobile-menu-toggle {
             display: none;
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
             border: none;
             padding: 10px 16px;
@@ -1118,7 +1160,7 @@
             justify-content: space-between;
             min-height: 48px;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 114, 206,0.2);
+            box-shadow: 0 2px 8px rgba(0, 75, 135,0.2);
         }
 
         .mobile-menu-toggle .current-survey-label {
@@ -1194,7 +1236,7 @@
         }
 
         .mobile-nav-drawer .drawer-header {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #004B87 0%, #003B6F 100%);
             color: white;
             padding: 20px;
             display: flex;
@@ -1257,15 +1299,15 @@
 
         .mobile-nav-drawer .drawer-nav-item:hover {
             background: #f0f4ff;
-            border-left-color: #0072CE;
+            border-left-color: #004B87;
         }
 
         .mobile-nav-drawer .drawer-nav-item.active {
             background: linear-gradient(135deg, #e3f2fd 0%, #f0f4ff 100%);
-            color: #0072CE;
+            color: #004B87;
             font-weight: 700;
-            border-left-color: #0072CE;
-            box-shadow: 0 2px 8px rgba(0, 114, 206,0.1);
+            border-left-color: #004B87;
+            box-shadow: 0 2px 8px rgba(0, 75, 135,0.1);
         }
 
         /* ======================================== */
@@ -2300,7 +2342,7 @@
             height: 100%;
             width: 0;                          /* JS will animate to target */
             border-radius: 4px;
-            background: linear-gradient(90deg, #0072CE, #005a9e);
+            background: linear-gradient(90deg, #004B87, #003B6F);
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .anim-progress-bar.green  { background: linear-gradient(90deg, #2e7d32, #43a047); }
@@ -2387,13 +2429,13 @@
                 color: black !important;
                 text-align: center;
                 padding: 10px 0 !important;
-                border-bottom: 2px solid #0072CE;
+                border-bottom: 2px solid #004B87;
                 margin-bottom: 15px;
                 page-break-after: avoid;
             }
 
             .header h1 {
-                color: #0072CE !important;
+                color: #004B87 !important;
                 font-size: 18pt;
             }
 
@@ -2419,8 +2461,8 @@
 
             .section-title {
                 background: none !important;
-                color: #0072CE !important;
-                border-bottom: 2px solid #0072CE;
+                color: #004B87 !important;
+                border-bottom: 2px solid #004B87;
                 border-radius: 0 !important;
                 padding: 8px 0 !important;
                 margin: 0 0 10px 0 !important;
@@ -2441,7 +2483,7 @@
             }
 
             .kpi-value {
-                color: #0072CE !important;
+                color: #004B87 !important;
             }
 
             /* Key findings */
@@ -2492,7 +2534,7 @@
             }
 
             .comparison-table th, .output-table th {
-                background: #0072CE !important;
+                background: #004B87 !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -2502,11 +2544,11 @@
             .output-header {
                 background: none !important;
                 color: black !important;
-                border: 2px solid #0072CE;
+                border: 2px solid #004B87;
             }
 
             .output-header h2 {
-                color: #0072CE !important;
+                color: #004B87 !important;
             }
 
             .output-card {
@@ -2531,7 +2573,7 @@
             }
 
             .highlight-box {
-                border: 1px solid #0072CE !important;
+                border: 1px solid #004B87 !important;
                 background: #f0f7ff !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -2567,7 +2609,7 @@
             border-radius: 10px;
             padding: 20px 18px;
             text-align: center;
-            border-top: 4px solid #0072CE;
+            border-top: 4px solid #004B87;
             box-shadow: 0 3px 12px rgba(0,0,0,0.07);
             transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
@@ -2590,7 +2632,7 @@
         .synthesis-kpi .sk-value {
             font-size: 2em;
             font-weight: 800;
-            color: #0072CE;
+            color: #004B87;
             margin-bottom: 6px;
             line-height: 1.1;
             flex-shrink: 0;
@@ -2618,7 +2660,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         .cross-table th {
-            background: linear-gradient(135deg, #0072CE, #005a9e);
+            background: linear-gradient(135deg, #004B87, #003B6F);
             color: #fff;
             padding: 12px 14px;
             text-align: left;
@@ -2665,9 +2707,9 @@
         .domain-chip {
             padding: 6px 14px;
             border-radius: 20px;
-            border: 2px solid #0072CE;
+            border: 2px solid #004B87;
             background: #fff;
-            color: #0072CE;
+            color: #004B87;
             font-weight: 600;
             font-size: 0.82em;
             cursor: pointer;
@@ -2675,7 +2717,7 @@
         }
         .domain-chip.active,
         .domain-chip:hover {
-            background: #0072CE;
+            background: #004B87;
             color: #fff;
         }
 
@@ -2690,7 +2732,7 @@
             border-radius: 10px;
             padding: 20px 22px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.07);
-            border-left: 5px solid #0072CE;
+            border-left: 5px solid #004B87;
             transition: transform 0.2s;
         }
         .insight-card:hover {
@@ -2787,7 +2829,7 @@
         .insight-evidence-toggle {
             cursor: pointer;
             font-size: 0.8em;
-            color: #0072CE;
+            color: #004B87;
             font-weight: 600;
             margin-top: 8px;
             display: inline-block;
@@ -2852,7 +2894,7 @@
         .insight-stat-box .isb-num {
             font-size: 1.8em;
             font-weight: 800;
-            color: #0072CE;
+            color: #004B87;
         }
         .insight-stat-box .isb-label {
             font-size: 0.78em;
@@ -2879,7 +2921,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .insight-filter-chip.active { border-color: #0072CE; background: #0072CE; color: #fff; }
+        .insight-filter-chip.active { border-color: #004B87; background: #004B87; color: #fff; }
         .insight-filter-chip[data-cat="trend"]     { border-color: #1976d2; }
         .insight-filter-chip[data-cat="anomaly"]   { border-color: #f57c00; }
         .insight-filter-chip[data-cat="milestone"] { border-color: #2e7d32; }
@@ -2938,7 +2980,7 @@
             padding: 16px 20px;
             margin-bottom: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border-left: 5px solid #0072CE;
+            border-left: 5px solid #004B87;
             transition: box-shadow 0.2s;
         }
         .domain-dive-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
@@ -2994,7 +3036,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         .perf-table thead th {
-            background: #0072CE; color: #fff; padding: 10px 12px;
+            background: #004B87; color: #fff; padding: 10px 12px;
             text-align: left; font-weight: 700; font-size: 0.88em;
             position: sticky; top: 0; z-index: 2;
             white-space: nowrap;
@@ -3048,7 +3090,7 @@
         .toc-step-data {
             font-size: 0.88em; color: #444; line-height: 1.6;
         }
-        .toc-step-data strong { color: #0072CE; font-size: 1.05em; }
+        .toc-step-data strong { color: #004B87; font-size: 1.05em; }
         .toc-arrow {
             display: flex; align-items: center; justify-content: center;
             font-size: 1.8em; font-weight: 900;
@@ -3263,7 +3305,31 @@
 
         <!-- HEADER -->
         <header class="header" role="banner">
-            <h1 id="survey-title">Project Output Dashboard</h1>
+            <div class="header-brand">
+                <div class="plan-logo">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Plan International inspired logo mark -->
+                        <circle cx="100" cy="100" r="95" fill="#004B87"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="#F5C518" stroke-width="4"/>
+                        <!-- Stylized figure -->
+                        <circle cx="100" cy="52" r="16" fill="#F5C518"/>
+                        <path d="M100 72 L100 130" stroke="#F5C518" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M100 88 L72 110" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M100 88 L128 110" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M100 130 L78 162" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M100 130 L122 162" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Stars -->
+                        <circle cx="55" cy="45" r="4" fill="#F5C518" opacity="0.8"/>
+                        <circle cx="145" cy="45" r="4" fill="#F5C518" opacity="0.8"/>
+                        <circle cx="40" cy="100" r="3" fill="#F5C518" opacity="0.6"/>
+                        <circle cx="160" cy="100" r="3" fill="#F5C518" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 id="survey-title">Project Output Dashboard</h1>
+                    <div class="plan-tagline">Plan International — COSME & GJJ Programme</div>
+                </div>
+            </div>
         </header>
 
         <!-- PRE & POST TEST SUB-SELECTOR (Forest / Seaweed / Mangrove) -->
@@ -4268,7 +4334,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="background: #005a9e; font-weight: 600;">
+                    <tr style="background: #003B6F; font-weight: 600;">
                         <td colspan="6"><strong style="color: white;">INTERMEDIATE OUTCOME - Behavior & Practice Change (1200-series)</strong></td>
                     </tr>
                     <tr>
@@ -4818,7 +4884,7 @@
         <!-- END WOMEN SURVEY SECTION -->
 
         <!-- MEN SURVEY SECTION - TOGGLED DISPLAY -->
-        <div id="men-survey-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #0072CE;">
+        <div id="men-survey-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #004B87;">
             <div class="header" style="margin-bottom: 30px;">
                 <h1>Men Survey - COSME Project</h1>
                 <div class="header-subtitle">Parallel Analysis: Male Household Members & Community Leaders</div>
@@ -6871,7 +6937,7 @@
             <div style="max-width:1080px;margin:0 auto;padding:20px 0;">
 
                 <!-- Hero card -->
-                <div style="background:linear-gradient(135deg,#0072CE 0%,#004E8C 100%);border-radius:16px;padding:40px 36px;color:#fff;margin-bottom:28px;position:relative;overflow:hidden;">
+                <div style="background:linear-gradient(135deg,#004B87 0%,#003B6F 100%);border-radius:16px;padding:40px 36px;color:#fff;margin-bottom:28px;position:relative;overflow:hidden;">
                     <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
                     <div style="position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
                     <div style="font-size:2.8rem;margin-bottom:12px;">📄</div>
@@ -6926,7 +6992,7 @@
 
                                 <!-- Right: quick stats for selected report -->
                                 <div>
-                                    <div class="section" style="border-left:4px solid #0072CE;">
+                                    <div class="section" style="border-left:4px solid #004B87;">
                                         <div class="section-title" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:#0d47a1;">📊 Key Stats</div>
                                         <div id="reportDetailStats" style="padding:16px;">
                                         </div>
@@ -6962,12 +7028,12 @@
                         white-space: nowrap;
                     }
                     .rpt-chip:hover {
-                        border-color: #0072CE;
-                        color: #0072CE;
+                        border-color: #004B87;
+                        color: #004B87;
                         background: #e3f2fd;
                     }
                     .rpt-chip.active {
-                        background: linear-gradient(135deg, #0072CE, #004E8C);
+                        background: linear-gradient(135deg, #004B87, #003B6F);
                         color: #fff;
                         border-color: transparent;
                         box-shadow: 0 3px 10px rgba(0,114,206,0.3);
@@ -6983,12 +7049,12 @@
                         position: relative;
                     }
                     .rpt-card:hover {
-                        border-color: #0072CE;
+                        border-color: #004B87;
                         box-shadow: 0 6px 20px rgba(0,114,206,0.15);
                         transform: translateY(-2px);
                     }
                     .rpt-card.selected {
-                        border-color: #0072CE;
+                        border-color: #004B87;
                         box-shadow: 0 4px 16px rgba(0,114,206,0.2);
                     }
                     .rpt-card-header {
@@ -7045,15 +7111,15 @@
                         border: none;
                     }
                     .rpt-dl-btn.primary {
-                        background: linear-gradient(135deg,#0072CE,#004E8C);
+                        background: linear-gradient(135deg,#004B87,#003B6F);
                         color: #fff;
                         box-shadow: 0 4px 12px rgba(0,114,206,0.3);
                     }
                     .rpt-dl-btn.primary:hover { box-shadow: 0 6px 18px rgba(0,114,206,0.4); }
                     .rpt-dl-btn.outline {
                         background: #fff;
-                        color: #0072CE;
-                        border: 2px solid #0072CE;
+                        color: #004B87;
+                        border: 2px solid #004B87;
                     }
                     .rpt-dl-btn.outline:hover { background: #e3f2fd; }
                     .rpt-dl-btn.data {
@@ -7261,10 +7327,23 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="footer" role="contentinfo">
-        <p id="footer-title"><strong>Project Output Dashboard - Mangrove</strong></p>
-        <p id="footer-sample">COSME Project Outputs and Deliverables Tracker</p>
-        <p>Dashboard Created: February 2026 | Last Updated: <span id="footer-timestamp"></span></p>
+    <footer class="footer" role="contentinfo" style="background: linear-gradient(135deg, #004B87 0%, #003B6F 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-top: 20px; border-top: 4px solid #F5C518;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 8px;">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                <circle cx="100" cy="100" r="95" fill="#004B87"/>
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#F5C518" stroke-width="4"/>
+                <circle cx="100" cy="52" r="16" fill="#F5C518"/>
+                <path d="M100 72 L100 130" stroke="#F5C518" stroke-width="6" stroke-linecap="round"/>
+                <path d="M100 88 L72 110" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                <path d="M100 88 L128 110" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                <path d="M100 130 L78 162" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+                <path d="M100 130 L122 162" stroke="#F5C518" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+            <span style="font-weight: 700; font-size: 1.05em;">Plan International</span>
+        </div>
+        <p id="footer-title" style="color: #fff;"><strong>Project Output Dashboard - Mangrove</strong></p>
+        <p id="footer-sample" style="color: rgba(255,255,255,0.85);">COSME Project Outputs and Deliverables Tracker</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85em;">Dashboard Created: February 2026 | Last Updated: <span id="footer-timestamp"></span></p>
     </footer>
 
     <!-- BACK TO TOP BUTTON -->
@@ -7277,8 +7356,8 @@
         Chart.register(ChartDataLabels);
 
         const colors = {
-            primary: '#0072CE',
-            secondary: '#005a9e',
+            primary: '#004B87',
+            secondary: '#003B6F',
             success: '#2e7d32',
             warning: '#f57c00',
             danger: '#c62828',
@@ -7832,7 +7911,7 @@
                     { label: 'Household Electricity', value: '19.4%', change: '↓ 8.3pp from 27.7% baseline', trend: 'negative' }
                 ],
                 logframe: [
-                    { level: 'INTERMEDIATE OUTCOME', name: 'Behavior & Practice Change', color: '#005a9e', indicators: [
+                    { level: 'INTERMEDIATE OUTCOME', name: 'Behavior & Practice Change', color: '#003B6F', indicators: [
                         { id: '1200a', name: 'Percentage of targeted women with adequate involvement in HH, group and enterprise decision making', baseline: '57.6%', target: '65.0%', result: '95.9%', achievement: '+38.3pp', status: 'EXCEEDED' },
                         { id: '1200b', name: 'Average time women spend in unpaid work', baseline: '9.3 hours', target: '8.3 hours', result: '7.7 hours', achievement: '-1.6 hrs', status: 'EXCEEDED' },
                         { id: '1200c', name: 'Percentage of targeted women with adequate access and control over household and enterprise resources', baseline: '41.2%', target: '50.0%', result: '53.8%', achievement: '+12.6pp', status: 'EXCEEDED' }
@@ -7965,7 +8044,7 @@
                     { label: 'Harmful Norms Reduction', value: '22.7%', change: '↓ 36.4pp: Only men drive boats', trend: 'positive' }
                 ],
                 logframe: [
-                    { level: 'EXPECTED RESULTS', name: 'Increased capacity of community members and leaders, particularly men, to promote and support gender responsive NbS, economic rights and GE&I, including UPCW', color: '#0072CE', indicators: [
+                    { level: 'EXPECTED RESULTS', name: 'Increased capacity of community members and leaders, particularly men, to promote and support gender responsive NbS, economic rights and GE&I, including UPCW', color: '#004B87', indicators: [
                         { id: '1230a', name: 'Percentage of male family members with adequate knowledge and practical skills to promote and support NbS, economic rights of women and GE&I', baseline: '54.70%', target: '65.00%', result: '80.3%', achievement: '+25.6pp', status: 'EXCEEDED' },
                         { id: '1230b', name: 'Degree/extent to which women are perceived as equal to men by male family members', baseline: '41.2/100', target: '55/100', result: '71/100', achievement: '+29.8 pts', status: 'EXCEEDED' }
                     ]}
@@ -8031,7 +8110,7 @@
                     { label: 'Group Registration', value: '85.0%', change: '↑ 12.5pp from 72.5% baseline', trend: 'positive' }
                 ],
                 logframe: [
-                    { level: 'INTERMEDIATE OUTCOME', name: 'Forest Conservation Group Functionality', color: '#005a9e', indicators: [
+                    { level: 'INTERMEDIATE OUTCOME', name: 'Forest Conservation Group Functionality', color: '#003B6F', indicators: [
                         { id: '1130b', name: 'Percentage and Number of community forest conservation groups that are functional', baseline: '53.5%', target: '70.0%', result: '85.7%', achievement: '+32.2pp', status: 'EXCEEDED' }
                     ]}
                 ]
@@ -14340,7 +14419,7 @@
                 const arrowColor = status === 'exceeded' || status === 'on-track' ? '#2e7d32' : (status === 'declined' ? '#c62828' : '#f57c00');
 
                 return `<tr data-domain="${ind.domain}">
-                    <td><strong>${ind.label}</strong>${ind.logframeId ? ' <span style="color:#0072CE;font-size:0.75em;">[' + ind.logframeId + ']</span>' : ''}</td>
+                    <td><strong>${ind.label}</strong>${ind.logframeId ? ' <span style="color:#004B87;font-size:0.75em;">[' + ind.logframeId + ']</span>' : ''}</td>
                     <td style="text-transform:capitalize;">${ind.domain}</td>
                     <td>${formatVal(ind.womenBaseline, ind.unit)}</td>
                     <td>${formatVal(ind.womenMidline, ind.unit)}</td>
@@ -14980,7 +15059,7 @@
                     datasets: [{
                         label: 'Health Score',
                         data: dhScores,
-                        borderColor: '#0072CE',
+                        borderColor: '#004B87',
                         backgroundColor: 'rgba(0,114,206,0.15)',
                         pointBackgroundColor: dhScores.map(s => s >= 70 ? '#2e7d32' : (s >= 50 ? '#f57c00' : '#c62828')),
                         pointRadius: 6,
@@ -15058,7 +15137,7 @@
                         <span class="severity-indicator" title="Impact severity: ${severity}/3">
                             ${[1,2,3].map(i => `<span class="severity-dot ${i <= severity ? 'filled ' + sevClass : ''}"></span>`).join('')}
                         </span>
-                        ${ins.domain ? `<span style="font-size:0.7em;background:#f0f4ff;color:#0072CE;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:capitalize;">${ins.domain}</span>` : ''}
+                        ${ins.domain ? `<span style="font-size:0.7em;background:#f0f4ff;color:#004B87;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:capitalize;">${ins.domain}</span>` : ''}
                     </div>
                     <div class="insight-title">${ins.title}</div>
                     <div class="insight-narrative">${ins.narrative}</div>
@@ -15132,7 +15211,7 @@
             const html = Object.entries(domainHealth).map(([domain, health]) => {
                 const domainInds = indicatorDictionary.filter(i => i.domain === domain);
                 const scoreClass = health.score >= 70 ? 'healthy' : (health.score >= 50 ? 'moderate' : 'weak');
-                const color = domainColors[domain] || '#0072CE';
+                const color = domainColors[domain] || '#004B87';
 
                 const indRows = domainInds.map(ind => {
                     const wc = ppChange(ind.womenBaseline, ind.womenMidline);
@@ -15209,7 +15288,7 @@
             });
 
             // Training indicators
-            html += `<tr><td colspan="11" style="background:#f0f4ff;font-weight:700;color:#0072CE;padding:10px;">Training Indicators (Pre/Post Assessment)</td></tr>`;
+            html += `<tr><td colspan="11" style="background:#f0f4ff;font-weight:700;color:#004B87;padding:10px;">Training Indicators (Pre/Post Assessment)</td></tr>`;
             trainingIndicators.forEach((t, idx) => {
                 const gain = t.post - t.pre;
                 const status = t.post >= t.target ? 'exceeded' : 'below';
@@ -16265,10 +16344,10 @@
                 id: 'full-report',
                 title: 'Full Midline Report',
                 icon: '📄',
-                iconBg: 'linear-gradient(135deg,#0072CE,#004E8C)',
+                iconBg: 'linear-gradient(135deg,#004B87,#003B6F)',
                 category: 'all',
                 badge: 'Complete',
-                badgeColor: '#0072CE',
+                badgeColor: '#004B87',
                 desc: 'Comprehensive COSME Midline Analysis covering all programme areas — surveys, forestry, schools, seaweed, VSLA, logframe, and strategic recommendations.',
                 pdf: 'COSME_Midline_Report.pdf',
                 dataFiles: [],
@@ -16631,7 +16710,7 @@
                     </div>
                     <div class="rpt-card-footer">
                         <span style="color:#888;">📑 ${r.sections.length} sections</span>
-                        <span style="color:#0072CE;font-weight:600;">View Details →</span>
+                        <span style="color:#004B87;font-weight:600;">View Details →</span>
                     </div>
                 </div>
             `).join('');
