@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COSME Phase 2 – Project Design & Implementation Package</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230072CE'/%3E%3Ctext y='.82em' x='.15em' font-size='70' fill='white'%3EP%3C/text%3E%3C/svg%3E">
     <style>
         :root {
@@ -25,14 +28,15 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.75;
-            font-size: 15px;
+            line-height: 1.8;
+            font-size: 16px;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.01em;
         }
 
         /* HEADER */
@@ -270,14 +274,14 @@
         }
 
         .section h3 {
-            font-size: 1.18rem; color: var(--primary);
+            font-size: 1.25rem; color: var(--primary);
             margin: 28px 0 14px;
             font-weight: 700;
             letter-spacing: -0.01em;
         }
 
         .section h4 {
-            font-size: 1.02rem; color: var(--primary-dark);
+            font-size: 1.08rem; color: var(--primary-dark);
             margin: 22px 0 10px;
             font-weight: 600;
         }
@@ -285,8 +289,8 @@
         .section p {
             margin-bottom: 16px;
             color: var(--text);
-            font-size: 0.95rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.85;
         }
 
         .section ul, .section ol {
@@ -296,8 +300,8 @@
         .section li {
             margin-bottom: 10px;
             padding-left: 5px;
-            font-size: 0.95rem;
-            line-height: 1.75;
+            font-size: 1rem;
+            line-height: 1.8;
         }
 
         .section li strong {
@@ -311,8 +315,8 @@
             border-radius: 0 10px 10px 0;
             padding: 22px 26px;
             margin: 20px 0;
-            font-size: 0.95rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.85;
         }
 
         .highlight-box.goal {
@@ -336,8 +340,8 @@
             border: 1px solid var(--border);
             font-style: italic;
             color: var(--primary-dark);
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 1rem;
+            line-height: 1.75;
         }
 
         .title-option .label {
@@ -360,7 +364,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.94rem;
             table-layout: auto;
         }
 
@@ -425,8 +429,8 @@
         }
 
         .toc-block li {
-            font-size: 0.93rem;
-            line-height: 1.7;
+            font-size: 0.98rem;
+            line-height: 1.75;
         }
 
         .toc-block.inputs { border-left-color: #3498db; }
@@ -486,7 +490,7 @@
         .partner-card ul {
             margin: 0;
             padding-left: 18px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .partner-card li {
@@ -532,7 +536,7 @@
         }
 
         .footer strong { color: white; }
-        .footer { font-size: 0.88rem; line-height: 1.6; }
+        .footer { font-size: 0.92rem; line-height: 1.65; }
 
         /* PRINT */
         @media print {
@@ -937,7 +941,7 @@
         .be-domain-header {
             padding: 14px 18px;
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 0.96rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             display: flex;
@@ -1041,7 +1045,7 @@
             border-radius: 10px;
             margin-bottom: 16px;
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 0.96rem;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -1110,19 +1114,19 @@
             margin-right: 10px;
         }
         .reflection-card strong {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: #92400e;
         }
         .reflection-card p {
             margin: 8px 0 0;
-            font-size: 0.92rem;
+            font-size: 0.96rem;
             color: #78350f;
-            line-height: 1.7;
+            line-height: 1.75;
         }
         .reflection-card ul {
             margin: 6px 0 0;
             padding-left: 20px;
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             color: #92400e;
         }
 
@@ -1837,7 +1841,7 @@
             <p>Critical cross-cutting components — including research, MEL, learning, policy advocacy, safeguarding, and institutional strengthening — are <strong>jointly designed and delivered</strong> by all five partners to ensure coherence and amplify collective impact. Plan International Kenya plays a soft leadership role in consortium coordination, promoting alignment and trust-building, while acting as a connector between technical partners, community actors, and government institutions.</p>
 
             <h3>5.2 Partner Roles & Value-Add</h3>
-            <p style="font-size:0.93rem; color: var(--text-light); margin-bottom:18px; line-height:1.7;">The consortium combines <strong>Plan International Kenya / Mission Inclusion</strong> capabilities with <strong>Natural State / MEDA</strong> market expertise, <strong>AECF</strong> financing, and <strong>CICaN</strong> institutional coordination. The diagram below maps the symbiotic relationship between conservation and economic empowerment interventions.</p>
+            <p style="font-size:1rem; color: var(--text-light); margin-bottom:18px; line-height:1.75;">The consortium combines <strong>Plan International Kenya / Mission Inclusion</strong> capabilities with <strong>Natural State / MEDA</strong> market expertise, <strong>AECF</strong> financing, and <strong>CICaN</strong> institutional coordination. The diagram below maps the symbiotic relationship between conservation and economic empowerment interventions.</p>
             <div class="partner-grid">
                 <div class="partner-card" style="border-top:4px solid var(--primary);">
                     <h4>Plan International Kenya / Mission Inclusion</h4>
@@ -1920,7 +1924,7 @@
             <span class="toggle">▼</span>
         </div>
         <div class="collapsible-body open">
-            <p style="font-size:0.93rem; color:var(--text-light); margin-bottom:22px; line-height:1.7;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
+            <p style="font-size:1rem; color:var(--text-light); margin-bottom:22px; line-height:1.75;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
 
             <!-- ====== DIAGRAM 1: BE Design Architecture ====== -->
             <div class="diagram-container" id="diagram1">
@@ -2197,7 +2201,7 @@
 
             <!-- ====== REFLECTION QUESTIONS ====== -->
             <h3 style="margin-top:30px;">Design Reflection Questions</h3>
-            <p style="font-size:0.93rem; color:var(--text-light); margin-bottom:18px; line-height:1.7;">These questions guided the consortium design dialogue and can continue to inform partner engagement and program refinement.</p>
+            <p style="font-size:1rem; color:var(--text-light); margin-bottom:18px; line-height:1.75;">These questions guided the consortium design dialogue and can continue to inform partner engagement and program refinement.</p>
 
             <div class="reflection-card">
                 <span class="q-num">1</span> <strong>Collaboration Vision</strong>
