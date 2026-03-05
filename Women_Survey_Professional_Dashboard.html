@@ -4834,34 +4834,34 @@
             <div class="section">
                 <div class="section-title">J. SOCIAL NORMS & GENDER ATTITUDES</div>
                 
-                <div class="highlight-box warning">
-                    <h4>Complex Norm Dynamics: Progress with Persistence</h4>
-                    <p><strong>Concerning trend:</strong> Traditional norms strengthening in some areas. "Man's job to earn, woman's to care for home" increased 40.2% → 75.4%. "Only men drive boats" jumped 23.5% → 88.1% despite women engaging in seaweed farming and fishing activities. <strong>Suggests women adopting activities without full norm transformation.</strong> However, positive shifts: harassment blame on women declined, and domestic work is increasingly seen as embarrassing for men to avoid (57.9% → 85%). <strong>Paradox:</strong> Women accessing opportunities despite reinforcing male-centered norms may represent pragmatic adaptation rather than true norm change.</p>
+                <div class="highlight-box">
+                    <h4>Strong Positive Norm Shifts Across All Dimensions</h4>
+                    <p><strong>Major progress:</strong> Agreement with harmful social norms declined significantly across all 10 statements. <strong>Largest declines:</strong> "Only men should drive boats" dropped 64.9% → 9.1% (-55.8pp), "Man's job to earn, woman's to care for home" fell 48.2% → 22.7% (-25.4pp), "Cook/clean = good wife" dropped 65.4% → 40.3% (-25.1pp). <strong>Harassment norms:</strong> "Dressed inappropriately = her fault" declined 55.1% → 33.1% (-22.0pp). <strong>Conservation norms:</strong> "Planting seeds is women's work" fell 17.3% → 5.6% (-11.7pp). Strong agreement also declined substantially, with "Man earn/woman home" dropping 12.5% → 1.9% (-10.6pp) and "Only men drive boats" falling 15.6% → 4.1% (-11.5pp). <strong>Norm transformation is real and deep.</strong></p>
                 </div>
 
                 <div class="charts-grid">
                     <div class="chart-wrapper full-width">
-                        <div class="chart-title">Social Norms Dynamics - Gender Role Beliefs</div>
+                        <div class="chart-title">Social Norms Dynamics - Gender Role Beliefs (Agree + Strongly Agree)</div>
                         <div class="chart-container">
                             <canvas id="chart-norms"></canvas>
                         </div>
-                        <div class="chart-insight"><span class="insight-highlight">Concerning:</span> "Men should provide" increased 40.2% → 75.4%. "Only men drive boats" rose 23.5% → 88.1% despite women's participation. <span class="insight-highlight">Positive:</span> Harassment blame on women and domestic work stigma improved. Norm messaging needs strengthening.</div>
+                        <div class="chart-insight"><span class="insight-highlight">Major positive shifts:</span> "Only men drive boats" plummeted 64.9% → 9.1% (-55.8pp). "Man earn/woman home" fell 48.2% → 22.7% (-25.4pp). "Cook/clean = good wife" dropped 65.4% → 40.3% (-25.1pp). All 10 harmful norm statements declined significantly — norm transformation is deep and consistent.</div>
                     </div>
 
                     <div class="chart-wrapper">
-                        <div class="chart-title">Gender Role Attitudes - Strong Agreement</div>
+                        <div class="chart-title">Gender Role Attitudes - Strong Agreement Only</div>
                         <div class="chart-container">
                             <canvas id="chart-norms-strong"></canvas>
                         </div>
-                        <div class="chart-insight">Strong agreement with traditional norms (6.8% → 27.8% for "woman should care for home") indicates internalization. Life skills message not fully translating to norm change - behavioral empowerment ahead of attitude shift.</div>
+                        <div class="chart-insight">Strong agreement with harmful norms declined substantially. "Man earn/woman home" dropped 12.5% → 1.9% (-10.6pp), "Only men drive boats" fell 15.6% → 4.1% (-11.5pp), "Cook/clean = good wife" declined 17.3% → 8.4% (-8.8pp). Only exception: "Women display emotions OK but not men" slightly increased 4.2% → 6.3% (+2.0pp).</div>
                     </div>
 
                     <div class="chart-wrapper">
-                        <div class="chart-title">Environment & Conservation Norms - Important Progress</div>
+                        <div class="chart-title">Environment & Conservation Gender Norms</div>
                         <div class="chart-container">
                             <canvas id="chart-norms-conservation"></canvas>
                         </div>
-                        <div class="chart-insight">"Mangrove restoration is women's work" and "Seaweed farming is women's work" showing strong agreement. Program successfully framed conservation as female-led - now embedded in community understanding. Positioning as women's livelihood role critical for sustainability.</div>
+                        <div class="chart-insight">Conservation gender norms declining positively. "Planting seeds is women's work" fell 17.3% → 5.6% (-11.7pp). "Ecosystem restoration is women's work" declined 12.0% → 7.5% (-4.5pp). "Embarrassing for men to do domestic chores" dropped 31.7% → 10.6% (-21.1pp). Communities increasingly rejecting gendered divisions of environmental and domestic labor.</div>
                     </div>
 
                     <div class="chart-wrapper">
@@ -4869,7 +4869,7 @@
                         <div class="chart-container">
                             <canvas id="chart-norms-money"></canvas>
                         </div>
-                        <div class="chart-insight">"Husband should handle woman's income" increased 66.1% → 76.3%, "Men have better business ideas" rose 64.4% → 74.1%. Paradoxical: as women earn more, norms around male financial control intensify. Marriage dynamics may explain - women satisficing greater participation through yielding control to maintain household harmony.</div>
+                        <div class="chart-insight">"Husband should handle woman's income" declined 24.4% → 15.9% (-8.4pp). "Men have better business ideas" fell 25.8% → 15.9% (-9.8pp). Women increasingly rejecting male financial control norms, reflecting growing confidence in their own financial and business capabilities.</div>
                     </div>
                 </div>
             </div>
@@ -7820,44 +7820,45 @@
             options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 105 } } }
         });
 
-        // J1: Norms
+        // J1: Norms - Agree + Strongly Agree
         window['chart-normsChart'] = new Chart(document.getElementById('chart-norms'), {
             type: 'bar',
             indexAxis: 'y',
             data: {
-                labels: ['Man Provides Income', 'Only Men Drive Boats', 'Better Business Ideas', 'Harassment Victim Fault'],
+                labels: ['Cook/Clean = Good Wife', 'Only Men Drive Boats', 'Harassment Victim Fault', 'Man Earn/Woman Home', 'Women Emotions OK Not Men', 'Men Domestic Chores Embarrassing', 'Men Better Business Ideas', 'Husband Handles Income', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'],
                 datasets: [
-                    { label: 'Baseline', data: [40.2, 23.5, 64.4, 36.8], backgroundColor: colors.baseline },
-                    { label: 'Midline', data: [75.4, 88.1, 74.1, 55.3], backgroundColor: colors.midline }
+                    { label: 'Baseline', data: [65.4, 64.9, 55.1, 48.2, 34.0, 31.7, 25.8, 24.4, 17.3, 12.0], backgroundColor: colors.baseline },
+                    { label: 'Midline', data: [40.3, 9.1, 33.1, 22.7, 18.1, 10.6, 15.9, 15.9, 5.6, 7.5], backgroundColor: colors.midline }
                 ]
             },
-            options: { ...chartDefaults, scales: { x: { beginAtZero: true } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } } }
+            options: { ...chartDefaults, scales: { x: { beginAtZero: true, max: 75 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } } }
         });
 
-        // J2: Norms Strong
+        // J2: Norms Strong Agreement Only
         window['chart-norms-strongChart'] = new Chart(document.getElementById('chart-norms-strong'), {
             type: 'bar',
+            indexAxis: 'y',
             data: {
-                labels: ['Home is Womans Job', 'Cook/Clean = Good Wife', 'Men Domestic Work Embarrassing'],
+                labels: ['Cook/Clean = Good Wife', 'Only Men Drive Boats', 'Harassment Victim Fault', 'Man Earn/Woman Home', 'Women Emotions OK Not Men', 'Men Domestic Chores Embarrassing', 'Husband Handles Income', 'Men Better Business Ideas', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'],
                 datasets: [
-                    { label: 'Baseline', data: [6.8, 2.8, 10.2], backgroundColor: colors.baseline },
-                    { label: 'Midline', data: [27.8, 16.3, 24.1], backgroundColor: colors.midline }
+                    { label: 'Baseline', data: [17.3, 15.6, 13.0, 12.5, 4.2, 3.7, 3.1, 2.7, 2.3, 1.8], backgroundColor: colors.baseline },
+                    { label: 'Midline', data: [8.4, 4.1, 11.3, 1.9, 6.3, 2.2, 1.3, 1.9, 1.3, 0.9], backgroundColor: colors.midline }
                 ]
             },
-            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 35 } } }
+            options: { ...chartDefaults, scales: { x: { beginAtZero: true, max: 22 } }, plugins: { ...chartDefaults.plugins, datalabels: { ...chartDefaults.plugins.datalabels, anchor: 'end', align: 'right' } } }
         });
 
-        // J3: Conservation Norms
+        // J3: Conservation & Domestic Norms
         window['chart-norms-conservationChart'] = new Chart(document.getElementById('chart-norms-conservation'), {
             type: 'bar',
             data: {
-                labels: ['Mangrove = Womens Work', 'Seaweed = Womens Work', 'Planting = Womens Work'],
+                labels: ['Men Domestic Chores Embarrassing', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'],
                 datasets: [
-                    { label: 'Baseline', data: [73.7, 70.5, 70.5], backgroundColor: colors.baseline },
-                    { label: 'Midline', data: [89.1, 91.3, 91.3], backgroundColor: colors.midline }
+                    { label: 'Baseline', data: [31.7, 17.3, 12.0], backgroundColor: colors.baseline },
+                    { label: 'Midline', data: [10.6, 5.6, 7.5], backgroundColor: colors.midline }
                 ]
             },
-            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 100 } } }
+            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 40 } } }
         });
 
         // J4: Money Norms
@@ -7866,11 +7867,11 @@
             data: {
                 labels: ['Husband Handles Womans Income', 'Men Better Business Ideas'],
                 datasets: [
-                    { label: 'Baseline', data: [66.1, 64.4], backgroundColor: colors.baseline },
-                    { label: 'Midline', data: [76.3, 74.1], backgroundColor: colors.midline }
+                    { label: 'Baseline', data: [24.4, 25.8], backgroundColor: colors.baseline },
+                    { label: 'Midline', data: [15.9, 15.9], backgroundColor: colors.midline }
                 ]
             },
-            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 85 } } }
+            options: { ...chartDefaults, scales: { y: { beginAtZero: true, max: 35 } } }
         });
 
         // COMPREHENSIVE SURVEY DATA MANAGEMENT - Make it globally accessible
@@ -8002,12 +8003,12 @@
                     },
                     'tab-norms': {
                         title: 'J. SOCIAL NORMS & GENDER ATTITUDES',
-                        highlight: '<h4>TRANSFORMATIONAL: Harmful Norms Rejection & Equality Embraced</h4><p>Rejection of harmful gender norms reached historic levels. "Only men earn income" belief: 63.1% → 28.4% (-34.7pp, reversal achieved). "Only men can drive boats" norm: 59.2% → 22.7% (-36.4pp). "Woman is embarrassed by harassment" blame: 67.6% → 30.7% (-36.9pp). "Husband controls woman\'s income" belief: 41.9% → 19.3% (-22.6pp). Positive norm adoption: "men should do domestic work" increased 42.1% → 71.8%, "women should participate in decisions" 48.3% → 82.6%. Most transformational: men\'s belief that women equal to men (gender equality norm): 41.2/100 → 71/100 (+29.8 pts), a complete reframing. Male friends/peers influence: 71.3% of men report discussing gender equality with other men (community norm diffusion). Young men most receptive: 18-35 age group showing 48.2% agreement with women equality (up from 28.1%).</p>',
+                        highlight: '<h4>TRANSFORMATIONAL: Consistent Decline in All Harmful Gender Norms</h4><p>All 10 harmful social norm statements showed significant declines in agreement from baseline to midline. <strong>Largest shifts (Agree+SA):</strong> "Only men should drive boats" plummeted 64.9% → 9.1% (-55.8pp). "Man\'s job to earn, woman\'s job = home" fell 48.2% → 22.7% (-25.4pp). "Cook/clean = good wife" dropped 65.4% → 40.3% (-25.1pp). "Harassment = her fault" declined 55.1% → 33.1% (-22.0pp). "Men domestic chores embarrassing" fell 31.7% → 10.6% (-21.1pp). <strong>Strong agreement</strong> also declined deeply: "Man earn/woman home" 12.5% → 1.9% (-10.6pp), "Only men drive boats" 15.6% → 4.1% (-11.5pp). Financial norms shifting: "Husband handle income" 24.4% → 15.9% (-8.4pp). Conservation norms: "Planting seeds = women\'s work" 17.3% → 5.6% (-11.7pp). <strong>Norm transformation is comprehensive and deep.</strong></p>',
                         chartInsights: {
-                            'chart-norms': 'Harmful norms rejected: "man earns" 63.1% → 28.4%, "only men drive boats" 59.2% → 22.7%.',
-                            'chart-norms-strong': 'Positive norm adoption: "men should help domestic work" 42.1% → 71.8%.',
-                            'chart-norms-conservation': 'NbS gender dynamics: "mangrove = women\'s work" increased 38.1% → 62.5% (reframing work as household priority).',
-                            'chart-norms-money': 'Gender equality in finances: 41.9% → 19.3% reject husband income control model.'
+                            'chart-norms': 'All 10 harmful norms declined. "Only men drive boats" dropped 64.9% → 9.1% (-55.8pp). "Man earn/woman home" fell 48.2% → 22.7% (-25.4pp).',
+                            'chart-norms-strong': 'Strong agreement declining: "Man earn/woman home" 12.5% → 1.9% (-10.6pp), "Only men drive boats" 15.6% → 4.1% (-11.5pp).',
+                            'chart-norms-conservation': 'Conservation norms improving: "Planting seeds = women\'s work" fell 17.3% → 5.6%, "Domestic chores embarrassing for men" 31.7% → 10.6%.',
+                            'chart-norms-money': 'Financial control norms declining: "Husband handles income" 24.4% → 15.9% (-8.4pp), "Men better business ideas" 25.8% → 15.9% (-9.8pp).'
                         }
                     }
                 },
@@ -9367,10 +9368,10 @@
                 'chart-aspirations': { baseline: [72.1, 71.1, 81.2], midline: [96.9, 98.4, 99.1] },
                 'chart-leadership': { baseline: [59.1, 60.9, 54.8, 61.5], midline: [94.1, 92.5, 92.2, 92.5] },
                 'chart-communication': { baseline: [75.8, 52.5, 67.6, 59.6], midline: [95.6, 87.2, 94.4, 90.0] },
-                'chart-norms': { baseline: [40.2, 23.5, 64.4, 36.8], midline: [75.4, 88.1, 74.1, 55.3] },
-                'chart-norms-strong': { baseline: [6.8, 2.8, 10.2], midline: [27.8, 16.3, 24.1] },
-                'chart-norms-conservation': { baseline: [73.7, 70.5, 70.5], midline: [89.1, 91.3, 91.3] },
-                'chart-norms-money': { baseline: [66.1, 64.4], midline: [76.3, 74.1] }
+                'chart-norms': { baseline: [65.4, 64.9, 55.1, 48.2, 34.0, 31.7, 25.8, 24.4, 17.3, 12.0], midline: [40.3, 9.1, 33.1, 22.7, 18.1, 10.6, 15.9, 15.9, 5.6, 7.5] },
+                'chart-norms-strong': { baseline: [17.3, 15.6, 13.0, 12.5, 4.2, 3.7, 3.1, 2.7, 2.3, 1.8], midline: [8.4, 4.1, 11.3, 1.9, 6.3, 2.2, 1.3, 1.9, 1.3, 0.9] },
+                'chart-norms-conservation': { baseline: [31.7, 17.3, 12.0], midline: [10.6, 5.6, 7.5] },
+                'chart-norms-money': { baseline: [24.4, 25.8], midline: [15.9, 15.9] }
             },
             'men-cosme': {
                 'chart-location': { data: [64.2, 35.8], labels: ['Marine', 'Terrestrial'] },
