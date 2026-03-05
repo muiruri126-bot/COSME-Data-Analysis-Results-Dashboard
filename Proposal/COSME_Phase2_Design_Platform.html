@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COSME Phase 2 – Project Design & Implementation Package</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230072CE'/%3E%3Ctext y='.82em' x='.15em' font-size='70' fill='white'%3EP%3C/text%3E%3C/svg%3E">
     <style>
         :root {
-            --primary: #0a4d7a;
-            --primary-light: #1a6da8;
-            --primary-dark: #063554;
-            --accent: #00a78e;
-            --accent-light: #00c9ab;
-            --gold: #d4a843;
+            --primary: #0072CE;
+            --primary-light: #338FDB;
+            --primary-dark: #003C71;
+            --accent: #00A651;
+            --accent-light: #2FC46B;
+            --gold: #FFD200;
             --bg: #f5f7fa;
             --card-bg: #ffffff;
             --text: #2c3e50;
@@ -50,6 +50,21 @@
 
         .header-logo .icon {
             font-size: 1.8rem;
+        }
+
+        .header-logo .plan-logo-svg {
+            height: 45px;
+            width: auto;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold);
         }
 
         .header-title h1 {
@@ -127,7 +142,7 @@
         .nav-item.active {
             background: #eaf3fb;
             color: var(--primary);
-            border-left-color: var(--primary);
+            border-left-color: var(--gold);
             font-weight: 600;
         }
 
@@ -556,7 +571,7 @@
 <header class="header">
     <div class="header-logo">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <span class="icon">🌊</span>
+        <img class="plan-logo-svg" src="plan-logo-white.svg" alt="Plan International">
         <div class="header-title">
             <h1>COSME Phase 2 – Project Design Package</h1>
             <span>Plan International Kenya | Blue Economy Program</span>
@@ -622,6 +637,11 @@
 
     <!-- HERO -->
     <div class="hero" id="hero">
+        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+            <img src="plan-logo-white.svg" alt="Plan International" style="height: 55px; width: auto; opacity: 0.95;">
+            <div style="height: 40px; width: 3px; background: var(--gold); border-radius: 2px;"></div>
+            <span style="font-size: 0.95rem; opacity: 0.9; font-weight: 500; letter-spacing: 0.5px;">PLAN INTERNATIONAL KENYA</span>
+        </div>
         <h1>COSME Phase 2: Advancing Climate-Resilient Blue Economy Livelihoods, Gender Justice & Systems Change</h1>
         <p class="subtitle">Digitized Project Design & Implementation Package for Coastal Women and Youth in Kenya</p>
         <div class="hero-stats">
@@ -1465,10 +1485,14 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="footer">
+<footer class="footer" style="border-top: 4px solid var(--gold);">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; justify-content: center;">
+        <img src="plan-logo-white.svg" alt="Plan International" style="height: 40px; width: auto; opacity: 0.9;">
+    </div>
     <p><strong>COSME Phase 2 – Project Design & Implementation Package</strong></p>
     <p>Plan International Kenya | Blue Economy Program | Prepared for Donor Proposals, Results Frameworks, Workplans & MEL Plans</p>
     <p style="margin-top:8px; font-size:0.75rem;">Document generated March 2026 | For internal and consortium use</p>
+    <p style="margin-top:6px; font-size:0.7rem; opacity:0.7;">Until we are all equal &trade;</p>
 </footer>
 
 <!-- BACK TO TOP -->
