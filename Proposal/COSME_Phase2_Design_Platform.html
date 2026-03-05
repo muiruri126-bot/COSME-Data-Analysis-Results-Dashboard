@@ -1156,7 +1156,7 @@
         <input type="text" id="contribRole" placeholder="e.g. Programme Manager">
         <div class="modal-actions">
             <button class="btn-secondary" onclick="closeContributorModal()">Cancel</button>
-            <button class="btn-primary" onclick="confirmContributor()">✏️ Start Editing</button>
+            <button class="btn-primary" onclick="confirmContributor()">Start Editing</button>
         </div>
     </div>
 </div>
@@ -1164,7 +1164,7 @@
 <!-- EXPORT MODAL -->
 <div class="modal-overlay" id="exportModal">
     <div class="modal">
-        <h2>📥 Export Document</h2>
+        <h2>Export Document</h2>
         <p class="modal-desc">Download the current version with all edits included.</p>
         <div class="export-options">
             <div class="export-option" onclick="exportAsHTML()">
@@ -1198,20 +1198,20 @@
 <!-- EDIT MODE BANNER -->
 <div class="edit-banner" id="editBanner">
     <div class="edit-info">
-        <span>✏️ <strong>Edit Mode Active</strong></span>
+        <span><strong>Edit Mode Active</strong></span>
         <span class="contributor-badge" id="editBadge">—</span>
         <span style="font-size:0.72rem; opacity:0.85;">Click any text to edit. Changes auto-save.</span>
     </div>
     <div style="display:flex; gap:8px;">
-        <button class="btn-save" onclick="saveAllEdits()">💾 Save</button>
-        <button class="btn-stop" onclick="stopEditMode()">✖ Exit Edit Mode</button>
+        <button class="btn-save" onclick="saveAllEdits()">Save</button>
+        <button class="btn-stop" onclick="stopEditMode()">Exit Edit Mode</button>
     </div>
 </div>
 
 <!-- EDIT HISTORY PANEL -->
 <div class="history-panel" id="historyPanel">
     <div class="panel-header">
-        <span>📝 Edit History</span>
+        <span>Edit History</span>
         <button class="panel-close" onclick="toggleHistory()">✕</button>
     </div>
     <div id="historyList">
@@ -1230,11 +1230,11 @@
         </div>
     </div>
     <div class="header-actions">
-        <button class="edit-btn" onclick="requestEditMode()">✏️ Edit</button>
-        <button class="history-btn" onclick="toggleHistory()">📝 History</button>
-        <button onclick="openExportModal()">📥 Export</button>
-        <button onclick="window.print()">🖨️ Print / PDF</button>
-        <button onclick="toggleAllSections()">📂 Expand / Collapse All</button>
+        <button class="edit-btn" onclick="requestEditMode()">Edit</button>
+        <button class="history-btn" onclick="toggleHistory()">History</button>
+        <button onclick="openExportModal()">Export</button>
+        <button onclick="window.print()">Print / PDF</button>
+        <button onclick="toggleAllSections()">Expand / Collapse All</button>
     </div>
 </header>
 
@@ -2689,7 +2689,7 @@
         if (header && !header.querySelector('.edit-indicator')) {
             const badge = document.createElement('span');
             badge.className = 'edit-indicator';
-            badge.textContent = '✏️ Edited';
+            badge.textContent = 'Edited';
             badge.style.display = 'inline-block';
             header.querySelector('div').appendChild(badge);
         }
@@ -2751,7 +2751,7 @@
                 if (header && !header.querySelector('.edit-indicator')) {
                     const badge = document.createElement('span');
                     badge.className = 'edit-indicator';
-                    badge.textContent = '✏️ Edited';
+                    badge.textContent = 'Edited';
                     badge.style.display = 'inline-block';
                     header.querySelector('div')?.appendChild(badge);
                 }
