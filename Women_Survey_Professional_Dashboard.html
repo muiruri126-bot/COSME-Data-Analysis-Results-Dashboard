@@ -169,42 +169,20 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
-            padding-top: 20px;
+            padding-top: 15px;
             padding-bottom: 5px;
         }
 
-        /* SURVEY SELECTOR - Fixed at top, compact horizontal strip */
+        /* SURVEY SELECTOR - HIDDEN (replaced by sidebar) */
         .survey-selector {
-            background: rgba(255, 255, 255, 0.97);
-            padding: 6px 12px;
-            margin-bottom: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: nowrap;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1050;
-            transition: box-shadow 0.3s ease, background 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-top: 3px solid #0072CE;
+            display: none !important;
         }
 
-        .survey-selector.scrolled {
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Spacer to push content below fixed survey selector */
         .survey-selector-spacer {
-            height: 46px;
-            flex-shrink: 0;
+            display: none !important;
         }
 
         .survey-selector label {
@@ -1155,22 +1133,12 @@
         /* MOBILE HAMBURGER MENU & DRAWER           */
         /* ======================================== */
         .mobile-menu-toggle {
-            display: none;
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            justify-content: space-between;
-            min-height: 48px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 114, 206,0.2);
+            display: none !important;
+        }
+
+        .mobile-nav-overlay,
+        .mobile-nav-drawer {
+            display: none !important;
         }
 
         .mobile-menu-toggle .current-survey-label {
@@ -1390,34 +1358,7 @@
                 padding: 12px;
             }
 
-            /* Show hamburger, hide desktop survey buttons */
-            .mobile-menu-toggle {
-                display: flex;
-            }
-
-            .mobile-nav-drawer {
-                display: block;
-            }
-
-            .survey-buttons {
-                display: none !important;
-            }
-
-            .survey-selector label {
-                display: none;
-            }
-
-            .survey-selector {
-                padding: 6px 8px;
-                gap: 6px;
-                margin-bottom: 0;
-                border-radius: 0;
-            }
-
-            /* Spacer adjustment for mobile */
-            .survey-selector-spacer {
-                height: 46px;
-            }
+            /* Old nav elements stay hidden — sidebar handles all navigation */
 
             /* Header */
             .header {
@@ -1744,34 +1685,6 @@
         @media (max-width: 480px) {
             .container {
                 padding: 8px;
-            }
-
-            /* Survey Selector - minimal on phone */
-            .survey-selector {
-                padding: 5px 6px;
-                gap: 4px;
-                border-radius: 0;
-                margin-bottom: 0;
-            }
-
-            .survey-selector-spacer {
-                height: 42px;
-            }
-
-            .mobile-menu-toggle {
-                padding: 10px 14px;
-                font-size: 0.9em;
-            }
-
-            /* Mobile nav drawer full width on small phones */
-            .mobile-nav-drawer {
-                width: 90%;
-                max-width: 300px;
-            }
-
-            .mobile-nav-drawer .drawer-nav-item {
-                padding: 12px 14px;
-                font-size: 0.9em;
             }
 
             /* Header */
@@ -2203,15 +2116,6 @@
                 padding: 6px;
             }
 
-            .survey-selector {
-                padding: 4px 6px;
-            }
-
-            .mobile-menu-toggle {
-                padding: 9px 12px;
-                font-size: 0.85em;
-            }
-
             .header {
                 padding: 12px;
             }
@@ -2271,11 +2175,6 @@
         /* LANDSCAPE PHONE                          */
         /* ======================================== */
         @media (max-width: 768px) and (orientation: landscape) {
-            .mobile-nav-drawer {
-                width: 50%;
-                max-width: 300px;
-            }
-
             .chart-container {
                 height: 260px;
             }
@@ -2403,6 +2302,9 @@
             .survey-selector-spacer,
             .mobile-nav-overlay,
             .mobile-nav-drawer,
+            .sidebar,
+            .sidebar-overlay,
+            .sidebar-mobile-toggle,
             .tabs-container,
             #backToTop,
             .scroll-indicator,
@@ -2411,6 +2313,10 @@
             .collapsible-header::after,
             .footer {
                 display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
             }
 
             /* Reset positioning so content flows naturally */
@@ -3194,9 +3100,492 @@
             .toc-connections-grid, .toc-tensions-grid { grid-template-columns: 1fr; }
             .toc-connection-card, .toc-tension-card { page-break-inside: avoid; box-shadow: none !important; border: 1px solid #ddd; }
         }
+
+        /* ======================================== */
+        /* VERTICAL SIDEBAR NAVIGATION              */
+        /* ======================================== */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 1060;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 2px 0 12px rgba(0,0,0,0.06);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            color: white;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-header .sidebar-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header .sidebar-logo img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .sidebar-header .sidebar-brand {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-header .sidebar-brand h2 {
+            margin: 0;
+            font-size: 0.95em;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+        }
+
+        .sidebar-header .sidebar-brand small {
+            font-size: 0.7em;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #c0c0c0 transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 4px;
+        }
+
+        .sidebar-group {
+            margin-bottom: 2px;
+        }
+
+        .sidebar-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.72em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+            user-select: none;
+        }
+
+        .sidebar-group-header:hover {
+            color: #0072CE;
+            background: #f5f8fc;
+        }
+
+        .sidebar-group-header .group-icon {
+            font-size: 1.1em;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-group-header .group-label {
+            flex: 1;
+        }
+
+        .sidebar-group-header .group-chevron {
+            font-size: 0.85em;
+            transition: transform 0.25s ease;
+            color: #aaa;
+            flex-shrink: 0;
+        }
+
+        .sidebar-group.collapsed .group-chevron {
+            transform: rotate(-90deg);
+        }
+
+        .sidebar-group-items {
+            overflow: hidden;
+            max-height: 500px;
+            transition: max-height 0.3s ease;
+        }
+
+        .sidebar-group.collapsed .sidebar-group-items {
+            max-height: 0;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 18px 9px 44px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.82em;
+            font-weight: 500;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .sidebar-item:hover {
+            background: #f0f4ff;
+            color: #0072CE;
+            border-left-color: #90c2f0;
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(90deg, #e3f2fd 0%, #f0f7ff 100%);
+            color: #0072CE;
+            font-weight: 700;
+            border-left-color: #0072CE;
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: #0072CE;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-item .item-icon {
+            font-size: 0.95em;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+
+        .sidebar-item.active .item-icon {
+            opacity: 1;
+        }
+
+        .sidebar-item .item-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-footer {
+            padding: 12px 18px;
+            border-top: 1px solid #eee;
+            background: #fafbfc;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer small {
+            font-size: 0.68em;
+            color: #999;
+            display: block;
+            text-align: center;
+        }
+
+        /* Sidebar collapse toggle for desktop */
+        .sidebar-collapse-btn {
+            display: none;
+            position: absolute;
+            top: 12px;
+            right: -14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .sidebar-collapse-btn:hover {
+            background: #f0f4ff;
+            color: #0072CE;
+            border-color: #0072CE;
+        }
+
+        /* Mobile sidebar toggle button (replaces old hamburger) */
+        .sidebar-mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 1070;
+            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 12px rgba(0, 114, 206, 0.35);
+            font-size: 1.3em;
+            transition: all 0.3s;
+        }
+
+        .sidebar-mobile-toggle:hover {
+            box-shadow: 0 4px 16px rgba(0, 114, 206, 0.5);
+            transform: scale(1.05);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 1055;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Main content area offset by sidebar width */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-width: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* ======================================== */
+        /* SIDEBAR RESPONSIVE - TABLET (<=1024px)   */
+        /* ======================================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+                min-width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+        /* ======================================== */
+        /* SIDEBAR RESPONSIVE - MOBILE (<=768px)    */
+        /* ======================================== */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px;
+                min-width: 280px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .sidebar-mobile-toggle {
+                display: flex;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* ======================================== */
+        /* SIDEBAR PRINT HIDE                       */
+        /* ======================================== */
+        @media print {
+            .sidebar,
+            .sidebar-overlay,
+            .sidebar-mobile-toggle {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- SIDEBAR MOBILE TOGGLE -->
+    <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        ☰
+    </button>
+
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- VERTICAL SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="dashboardSidebar" role="navigation" aria-label="Dashboard navigation">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="plan-logo.svg" alt="Plan" onerror="this.parentElement.innerHTML='P'" />
+            </div>
+            <div class="sidebar-brand">
+                <h2>COSME & GJJ</h2>
+                <small>Plan International Kenya</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- Group 1: Surveys -->
+            <div class="sidebar-group" data-group="surveys">
+                <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
+                    <span class="group-icon">📋</span>
+                    <span class="group-label">Surveys</span>
+                    <span class="group-chevron">▾</span>
+                </button>
+                <div class="sidebar-group-items">
+                    <button class="sidebar-item" onclick="sidebarNav('women-cosme', this)" data-key="women-cosme">
+                        <span class="item-icon">👩</span>
+                        <span class="item-label">Women Survey (Midline)</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('men-cosme', this)" data-key="men-cosme">
+                        <span class="item-icon">👨</span>
+                        <span class="item-label">Men Survey (Midline)</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('gjj-women', this)" data-key="gjj-women">
+                        <span class="item-icon">👩‍🏫</span>
+                        <span class="item-label">GJJ KAP Women (Endline)</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('gjj-men', this)" data-key="gjj-men">
+                        <span class="item-icon">👨‍🏫</span>
+                        <span class="item-label">GJJ KAP Men (Endline)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Group 2: Assessments & Monitoring -->
+            <div class="sidebar-group" data-group="assessments">
+                <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
+                    <span class="group-icon">📊</span>
+                    <span class="group-label">Assessments & Monitoring</span>
+                    <span class="group-chevron">▾</span>
+                </button>
+                <div class="sidebar-group-items">
+                    <button class="sidebar-item" onclick="sidebarNav('forestry', this)" data-key="forestry">
+                        <span class="item-icon">🌳</span>
+                        <span class="item-label">Forestry Functionality</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('seaweed-assessment', this)" data-key="seaweed-assessment">
+                        <span class="item-icon">🌊</span>
+                        <span class="item-label">Seaweed Assessment</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('vsla-monitoring', this)" data-key="vsla-monitoring">
+                        <span class="item-icon">💰</span>
+                        <span class="item-label">VSLA Monitoring</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('prepost-forest', this)" data-key="prepost-forest">
+                        <span class="item-icon">📝</span>
+                        <span class="item-label">Trainings Pre & Post</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('schools-dashboard', this)" data-key="schools-dashboard">
+                        <span class="item-icon">🏫</span>
+                        <span class="item-label">Schools Dashboard</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Group 3: Analysis & Evidence -->
+            <div class="sidebar-group" data-group="analysis">
+                <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
+                    <span class="group-icon">🔬</span>
+                    <span class="group-label">Analysis & Evidence</span>
+                    <span class="group-chevron">▾</span>
+                </button>
+                <div class="sidebar-group-items">
+                    <button class="sidebar-item" onclick="sidebarNav('automated-insights', this)" data-key="automated-insights">
+                        <span class="item-icon">💡</span>
+                        <span class="item-label">Impact & Evidence</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('cross-dataset', this)" data-key="cross-dataset">
+                        <span class="item-icon">🔗</span>
+                        <span class="item-label">Cross-Dataset Synthesis</span>
+                    </button>
+                    <button class="sidebar-item active" onclick="sidebarNav('project-outputs', this)" data-key="project-outputs">
+                        <span class="item-icon">📈</span>
+                        <span class="item-label">Project Outputs</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Group 4: Reports & Tools -->
+            <div class="sidebar-group" data-group="reports">
+                <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
+                    <span class="group-icon">🛠️</span>
+                    <span class="group-label">Reports & Tools</span>
+                    <span class="group-chevron">▾</span>
+                </button>
+                <div class="sidebar-group-items">
+                    <button class="sidebar-item" onclick="sidebarNav('report-generation', this)" data-key="report-generation">
+                        <span class="item-icon">📄</span>
+                        <span class="item-label">Report Generation</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('analytics-dashboard', this)" data-key="analytics-dashboard">
+                        <span class="item-icon">📊</span>
+                        <span class="item-label">Analytics</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <small>COSME & GJJ M&E Dashboard</small>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content" id="mainContent">
     <div class="container">
         <!-- LIVE VIEWERS BADGE -->
         <div id="live-viewers-badge" onclick="document.getElementById('viewer-panel').classList.toggle('open')">
@@ -7321,7 +7710,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="footer" role="contentinfo" style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-top: 20px; border-top: 4px solid #0072CE;">
+    <footer class="footer" role="contentinfo" style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin: 20px 20px 10px 20px; border-top: 4px solid #0072CE;">
         <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 8px;">
             <img src="plan-logo.svg" alt="Plan International" style="width: 120px; height: auto;" />
         </div>
@@ -7329,6 +7718,8 @@
         <p id="footer-sample" style="color: rgba(255,255,255,0.85);">COSME Project Outputs and Deliverables Tracker</p>
         <p style="color: rgba(255,255,255,0.7); font-size: 0.85em;">Dashboard Created: February 2026 | Last Updated: <span id="footer-timestamp"></span></p>
     </footer>
+
+    </div><!-- /main-content -->
 
     <!-- BACK TO TOP BUTTON -->
     <button id="backToTop" onclick="scrollToTop()" title="Back to Top" aria-label="Scroll back to top">↑</button>
@@ -7338,6 +7729,83 @@
 
     <script>
         Chart.register(ChartDataLabels);
+
+        // ══════════════════════════════════════════
+        // SIDEBAR NAVIGATION LOGIC
+        // ══════════════════════════════════════════
+
+        // Toggle sidebar group expand/collapse
+        function toggleSidebarGroup(headerBtn) {
+            const group = headerBtn.closest('.sidebar-group');
+            group.classList.toggle('collapsed');
+        }
+
+        // Sidebar navigation — click handler
+        function sidebarNav(surveyKey, btn) {
+            // Update active state on sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Ensure the parent group is expanded
+            const group = btn.closest('.sidebar-group');
+            if (group && group.classList.contains('collapsed')) {
+                group.classList.remove('collapsed');
+            }
+
+            // Close mobile sidebar if open
+            closeSidebar();
+
+            // Delegate to existing switchSurvey function
+            switchSurvey(surveyKey);
+        }
+
+        // Toggle sidebar (mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('dashboardSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggle = document.getElementById('sidebarMobileToggle');
+
+            sidebar.classList.toggle('mobile-open');
+            if (sidebar.classList.contains('mobile-open')) {
+                overlay.classList.add('open');
+                toggle.innerHTML = '✕';
+            } else {
+                overlay.classList.remove('open');
+                toggle.innerHTML = '☰';
+            }
+        }
+
+        // Close sidebar (mobile)
+        function closeSidebar() {
+            const sidebar = document.getElementById('dashboardSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggle = document.getElementById('sidebarMobileToggle');
+
+            if (sidebar.classList.contains('mobile-open')) {
+                sidebar.classList.remove('mobile-open');
+                overlay.classList.remove('open');
+                if (toggle) toggle.innerHTML = '☰';
+            }
+        }
+
+        // Sync sidebar active state when switchSurvey is called from elsewhere
+        function syncSidebarActive(surveyKey) {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                const itemKey = item.getAttribute('data-key');
+                const isMatch = surveyKey.startsWith('prepost-')
+                    ? itemKey === 'prepost-forest'
+                    : itemKey === surveyKey;
+                if (isMatch) {
+                    item.classList.add('active');
+                    // Expand parent group if collapsed
+                    const group = item.closest('.sidebar-group');
+                    if (group && group.classList.contains('collapsed')) {
+                        group.classList.remove('collapsed');
+                    }
+                }
+            });
+        }
 
         const colors = {
             primary: '#0072CE',
@@ -8279,6 +8747,11 @@
 
         // Survey Switching Function
         function switchSurvey(surveyKey) {
+            // Sync sidebar active state
+            if (typeof syncSidebarActive === 'function') {
+                syncSidebarActive(surveyKey);
+            }
+
             // ── Standalone dashboards (config-driven) ──
             const standalone = standaloneDashboards[surveyKey];
             if (standalone) {
@@ -16266,58 +16739,21 @@
     <!-- STICKY HEADER SCROLL MANAGEMENT -->
     <script>
     (function() {
-        const selector = document.querySelector('.survey-selector');
-        const spacer = document.querySelector('.survey-selector-spacer');
-
-        // Dynamically measure and set spacer height to match selector
-        function updateSpacerHeight() {
-            if (selector && spacer) {
-                const h = selector.offsetHeight;
-                spacer.style.height = h + 'px';
-                // Update CSS custom property for tabs/section-title offsets
-                document.documentElement.style.setProperty('--selector-height', h + 'px');
-                // Update tabs top offset
-                document.querySelectorAll('.tabs-container').forEach(tc => {
-                    tc.style.top = h + 'px';
-                });
-                // Update section-title offsets (selector + approx tabs height)
-                document.querySelectorAll('.section-title').forEach(st => {
-                    st.style.top = (h + 48) + 'px';
-                });
-            }
+        // With sidebar navigation, the old fixed survey-selector is hidden.
+        // Set tabs and section-title offsets to 0 since there's no top bar.
+        function updateOffsets() {
+            document.documentElement.style.setProperty('--selector-height', '0px');
+            document.querySelectorAll('.tabs-container').forEach(tc => {
+                tc.style.top = '0px';
+            });
+            document.querySelectorAll('.section-title').forEach(st => {
+                st.style.top = '48px';
+            });
         }
 
-        // Run on load and resize
-        updateSpacerHeight();
-        window.addEventListener('resize', updateSpacerHeight);
-        // Recheck after fonts/images load
-        window.addEventListener('load', updateSpacerHeight);
-
-        // Add scrolled class for shadow effect
-        let ticking = false;
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(function() {
-                    if (selector) {
-                        if (window.scrollY > 10) {
-                            selector.classList.add('scrolled');
-                        } else {
-                            selector.classList.remove('scrolled');
-                        }
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }, { passive: true });
-
-        // Observe DOM mutations (survey switching may show/hide sub-selectors)
-        const observer = new MutationObserver(function() {
-            setTimeout(updateSpacerHeight, 100);
-        });
-        if (selector) {
-            observer.observe(selector, { childList: true, subtree: true, attributes: true });
-        }
+        updateOffsets();
+        window.addEventListener('resize', updateOffsets);
+        window.addEventListener('load', updateOffsets);
     })();
     </script>
 
