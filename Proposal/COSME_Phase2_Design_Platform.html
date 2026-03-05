@@ -796,6 +796,21 @@
         body.edit-mode .be-domain-header.editable-content {
             outline-offset: 3px;
         }
+        body.edit-mode .section-num.editable-content,
+        body.edit-mode .nav-num.editable-content {
+            outline: 2px dashed rgba(255,210,0,0.5);
+            outline-offset: 2px;
+            cursor: text;
+        }
+        body.edit-mode .section-num.editable-content:hover,
+        body.edit-mode .nav-num.editable-content:hover {
+            outline-color: rgba(255,210,0,0.8);
+        }
+        body.edit-mode .section-num.editable-content:focus,
+        body.edit-mode .nav-num.editable-content:focus {
+            outline: 2px solid var(--gold);
+            background: rgba(255,210,0,0.15);
+        }
 
         /* Edited indicator */
         .edit-indicator {
@@ -1297,25 +1312,25 @@
             <span class="nav-num">5</span> Collaboration Architecture
         </a>
         <a class="nav-item" href="#diagrams" data-section="diagrams">
-            <span class="nav-num">6</span> BE Design Diagrams
+            <span class="nav-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));"></span> BE Design Diagrams
         </a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-label">Risk & Quality</div>
+        <a class="nav-item" href="#section6" data-section="section6">
+            <span class="nav-num">6</span> Boundaries & Assumptions
+        </a>
         <a class="nav-item" href="#section7" data-section="section7">
-            <span class="nav-num">7</span> Boundaries & Assumptions
+            <span class="nav-num">7</span> MEL, Research & Learning
         </a>
         <a class="nav-item" href="#section8" data-section="section8">
-            <span class="nav-num">8</span> MEL, Research & Learning
-        </a>
-        <a class="nav-item" href="#section9" data-section="section9">
-            <span class="nav-num">9</span> Risk Analysis & Mitigation
+            <span class="nav-num">8</span> Risk Analysis & Mitigation
         </a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-label">Summary</div>
-        <a class="nav-item" href="#section10" data-section="section10">
-            <span class="nav-num">10</span> Executive Summary
+        <a class="nav-item" href="#section9" data-section="section9">
+            <span class="nav-num">9</span> Executive Summary
         </a>
     </div>
 </nav>
@@ -1875,7 +1890,7 @@
     <div class="section" id="diagrams">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num">6</div>
+                <div class="section-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));"></div>
                 <h2>Blue Economy Program Design — Schematic Diagrams</h2>
             </div>
             <span class="toggle">▼</span>
@@ -2151,8 +2166,8 @@
                     <a class="diagram-link-btn" href="#section5">Partner Details</a>
                     <a class="diagram-link-btn" href="#section3">Results Framework</a>
                     <a class="diagram-link-btn" href="#section4">Workplan</a>
-                    <a class="diagram-link-btn" href="#section8">MEL & Research</a>
-                    <a class="diagram-link-btn" href="#section9">Risk Analysis</a>
+                    <a class="diagram-link-btn" href="#section7">MEL & Research</a>
+                    <a class="diagram-link-btn" href="#section8">Risk Analysis</a>
                 </div>
             </div>
 
@@ -2200,19 +2215,19 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- SECTION 7: BOUNDARIES & ASSUMPTIONS -->
+    <!-- SECTION 6: BOUNDARIES & ASSUMPTIONS -->
     <!-- ============================================== -->
-    <div class="section" id="section7">
+    <div class="section" id="section6">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num">7</div>
+                <div class="section-num">6</div>
                 <h2>Boundaries, Limitations & Assumptions</h2>
             </div>
             <span class="toggle">▼</span>
         </div>
         <div class="collapsible-body open">
 
-            <h3>7.1 Scope Boundaries</h3>
+            <h3>6.1 Scope Boundaries</h3>
             <ul>
                 <li><strong>Thematic focus:</strong> Coastal and marine-based livelihood systems (seaweed, mangrove-linked, conservation enterprises) — not broad livelihood diversification.</li>
                 <li><strong>Target group:</strong> Existing women- and youth-led groups, clustered for aggregation and peer learning — not general population.</li>
@@ -2220,7 +2235,7 @@
                 <li><strong>Geographic scope:</strong> Deepen in Phase 1 geographies; selective expansion only where conditions support it.</li>
             </ul>
 
-            <h3>7.2 Realistic Change Ambition</h3>
+            <h3>6.2 Realistic Change Ambition</h3>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                 <div class="highlight-box" style="margin:0;">
                     <h4>✅ What the project WILL achieve</h4>
@@ -2244,7 +2259,7 @@
                 </div>
             </div>
 
-            <h3>7.3 Key Assumptions</h3>
+            <h3>6.3 Key Assumptions</h3>
             <ul>
                 <li><strong>Government support:</strong> Continued political will in blue economy and devolution processes.</li>
                 <li><strong>Climate manageability:</strong> Climate shocks remain within adaptable levels.</li>
@@ -2259,19 +2274,19 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- SECTION 8: MEL, RESEARCH & LEARNING -->
+    <!-- SECTION 7: MEL, RESEARCH & LEARNING -->
     <!-- ============================================== -->
-    <div class="section" id="section8">
+    <div class="section" id="section7">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num">8</div>
+                <div class="section-num">7</div>
                 <h2>MEL, Research, Learning & Adaptive Management</h2>
             </div>
             <span class="toggle">▼</span>
         </div>
         <div class="collapsible-body open">
 
-            <h3>8.1 MEL Approach</h3>
+            <h3>7.1 MEL Approach</h3>
             <ul>
                 <li><strong>Harmonized indicators and joint learning</strong> across all five COSME partners, with shared MEL framework, common data collection tools, and unified reporting.</li>
                 <li><strong>Outcome harvesting</strong> to capture emergent and systemic outcomes (gender norms, institutional capacity, policy influence).</li>
@@ -2283,7 +2298,7 @@
                 <li><strong>Quarterly and annual reflection</strong> events for data review, adaptation, and learning.</li>
             </ul>
 
-            <h3>8.2 Research & Learning Agenda</h3>
+            <h3>7.2 Research & Learning Agenda</h3>
             <h4>Research Priorities</h4>
             <ul>
                 <li><strong>Participatory action research</strong> on gender, climate resilience, and coastal livelihoods — conducted with and for communities.</li>
@@ -2303,7 +2318,7 @@
                 <li>Community and partner capacity strengthened to use data for decision-making.</li>
             </ul>
 
-            <h3>8.3 Evidence-Based Advocacy Strategy</h3>
+            <h3>7.3 Evidence-Based Advocacy Strategy</h3>
             <h4>Priority Advocacy Themes</h4>
             <ul>
                 <li>Blue economy governance, policy, and financing.</li>
@@ -2327,12 +2342,12 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- SECTION 9: RISK ANALYSIS -->
+    <!-- SECTION 8: RISK ANALYSIS -->
     <!-- ============================================== -->
-    <div class="section" id="section9">
+    <div class="section" id="section8">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num">9</div>
+                <div class="section-num">8</div>
                 <h2>Risk Analysis & Mitigation</h2>
             </div>
             <span class="toggle">▼</span>
@@ -2412,12 +2427,12 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- SECTION 10: EXECUTIVE SUMMARY -->
+    <!-- SECTION 9: EXECUTIVE SUMMARY -->
     <!-- ============================================== -->
-    <div class="section" id="section10">
+    <div class="section" id="section9">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num">10</div>
+                <div class="section-num">9</div>
                 <h2>Executive Summary</h2>
             </div>
             <span class="toggle">▼</span>
@@ -2619,7 +2634,10 @@
             '.be-connector-label',
             '.partner-badge',
             '.reflection-card p',
-            '.reflection-card strong'
+            '.reflection-card strong',
+            // Section numbers
+            '.section-num',
+            '.nav-num'
         ];
 
         editableSelectors.forEach(sel => {
@@ -2716,7 +2734,7 @@
             const section = document.getElementById(edit.sectionId);
             if (!section) return;
 
-            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle, .diagram-title, .diagram-subtitle, .resilience-banner, .be-domain-header, .be-node h5, .be-node .node-details span, .symbiotic-link, .be-connector-label, .partner-badge, .reflection-card p, .reflection-card strong');
+            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle, .diagram-title, .diagram-subtitle, .resilience-banner, .be-domain-header, .be-node h5, .be-node .node-details span, .symbiotic-link, .be-connector-label, .partner-badge, .reflection-card p, .reflection-card strong, .section-num');
             if (candidates[edit.index]) {
                 candidates[edit.index].innerHTML = edit.content;
                 candidates[edit.index].dataset.original = edit.original;
