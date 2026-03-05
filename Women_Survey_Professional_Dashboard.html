@@ -3112,8 +3112,8 @@
         .sidebar {
             width: 260px;
             min-width: 260px;
-            background: #fff;
-            border-right: 1px solid #e0e0e0;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafd 100%);
+            border-right: 1px solid #e2e8f0;
             position: fixed;
             top: 0;
             left: 0;
@@ -3122,19 +3122,37 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.06);
+            box-shadow: 3px 0 18px rgba(0,0,0,0.07);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar-header {
-            background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);
+            background: linear-gradient(135deg, #0072CE 0%, #004d8c 100%);
             color: white;
-            padding: 16px 18px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
             flex-shrink: 0;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00a8ff, #0072CE, #004d8c);
+            animation: headerShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShimmer {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         .sidebar-header .sidebar-logo {
@@ -3177,47 +3195,54 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 8px 0;
+            padding: 10px 0;
             scrollbar-width: thin;
             scrollbar-color: #c0c0c0 transparent;
         }
 
         .sidebar-nav::-webkit-scrollbar {
-            width: 4px;
+            width: 5px;
         }
 
         .sidebar-nav::-webkit-scrollbar-thumb {
-            background: #c0c0c0;
+            background: linear-gradient(180deg, #0072CE, #90c2f0);
             border-radius: 4px;
         }
 
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
         .sidebar-group {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .sidebar-group-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 11px 18px;
+            gap: 10px;
+            padding: 12px 16px;
+            margin: 0 10px;
             background: none;
             border: none;
-            width: 100%;
+            width: calc(100% - 20px);
             text-align: left;
-            font-size: 0.78em;
+            font-size: 0.76em;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.7px;
-            color: #555;
+            letter-spacing: 0.8px;
+            color: #64748b;
             cursor: pointer;
-            transition: color 0.2s, background 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
-            border-bottom: 1px solid #eef1f5;
+            border-radius: 8px;
+            position: relative;
         }
 
         .sidebar-group-header:hover {
             color: #0072CE;
-            background: #f0f5fc;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+            transform: translateX(2px);
         }
 
         .sidebar-group-header .group-label {
@@ -3225,10 +3250,11 @@
         }
 
         .sidebar-group-header .group-chevron {
-            font-size: 0.9em;
-            transition: transform 0.25s ease;
-            color: #888;
+            font-size: 0.85em;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #94a3b8;
             flex-shrink: 0;
+            display: inline-flex;
         }
 
         .sidebar-group.collapsed .group-chevron {
@@ -3237,55 +3263,82 @@
 
         .sidebar-group-items {
             overflow: hidden;
-            max-height: 500px;
-            transition: max-height 0.3s ease;
+            max-height: 600px;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            opacity: 1;
         }
 
         .sidebar-group.collapsed .sidebar-group-items {
             max-height: 0;
+            opacity: 0;
         }
 
         .sidebar-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 11px 18px 11px 32px;
+            padding: 10px 16px 10px 28px;
+            margin: 2px 10px;
             border: none;
             background: none;
-            width: 100%;
+            width: calc(100% - 20px);
             text-align: left;
-            font-size: 0.88em;
+            font-size: 0.87em;
             font-weight: 500;
-            color: #333;
+            color: #475569;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 3px solid transparent;
+            border-radius: 8px;
             position: relative;
         }
 
         .sidebar-item:hover {
-            background: #eaf2fd;
+            background: linear-gradient(135deg, #eef5ff 0%, #e3f0fd 100%);
             color: #0060b0;
-            border-left-color: #7db8e8;
+            border-left-color: transparent;
+            transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(0, 114, 206, 0.08);
         }
 
         .sidebar-item.active {
-            background: linear-gradient(90deg, #dbeafe 0%, #eef5ff 100%);
-            color: #0060b0;
-            font-weight: 700;
-            border-left-color: #0072CE;
+            background: linear-gradient(135deg, #0072CE 0%, #0062b3 100%);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: transparent;
+            box-shadow: 0 3px 12px rgba(0, 114, 206, 0.25);
+            transform: translateX(2px);
         }
 
         .sidebar-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 60%;
-            background: #0072CE;
-            border-radius: 0 3px 3px 0;
+            display: none;
+        }
+
+        .sidebar-item.active:hover {
+            background: linear-gradient(135deg, #005eb3 0%, #004d99 100%);
+            box-shadow: 0 4px 16px rgba(0, 114, 206, 0.35);
+            transform: translateX(4px);
+        }
+
+        /* Staggered entrance animation for items */
+        .sidebar-group-items .sidebar-item {
+            animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+        }
+        .sidebar-group-items .sidebar-item:nth-child(1) { animation-delay: 0.03s; }
+        .sidebar-group-items .sidebar-item:nth-child(2) { animation-delay: 0.06s; }
+        .sidebar-group-items .sidebar-item:nth-child(3) { animation-delay: 0.09s; }
+        .sidebar-group-items .sidebar-item:nth-child(4) { animation-delay: 0.12s; }
+        .sidebar-group-items .sidebar-item:nth-child(5) { animation-delay: 0.15s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .sidebar-item .item-label {
@@ -3296,17 +3349,18 @@
         }
 
         .sidebar-footer {
-            padding: 12px 18px;
-            border-top: 1px solid #eee;
-            background: #fafbfc;
+            padding: 14px 18px;
+            border-top: 1px solid #e8ecf1;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
             flex-shrink: 0;
         }
 
         .sidebar-footer small {
             font-size: 0.68em;
-            color: #999;
+            color: #94a3b8;
             display: block;
             text-align: center;
+            letter-spacing: 0.3px;
         }
 
         /* Sidebar collapse toggle for desktop */
