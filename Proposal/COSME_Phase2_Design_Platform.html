@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSME Phase 2 – Project Design & Implementation Package</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+    <style>
+        :root {
+            --primary: #0a4d7a;
+            --primary-light: #1a6da8;
+            --primary-dark: #063554;
+            --accent: #00a78e;
+            --accent-light: #00c9ab;
+            --gold: #d4a843;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #5a6a7a;
+            --border: #e1e8ef;
+            --sidebar-width: 300px;
+            --header-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        }
+
+        .header-logo {
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .header-logo .icon {
+            font-size: 1.8rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.15rem; font-weight: 600; letter-spacing: 0.5px;
+        }
+
+        .header-title span {
+            font-size: 0.75rem; opacity: 0.8; font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .header-actions button {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white; padding: 8px 16px;
+            border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s;
+        }
+
+        .header-actions button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed; top: var(--header-height); left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-section {
+            padding: 20px 0 10px;
+        }
+
+        .sidebar-label {
+            padding: 0 20px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.88rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: #eaf3fb;
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-item .nav-num {
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .nav-item.active .nav-num {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 30px 40px 60px;
+            max-width: 1100px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--accent) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 50px 45px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -30%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 2rem; font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem; opacity: 0.9;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .hero-stats {
+            display: flex; gap: 30px; flex-wrap: wrap;
+            position: relative;
+        }
+
+        .hero-stat {
+            background: rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 15px 22px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .hero-stat .value { font-size: 1.5rem; font-weight: 700; }
+        .hero-stat .label { font-size: 0.8rem; opacity: 0.8; }
+
+        /* SECTION */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 35px 40px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            scroll-margin-top: calc(var(--header-height) + 20px);
+        }
+
+        .section-header {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg);
+        }
+
+        .section-num {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 1.35rem; font-weight: 700; color: var(--primary-dark);
+        }
+
+        .section h3 {
+            font-size: 1.1rem; color: var(--primary);
+            margin: 25px 0 12px;
+            font-weight: 600;
+        }
+
+        .section h4 {
+            font-size: 0.95rem; color: var(--primary-dark);
+            margin: 18px 0 8px;
+            font-weight: 600;
+        }
+
+        .section p {
+            margin-bottom: 14px; color: var(--text);
+        }
+
+        .section ul, .section ol {
+            margin: 10px 0 16px 20px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        /* HIGHLIGHT BOXES */
+        .highlight-box {
+            background: linear-gradient(135deg, #eaf6f4, #e8f4fd);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 18px 22px;
+            margin: 16px 0;
+        }
+
+        .highlight-box.goal {
+            background: linear-gradient(135deg, #fef9e7, #fdf3d7);
+            border-left-color: var(--gold);
+        }
+
+        .highlight-box.warning {
+            background: linear-gradient(135deg, #fdf2f2, #fde8e8);
+            border-left-color: #e74c3c;
+        }
+
+        .highlight-box strong { color: var(--primary-dark); }
+
+        /* TITLE OPTIONS */
+        .title-option {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: 1px solid var(--border);
+            font-style: italic;
+            color: var(--primary-dark);
+        }
+
+        .title-option .label {
+            font-style: normal;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        /* TABLES */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 700px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+        }
+
+        thead th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) { background: #f9fbfd; }
+        tbody tr:hover { background: #eef5fb; }
+
+        .level-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .level-impact { background: #d4a843; color: white; }
+        .level-outcome { background: var(--primary); color: white; }
+        .level-output { background: var(--accent); color: white; }
+
+        /* RISK MATRIX */
+        .risk-high { color: #e74c3c; font-weight: 700; }
+        .risk-medium { color: #f39c12; font-weight: 700; }
+        .risk-low { color: #27ae60; font-weight: 700; }
+
+        /* TOC FLOW */
+        .toc-flow {
+            display: flex; flex-direction: column; gap: 0;
+            margin: 20px 0;
+        }
+
+        .toc-block {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 20px 24px;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .toc-block.inputs { border-left-color: #3498db; }
+        .toc-block.outputs { border-left-color: var(--accent); }
+        .toc-block.outcomes { border-left-color: var(--gold); }
+        .toc-block.impact { border-left-color: #e74c3c; }
+
+        .toc-block h4 {
+            margin: 0 0 10px;
+        }
+
+        .toc-arrow {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            padding: 5px 0;
+        }
+
+        /* PILLAR TAG */
+        .pillar-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .pillar-1 { background: #e8f4fd; color: #1a6da8; }
+        .pillar-2 { background: #fce4ec; color: #c0392b; }
+        .pillar-3 { background: #e8f5e9; color: #27ae60; }
+        .pillar-4 { background: #fff3e0; color: #e67e22; }
+
+        /* PARTNER GRID */
+        .partner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .partner-card {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .partner-card h4 {
+            color: var(--primary);
+            margin: 0 0 10px;
+            font-size: 0.95rem;
+        }
+
+        .partner-card ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 0.85rem;
+        }
+
+        .partner-card li { margin-bottom: 4px; }
+
+        /* COLLAPSIBLE */
+        .collapsible-header {
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible-header .toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            color: var(--primary);
+        }
+
+        .collapsible-header.open .toggle {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .collapsible-body.open {
+            max-height: 50000px;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-left: var(--sidebar-width);
+            background: var(--primary-dark);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+        }
+
+        .footer strong { color: white; }
+
+        /* PRINT */
+        @media print {
+            .header, .sidebar, .menu-toggle, .header-actions { display: none !important; }
+            .main { margin-left: 0; padding: 0; max-width: 100%; }
+            .section { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .hero { background: var(--primary) !important; -webkit-print-color-adjust: exact; }
+            .footer { margin-left: 0; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main { margin-left: 0; padding: 20px 16px 40px; }
+            .footer { margin-left: 0; }
+
+            .menu-toggle { display: block; }
+
+            .hero { padding: 30px 25px; }
+            .hero h1 { font-size: 1.5rem; }
+            .hero-stats { gap: 12px; }
+
+            .section { padding: 20px; }
+        }
+
+        /* SEARCH */
+        .search-box {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            width: 45px; height: 45px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .back-to-top.visible { opacity: 1; }
+
+        /* Assumption label */
+        .assumption-label {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-logo">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <span class="icon">🌊</span>
+        <div class="header-title">
+            <h1>COSME Phase 2 – Project Design Package</h1>
+            <span>Plan International Kenya | Blue Economy Program</span>
+        </div>
+    </div>
+    <div class="header-actions">
+        <button onclick="window.print()">🖨️ Print / PDF</button>
+        <button onclick="toggleAllSections()">📂 Expand / Collapse All</button>
+    </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search sections..." oninput="filterNav()">
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-label">Project Design</div>
+        <a class="nav-item active" href="#hero" data-section="hero">
+            <span class="nav-num">⚡</span> Overview
+        </a>
+        <a class="nav-item" href="#section1" data-section="section1">
+            <span class="nav-num">1</span> Quick Synthesis
+        </a>
+        <a class="nav-item" href="#section2" data-section="section2">
+            <span class="nav-num">2</span> Structured Project Design
+        </a>
+        <a class="nav-item" href="#section3" data-section="section3">
+            <span class="nav-num">3</span> Results Framework / Logframe
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-label">Implementation</div>
+        <a class="nav-item" href="#section4" data-section="section4">
+            <span class="nav-num">4</span> Workplan Matrix
+        </a>
+        <a class="nav-item" href="#section5" data-section="section5">
+            <span class="nav-num">5</span> Collaboration Architecture
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-label">Risk & Quality</div>
+        <a class="nav-item" href="#section6" data-section="section6">
+            <span class="nav-num">6</span> Boundaries & Assumptions
+        </a>
+        <a class="nav-item" href="#section7" data-section="section7">
+            <span class="nav-num">7</span> MEL, Research & Learning
+        </a>
+        <a class="nav-item" href="#section8" data-section="section8">
+            <span class="nav-num">8</span> Risk Analysis & Mitigation
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-label">Summary</div>
+        <a class="nav-item" href="#section9" data-section="section9">
+            <span class="nav-num">9</span> Executive Summary
+        </a>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+    <!-- HERO -->
+    <div class="hero" id="hero">
+        <h1>COSME Phase 2: Advancing Climate-Resilient Blue Economy Livelihoods, Gender Justice & Systems Change</h1>
+        <p class="subtitle">Digitized Project Design & Implementation Package for Coastal Women and Youth in Kenya</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value">4</div>
+                <div class="label">Strategic Pillars</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">5</div>
+                <div class="label">Consortium Partners</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">4</div>
+                <div class="label">Coastal Counties</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">4-Year</div>
+                <div class="label">Implementation</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value">3,000+</div>
+                <div class="label">Target Beneficiaries</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 1: QUICK SYNTHESIS -->
+    <!-- ============================================== -->
+    <div class="section" id="section1">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">1</div>
+                <h2>Quick Synthesis of Source Text</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <h3>1.1 Overall Vision</h3>
+            <div class="highlight-box">
+                <p>Plan International Kenya envisions COSME Phase 2 as a transformative evolution from a strong implementation consortium into a <strong>cohesive, learning-oriented, and influence-driven partnership</strong> that delivers measurable improvements in women's and youth's lives, coastal ecosystem sustainability, and governance systems. The collaboration logic centres on a <strong>hybrid model</strong> combining geographic coordination with technical specialization: Plan International Kenya leads in established geographies with strengths in gender justice, regenerative agriculture, enterprise development, and conservation governance, while MEDA, AECF, REAsee, and CICaN contribute complementary technical expertise in processing, value addition, market access, and institutional coordination. All five partners share strategic functions — research, MEL, policy advocacy, safeguarding, and institutional strengthening — to ensure coherence, reduce duplication, and amplify collective impact through sequenced and layered interventions across the value chain.</p>
+            </div>
+
+            <h3>1.2 Key Problems / Gaps from Phase 1</h3>
+            <ul>
+                <li><strong>Fragmented value chains and low production volumes</strong> — interventions were insufficiently integrated across production, value addition, and markets.</li>
+                <li><strong>Uneven institutional capacity</strong> among women- and youth-led groups, limiting sustainability and scale readiness.</li>
+                <li><strong>Gaps between community-level practice and policy frameworks</strong> — limited translation of community innovation into governance and budget influence.</li>
+                <li><strong>Livelihood gains alone proved insufficient</strong> without parallel governance and institutional change.</li>
+                <li><strong>Gender participation without transformation</strong> — women participated but agency, leadership, and norm change were not systematically embedded.</li>
+                <li><strong>Disconnected interventions</strong> — activities lacked the sequenced, layered logic needed for durable impact.</li>
+                <li><strong>Institutional fragmentation</strong> and limited local capacity among coordination platforms and government forums.</li>
+                <li><strong>Safeguarding and GESI mainstreaming</strong> not yet systematically embedded across all partner activities.</li>
+            </ul>
+
+            <h3>1.2b Key Opportunities for Phase 2</h3>
+            <ul>
+                <li><strong>Strong potential for women-led enterprises</strong> when supported holistically (demonstrated in Phase 1).</li>
+                <li><strong>Devolution</strong> creates county-level entry points for policy engagement, budgeting, and blue economy governance.</li>
+                <li><strong>Growing blue economy discourse</strong> nationally and regionally increases political will and donor interest.</li>
+                <li><strong>Increased climate finance interest</strong> offers new resource mobilization and co-financing opportunities.</li>
+                <li><strong>Established trust and community systems</strong> from Phase 1 provide a foundation for deepening.</li>
+                <li><strong>COSME Phase 1 evidence base</strong> can be leveraged for advocacy, adaptive programming, and influence.</li>
+                <li><strong>Partner complementarity</strong> — clear, non-duplicative roles across the five consortium members.</li>
+                <li><strong>Gender Justice Journey model</strong> can be upgraded from household level to group and enterprise level.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 2: STRUCTURED PROJECT DESIGN -->
+    <!-- ============================================== -->
+    <div class="section" id="section2">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">2</div>
+                <h2>Structured Project Design (Narrative)</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+
+            <h3>2.1 Proposed Project Titles</h3>
+            <div class="title-option">
+                <span class="label">Option A</span><br>
+                COSME Phase 2: Advancing Climate-Resilient Blue Economy Livelihoods, Gender Justice, and Systems Change for Coastal Women and Youth in Kenya
+            </div>
+            <div class="title-option">
+                <span class="label">Option B</span><br>
+                Scaling Inclusive Coastal Futures: Women- and Youth-Led Blue Economy Enterprise, Governance, and Resilience (COSME Phase 2)
+            </div>
+            <div class="title-option">
+                <span class="label">Option C</span><br>
+                Blue Horizons – Gender-Transformative Livelihoods, Market Systems, and Governance for Coastal Communities (COSME 2.0)
+            </div>
+
+            <h3>2.2 Background and Rationale</h3>
+            <h4>Context of Coastal Communities and Blue Economy Opportunities</h4>
+            <p>Kenya's coastal counties — including Kilifi, Kwale, Lamu, and Tana River — are home to communities whose livelihoods depend on marine and coastal resources, including seaweed farming, mangrove-linked enterprises, and small-scale fisheries. Despite the significant economic potential of the blue economy, coastal communities face persistent poverty, gender inequality, limited market access, and escalating climate risks. Women and youth, who form the backbone of coastal production systems, remain disproportionately excluded from decision-making, value chain governance, and equitable economic returns. Kenya's devolution framework and the growing national discourse on the blue economy present an unprecedented opportunity to address these structural barriers at county and national levels.</p>
+
+            <h4>Phase 1 Achievements and Key Learnings</h4>
+            <p>COSME Phase 1 established a solid implementation foundation, demonstrating that women-led enterprises thrive when supported holistically with production inputs, savings (VSLAs), skills development, and mentorship. Phase 1 built community trust, established women- and youth-led groups, piloted the Gender Justice Journey at household level, initiated seaweed and mangrove-linked livelihoods, and generated an evidence base on coastal livelihoods and gender dynamics. However, Phase 1 also revealed critical limitations: fragmented value chains, low production volumes, uneven institutional capacity among community groups, and insufficient linkage between community innovation and policy influence.</p>
+
+            <h4>Gaps and Challenges Justifying Phase 2</h4>
+            <p>Despite Phase 1 progress, fundamental gaps persist. Value chains remain fragmented, with weak aggregation, quality standards, and market linkages. Community institutions — WROs, YLOs, cooperatives — have variable governance, financial management, and sustainability capacity. Gender participation has not yet translated into systematic norm change, agency, or leadership at enterprise and governance levels. Policy engagement remains ad hoc, with insufficient use of evidence to influence county and national budgets and plans. Safeguarding systems require strengthening across the consortium. These gaps underscore the need for a dedicated second phase.</p>
+
+            <h4>Why a Gender-Transformative, Systems-Strengthening, and Market Systems Approach Is Needed</h4>
+            <p>Addressing poverty and inequality in coastal Kenya requires more than livelihood support; it demands transformation of the systems — social, economic, institutional, and political — that perpetuate exclusion. A <strong>gender-transformative approach</strong> moves beyond women's access to resources to tackle harmful norms, power relations, unpaid care work, and decision-making barriers. A <strong>systems-strengthening approach</strong> builds the capacity, accountability, and sustainability of community institutions, government forums, and coordination platforms. A <strong>market systems approach</strong> facilitates private sector linkages, enabling women and youth to participate in markets on equitable terms.</p>
+
+            <h3>2.3 Overall Goal and Specific Objectives</h3>
+            <div class="highlight-box goal">
+                <h4>Overall Goal (Impact Level)</h4>
+                <p><strong>To improve the economic well-being, resilience, and agency of women and youth in coastal Kenya through inclusive, gender-transformative, and climate-resilient blue economy livelihoods, strengthened market systems, and accountable governance.</strong></p>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:14px; margin:20px 0;">
+                <div style="background:#e8f4fd; border-radius:10px; padding:18px; border-top:4px solid #1a6da8;">
+                    <span class="pillar-tag pillar-1">Pillar 1</span>
+                    <h4>Climate-Resilient Coastal Livelihoods</h4>
+                    <p style="font-size:0.87rem;">To increase the productivity, diversification, and climate resilience of coastal livelihood systems — particularly seaweed, mangrove-linked, and conservation-based enterprises — for women and youth in target communities.</p>
+                </div>
+                <div style="background:#fce4ec; border-radius:10px; padding:18px; border-top:4px solid #c0392b;">
+                    <span class="pillar-tag pillar-2">Pillar 2</span>
+                    <h4>Women's Economic Empowerment & Gender Justice</h4>
+                    <p style="font-size:0.87rem;">To strengthen the economic agency, leadership, decision-making power, and collective action of women and girls through gender-transformative programming, including VSLAs, enterprise governance, and the upgraded Gender Justice Journey.</p>
+                </div>
+                <div style="background:#e8f5e9; border-radius:10px; padding:18px; border-top:4px solid #27ae60;">
+                    <span class="pillar-tag pillar-3">Pillar 3</span>
+                    <h4>Market Systems & Value Chain Strengthening</h4>
+                    <p style="font-size:0.87rem;">To facilitate improved value addition, quality standards, aggregation, and inclusive market linkages for coastal products, enabling women- and youth-led enterprises to participate equitably in markets.</p>
+                </div>
+                <div style="background:#fff3e0; border-radius:10px; padding:18px; border-top:4px solid #e67e22;">
+                    <span class="pillar-tag pillar-4">Pillar 4</span>
+                    <h4>Governance, Policy Influence & Institutional Capacity</h4>
+                    <p style="font-size:0.87rem;">To strengthen community institutions (WROs, YLOs, cooperatives, BMUs), coordination platforms, and evidence-based policy engagement on blue economy, climate adaptation, and gender-responsive governance.</p>
+                </div>
+            </div>
+
+            <h3>2.4 Theory of Change</h3>
+            <h4>a) Narrative Theory of Change</h4>
+            <p>COSME Phase 2 is premised on the understanding that sustainable, inclusive economic empowerment for coastal women and youth requires simultaneous and sequenced investment across four interconnected domains: climate-resilient production, gender-transformative empowerment, inclusive market systems, and accountable governance.</p>
+            <p><strong>If</strong> women and youth receive sustained support in climate-smart production, business skills, and financial services (VSLAs), <strong>and if</strong> gender-transformative programming addresses norms, power relations, and unpaid care at group and enterprise levels, <strong>then</strong> women and youth will increase their productivity and assume leadership roles. <strong>If</strong> value chain interventions strengthen aggregation, quality, and market access, <strong>then</strong> women- and youth-led enterprises will capture greater value. <strong>If</strong> community institutions are strengthened and evidence is used for coordinated advocacy, <strong>then</strong> policy frameworks will become more inclusive and responsive. Gender justice, safeguarding, and systems-strengthening are embedded throughout the causal chain.</p>
+
+            <h4>b) Theory of Change Flow</h4>
+            <div class="toc-flow">
+                <div class="toc-block inputs">
+                    <h4 style="color:#3498db;">⬇ IF (Inputs & Activities)</h4>
+                    <ul>
+                        <li>Plan International Kenya delivers gender-transformative programming (GJJ upgrade, leadership, VSLA strengthening, enterprise governance).</li>
+                        <li>Plan co-leads community institutional strengthening (WROs, YLOs, cooperatives, BMUs).</li>
+                        <li>MEDA & AECF facilitate market access, processing, advanced value addition, and private sector partnerships.</li>
+                        <li>REAsee & CICaN support production systems, technical training, and institutional coordination.</li>
+                        <li>All partners jointly deliver research, MEL, advocacy, safeguarding, and learning.</li>
+                        <li>Climate-smart production support for seaweed, mangrove-linked, and conservation enterprises.</li>
+                    </ul>
+                </div>
+                <div class="toc-arrow">⬇</div>
+                <div class="toc-block outputs">
+                    <h4 style="color:#00a78e;">⬇ THEN (Outputs)</h4>
+                    <ul>
+                        <li>Women & youth trained in climate-resilient production, business skills, and financial literacy.</li>
+                        <li>Gender Justice Journey delivered at group and enterprise levels.</li>
+                        <li>VSLAs strengthened and linked to enterprise development and financial services.</li>
+                        <li>Value addition, quality standards, and aggregation systems established.</li>
+                        <li>Community institutions strengthened; safeguarding systems operational.</li>
+                        <li>Joint advocacy agendas developed; policy engagement initiated.</li>
+                    </ul>
+                </div>
+                <div class="toc-arrow">⬇</div>
+                <div class="toc-block outcomes">
+                    <h4 style="color:#d4a843;">⬇ WHICH LEADS TO (Intermediate Outcomes)</h4>
+                    <ul>
+                        <li>Increased and more resilient incomes for women and youth.</li>
+                        <li>Improved agency, leadership, and decision-making power of women.</li>
+                        <li>More sustainable management of coastal ecosystems.</li>
+                        <li>Women- and youth-led enterprises integrated into inclusive markets.</li>
+                        <li>Community institutions accountable and linked to county structures.</li>
+                        <li>Evidence-informed, responsive governance frameworks.</li>
+                    </ul>
+                </div>
+                <div class="toc-arrow">⬇</div>
+                <div class="toc-block impact">
+                    <h4 style="color:#e74c3c;">⬇ CONTRIBUTING TO (Long-Term Impact)</h4>
+                    <ul>
+                        <li>Improved economic well-being, resilience, and gender justice for coastal women, youth, and their communities.</li>
+                        <li>Inclusive, sustainable blue economy governance at county and national levels.</li>
+                        <li>Systems-level change sustained through strengthened institutions.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>Partner Contributions Along the Change Chain</h4>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Chain Stage</th><th>Plan International KE</th><th>MEDA</th><th>AECF</th><th>REAsee</th><th>CICaN</th><th>Government / Community</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Inputs</strong></td><td>Gender-transformative design, community mobilization, safeguarding</td><td>Market systems design</td><td>Enterprise finance, partnerships</td><td>Production systems, training</td><td>Institutional coordination</td><td>Policy frameworks, resource access</td></tr>
+                        <tr><td><strong>Outputs</strong></td><td>GJJ delivery, VSLA, WRO/YLO capacity, research, advocacy</td><td>Value addition, market linkages</td><td>Enterprise support, co-financing</td><td>Technical assistance, production training</td><td>Coordination platforms</td><td>County plans, BMU governance</td></tr>
+                        <tr><td><strong>Outcomes</strong></td><td>Women's agency, inclusive governance, evidence-based policy</td><td>Inclusive market access</td><td>Sustainable enterprise growth</td><td>Improved production</td><td>Stronger coordination</td><td>Responsive policy, budget allocation</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.5 Target Groups and Coverage</h3>
+            <h4>Primary Target Groups</h4>
+            <ul>
+                <li><strong>Women in coastal communities</strong>: Members of women-led producer groups, cooperatives, VSLAs, WROs, and BMUs engaged in seaweed, mangrove-linked, and conservation enterprises.</li>
+                <li><strong>Youth (focus on young women and adolescent girls)</strong>: Members of YLOs, youth enterprise groups, and blue economy pathway participants.</li>
+                <li><strong>Women-led and youth-led enterprises</strong>: Groups and cooperatives producing, processing, and trading coastal products.</li>
+            </ul>
+            <h4>Secondary / Indirect Target Groups</h4>
+            <ul>
+                <li>Households of primary participants.</li>
+                <li>Community leaders, men, and boys engaged through GJJ.</li>
+                <li>Private sector actors in value addition and market access.</li>
+                <li>County and national government institutions.</li>
+                <li>Community-based conservation groups and BMUs.</li>
+            </ul>
+            <h4>Geographic Focus</h4>
+            <ul>
+                <li><strong>Core counties</strong>: Kilifi, Kwale, Lamu, Tana River.</li>
+                <li><strong>Strategy</strong>: Deepen in Phase 1 geographies; selective expansion based on ecological suitability and governance readiness.</li>
+                <li><strong>Clustering</strong>: Groups clustered for peer learning, aggregation, and market viability.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 3: RESULTS FRAMEWORK -->
+    <!-- ============================================== -->
+    <div class="section" id="section3">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">3</div>
+                <h2>Results Framework / Logframe</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+
+            <h3>Impact Level</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Level</th><th>Statement</th><th>Key Indicators</th><th>Baseline</th><th>Endline Target</th><th>MoV</th><th>Freq.</th><th>Responsible</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="level-badge level-impact">IMPACT</span></td>
+                            <td>Improved economic well-being, resilience, and gender justice for women and youth in coastal Kenya through inclusive blue economy livelihoods and strengthened systems</td>
+                            <td>1. % change in average monthly income (by sex, age, county)<br>2. % of women reporting increased decision-making power<br>3. Improvement in coastal ecosystem health indicators</td>
+                            <td>Phase 1 endline values</td>
+                            <td>1. ≥40% increase<br>2. ≥60% report improvement<br>3. Measurable improvement in ≥2 indicators</td>
+                            <td>HH income surveys, Women's Empowerment Index, ecological assessments</td>
+                            <td>Baseline, midline, endline</td>
+                            <td>All partners (MEL lead)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-1">Pillar 1</span> Outcome 1: Climate-Resilient Coastal Livelihoods</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Level</th><th>Statement</th><th>Key Indicators</th><th>Baseline</th><th>Endline Target</th><th>MoV</th><th>Freq.</th><th>Responsible</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="level-badge level-outcome">OUTCOME 1</span></td>
+                            <td>Increased and more resilient incomes for women and youth from climate-smart coastal livelihood enterprises</td>
+                            <td>1.1 # and % with diversified income sources (by sex, age, county)<br>1.2 % reduction in income loss from climate shocks</td>
+                            <td>Phase 1 endline</td>
+                            <td>1.1 ≥70% report ≥2 sources<br>1.2 ≥30% reduction</td>
+                            <td>Participant surveys, enterprise records, resilience assessments</td>
+                            <td>Annual; Midline, Endline</td>
+                            <td>Plan, REAsee, MEDA</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 1.1</span></td>
+                            <td>Women and youth trained in climate-resilient production techniques</td>
+                            <td>1.1.1 # trained (sex, age, value chain, county)<br>1.1.2 % adopting ≥2 climate-smart practices</td>
+                            <td>0 (new Phase 2)</td>
+                            <td>≥3,000 (≥70% women)<br>≥60% adoption</td>
+                            <td>Training records, follow-up surveys</td>
+                            <td>Quarterly; Semi-annual</td>
+                            <td>Plan, REAsee</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 1.2</span></td>
+                            <td>Climate-smart production, diversification, and risk reduction initiatives established</td>
+                            <td>1.2.1 # enterprises supported<br>1.2.2 # diversified activities operational</td>
+                            <td>Phase 1 baseline</td>
+                            <td>≥50 enterprises<br>≥5 new activities</td>
+                            <td>Enterprise mapping, field verification</td>
+                            <td>Semi-annual; Annual</td>
+                            <td>Plan, REAsee, CICaN</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-2">Pillar 2</span> Outcome 2: Women's Economic Empowerment & Gender Justice</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Level</th><th>Statement</th><th>Key Indicators</th><th>Baseline</th><th>Endline Target</th><th>MoV</th><th>Freq.</th><th>Responsible</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="level-badge level-outcome">OUTCOME 2</span></td>
+                            <td>Improved agency, leadership, and decision-making power of women and girls in coastal economic and governance spaces</td>
+                            <td>2.1 % of women in leadership positions (by age, county)<br>2.2 % reporting positive changes in norms and power relations</td>
+                            <td>Phase 1 endline</td>
+                            <td>2.1 ≥50% leadership positions<br>2.2 ≥50% report positive change</td>
+                            <td>Governance assessments, GJJ monitoring tools, FGDs</td>
+                            <td>Annual</td>
+                            <td>Plan International KE</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 2.1</span></td>
+                            <td>Gender Justice Journey delivered at group and enterprise level (upgraded model)</td>
+                            <td>2.1.1 # groups/enterprises completing GJJ<br>2.1.2 # participants (by sex, age)</td>
+                            <td>0 (new model)</td>
+                            <td>≥80 groups<br>≥2,500 participants</td>
+                            <td>GJJ delivery records, facilitator reports</td>
+                            <td>Quarterly</td>
+                            <td>Plan International KE</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 2.2</span></td>
+                            <td>VSLAs strengthened and linked to enterprise development and financial services</td>
+                            <td>2.2.1 # VSLAs operational (quality standards)<br>2.2.2 Total savings mobilized (KES)</td>
+                            <td>Phase 1 count/value</td>
+                            <td>≥100 VSLAs<br>≥30% increase in savings</td>
+                            <td>VSLA monitoring data, quality audits</td>
+                            <td>Quarterly; Semi-annual</td>
+                            <td>Plan International KE</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 2.3</span></td>
+                            <td>Women's and youth leadership development and collective action strengthened</td>
+                            <td>2.3.1 # in mentorship/leadership programs (by sex, age)</td>
+                            <td>0</td>
+                            <td>≥500</td>
+                            <td>Program records</td>
+                            <td>Quarterly</td>
+                            <td>Plan International KE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-3">Pillar 3</span> Outcome 3: Market Systems & Value Chain Strengthening</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Level</th><th>Statement</th><th>Key Indicators</th><th>Baseline</th><th>Endline Target</th><th>MoV</th><th>Freq.</th><th>Responsible</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="level-badge level-outcome">OUTCOME 3</span></td>
+                            <td>Women- and youth-led enterprises integrated into higher-value, inclusive coastal product markets</td>
+                            <td>3.1 % increase in value of products sold through organized channels<br>3.2 # market linkages/contracts established</td>
+                            <td>Phase 1 endline</td>
+                            <td>3.1 ≥50% increase<br>3.2 ≥20 new linkages</td>
+                            <td>Transaction records, buyer surveys, MoUs</td>
+                            <td>Annual</td>
+                            <td>MEDA, AECF, Plan</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 3.1</span></td>
+                            <td>Value addition, quality standards, and aggregation systems established or upgraded</td>
+                            <td>3.1.1 # value addition units operational<br>3.1.2 # enterprises meeting quality standards</td>
+                            <td>Phase 1 count</td>
+                            <td>≥10 units<br>≥30 enterprises</td>
+                            <td>Facility records, quality audits</td>
+                            <td>Semi-annual; Annual</td>
+                            <td>MEDA, AECF, Plan</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 3.2</span></td>
+                            <td>Partnerships with private sector, social enterprises, and market actors facilitated</td>
+                            <td>3.2.1 # private sector partnerships/MoUs</td>
+                            <td>Phase 1 count</td>
+                            <td>≥10 new partnerships</td>
+                            <td>MoUs, partnership agreements</td>
+                            <td>Annual</td>
+                            <td>MEDA, AECF, Plan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-4">Pillar 4</span> Outcome 4: Governance, Policy Influence & Institutional Capacity</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Level</th><th>Statement</th><th>Key Indicators</th><th>Baseline</th><th>Endline Target</th><th>MoV</th><th>Freq.</th><th>Responsible</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="level-badge level-outcome">OUTCOME 4</span></td>
+                            <td>Stronger, more inclusive local institutions and responsive policy frameworks for blue economy and gender justice</td>
+                            <td>4.1 # policies/plans/budgets influenced by COSME evidence<br>4.2 % of institutions meeting governance quality standards</td>
+                            <td>0; Phase 1 baseline</td>
+                            <td>4.1 ≥5 policy changes<br>4.2 ≥70% meet standards</td>
+                            <td>Policy tracking, institutional assessments</td>
+                            <td>Annual</td>
+                            <td>Plan, CICaN, all</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 4.1</span></td>
+                            <td>Community institutions strengthened in governance, financial management, and accountability</td>
+                            <td>4.1.1 # institutions receiving capacity building<br>4.1.2 # with functional accountability mechanisms</td>
+                            <td>Phase 1 count; 0</td>
+                            <td>≥60 institutions<br>≥40 with mechanisms</td>
+                            <td>Training records, capacity assessments, audits</td>
+                            <td>Quarterly; Semi-annual</td>
+                            <td>Plan, CICaN</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 4.2</span></td>
+                            <td>Evidence-based, coordinated advocacy at county and national levels</td>
+                            <td>4.2.1 # advocacy events/policy briefs<br>4.2.2 # community voices amplified in policy spaces</td>
+                            <td>0</td>
+                            <td>≥20 events/products<br>≥200 individuals</td>
+                            <td>Event reports, briefs, participation records</td>
+                            <td>Semi-annual; Annual</td>
+                            <td>Plan, CICaN, all</td>
+                        </tr>
+                        <tr>
+                            <td><span class="level-badge level-output">OUTPUT 4.3</span></td>
+                            <td>Consortium safeguarding, GESI mainstreaming, and learning systems operational</td>
+                            <td>4.3.1 # partners with operational safeguarding systems<br>4.3.2 # learning products produced</td>
+                            <td>0</td>
+                            <td>5/5 partners<br>≥15 products</td>
+                            <td>Safeguarding audits, publication records</td>
+                            <td>Annual; Semi-annual</td>
+                            <td>Plan International KE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 4: WORKPLAN MATRIX -->
+    <!-- ============================================== -->
+    <div class="section" id="section4">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">4</div>
+                <h2>Implementation & Workplan Matrix</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <p><em>Assumed project duration: 4 years (Year 1 – Year 4)</em></p>
+
+            <h3><span class="pillar-tag pillar-1">Pillar 1</span> Climate-Resilient Coastal Livelihoods</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <tbody>
+                        <tr><td>Baseline assessments, community mapping, group selection</td><td>Y1 Q1–Q2</td><td>Kilifi, Kwale, Lamu, Tana River</td><td>Plan KE</td><td>REAsee, CICaN, County Govt</td><td>Baseline</td></tr>
+                        <tr><td>Climate-resilient seaweed & mangrove-linked enterprise training</td><td>Y1 Q2 – Y3 Q4</td><td>Kilifi, Kwale, Lamu</td><td>Plan KE, REAsee</td><td>CICaN, local CBOs</td><td>Output 1.1</td></tr>
+                        <tr><td>Establish/upgrade climate-smart production units</td><td>Y1 Q3 – Y4 Q2</td><td>All target counties</td><td>Plan, REAsee</td><td>MEDA, County Govt</td><td>Output 1.2</td></tr>
+                        <tr><td>Livelihood diversification (terrestrial conservation, upstream)</td><td>Y2 Q1 – Y4 Q2</td><td>Kilifi, Kwale</td><td>Plan KE</td><td>REAsee, CICaN</td><td>Output 1.2</td></tr>
+                        <tr><td>Climate risk reduction planning for enterprises</td><td>Y2 Q1 – Y3 Q4</td><td>All target counties</td><td>Plan, REAsee</td><td>CICaN, County Govt</td><td>Output 1.2</td></tr>
+                        <tr><td>Follow-up monitoring, peer learning exchanges</td><td>Y2 Q1 – Y4 Q4</td><td>All target counties</td><td>Plan KE</td><td>REAsee</td><td>Output 1.1, 1.2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-2">Pillar 2</span> Women's Economic Empowerment & Gender Justice</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <tbody>
+                        <tr><td>Upgrade & roll out Gender Justice Journey (GJJ) to group/enterprise level</td><td>Y1 Q2 – Y3 Q4</td><td>All target counties</td><td>Plan KE</td><td>WROs, YLOs</td><td>Output 2.1</td></tr>
+                        <tr><td>Women's & youth leadership development and mentorship</td><td>Y1 Q3 – Y4 Q4</td><td>All target counties</td><td>Plan KE</td><td>WROs, YLOs, mentors</td><td>Output 2.3</td></tr>
+                        <tr><td>VSLA strengthening, quality audits, financial services linkages</td><td>Y1 Q2 – Y4 Q2</td><td>All target counties</td><td>Plan KE</td><td>Community groups</td><td>Output 2.2</td></tr>
+                        <tr><td>Enterprise governance training (women- and youth-led groups)</td><td>Y2 Q1 – Y3 Q4</td><td>Kilifi, Kwale, Lamu</td><td>Plan KE</td><td>MEDA, CICaN</td><td>Output 2.1, 2.3</td></tr>
+                        <tr><td>Social norms engagement with men and boys</td><td>Y1 Q3 – Y4 Q2</td><td>All target counties</td><td>Plan KE</td><td>Community leaders</td><td>Output 2.1</td></tr>
+                        <tr><td>Address unpaid care work barriers</td><td>Y2 Q1 – Y3 Q4</td><td>All target counties</td><td>Plan KE</td><td>WROs</td><td>Output 2.1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-3">Pillar 3</span> Market Systems & Value Chain Strengthening</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <tbody>
+                        <tr><td>Value chain assessment & market opportunity mapping</td><td>Y1 Q1 – Q3</td><td>All target counties</td><td>MEDA</td><td>AECF, Plan, CICaN</td><td>Baseline, Output 3.1</td></tr>
+                        <tr><td>Establish/upgrade value addition facilities & quality systems</td><td>Y1 Q3 – Y3 Q4</td><td>Kilifi, Kwale, Lamu</td><td>MEDA, AECF</td><td>Plan, REAsee</td><td>Output 3.1</td></tr>
+                        <tr><td>Aggregation system development & cooperative market readiness</td><td>Y2 Q1 – Y3 Q4</td><td>All target counties</td><td>MEDA</td><td>Plan, CICaN</td><td>Output 3.1</td></tr>
+                        <tr><td>Facilitate private sector partnerships, buyer linkages, MoUs</td><td>Y2 Q1 – Y4 Q4</td><td>Coastal + Nairobi</td><td>MEDA, AECF</td><td>Plan, CICaN</td><td>Output 3.2</td></tr>
+                        <tr><td>Enterprise mentoring, business plan support, co-financing</td><td>Y2 Q1 – Y4 Q2</td><td>All target counties</td><td>AECF</td><td>MEDA, Plan</td><td>Output 3.2</td></tr>
+                        <tr><td>Joint market events, trade fairs, product showcasing</td><td>Y2 Q2 – Y4 Q4</td><td>Coastal + Nairobi</td><td>MEDA, AECF</td><td>Plan, CICaN</td><td>Output 3.2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3><span class="pillar-tag pillar-4">Pillar 4</span> Governance, Policy Influence & Institutional Capacity</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <tbody>
+                        <tr><td>Institutional capacity assessments (WROs, YLOs, cooperatives, BMUs)</td><td>Y1 Q1–Q2</td><td>All target counties</td><td>Plan KE</td><td>CICaN</td><td>Output 4.1</td></tr>
+                        <tr><td>Governance, financial management & accountability training</td><td>Y1 Q2 – Y3 Q4</td><td>All target counties</td><td>Plan KE</td><td>CICaN, County Govt</td><td>Output 4.1</td></tr>
+                        <tr><td>Strengthen community-institution-to-county linkages</td><td>Y1 Q3 – Y4 Q4</td><td>All target counties</td><td>Plan, CICaN</td><td>County Govt</td><td>Output 4.1</td></tr>
+                        <tr><td>Develop & implement joint advocacy agenda (CIDPs, budgets)</td><td>Y1 Q4 – Y4 Q4</td><td>Coastal + Nairobi</td><td>Plan, CICaN</td><td>All, WROs, YLOs</td><td>Output 4.2</td></tr>
+                        <tr><td>Policy briefs, evidence products, community voice amplification</td><td>Y2 Q1 – Y4 Q4</td><td>Coastal + Nairobi</td><td>Plan KE</td><td>All partners</td><td>Output 4.2</td></tr>
+                        <tr><td>Consortium safeguarding systems design, rollout & audits</td><td>Y1 Q1 – Y4 Q4</td><td>All target counties</td><td>Plan KE</td><td>All partners</td><td>Output 4.3</td></tr>
+                        <tr><td>GESI mainstreaming (tools, standards, indicators)</td><td>Y1 Q1 – Y4 Q4</td><td>All target counties</td><td>Plan KE</td><td>All partners</td><td>Output 4.3</td></tr>
+                        <tr><td>MEL harmonization, outcome harvesting, learning, adaptation</td><td>Y1 Q1 – Y4 Q4</td><td>All target counties</td><td>Plan KE (co-lead)</td><td>All partners</td><td>Output 4.3</td></tr>
+                        <tr><td>Succession planning & sustainability strategy</td><td>Y3 Q1 – Y4 Q4</td><td>All target counties</td><td>Plan, CICaN</td><td>Community groups</td><td>Output 4.1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 5: COLLABORATION ARCHITECTURE -->
+    <!-- ============================================== -->
+    <div class="section" id="section5">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">5</div>
+                <h2>Collaboration & Systems-Strengthening Architecture</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <h3>5.1 Consortium Collaboration Model</h3>
+            <p>COSME Phase 2 adopts a <strong>hybrid collaboration model</strong> that combines <strong>geographic coordination with technical specialization</strong> and <strong>shared strategic functions</strong>. Each partner leads in specific geographies where they have established trust and operational systems, while contributing distinct technical strengths that are sequenced and layered across the value chain. Interventions are intentionally connected: communities move from capacity building → production → value addition → market integration → policy influence, with different partners contributing at different stages.</p>
+            <p>Critical cross-cutting components — including research, MEL, learning, policy advocacy, safeguarding, and institutional strengthening — are <strong>jointly designed and delivered</strong> by all five partners to ensure coherence and amplify collective impact. Plan International Kenya plays a soft leadership role in consortium coordination, promoting alignment and trust-building, while acting as a connector between technical partners, community actors, and government institutions.</p>
+
+            <h3>5.2 Partner Roles & Value-Add</h3>
+            <div class="partner-grid">
+                <div class="partner-card" style="border-top:4px solid var(--primary);">
+                    <h4>🏛️ Plan International Kenya</h4>
+                    <ul>
+                        <li>Gender-transformative programming (GJJ upgrade, GESI mainstreaming)</li>
+                        <li>Women's and youth empowerment & leadership</li>
+                        <li>Community institutional strengthening (WROs, YLOs, cooperatives, BMUs)</li>
+                        <li>Safeguarding leadership (consortium-wide)</li>
+                        <li>Evidence generation & participatory action research</li>
+                        <li>Policy engagement & advocacy</li>
+                        <li>MEL co-leadership</li>
+                        <li>Consortium coordination (soft leadership)</li>
+                    </ul>
+                </div>
+                <div class="partner-card" style="border-top:4px solid #27ae60;">
+                    <h4>📊 MEDA</h4>
+                    <ul>
+                        <li>Market systems development</li>
+                        <li>Value addition, processing & quality standards</li>
+                        <li>Aggregation systems</li>
+                        <li>Private sector partnerships & buyer linkages</li>
+                        <li>Enterprise mentoring & business plan support</li>
+                    </ul>
+                </div>
+                <div class="partner-card" style="border-top:4px solid #e67e22;">
+                    <h4>💰 AECF</h4>
+                    <ul>
+                        <li>Enterprise finance & co-financing facilitation</li>
+                        <li>Private sector partnership brokering</li>
+                        <li>Innovation & enterprise development support</li>
+                        <li>Market event facilitation</li>
+                    </ul>
+                </div>
+                <div class="partner-card" style="border-top:4px solid #3498db;">
+                    <h4>🌿 REAsee</h4>
+                    <ul>
+                        <li>Sustainable production systems (seaweed, mangrove-linked)</li>
+                        <li>Technical training & production quality</li>
+                        <li>Climate-smart agriculture & conservation TA</li>
+                    </ul>
+                </div>
+                <div class="partner-card" style="border-top:4px solid #9b59b6;">
+                    <h4>🤝 CICaN</h4>
+                    <ul>
+                        <li>Institutional coordination platforms</li>
+                        <li>Organizational development for community groups</li>
+                        <li>County/national coordination support</li>
+                        <li>Governance & accountability frameworks</li>
+                    </ul>
+                </div>
+                <div class="partner-card" style="border-top:4px solid #d4a843;">
+                    <h4>🏛️ Government & Community Institutions</h4>
+                    <ul>
+                        <li>Policy & regulatory frameworks</li>
+                        <li>CIDP, sector plans & budget processes</li>
+                        <li>BMU governance & blue economy strategy</li>
+                        <li>WROs/YLOs: grassroots implementation, accountability, peer learning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 6: BOUNDARIES & ASSUMPTIONS -->
+    <!-- ============================================== -->
+    <div class="section" id="section6">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">6</div>
+                <h2>Boundaries, Limitations & Assumptions</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+
+            <h3>6.1 Scope Boundaries</h3>
+            <ul>
+                <li><strong>Thematic focus:</strong> Coastal and marine-based livelihood systems (seaweed, mangrove-linked, conservation enterprises) — not broad livelihood diversification.</li>
+                <li><strong>Target group:</strong> Existing women- and youth-led groups, clustered for aggregation and peer learning — not general population.</li>
+                <li><strong>Market engagement:</strong> Facilitation of market access through MEDA, AECF, and private sector — Plan does not operate as a commercial entity.</li>
+                <li><strong>Geographic scope:</strong> Deepen in Phase 1 geographies; selective expansion only where conditions support it.</li>
+            </ul>
+
+            <h3>6.2 Realistic Change Ambition</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="highlight-box" style="margin:0;">
+                    <h4>✅ What the project WILL achieve</h4>
+                    <ul>
+                        <li>Inclusive market participation for women- and youth-led enterprises.</li>
+                        <li>Measurable improvements in women's agency, leadership, and decision-making.</li>
+                        <li>Stronger, accountable community institutions linked to county structures.</li>
+                        <li>Evidence-based policy influence at county level, with national entry points.</li>
+                        <li>Operational safeguarding, GESI, and learning systems across the consortium.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box warning" style="margin:0;">
+                    <h4>⚠️ What remains BEYOND scope</h4>
+                    <ul>
+                        <li>Full transformation of national export markets.</li>
+                        <li>Systemic resolution of all climate risks.</li>
+                        <li>Complete national-level policy reform on blue economy and gender.</li>
+                        <li>Reaching all coastal communities across Kenya's entire coastline.</li>
+                        <li>Replacing government or private sector roles.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>6.3 Key Assumptions</h3>
+            <ul>
+                <li><strong>Government support:</strong> Continued political will in blue economy and devolution processes.</li>
+                <li><strong>Climate manageability:</strong> Climate shocks remain within adaptable levels.</li>
+                <li><strong>Political stability:</strong> Minimum stability enables program operations and policy dialogue.</li>
+                <li><strong>Partner continuity:</strong> All five consortium partners maintain capacity and commitment.</li>
+                <li><strong>Community willingness:</strong> Target communities remain engaged in gender-transformative programming.</li>
+                <li><strong>Market viability:</strong> Sufficient demand for coastal products.</li>
+                <li><strong>Civic space:</strong> CSOs, WROs, YLOs can continue to organize and advocate.</li>
+                <li><strong>Donor alignment:</strong> Donor expectations align with systems-strengthening and adaptive management approach.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 7: MEL, RESEARCH & LEARNING -->
+    <!-- ============================================== -->
+    <div class="section" id="section7">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">7</div>
+                <h2>MEL, Research, Learning & Adaptive Management</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+
+            <h3>7.1 MEL Approach</h3>
+            <ul>
+                <li><strong>Harmonized indicators and joint learning</strong> across all five COSME partners, with shared MEL framework, common data collection tools, and unified reporting.</li>
+                <li><strong>Outcome harvesting</strong> to capture emergent and systemic outcomes (gender norms, institutional capacity, policy influence).</li>
+                <li><strong>Participatory monitoring</strong> engaging women and youth groups in data collection, reflection, and feedback.</li>
+                <li><strong>Feedback loops</strong> from communities to program design, including complaint and feedback mechanisms.</li>
+                <li><strong>GESI markers and indicators</strong> across all activities (economic + gender-transformative dimensions).</li>
+                <li><strong>Safeguarding monitoring</strong> integrated and aligned with Plan International's commitments.</li>
+                <li><strong>Data disaggregation</strong> by sex, age, county, value chain, and group type.</li>
+                <li><strong>Quarterly and annual reflection</strong> events for data review, adaptation, and learning.</li>
+            </ul>
+
+            <h3>7.2 Research & Learning Agenda</h3>
+            <h4>Research Priorities</h4>
+            <ul>
+                <li><strong>Participatory action research</strong> on gender, climate resilience, and coastal livelihoods — conducted with and for communities.</li>
+                <li><strong>What works for women-led enterprises</strong> — success factors, barriers, and scalable models.</li>
+                <li><strong>Social norms research</strong> — how norms, power relations, and unpaid care interact with economic empowerment.</li>
+                <li><strong>Climate resilience</strong> — adaptive strategies, risk reduction innovations, ecosystem co-benefits.</li>
+            </ul>
+            <h4>Learning Products</h4>
+            <ul>
+                <li>Case studies, stories of change, good practice briefs, policy-relevant research reports.</li>
+                <li>Community-generated evidence (photo-voice, scorecards, most significant change stories).</li>
+            </ul>
+            <h4>Learning Loops & Adaptation</h4>
+            <ul>
+                <li>Findings fed back through quarterly reflection meetings and annual learning reviews.</li>
+                <li>Learning agenda updated annually with priorities from both planned research and outcome harvesting.</li>
+                <li>Community and partner capacity strengthened to use data for decision-making.</li>
+            </ul>
+
+            <h3>7.3 Evidence-Based Advocacy Strategy</h3>
+            <h4>Priority Advocacy Themes</h4>
+            <ul>
+                <li>Blue economy governance, policy, and financing.</li>
+                <li>Climate adaptation and resilience in coastal livelihoods.</li>
+                <li>Gender-responsive policies, budgets, and institutional frameworks.</li>
+                <li>Inclusive financing for women- and youth-led enterprises.</li>
+            </ul>
+            <h4>Entry Points</h4>
+            <ul>
+                <li><strong>County:</strong> CIDPs, sector plans, budgets, blue economy and environment committees.</li>
+                <li><strong>National:</strong> Blue Economy Strategy, climate and gender policy frameworks, parliamentary committees.</li>
+            </ul>
+            <h4>Role of Community Voices</h4>
+            <ul>
+                <li>Women and youth as active advocates — voices, evidence, and experiences amplified in policy spaces.</li>
+                <li>WROs/YLOs engaged directly in policy dialogue.</li>
+                <li>Community evidence translated into policy-relevant messaging.</li>
+                <li>Coordinated advocacy to avoid fragmented approaches.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 8: RISK ANALYSIS -->
+    <!-- ============================================== -->
+    <div class="section" id="section8">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">8</div>
+                <h2>Risk Analysis & Mitigation</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Risk Category</th><th>Description</th><th>Likelihood</th><th>Impact</th><th>Mitigation / Management Strategy</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Programmatic / Climate</strong></td>
+                            <td>Low production or asset loss due to climate shocks (flooding, coral bleaching, drought) disrupting enterprises</td>
+                            <td><span class="risk-high">High</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Climate-smart techniques; livelihood diversification; risk reduction planning; early warning; savings (VSLAs); adaptive management</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Institutional / Systems</strong></td>
+                            <td>Institutional fragmentation and limited local capacity among WROs, YLOs, cooperatives, and coordination platforms</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Structured, long-term capacity building; governance training; succession planning; county-structure linkages; sustainability strategies from Y1</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Social / Gender</strong></td>
+                            <td>Backlash against women's leadership, shifting norms, and gender-transformative programming</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Engage men & boys (GJJ); community dialogue; phased, culturally sensitive approach; safeguarding systems & response</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Civic Space / Governance</strong></td>
+                            <td>Shrinking civic space limiting CSO, WRO, YLO engagement in advocacy and accountability</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td>Monitor civic space; diversify advocacy channels; strengthen community platforms; build coalitions; document impact</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Market / Private Sector</strong></td>
+                            <td>Limited or volatile demand for coastal products; unreliable private sector partners</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Market diversification; value addition; robust assessments; multiple buyer linkages; enterprise resilience support</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Partner / Consortium</strong></td>
+                            <td>Partner disagreements, divergent priorities, or loss of capacity disrupting coherence</td>
+                            <td><span class="risk-low">Low</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Joint planning; clear agreements; soft leadership & trust-building; regular governance meetings; conflict resolution</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial / Funding</strong></td>
+                            <td>Funding delays, shortfalls, or donor shifts impacting implementation</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Adaptive workplanning; phased budgeting; contingency reserves; regular donor communication; co-financing diversification</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Safeguarding</strong></td>
+                            <td>Exclusion, elite capture, GBV, or harmful labour practices exacerbated by economic interventions</td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td><span class="risk-high">High</span></td>
+                            <td>Consortium-wide safeguarding (Plan-led); feedback & complaint mechanisms; audits; capacity building; Do No Harm analysis</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Political / Governance</strong></td>
+                            <td>Political instability or governance disruptions affecting policy engagement and operations</td>
+                            <td><span class="risk-low">Low</span></td>
+                            <td><span class="risk-medium">Medium</span></td>
+                            <td>Political economy analysis; diversify engagement; non-partisan stance; strengthen technical government linkages</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SECTION 9: EXECUTIVE SUMMARY -->
+    <!-- ============================================== -->
+    <div class="section" id="section9">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">9</div>
+                <h2>Executive Summary</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <div class="highlight-box goal">
+                <p><strong>COSME Phase 2: Advancing Climate-Resilient Blue Economy Livelihoods, Gender Justice, and Systems Change for Coastal Women and Youth in Kenya</strong></p>
+            </div>
+
+            <p><strong>Background and Problem.</strong> Coastal communities in Kenya — particularly in Kilifi, Kwale, Lamu, and Tana River — depend on marine and coastal resources for their livelihoods, yet face persistent poverty, gender inequality, fragmented value chains, and escalating climate risks. Women and youth, who are central to coastal production systems, remain excluded from value chain governance, decision-making, and equitable economic returns. COSME Phase 1 established a strong foundation — building community trust, piloting women-led enterprise models and the Gender Justice Journey, initiating seaweed and mangrove-linked livelihoods, and generating evidence on what works. However, Phase 1 also revealed critical gaps: fragmented value chains, low production volumes, uneven institutional capacity, insufficient policy engagement, and gender participation that fell short of genuine transformation.</p>
+
+            <p><strong>Goal and Objectives.</strong> COSME Phase 2 aims to <strong>improve the economic well-being, resilience, and agency of women and youth in coastal Kenya</strong> through inclusive, gender-transformative, and climate-resilient blue economy livelihoods, strengthened market systems, and accountable governance. The project pursues four interconnected objectives: (1) increasing climate-resilient coastal livelihood productivity and diversification; (2) strengthening women's economic empowerment, gender justice, and leadership; (3) facilitating inclusive market systems and value chain integration; and (4) building governance capacity, policy influence, and institutional sustainability.</p>
+
+            <p><strong>Strategies and Pillars.</strong> The project employs a <strong>sequenced, layered implementation logic</strong> — capacity building → production → value addition → market integration → policy influence — delivered through a consortium of five partners (Plan International Kenya, MEDA, AECF, REAsee, CICaN). Plan International Kenya leads on gender-transformative programming, community institutional strengthening, safeguarding, evidence generation, and policy advocacy. MEDA and AECF lead on market systems and private sector partnerships. REAsee contributes production systems. CICaN supports institutional coordination. Shared strategic functions ensure coherence and amplify impact.</p>
+
+            <p><strong>Target Groups and Geography.</strong> Primary beneficiaries are <strong>women and youth in coastal communities</strong> — members of women-led producer groups, cooperatives, VSLAs, WROs, YLOs, and BMUs. The project deepens engagement in Phase 1 geographies (Kilifi, Kwale, Lamu, Tana River) with selective expansion.</p>
+
+            <p><strong>Expected Outcomes.</strong> Increased and more resilient incomes; improved agency, leadership, and decision-making power of women; sustainable coastal ecosystem management; inclusive market integration; stronger community institutions; and evidence-informed, gender-responsive policy engagement.</p>
+
+            <p><strong>Why Phase 2, Why Now.</strong> Kenya's devolution framework, growing blue economy discourse, and increased climate finance interest create a strategic window. COSME Phase 1's evidence, community trust, and established groups provide a launchpad for deeper, more systemic impact — bridging community-level innovation with system-level change for coastal women and youth.</p>
+        </div>
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <p><strong>COSME Phase 2 – Project Design & Implementation Package</strong></p>
+    <p>Plan International Kenya | Blue Economy Program | Prepared for Donor Proposals, Results Frameworks, Workplans & MEL Plans</p>
+    <p style="margin-top:8px; font-size:0.75rem;">Document generated March 2026 | For internal and consortium use</p>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+    // SIDEBAR TOGGLE (MOBILE)
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // COLLAPSIBLE SECTIONS
+    function toggleSection(header) {
+        header.classList.toggle('open');
+        const body = header.nextElementSibling;
+        body.classList.toggle('open');
+    }
+
+    // TOGGLE ALL SECTIONS
+    let allOpen = true;
+    function toggleAllSections() {
+        allOpen = !allOpen;
+        document.querySelectorAll('.collapsible-header').forEach(h => {
+            if (allOpen) {
+                h.classList.add('open');
+                h.nextElementSibling.classList.add('open');
+            } else {
+                h.classList.remove('open');
+                h.nextElementSibling.classList.remove('open');
+            }
+        });
+    }
+
+    // ACTIVE NAV TRACKING
+    const sections = document.querySelectorAll('.section, .hero');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navItems.forEach(n => n.classList.remove('active'));
+                const id = entry.target.id;
+                const active = document.querySelector(`.nav-item[href="#${id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '-80px 0px -50% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // SMOOTH SCROLL
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(item.getAttribute('href'));
+            target.scrollIntoView({ behavior: 'smooth' });
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+        });
+    });
+
+    // BACK TO TOP
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 500) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    });
+
+    // SEARCH/FILTER NAV
+    function filterNav() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        navItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(q) ? 'flex' : 'none';
+        });
+    }
+
+    // CLOSE SIDEBAR ON OUTSIDE CLICK (MOBILE)
+    document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.querySelector('.menu-toggle');
+        if (window.innerWidth <= 900 && sidebar.classList.contains('open') 
+            && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    });
+</script>
+
+</body>
+</html>
