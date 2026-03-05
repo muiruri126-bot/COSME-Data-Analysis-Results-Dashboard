@@ -589,9 +589,21 @@
             .header-actions button { padding: 5px 8px; font-size: 0.72rem; }
             .header-logo .plan-logo-svg { height: 35px; }
 
-            /* Tables: horizontal scroll wrapper */
-            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; }
-            thead, tbody, tr, th, td { white-space: normal; }
+            /* Tables: scroll hint + shadow */
+            .table-container { position: relative; }
+            .table-container::after {
+                content: '← Scroll →';
+                display: block;
+                text-align: center;
+                font-size: 0.7rem;
+                color: var(--text-light);
+                padding: 4px;
+                background: #f5f7fa;
+                border-radius: 0 0 8px 8px;
+            }
+            table { font-size: 0.82rem; }
+            thead th { padding: 10px 10px; font-size: 0.72rem; }
+            tbody td { padding: 9px 10px; font-size: 0.82rem; }
 
             /* Inline 2-col grids → 1-col */
             [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
@@ -687,6 +699,115 @@
             .reflection-card { padding: 14px; }
             .reflection-card strong { font-size: 0.88rem; }
             .reflection-card p { font-size: 0.85rem; }
+
+            /* ===== MOBILE TABLE → STACKED CARD LAYOUT ===== */
+            .table-container::after { content: none; }
+
+            .table-container table,
+            .table-container thead,
+            .table-container tbody,
+            .table-container tr,
+            .table-container th,
+            .table-container td {
+                display: block;
+                width: 100%;
+            }
+
+            .table-container thead {
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+            }
+
+            .table-container tbody tr {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                margin-bottom: 12px;
+                padding: 6px 0;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            }
+            .table-container tbody tr:nth-child(even) { background: #fafbfd; }
+
+            .table-container tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 8px 14px;
+                border-bottom: 1px solid #f0f2f5;
+                font-size: 0.82rem;
+                line-height: 1.55;
+                text-align: right;
+            }
+            .table-container tbody td:last-child {
+                border-bottom: none;
+            }
+
+            .table-container tbody td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 0.74rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                flex-shrink: 0;
+                text-align: left;
+                min-width: 90px;
+            }
+
+            /* Tool-tables in MERL toolkit — same treatment */
+            .tool-table,
+            .tool-table thead,
+            .tool-table tbody,
+            .tool-table tr,
+            .tool-table th,
+            .tool-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .tool-table thead {
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+            }
+
+            .tool-table tbody tr {
+                background: #fff;
+                border: 1px solid #e8ecf0;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                padding: 4px 0;
+            }
+
+            .tool-table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 6px;
+                padding: 6px 12px;
+                border-bottom: 1px solid #f0f2f5;
+                font-size: 0.78rem;
+                text-align: right;
+                white-space: normal;
+            }
+            .tool-table tbody td:last-child { border-bottom: none; }
+            .tool-table tbody td:first-child { white-space: normal; }
+
+            .tool-table tbody td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                flex-shrink: 0;
+                text-align: left;
+                min-width: 80px;
+            }
         }
 
         /* SEARCH */
@@ -3808,6 +3929,23 @@
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+    // RESPONSIVE TABLES: inject data-label on each <td> from its <th>
+    (function() {
+        var tables = document.querySelectorAll('.table-container table, table.tool-table');
+        tables.forEach(function(tbl) {
+            var headers = [];
+            tbl.querySelectorAll('thead th').forEach(function(th) {
+                headers.push(th.textContent.trim());
+            });
+            if (!headers.length) return;
+            tbl.querySelectorAll('tbody tr').forEach(function(tr) {
+                tr.querySelectorAll('td').forEach(function(td, i) {
+                    if (headers[i]) td.setAttribute('data-label', headers[i]);
+                });
+            });
+        });
+    })();
+
     // SIDEBAR TOGGLE (MOBILE)
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
