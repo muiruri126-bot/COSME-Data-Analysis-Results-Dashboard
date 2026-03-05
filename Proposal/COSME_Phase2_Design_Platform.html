@@ -1014,12 +1014,17 @@
         .be-domain.conservation { border-color: #00A651; }
         .be-domain.conservation .be-domain-header { background: linear-gradient(135deg, #00A651, #00874a); color: #fff; }
         .be-domain.conservation .be-node { border-left-color: #00A651; }
-        .be-domain.economic { border-color: #0072CE; }
-        .be-domain.economic .be-domain-header { background: linear-gradient(135deg, #0072CE, #003C71); color: #fff; }
-        .be-domain.economic .be-node { border-left-color: #0072CE; }
-        .be-domain.policy { border-color: #FFD200; }
-        .be-domain.policy .be-domain-header { background: linear-gradient(135deg, #d4a843, #b8860b); color: #fff; }
-        .be-domain.policy .be-node { border-left-color: #d4a843; }
+        .be-domain.economic { border-color: #C00000; }
+        .be-domain.economic .be-domain-header { background: linear-gradient(135deg, #C00000, #8B0000); color: #fff; }
+        .be-domain.economic .be-node { border-left-color: #C00000; }
+        .be-domain.policy { border-color: #FFC000; }
+        .be-domain.policy .be-domain-header { background: linear-gradient(135deg, #FFC000, #D4A017); color: #fff; }
+        .be-domain.policy .be-node { border-left-color: #FFC000; }
+
+        /* Domain-specific node detail tag colors */
+        .be-domain.conservation .be-node .node-details span { background: rgba(0,166,81,0.12); }
+        .be-domain.economic .be-node .node-details span { background: rgba(192,0,0,0.10); }
+        .be-domain.policy .be-node .node-details span { background: rgba(255,192,0,0.18); }
 
         /* Connector arrows between domains */
         .be-connectors {
@@ -2026,50 +2031,48 @@
         <div class="collapsible-body open">
             <p style="font-size:1rem; color:var(--text-light); margin-bottom:22px; line-height:1.75;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
 
-            <!-- ====== DIAGRAM 1: BE Design Architecture ====== -->
+            <!-- ====== DIAGRAM 1: BE Design Architecture (rebuilt from Excel source) ====== -->
             <div class="diagram-container" id="diagram1">
                 <h4 class="diagram-title">Diagram 1: Blue Economy Program Design Architecture</h4>
                 <p class="diagram-subtitle">Three interconnected domains with a shared resilience framework and symbiotic conservation–empowerment linkage</p>
 
-                <div class="resilience-banner">RESILIENCE — Climate-Resilient Blue Economy Framework</div>
+                <div class="resilience-banner">RESILIENCE</div>
 
                 <!-- Three Domains -->
                 <div class="be-diagram">
-                    <!-- DOMAIN 1: Conservation -->
+                    <!-- DOMAIN 1: Conservation (Green #00B050) -->
                     <div class="be-domain conservation">
-                        <div class="be-domain-header">Conservation & Climate Finance</div>
+                        <div class="be-domain-header">Conservation</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#00A651;">
-                                <h5>Mangrove Restoration & Conservation</h5>
+                            <div class="be-node">
+                                <h5>Climate Finance</h5>
+                            </div>
+                            <div class="be-node">
+                                <h5>Measurement and Verification</h5>
+                            </div>
+                            <div class="be-node">
+                                <h5>Mangrove Restoration and Conservation</h5>
                                 <div class="node-details">
                                     <span>Ha Expansion</span>
                                     <span>Community-Led</span>
                                     <span>Green Assets</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#2e7d32;">
+                            <div class="be-node">
                                 <h5>Upstream Forest Conservation</h5>
-                                <div class="node-details">
-                                    <span>Terrestrial ecosystems</span>
-                                    <span>Watershed protection</span>
-                                </div>
-                            </div>
-                            <div class="be-node" style="border-left-color:#1b5e20;">
-                                <h5>Climate Finance</h5>
                                 <div class="node-details">
                                     <span>Carbon / Biodiversity</span>
                                     <span>Readiness</span>
-                                    <span>Measurement & Verification</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DOMAIN 2: Economic Empowerment -->
+                    <!-- DOMAIN 2: Economic Empowerment (Red #C00000) -->
                     <div class="be-domain economic">
-                        <div class="be-domain-header">Economic Empowerment & Production</div>
+                        <div class="be-domain-header">Economic Empowerment</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#0072CE;">
+                            <div class="be-node">
                                 <h5>Seaweed Production</h5>
                                 <div class="node-details">
                                     <span>Technology</span>
@@ -2078,87 +2081,72 @@
                                     <span>Deep Sea</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#1565c0;">
+                            <div class="be-node">
                                 <h5>Other Nature-Based Enterprises</h5>
                                 <div class="node-details">
                                     <span>Beekeeping</span>
                                     <span>Tourism</span>
-                                    <span>Crab Farming</span>
+                                    <span>Crab</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#003C71;">
-                                <h5>Gender Transformation & VSLAs</h5>
-                                <div class="node-details">
-                                    <span>Gender Transformation</span>
-                                    <span>VSLAs</span>
-                                    <span>Upskilling</span>
-                                </div>
-                            </div>
-                            <div class="be-node" style="border-left-color:#0d47a1;">
-                                <h5>Scale Through Organizations</h5>
+                            <div class="be-node">
+                                <h5>Scale through Organizations</h5>
                                 <div class="node-details">
                                     <span>Cooperatives</span>
                                     <span>Clusters</span>
                                     <span>Associations</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#1976d2;">
+                            <div class="be-node">
                                 <h5>Value Chain Upgrading</h5>
                                 <div class="node-details">
                                     <span>Strategic Value Chains</span>
-                                    <span>HV Market Access</span>
-                                    <span>Pull-Effect / Lead Firm</span>
+                                    <span>Upgrade: Value Addition / HV Market Access</span>
+                                    <span>Pull-Effect / Lead Firm Approach</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#42a5f5;">
-                                <h5>Access to Alternative Capital & Financing</h5>
-                                <div class="node-details">
-                                    <span>Co-financing</span>
-                                    <span>Enterprise finance</span>
-                                </div>
+                            <div class="be-node">
+                                <h5>Access to Alternative Capital and Financing</h5>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DOMAIN 3: Policy -->
+                    <!-- DOMAIN 3: Policy (Amber #FFC000) -->
                     <div class="be-domain policy">
-                        <div class="be-domain-header">Policy & Governance</div>
+                        <div class="be-domain-header">Policy</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#d4a843;">
-                                <h5>Monitoring, Evaluation & Research</h5>
-                                <div class="node-details">
-                                    <span>Outcome harvesting</span>
-                                    <span>Evidence generation</span>
-                                    <span>Learning systems</span>
-                                </div>
+                            <div class="be-node">
+                                <h5>Monitoring, Evaluation and Research</h5>
                             </div>
-                            <div class="be-node" style="border-left-color:#f9a825;">
+                            <div class="be-node">
                                 <h5>Coordination Platform</h5>
-                                <div class="node-details">
-                                    <span>Community-Based Orgs</span>
-                                    <span>Multi-stakeholder forums</span>
-                                </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#ef6c00;">
+                            <div class="be-node">
                                 <h5>Local Community-Based Advocacy</h5>
                                 <div class="node-details">
-                                    <span>Community voice</span>
-                                    <span>Grassroots engagement</span>
+                                    <span>Community Based Organization</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#e65100;">
+                            <div class="be-node">
                                 <h5>Direct Advocacy</h5>
                                 <div class="node-details">
                                     <span>Lobby Parliamentarians</span>
-                                    <span>Regional & National</span>
+                                    <span>Regional and National</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#bf360c;">
+                            <div class="be-node">
                                 <h5>Strategic Policy Linkage</h5>
-                                <div class="node-details">Strategic policy needs and gaps specifically related to conservation and economic empowerment interventions</div>
+                                <div class="node-details">Strategic policy needs and gaps specifically related to Conservation and Economic Empowerment interventions</div>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Cross-cutting elements -->
+                <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0;">
+                    <span style="background:rgba(0,0,0,0.06);padding:6px 16px;border-radius:20px;font-size:0.82rem;font-weight:600;color:#333;">Gender Transformation</span>
+                    <span style="background:rgba(0,0,0,0.06);padding:6px 16px;border-radius:20px;font-size:0.82rem;font-weight:600;color:#333;">VSLAs</span>
+                    <span style="background:rgba(0,0,0,0.06);padding:6px 16px;border-radius:20px;font-size:0.82rem;font-weight:600;color:#333;">Upskilling</span>
                 </div>
 
                 <div class="symbiotic-link">Symbiotic Relationship between Conservation & Economic Empowerment</div>
@@ -2176,12 +2164,12 @@
                 </div>
             </div>
 
-            <!-- ====== DIAGRAM 2: BE Design with Partners ====== -->
+            <!-- ====== DIAGRAM 2: BE Design with Partners (rebuilt from Excel source) ====== -->
             <div class="diagram-container" id="diagram2">
                 <h4 class="diagram-title">Diagram 2: Blue Economy Design — Partner Mapping</h4>
                 <p class="diagram-subtitle">Implementing partners mapped to program domains, showing who leads and supports each component</p>
 
-                <div class="resilience-banner">RESILIENCE — Partner-Led Blue Economy Architecture</div>
+                <div class="resilience-banner">RESILIENCE</div>
 
                 <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:18px;">
                     <span class="partner-badge plan">Plan / Mission Inclusion</span>
@@ -2195,26 +2183,33 @@
                 <div class="be-diagram">
                     <!-- Conservation with Partners -->
                     <div class="be-domain conservation">
-                        <div class="be-domain-header">Conservation & Climate Finance</div>
+                        <div class="be-domain-header">Conservation</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#00A651;">
-                                <h5>Mangrove Restoration & Conservation</h5>
+                            <div class="be-node">
+                                <h5>Climate Finance</h5>
                                 <div class="node-details">
                                     <span class="partner-badge natstate">Natural State</span>
                                     <span class="partner-badge meda">MEDA</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#2e7d32;">
+                            <div class="be-node">
+                                <h5>Measurement and Verification</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge natstate">Natural State</span>
+                                    <span class="partner-badge meda">MEDA</span>
+                                </div>
+                            </div>
+                            <div class="be-node">
+                                <h5>Mangrove Restoration and Conservation</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge natstate">Natural State</span>
+                                    <span class="partner-badge meda">MEDA</span>
+                                </div>
+                            </div>
+                            <div class="be-node">
                                 <h5>Upstream Forest Conservation</h5>
                                 <div class="node-details">
                                     <span class="partner-badge natstate">Natural State</span>
-                                </div>
-                            </div>
-                            <div class="be-node" style="border-left-color:#1b5e20;">
-                                <h5>Climate Finance — Measurement & Verification</h5>
-                                <div class="node-details">
-                                    <span class="partner-badge natstate">Natural State</span>
-                                    <span class="partner-badge meda">MEDA</span>
                                 </div>
                             </div>
                         </div>
@@ -2222,38 +2217,38 @@
 
                     <!-- Economic Empowerment with Partners -->
                     <div class="be-domain economic">
-                        <div class="be-domain-header">Economic Empowerment & Production</div>
+                        <div class="be-domain-header">Economic Empowerment</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#0072CE;">
+                            <div class="be-node">
                                 <h5>Seaweed Production</h5>
                                 <div class="node-details">
                                     <span class="partner-badge natstate">Natural State</span>
                                     <span class="partner-badge meda">MEDA</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#1565c0;">
+                            <div class="be-node">
                                 <h5>Other Nature-Based Enterprises</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
                                     <span class="partner-badge natstate">Natural State</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#003C71;">
-                                <h5>Gender Transformation / VSLAs / Upskilling</h5>
-                                <div class="node-details">
-                                    <span class="partner-badge plan">Plan</span>
-                                    <span class="partner-badge mission">Mission Inclusion</span>
-                                </div>
-                            </div>
-                            <div class="be-node" style="border-left-color:#1976d2;">
-                                <h5>Value Chain Upgrading & Scale</h5>
+                            <div class="be-node">
+                                <h5>Scale through Organizations</h5>
                                 <div class="node-details">
                                     <span class="partner-badge meda">MEDA</span>
                                     <span class="partner-badge plan">Plan</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#42a5f5;">
-                                <h5>Access to Capital & Financing</h5>
+                            <div class="be-node">
+                                <h5>Value Chain Upgrading</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge meda">MEDA</span>
+                                    <span class="partner-badge plan">Plan</span>
+                                </div>
+                            </div>
+                            <div class="be-node">
+                                <h5>Access to Alternative Capital and Financing</h5>
                                 <div class="node-details">
                                     <span class="partner-badge aecf">AECF</span>
                                     <span class="partner-badge meda">MEDA</span>
@@ -2264,41 +2259,69 @@
 
                     <!-- Policy with Partners -->
                     <div class="be-domain policy">
-                        <div class="be-domain-header">Policy & Governance</div>
+                        <div class="be-domain-header">Policy</div>
                         <div class="be-domain-body">
-                            <div class="be-node" style="border-left-color:#d4a843;">
-                                <h5>Monitoring & Evaluation</h5>
+                            <div class="be-node">
+                                <h5>Monitoring and Evaluation</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#f9a825;">
+                            <div class="be-node">
                                 <h5>Research</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
+                                    <span class="partner-badge cican">CICaN</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#ef6c00;">
+                            <div class="be-node">
                                 <h5>Coordination Platform</h5>
                                 <div class="node-details">
                                     <span class="partner-badge cican">CICaN</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#e65100;">
-                                <h5>Local & Direct Advocacy</h5>
+                            <div class="be-node">
+                                <h5>Local Community-Based Advocacy</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
                                     <span class="partner-badge cican">CICaN</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#bf360c;">
+                            <div class="be-node">
+                                <h5>Direct Advocacy</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                    <span class="partner-badge cican">CICaN</span>
+                                </div>
+                            </div>
+                            <div class="be-node">
                                 <h5>Strategic Policy Linkage</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
                                     <span class="partner-badge cican">CICaN</span>
+                                    <span class="partner-badge meda">MEDA</span>
+                                    <span class="partner-badge aecf">AECF</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Cross-cutting with Partners -->
+                <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0;padding:12px 20px;background:#f8f9fa;border-radius:10px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:0.82rem;font-weight:600;color:#333;margin-bottom:4px;">Gender Transformation</div>
+                        <span class="partner-badge plan">Plan</span>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:0.82rem;font-weight:600;color:#333;margin-bottom:4px;">VSLAs</div>
+                        <span class="partner-badge plan">Plan</span>
+                        <span class="partner-badge cican">CICaN</span>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:0.82rem;font-weight:600;color:#333;margin-bottom:4px;">Upskilling</div>
+                        <span class="partner-badge plan">Plan</span>
+                        <span class="partner-badge cican">CICaN</span>
                     </div>
                 </div>
 
