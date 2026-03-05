@@ -176,17 +176,16 @@
             padding-bottom: 5px;
         }
 
-        /* SURVEY SELECTOR - Fixed at top */
+        /* SURVEY SELECTOR - Fixed at top, compact horizontal strip */
         .survey-selector {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 0 0 12px 12px;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 6px 12px;
             margin-bottom: 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex-wrap: nowrap;
             position: fixed;
             top: 0;
             left: 0;
@@ -195,42 +194,68 @@
             transition: box-shadow 0.3s ease, background 0.3s ease;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.97);
-            border-top: 4px solid #0072CE;
+            border-top: 3px solid #0072CE;
         }
 
         .survey-selector.scrolled {
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* Spacer to push content below fixed survey selector */
         .survey-selector-spacer {
-            height: 72px;
+            height: 46px;
             flex-shrink: 0;
         }
 
         .survey-selector label {
             font-weight: 600;
-            color: #333;
-            font-size: 1.1em;
+            color: #555;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .survey-buttons {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 5px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #0072CE transparent;
+            padding-bottom: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .survey-buttons::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .survey-buttons::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .survey-buttons::-webkit-scrollbar-thumb {
+            background: #0072CE;
+            border-radius: 3px;
         }
 
         .survey-btn {
-            padding: 10px 20px;
-            border: 2px solid #0072CE;
+            padding: 5px 12px;
+            border: 1.5px solid #0072CE;
             background: white;
             color: #0072CE;
-            border-radius: 8px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
+            transition: all 0.2s ease;
+            font-size: 0.78em;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .survey-btn:hover {
@@ -1383,15 +1408,15 @@
             }
 
             .survey-selector {
-                padding: 10px;
-                gap: 8px;
+                padding: 6px 8px;
+                gap: 6px;
                 margin-bottom: 0;
                 border-radius: 0;
             }
 
             /* Spacer adjustment for mobile */
             .survey-selector-spacer {
-                height: 60px;
+                height: 46px;
             }
 
             /* Header */
@@ -1723,14 +1748,14 @@
 
             /* Survey Selector - minimal on phone */
             .survey-selector {
-                padding: 8px;
-                gap: 6px;
+                padding: 5px 6px;
+                gap: 4px;
                 border-radius: 0;
                 margin-bottom: 0;
             }
 
             .survey-selector-spacer {
-                height: 56px;
+                height: 42px;
             }
 
             .mobile-menu-toggle {
@@ -2179,7 +2204,7 @@
             }
 
             .survey-selector {
-                padding: 6px;
+                padding: 4px 6px;
             }
 
             .mobile-menu-toggle {
