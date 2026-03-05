@@ -563,21 +563,379 @@
             font-weight: 600;
             margin-left: 6px;
         }
+
+        /* ========== EDITING & COLLABORATION STYLES ========== */
+
+        /* Contributor Login Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 36px 32px;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal h2 {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+        .modal p.modal-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        .modal label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text);
+            margin-bottom: 5px;
+            margin-top: 14px;
+        }
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        .modal input:focus, .modal select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .modal .btn-primary {
+            flex: 1;
+            padding: 11px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal .btn-primary:hover { background: var(--primary-dark); }
+        .modal .btn-secondary {
+            padding: 11px 20px;
+            background: #f0f0f0;
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .modal .btn-secondary:hover { background: #e0e0e0; }
+
+        /* Edit Mode Banner */
+        .edit-banner {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: var(--sidebar-width);
+            right: 0;
+            background: linear-gradient(135deg, #00A651, #00C853);
+            color: #fff;
+            padding: 8px 20px;
+            z-index: 900;
+            font-size: 0.82rem;
+            font-weight: 500;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .edit-banner.active { display: flex; }
+        .edit-banner .edit-info { display: flex; align-items: center; gap: 10px; }
+        .edit-banner .contributor-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        .edit-banner button {
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .edit-banner .btn-save {
+            background: #fff;
+            color: var(--accent);
+        }
+        .edit-banner .btn-stop {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .edit-banner { left: 0; }
+        }
+
+        /* Editable content styling */
+        body.edit-mode .editable-content {
+            outline: 2px dashed rgba(0,114,206,0.3);
+            outline-offset: 4px;
+            border-radius: 4px;
+            min-height: 1em;
+            transition: outline-color 0.2s, background 0.2s;
+        }
+        body.edit-mode .editable-content:hover {
+            outline-color: rgba(0,114,206,0.6);
+            background: rgba(0,114,206,0.03);
+        }
+        body.edit-mode .editable-content:focus {
+            outline: 2px solid var(--primary);
+            background: rgba(0,114,206,0.05);
+        }
+
+        /* Edited indicator */
+        .edit-indicator {
+            display: none;
+            font-size: 0.65rem;
+            background: var(--gold);
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        .edited .edit-indicator { display: inline-block; }
+
+        /* Edit History Panel */
+        .history-panel {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: var(--header-height);
+            bottom: 0;
+            width: 340px;
+            background: #fff;
+            border-left: 1px solid var(--border);
+            z-index: 950;
+            overflow-y: auto;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+        }
+        .history-panel.active { display: block; }
+        .history-panel .panel-header {
+            padding: 18px 20px;
+            background: var(--primary-dark);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-panel .panel-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 2px 8px;
+        }
+        .history-entry {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-entry .entry-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            margin-bottom: 6px;
+        }
+        .history-entry .entry-contributor {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .history-entry .entry-time {
+            color: var(--text-light);
+        }
+        .history-entry .entry-section {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .history-entry .entry-org {
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .history-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Header edit buttons */
+        .header-actions .edit-btn {
+            background: var(--accent) !important;
+            color: #fff !important;
+        }
+        .header-actions .edit-btn:hover {
+            background: #008c44 !important;
+        }
+        .header-actions .history-btn {
+            background: var(--gold) !important;
+            color: #333 !important;
+        }
+
+        /* Export modal additions */
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .export-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .export-option:hover {
+            border-color: var(--primary);
+            background: rgba(0,114,206,0.04);
+        }
+        .export-option .icon { font-size: 1.6rem; }
+        .export-option .info h4 {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .export-option .info p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
     </style>
 </head>
 <body>
+
+<!-- CONTRIBUTOR LOGIN MODAL -->
+<div class="modal-overlay" id="contributorModal">
+    <div class="modal">
+        <h2>👤 Contributor Login</h2>
+        <p class="modal-desc">Identify yourself to start editing. Your changes will be tracked and attributed to you.</p>
+        <label for="contribName">Full Name *</label>
+        <input type="text" id="contribName" placeholder="e.g. Jane Mwangi">
+        <label for="contribOrg">Organization *</label>
+        <select id="contribOrg">
+            <option value="">Select your organization...</option>
+            <option value="Plan International Kenya">Plan International Kenya</option>
+            <option value="MEDA">MEDA</option>
+            <option value="AECF">AECF</option>
+            <option value="REAsee">REAsee</option>
+            <option value="CICaN">CICaN</option>
+            <option value="Other">Other (type below)</option>
+        </select>
+        <input type="text" id="contribOrgOther" placeholder="Enter organization name..." style="display:none; margin-top:8px;">
+        <label for="contribRole">Role (optional)</label>
+        <input type="text" id="contribRole" placeholder="e.g. Programme Manager">
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeContributorModal()">Cancel</button>
+            <button class="btn-primary" onclick="confirmContributor()">✏️ Start Editing</button>
+        </div>
+    </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="exportModal">
+    <div class="modal">
+        <h2>📥 Export Document</h2>
+        <p class="modal-desc">Download the current version with all edits included.</p>
+        <div class="export-options">
+            <div class="export-option" onclick="exportAsHTML()">
+                <div class="icon">🌐</div>
+                <div class="info">
+                    <h4>Export as HTML</h4>
+                    <p>Full interactive web page with all edits preserved</p>
+                </div>
+            </div>
+            <div class="export-option" onclick="exportAsText()">
+                <div class="icon">📄</div>
+                <div class="info">
+                    <h4>Export as Plain Text</h4>
+                    <p>Clean text content suitable for Word/Google Docs</p>
+                </div>
+            </div>
+            <div class="export-option" onclick="exportEditLog()">
+                <div class="icon">📋</div>
+                <div class="info">
+                    <h4>Export Edit History</h4>
+                    <p>CSV log of all changes with contributor details</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions" style="margin-top:18px;">
+            <button class="btn-secondary" onclick="closeExportModal()" style="width:100%;">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODE BANNER -->
+<div class="edit-banner" id="editBanner">
+    <div class="edit-info">
+        <span>✏️ <strong>Edit Mode Active</strong></span>
+        <span class="contributor-badge" id="editBadge">—</span>
+        <span style="font-size:0.72rem; opacity:0.85;">Click any text to edit. Changes auto-save.</span>
+    </div>
+    <div style="display:flex; gap:8px;">
+        <button class="btn-save" onclick="saveAllEdits()">💾 Save</button>
+        <button class="btn-stop" onclick="stopEditMode()">✖ Exit Edit Mode</button>
+    </div>
+</div>
+
+<!-- EDIT HISTORY PANEL -->
+<div class="history-panel" id="historyPanel">
+    <div class="panel-header">
+        <span>📝 Edit History</span>
+        <button class="panel-close" onclick="toggleHistory()">✕</button>
+    </div>
+    <div id="historyList">
+        <div class="history-empty">No edits recorded yet.</div>
+    </div>
+</div>
 
 <!-- HEADER -->
 <header class="header">
     <div class="header-logo">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <img class="plan-logo-svg" src="plan-logo-white.svg" alt="Plan International">
+        <img class="plan-logo-svg" src="plan-logo.svg" alt="Plan International">
         <div class="header-title">
             <h1>COSME Phase 2 – Project Design Package</h1>
             <span>Plan International Kenya | Blue Economy Program</span>
         </div>
     </div>
     <div class="header-actions">
+        <button class="edit-btn" onclick="requestEditMode()">✏️ Edit</button>
+        <button class="history-btn" onclick="toggleHistory()">📝 History</button>
+        <button onclick="openExportModal()">📥 Export</button>
         <button onclick="window.print()">🖨️ Print / PDF</button>
         <button onclick="toggleAllSections()">📂 Expand / Collapse All</button>
     </div>
@@ -638,7 +996,7 @@
     <!-- HERO -->
     <div class="hero" id="hero">
         <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
-            <img src="plan-logo-white.svg" alt="Plan International" style="height: 55px; width: auto; opacity: 0.95;">
+            <img src="plan-logo.svg" alt="Plan International" style="height: 55px; width: auto;">
             <div style="height: 40px; width: 3px; background: var(--gold); border-radius: 2px;"></div>
             <span style="font-size: 0.95rem; opacity: 0.9; font-weight: 500; letter-spacing: 0.5px;">PLAN INTERNATIONAL KENYA</span>
         </div>
@@ -1487,7 +1845,7 @@
 <!-- FOOTER -->
 <footer class="footer" style="border-top: 4px solid var(--gold);">
     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; justify-content: center;">
-        <img src="plan-logo-white.svg" alt="Plan International" style="height: 40px; width: auto; opacity: 0.9;">
+        <img src="plan-logo.svg" alt="Plan International" style="height: 40px; width: auto;">
     </div>
     <p><strong>COSME Phase 2 – Project Design & Implementation Package</strong></p>
     <p>Plan International Kenya | Blue Economy Program | Prepared for Donor Proposals, Results Frameworks, Workplans & MEL Plans</p>
@@ -1579,6 +1937,321 @@
             sidebar.classList.remove('open');
         }
     });
+
+    // =======================================================
+    // EDITING & COLLABORATION SYSTEM
+    // =======================================================
+
+    const STORAGE_KEY = 'cosme_edits';
+    const HISTORY_KEY = 'cosme_edit_history';
+    const CONTRIBUTOR_KEY = 'cosme_contributor';
+
+    let currentContributor = null;
+    let editMode = false;
+    let saveTimeout = null;
+
+    // --- Contributor Modal ---
+    function requestEditMode() {
+        const saved = localStorage.getItem(CONTRIBUTOR_KEY);
+        if (saved) {
+            currentContributor = JSON.parse(saved);
+            startEditMode();
+        } else {
+            document.getElementById('contributorModal').classList.add('active');
+        }
+    }
+
+    function closeContributorModal() {
+        document.getElementById('contributorModal').classList.remove('active');
+    }
+
+    document.getElementById('contribOrg').addEventListener('change', function() {
+        const otherInput = document.getElementById('contribOrgOther');
+        otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+    });
+
+    function confirmContributor() {
+        const name = document.getElementById('contribName').value.trim();
+        let org = document.getElementById('contribOrg').value;
+        const role = document.getElementById('contribRole').value.trim();
+
+        if (!name) { alert('Please enter your name.'); return; }
+        if (!org) { alert('Please select your organization.'); return; }
+        if (org === 'Other') {
+            org = document.getElementById('contribOrgOther').value.trim();
+            if (!org) { alert('Please enter your organization name.'); return; }
+        }
+
+        currentContributor = { name, org, role };
+        localStorage.setItem(CONTRIBUTOR_KEY, JSON.stringify(currentContributor));
+        closeContributorModal();
+        startEditMode();
+    }
+
+    // --- Edit Mode ---
+    function startEditMode() {
+        editMode = true;
+        document.body.classList.add('edit-mode');
+        document.getElementById('editBanner').classList.add('active');
+        document.getElementById('editBadge').textContent = 
+            currentContributor.name + ' (' + currentContributor.org + ')';
+
+        // Make editable elements
+        const editableSelectors = [
+            '.collapsible-body p',
+            '.collapsible-body li',
+            '.collapsible-body h3',
+            '.collapsible-body td',
+            '.collapsible-body .highlight-box p',
+            '.collapsible-body .title-option',
+            '.hero h1',
+            '.hero .subtitle'
+        ];
+
+        editableSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => {
+                el.classList.add('editable-content');
+                el.setAttribute('contenteditable', 'true');
+                el.setAttribute('spellcheck', 'true');
+                el.addEventListener('input', handleEdit);
+                el.addEventListener('focus', handleFocus);
+            });
+        });
+    }
+
+    function stopEditMode() {
+        editMode = false;
+        saveAllEdits();
+        document.body.classList.remove('edit-mode');
+        document.getElementById('editBanner').classList.remove('active');
+
+        document.querySelectorAll('.editable-content').forEach(el => {
+            el.removeAttribute('contenteditable');
+            el.classList.remove('editable-content');
+        });
+    }
+
+    function handleFocus(e) {
+        // Store original content for diff comparison
+        if (!e.target.dataset.original) {
+            e.target.dataset.original = e.target.innerHTML;
+        }
+    }
+
+    function handleEdit(e) {
+        const el = e.target;
+        // Mark as edited
+        const section = el.closest('.section') || el.closest('.hero');
+        if (section) section.classList.add('edited');
+
+        // Show edit indicator on section header
+        const header = section?.querySelector('.section-header');
+        if (header && !header.querySelector('.edit-indicator')) {
+            const badge = document.createElement('span');
+            badge.className = 'edit-indicator';
+            badge.textContent = '✏️ Edited';
+            badge.style.display = 'inline-block';
+            header.querySelector('div').appendChild(badge);
+        }
+
+        // Debounced auto-save
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => saveAllEdits(), 2000);
+    }
+
+    // --- Save & Load ---
+    function saveAllEdits() {
+        const edits = {};
+        document.querySelectorAll('.section, .hero').forEach(section => {
+            const id = section.id;
+            if (!id) return;
+            const editables = section.querySelectorAll('[contenteditable="true"], .editable-content');
+            editables.forEach((el, idx) => {
+                const key = id + '__' + idx;
+                const original = el.dataset.original || '';
+                const current = el.innerHTML;
+                if (original && current !== original) {
+                    edits[key] = {
+                        sectionId: id,
+                        index: idx,
+                        content: current,
+                        original: original,
+                        contributor: currentContributor,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+            });
+        });
+
+        if (Object.keys(edits).length > 0) {
+            // Merge with existing edits
+            const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const merged = { ...existing, ...edits };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+
+            // Update history
+            addToHistory(edits);
+        }
+    }
+
+    function loadSavedEdits() {
+        const edits = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (Object.keys(edits).length === 0) return;
+
+        Object.values(edits).forEach(edit => {
+            const section = document.getElementById(edit.sectionId);
+            if (!section) return;
+
+            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle');
+            if (candidates[edit.index]) {
+                candidates[edit.index].innerHTML = edit.content;
+                candidates[edit.index].dataset.original = edit.original;
+                section.classList.add('edited');
+                const header = section.querySelector('.section-header');
+                if (header && !header.querySelector('.edit-indicator')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'edit-indicator';
+                    badge.textContent = '✏️ Edited';
+                    badge.style.display = 'inline-block';
+                    header.querySelector('div')?.appendChild(badge);
+                }
+            }
+        });
+    }
+
+    // --- Edit History ---
+    function addToHistory(newEdits) {
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        
+        Object.entries(newEdits).forEach(([key, edit]) => {
+            const sectionEl = document.getElementById(edit.sectionId);
+            const sectionTitle = sectionEl?.querySelector('h2, h1')?.textContent || edit.sectionId;
+            
+            history.unshift({
+                key: key,
+                section: sectionTitle,
+                contributor: edit.contributor.name,
+                org: edit.contributor.org,
+                timestamp: edit.timestamp,
+                sectionId: edit.sectionId
+            });
+        });
+
+        // Keep last 200 entries
+        const trimmed = history.slice(0, 200);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        const container = document.getElementById('historyList');
+        
+        if (history.length === 0) {
+            container.innerHTML = '<div class="history-empty">No edits recorded yet.</div>';
+            return;
+        }
+
+        container.innerHTML = history.map(h => {
+            const d = new Date(h.timestamp);
+            const timeStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) 
+                + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            return '<div class="history-entry">' +
+                '<div class="entry-header">' +
+                    '<span class="entry-contributor">' + escapeHtml(h.contributor) + '</span>' +
+                    '<span class="entry-time">' + timeStr + '</span>' +
+                '</div>' +
+                '<div class="entry-org">' + escapeHtml(h.org) + '</div>' +
+                '<div class="entry-section">Section: ' + escapeHtml(h.section) + '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function toggleHistory() {
+        const panel = document.getElementById('historyPanel');
+        panel.classList.toggle('active');
+        if (panel.classList.contains('active')) renderHistory();
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // --- Export Functions ---
+    function openExportModal() {
+        document.getElementById('exportModal').classList.add('active');
+    }
+    function closeExportModal() {
+        document.getElementById('exportModal').classList.remove('active');
+    }
+
+    function exportAsHTML() {
+        const clone = document.documentElement.cloneNode(true);
+        // Remove modals and edit UI from export
+        clone.querySelectorAll('.modal-overlay, .edit-banner, .history-panel, .back-to-top').forEach(el => el.remove());
+        // Remove contenteditable attributes
+        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        clone.querySelectorAll('.editable-content').forEach(el => el.classList.remove('editable-content'));
+        
+        const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+        downloadFile('COSME_Phase2_Design_Package_Edited.html', html, 'text/html');
+        closeExportModal();
+    }
+
+    function exportAsText() {
+        let text = '';
+        document.querySelectorAll('.section').forEach(section => {
+            const title = section.querySelector('h2')?.textContent || '';
+            text += '\n' + '='.repeat(60) + '\n';
+            text += title.toUpperCase() + '\n';
+            text += '='.repeat(60) + '\n\n';
+            
+            section.querySelectorAll('.collapsible-body h3, .collapsible-body p, .collapsible-body li').forEach(el => {
+                if (el.tagName === 'H3') {
+                    text += '\n--- ' + el.textContent + ' ---\n\n';
+                } else if (el.tagName === 'LI') {
+                    text += '  • ' + el.textContent + '\n';
+                } else {
+                    text += el.textContent + '\n\n';
+                }
+            });
+        });
+        downloadFile('COSME_Phase2_Design_Package.txt', text, 'text/plain');
+        closeExportModal();
+    }
+
+    function exportEditLog() {
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        if (history.length === 0) {
+            alert('No edit history to export.');
+            return;
+        }
+        let csv = 'Timestamp,Contributor,Organization,Section\n';
+        history.forEach(h => {
+            csv += '"' + h.timestamp + '","' + h.contributor + '","' + h.org + '","' + h.section.replace(/"/g, '""') + '"\n';
+        });
+        downloadFile('COSME_Edit_History.csv', csv, 'text/csv');
+        closeExportModal();
+    }
+
+    function downloadFile(filename, content, type) {
+        const blob = new Blob([content], { type: type + ';charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // --- Initialize ---
+    // Load saved edits on page load
+    loadSavedEdits();
+    renderHistory();
 </script>
 
 </body>
