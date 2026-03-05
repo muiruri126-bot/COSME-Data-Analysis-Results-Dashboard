@@ -796,21 +796,6 @@
         body.edit-mode .be-domain-header.editable-content {
             outline-offset: 3px;
         }
-        body.edit-mode .section-num.editable-content,
-        body.edit-mode .nav-num.editable-content {
-            outline: 2px dashed rgba(255,210,0,0.5);
-            outline-offset: 2px;
-            cursor: text;
-        }
-        body.edit-mode .section-num.editable-content:hover,
-        body.edit-mode .nav-num.editable-content:hover {
-            outline-color: rgba(255,210,0,0.8);
-        }
-        body.edit-mode .section-num.editable-content:focus,
-        body.edit-mode .nav-num.editable-content:focus {
-            outline: 2px solid var(--gold);
-            background: rgba(255,210,0,0.15);
-        }
 
         /* Edited indicator */
         .edit-indicator {
@@ -2103,13 +2088,6 @@
                                     <span class="partner-badge meda">MEDA</span>
                                 </div>
                             </div>
-                            <div class="be-node" style="border-left-color:#1565c0;">
-                                <h5>Other Nature-Based Enterprises</h5>
-                                <div class="node-details">
-                                    <span class="partner-badge plan">Plan</span>
-                                    <span class="partner-badge natstate">Natural State</span>
-                                </div>
-                            </div>
                             <div class="be-node" style="border-left-color:#003C71;">
                                 <h5>Gender Transformation / VSLAs / Upskilling</h5>
                                 <div class="node-details">
@@ -2158,13 +2136,6 @@
                             </div>
                             <div class="be-node" style="border-left-color:#e65100;">
                                 <h5>Local & Direct Advocacy</h5>
-                                <div class="node-details">
-                                    <span class="partner-badge plan">Plan</span>
-                                    <span class="partner-badge cican">CICaN</span>
-                                </div>
-                            </div>
-                            <div class="be-node" style="border-left-color:#bf360c;">
-                                <h5>Strategic Policy Linkage</h5>
                                 <div class="node-details">
                                     <span class="partner-badge plan">Plan</span>
                                     <span class="partner-badge cican">CICaN</span>
@@ -2648,10 +2619,7 @@
             '.be-connector-label',
             '.partner-badge',
             '.reflection-card p',
-            '.reflection-card strong',
-            // Section numbers
-            '.section-num',
-            '.nav-num'
+            '.reflection-card strong'
         ];
 
         editableSelectors.forEach(sel => {
@@ -2748,7 +2716,7 @@
             const section = document.getElementById(edit.sectionId);
             if (!section) return;
 
-            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle, .diagram-title, .diagram-subtitle, .resilience-banner, .be-domain-header, .be-node h5, .be-node .node-details span, .symbiotic-link, .be-connector-label, .partner-badge, .reflection-card p, .reflection-card strong, .section-num');
+            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle, .diagram-title, .diagram-subtitle, .resilience-banner, .be-domain-header, .be-node h5, .be-node .node-details span, .symbiotic-link, .be-connector-label, .partner-badge, .reflection-card p, .reflection-card strong');
             if (candidates[edit.index]) {
                 candidates[edit.index].innerHTML = edit.content;
                 candidates[edit.index].dataset.original = edit.original;
