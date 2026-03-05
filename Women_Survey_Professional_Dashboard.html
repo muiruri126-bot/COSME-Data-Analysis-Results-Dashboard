@@ -3219,13 +3219,6 @@
             background: #f5f8fc;
         }
 
-        .sidebar-group-header .group-icon {
-            font-size: 1.1em;
-            width: 18px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
         .sidebar-group-header .group-label {
             flex: 1;
         }
@@ -3292,18 +3285,6 @@
             height: 60%;
             background: #0072CE;
             border-radius: 0 3px 3px 0;
-        }
-
-        .sidebar-item .item-icon {
-            font-size: 0.95em;
-            width: 18px;
-            text-align: center;
-            flex-shrink: 0;
-            opacity: 0.7;
-        }
-
-        .sidebar-item.active .item-icon {
-            opacity: 1;
         }
 
         .sidebar-item .item-label {
@@ -3481,25 +3462,20 @@
             <!-- Group 1: Surveys -->
             <div class="sidebar-group" data-group="surveys">
                 <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
-                    <span class="group-icon">📋</span>
                     <span class="group-label">Surveys</span>
                     <span class="group-chevron">▾</span>
                 </button>
                 <div class="sidebar-group-items">
                     <button class="sidebar-item" onclick="sidebarNav('women-cosme', this)" data-key="women-cosme">
-                        <span class="item-icon">👩</span>
                         <span class="item-label">Women Survey (Midline)</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('men-cosme', this)" data-key="men-cosme">
-                        <span class="item-icon">👨</span>
                         <span class="item-label">Men Survey (Midline)</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('gjj-women', this)" data-key="gjj-women">
-                        <span class="item-icon">👩‍🏫</span>
                         <span class="item-label">GJJ KAP Women (Endline)</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('gjj-men', this)" data-key="gjj-men">
-                        <span class="item-icon">👨‍🏫</span>
                         <span class="item-label">GJJ KAP Men (Endline)</span>
                     </button>
                 </div>
@@ -3508,29 +3484,23 @@
             <!-- Group 2: Assessments & Monitoring -->
             <div class="sidebar-group" data-group="assessments">
                 <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
-                    <span class="group-icon">📊</span>
                     <span class="group-label">Assessments & Monitoring</span>
                     <span class="group-chevron">▾</span>
                 </button>
                 <div class="sidebar-group-items">
                     <button class="sidebar-item" onclick="sidebarNav('forestry', this)" data-key="forestry">
-                        <span class="item-icon">🌳</span>
                         <span class="item-label">Forestry Functionality</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('seaweed-assessment', this)" data-key="seaweed-assessment">
-                        <span class="item-icon">🌊</span>
                         <span class="item-label">Seaweed Assessment</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('vsla-monitoring', this)" data-key="vsla-monitoring">
-                        <span class="item-icon">💰</span>
                         <span class="item-label">VSLA Monitoring</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('prepost-forest', this)" data-key="prepost-forest">
-                        <span class="item-icon">📝</span>
                         <span class="item-label">Trainings Pre & Post</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('schools-dashboard', this)" data-key="schools-dashboard">
-                        <span class="item-icon">🏫</span>
                         <span class="item-label">Schools Dashboard</span>
                     </button>
                 </div>
@@ -3539,21 +3509,17 @@
             <!-- Group 3: Analysis & Evidence -->
             <div class="sidebar-group" data-group="analysis">
                 <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
-                    <span class="group-icon">🔬</span>
                     <span class="group-label">Analysis & Evidence</span>
                     <span class="group-chevron">▾</span>
                 </button>
                 <div class="sidebar-group-items">
                     <button class="sidebar-item" onclick="sidebarNav('automated-insights', this)" data-key="automated-insights">
-                        <span class="item-icon">💡</span>
                         <span class="item-label">Impact & Evidence</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('cross-dataset', this)" data-key="cross-dataset">
-                        <span class="item-icon">🔗</span>
                         <span class="item-label">Cross-Dataset Synthesis</span>
                     </button>
                     <button class="sidebar-item active" onclick="sidebarNav('project-outputs', this)" data-key="project-outputs">
-                        <span class="item-icon">📈</span>
                         <span class="item-label">Project Outputs</span>
                     </button>
                 </div>
@@ -3562,17 +3528,14 @@
             <!-- Group 4: Reports & Tools -->
             <div class="sidebar-group" data-group="reports">
                 <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
-                    <span class="group-icon">🛠️</span>
                     <span class="group-label">Reports & Tools</span>
                     <span class="group-chevron">▾</span>
                 </button>
                 <div class="sidebar-group-items">
                     <button class="sidebar-item" onclick="sidebarNav('report-generation', this)" data-key="report-generation">
-                        <span class="item-icon">📄</span>
                         <span class="item-label">Report Generation</span>
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('analytics-dashboard', this)" data-key="analytics-dashboard">
-                        <span class="item-icon">📊</span>
                         <span class="item-label">Analytics</span>
                     </button>
                 </div>
@@ -9897,8 +9860,8 @@
             const data = window.tabChartData[surveyKey];
             // List of all chart IDs organized by type
             const doughnutCharts = ['chart-location', 'chart-prep-participation', 'chart-cultivation', 'chart-personal-savings', 'chart-loans', 'chart-cc-awareness'];
-            const barCharts = ['chart-headship', 'chart-housing', 'chart-wash', 'chart-prep-knowledge', 'chart-warnings', 'chart-inputs', 'chart-time', 'chart-aspirations', 'chart-norms-strong', 'chart-norms-money'];
-            const horizontalCharts = ['chart-activities', 'chart-coping', 'chart-assets', 'chart-mechanism', 'chart-savings-use', 'chart-beliefs', 'chart-experience', 'chart-productive', 'chart-decisions', 'chart-influence', 'chart-cc-effects', 'chart-nbs-benefits', 'chart-leadership', 'chart-communication', 'chart-norms', 'chart-norms-conservation'];
+            const barCharts = ['chart-headship', 'chart-housing', 'chart-wash', 'chart-prep-knowledge', 'chart-warnings', 'chart-inputs', 'chart-time', 'chart-aspirations', 'chart-norms-money'];
+            const horizontalCharts = ['chart-activities', 'chart-coping', 'chart-assets', 'chart-mechanism', 'chart-savings-use', 'chart-beliefs', 'chart-experience', 'chart-productive', 'chart-decisions', 'chart-influence', 'chart-cc-effects', 'chart-nbs-benefits', 'chart-leadership', 'chart-communication', 'chart-norms', 'chart-norms-strong', 'chart-norms-conservation'];
             const specialCharts = ['chart-shocks', 'chart-impact', 'chart-land', 'chart-nbs', 'chart-decision-gap', 'chart-selfesteem'];
             
             // Update Doughnut Charts
@@ -9964,7 +9927,6 @@
                                        chartId === 'chart-inputs' ? ['Fertilizer', 'Seeds', 'Pesticide', 'Vet Drugs', 'Animal Feed'] :
                                        chartId === 'chart-time' ? ['Unpaid Care', 'Productive Work', 'Community Work', 'Personal Dev'] :
                                        chartId === 'chart-aspirations' ? ['Know How Achieve', 'Confident Can Achieve', 'Have Specific Goals'] :
-                                       chartId === 'chart-norms-strong' ? ['Home is Womans Job', 'Cook/Clean = Good Wife', 'Men Domestic Work Embarrassing'] :
                                        chartId === 'chart-norms-money' ? ['Husband Handles Womans Income', 'Men Better Business Ideas'] :
                                        [];
                         window[chartId + 'Chart'] = new Chart(ctx, {
@@ -10017,8 +9979,9 @@
                                        chartId === 'chart-nbs-benefits' ? ['Air Quality', 'Water Conservation', 'Soil Health', 'Carbon Capture', 'Biodiversity', 'Livelihoods'] :
                                        chartId === 'chart-leadership' ? ['Can Lead', 'Bring People Together', 'Give Advice', 'Convince Others'] :
                                        chartId === 'chart-communication' ? ['Express with Family', 'Express with Community', 'Easy to Express', 'Others Understand'] :
-                                       chartId === 'chart-norms' ? ['Man Provides Income', 'Only Men Drive Boats', 'Better Business Ideas', 'Harassment Victim Fault'] :
-                                       chartId === 'chart-norms-conservation' ? ['Mangrove = Womens Work', 'Seaweed = Womens Work', 'Planting = Womens Work'] :
+                                       chartId === 'chart-norms' ? ['Cook/Clean = Good Wife', 'Only Men Drive Boats', 'Harassment Victim Fault', 'Man Earn/Woman Home', 'Women Emotions OK Not Men', 'Men Domestic Chores Embarrassing', 'Men Better Business Ideas', 'Husband Handles Income', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'] :
+                                       chartId === 'chart-norms-strong' ? ['Cook/Clean = Good Wife', 'Only Men Drive Boats', 'Harassment Victim Fault', 'Man Earn/Woman Home', 'Women Emotions OK Not Men', 'Men Domestic Chores Embarrassing', 'Husband Handles Income', 'Men Better Business Ideas', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'] :
+                                       chartId === 'chart-norms-conservation' ? ['Men Domestic Chores Embarrassing', 'Planting Seeds Womens Work', 'Ecosystem Restoration Womens Work'] :
                                        [];
                         window[chartId + 'Chart'] = new Chart(ctx, {
                             type: 'bar',
