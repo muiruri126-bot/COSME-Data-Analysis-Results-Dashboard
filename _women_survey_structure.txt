@@ -1,0 +1,12 @@
+R268: Unpaid Care Work
+R276: Productive Work
+R286: Community Conservation Work
+R292: Personal Development
+R294: Personal Care
+R299: Leisure
+R301: Other
+R475: Self Esteem
+R478: Aspirations
+R482: Leadership
+R490: Communication
+R495: Conflict Resolution

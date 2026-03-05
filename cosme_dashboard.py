@@ -6260,11 +6260,12 @@ def _safe_int(val, default=0):
 
 
 @st.cache_data(show_spinner=False)
-def load_project_outputs(filepath):
+def load_project_outputs(filepath, _file_mtime=None):
     """Load all 4 sheets from Project Outputs.xlsx and return structured dicts.
 
     Uses dynamic row scanning to handle layout differences between sheets
     (e.g., Forest has extra blank rows before the modules section).
+    _file_mtime is used for cache-busting when the file changes on disk.
     """
     import openpyxl
     wb = openpyxl.load_workbook(filepath, data_only=True)
@@ -6991,11 +6992,12 @@ def render_project_outputs_tabs(po_data):
 # ============================================================================
 
 @st.cache_data(show_spinner=False)
-def load_vsla_data(filepath):
+def load_vsla_data(filepath, _file_mtime=None):
     """Load VSLA Functionality Excel and return a structured dict.
 
     Parses "Results (Across Qs)" sheet with dynamic row-scanning.
     Sections: A (Membership/Meetings), B (Savings), C (Social Fund), D (Loans).
+    _file_mtime is used for cache-busting when the file changes on disk.
     """
     import openpyxl
     wb = openpyxl.load_workbook(filepath, data_only=True)
@@ -11518,15 +11520,31 @@ def main():
         st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
                     '<span class="active">Project Outputs & Activity Indicators</span></div>', unsafe_allow_html=True)
 
-        po_data = load_project_outputs(project_outputs_path)
+        po_mtime = os.path.getmtime(project_outputs_path) if os.path.exists(project_outputs_path) else 0
+        po_data = load_project_outputs(project_outputs_path, _file_mtime=po_mtime)
 
+        # Dynamic sidebar summary from loaded data
+        _po_total_groups = sum(po_data[k]['groups']['Y3_SA'] for k in ('mangrove','seaweed','forestry','gjj'))
+        _po_total_members = sum(po_data[k]['members']['Y3_All'] for k in ('mangrove','seaweed','forestry','gjj'))
         st.sidebar.markdown("**Dataset Summary**")
-        st.sidebar.markdown("""
+        st.sidebar.markdown(f"""
         <div class="sidebar-section">
-            <div style="margin-bottom:0.3rem;">Mangrove Outputs</div>
-            <div style="margin-bottom:0.3rem;">Seaweed Outputs</div>
-            <div style="margin-bottom:0.3rem;">Forestry Outputs</div>
-            <div>GJJ Outputs</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Groups (Y3)</span>
+                <strong>{_po_total_groups:,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Total Members (Y3)</span>
+                <strong>{_po_total_members:,}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size:0.82rem; color:#666;">Modules</span>
+                <strong>Mangrove · Seaweed · Forestry · GJJ</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-size:0.82rem; color:#666;">Source File</span>
+                <span style="font-size:0.75rem; color:#999;">Project Outputs Excel</span>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -11542,7 +11560,8 @@ def main():
         st.markdown('<div class="nav-breadcrumb"><span>COSME</span><span class="sep">›</span>'
                     '<span class="active">VSLA Functionality (Q1-Q4 2025)</span></div>', unsafe_allow_html=True)
 
-        vsla_data = load_vsla_data(vsla_path)
+        vsla_mtime = os.path.getmtime(vsla_path) if os.path.exists(vsla_path) else 0
+        vsla_data = load_vsla_data(vsla_path, _file_mtime=vsla_mtime)
 
         # Sidebar filters
         st.sidebar.markdown("---")

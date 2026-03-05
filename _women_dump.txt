@@ -1,0 +1,63 @@
+R2: C2=Women Survey
+R4: C2=COSME
+R7: C2=A. HOUSEHOLD CHARACTERISTICS
+R10: C2=Percentage of women by type of location/intervention | C11=Percentage of women by type of household
+R11: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R12: C2=Marine | C3=0.5410764872521246 | C4=0.571875 | C11=Female | C12=0.509915014164306 | C13=0.5768025078369906
+R13: C2=Terrestrial | C3=0.45892351274787535 | C4=0.428125 | C11=Male | C12=0.49008498583569404 | C13=0.4231974921630094
+R15: C2=Percentage of women by marital status | C11=Percentage of women by highest educational level achieved
+R16: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R17: C2=Monogamously married | C3=0.7223796033994334 | C4=0.634375 | C11=Primary | C12=0.45750708215297453 | C13=0.459375
+R18: C2=Widowed | C3=0.11189801699716714 | C4=0.20625 | C11=Pre-primary, none, or other | C12=0.42209631728045327 | C13=0.4
+R19: C2=Polygamously married | C3=0.07365439093484419 | C4=0.053125 | C11=Secondary or post-primary, vocational | C12=0.1048158640226629 | C13=0.115625
+R20: C2=Separated | C3=0.03824362606232295 | C4=0.059375 | C11=College level or higher | C12=0.015580736543909348 | C13=0.025
+R21: C2=Single | C3=0.0339943342776204 | C4=0.04375
+R22: C2=Legally Divorced | C3=0.018413597733711047 | C4=0.003125
+R23: C2=No Answer | C3=0.00141643059490085 | C4=0
+R25: C2=Percentage of women by main HH economic activity | C11=Percentage of women by secondary HH economic activities
+R26: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R27: C2=Agiculture | C3=0.34844192634560905 | C4=0.3875 | C11=Agriculture | C12=0.3526912181303116 | C13=0.259375
+R28: C2=Small Business | C3=0.17563739376770537 | C4=0.303125 | C11=Small Business | C12=0.20538243626062322 | C13=0.303125
+R29: C2=Casual Labour | C3=0.254957507082153 | C4=0.115625 | C11=Casual Labour | C12=0.23654390934844194 | C13=0.228125
+R30: C2=Capture fisheries (fish, shellfish, other) | C3=0.036827195467422094 | C4=0.059375 | C11=Seaweed Farming | C12=0.014164305949008499 | C13=0.125
+R31: C2=Private Sector Wage/Salary | C3=0.036827195467422094 | C4=0.03125 | C11=Forestry | C12=0.0084985835694051 | C13=0.05
+R32: C2=Government Wage/Salary | C3=0.042492917847025496 | C4=0.015625 | C11=Capture fisheries (fish, shellfish, other) | C12=0.018413597733711047 | C13=0.015625
+R33: C2=Other | C3=0.031161473087818695 | C4=0.0125 | C11=Nurseries | C12=0.015580736543909348 | C13=0.01875
+R34: C2=Culture fisheries (farmed fish, prawns, crabs, or shellfish) | C3=0.019830028328611898 | C4=0.009375 | C11=Homemaker | C12=0.015580736543909348 | C13=0.00625
+R35: C2=Seaweed Farming | C3=0.0084985835694051 | C4=0.034375 | C11=Culture fisheries (farmed fish, prawns, crabs, or shellfish) | C12=0.0113314447592068 | C13=0.0125
+R36: C2=Homemaker | C3=0.018413597733711047 | C4=0.003125 | C11=Animal Breeding | C12=0.00141643059490085 | C13=0.028125
+R37: C2=Transfers and Social Assistance | C3=0.014164305949008499 | C4=0.0125 | C11=Transfers and Social Assistance | C12=0.012747875354107648 | C13=0.003125
+R38: C2=Forestry | C3=0.0084985835694051 | C4=0.009375 | C11=Government Wage/Salary | C12=0.007082152974504249 | C13=0.0125
+R39: C2=Animal Breeding | C3=0.0028328611898017 | C4=0.00625 | C11=Private Sector Wage/Salary | C12=0.0113314447592068 | C13=0.003125
+R40: C2=Nurseries | C3=0.00141643059490085 | C4=0
+R42: C2=Percentage of women with drinking water in HH | C11=Percentage of women with toilet facility in HH
+R43: C2=(Piped to a household water connection, public taps or standpipes, tube wells or boreholes, protected dug wells, protected springs or rainwater collection) | C5=. | C11=(Flush, a VIP latrine, a pit latrine with slab, or a composting toilet)
+R44: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R45: C2=Yes | C3=0.8427762039660056 | C4=0.796875 | C11=Yes | C12=0.7025495750708215 | C13=0.725
+R46: C2=No | C3=0.15722379603399433 | C4=0.203125 | C11=No | C12=0.29745042492917845 | C13=0.275
+R48: C2=Percentage of women with electricity in HH
+R49: C3=Baseline | C4=Midline
+R50: C2=Yes | C3=0.2762039660056657 | C4=0.19375
+R51: C2=No | C3=0.7237960339943342 | C4=0.80625
+R53: C2=Percentage of women by wall material of the main dwelling unit | C11=Percentage of women by floor material of the main dwelling unit
+R54: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R55: C2=Natural walls (cane/palm/trunks, grass/reeds, or mud/cow dung), no walls, bamboo with mud, stone with mud, or other | C3=0.5991501416430595 | C4=0.66875 | C11=Natural floor (earth/sand or dung) or palm/bamboo | C12=0.6657223796033994 | C13=0.79375
+R56: C2=Finished walls (cement, stone with lime/cement, bricks, cement blocks, covered adobe, or wood planks/shingles) | C3=0.3895184135977337 | C4=0.3125 | C11=Other (including wood planks/shingles, parquet or polished wood, vinyl or asphalt strips, ceramic tiles, cement, or carpet) | C12=0.3342776203966006 | C13=0.20625
+R57: C2=Uncovered adobe, plywood, cardboard, reused wood, or corrugated iron sheets | C3=0.0113314447592068 | C4=0.01875
+R60: C2=B. SHOCKS AND STRESSES
+R63: C2=Percentage of women  stating their HH experienced shocks/disasters in the past 12 months | C11=Extent to which the shock(s)affected the wellbeing of HH as perceived by women
+R64: C3=Baseline | C4=Midline | C12=Baseline | C13=Midline
+R65: C2=Drought | C3=0.6912181303116147 | C4=0.634375 | C11=To a very large extent | C12=0.32667876588021777 | C13=0.2
+R66: C2=None | C3=0.23371104815864022 | C4=0.253125 | C11=To a large extent | C12=0.3194192377495463 | C13=0.4666666666666667
+R67: C2=Heat/cold waves | C3=0.08640226628895184 | C4=0.228125 | C11=To a moderate extent | C12=0.17604355716878403 | C13=0.24166666666666667
+R68: C2=Flooding | C3=0.046742209631728045 | C4=0.1 | C11=To a small extent | C12=0.1397459165154265 | C13=0.07916666666666666
+R69: C2=Climate variability | C3=0.0906515580736544 | C4=0.05 | C11=To a very small extent | C12=0.029038112522686024 | C13=0.004166666666666667
+R70: C2=Typhoons/hurricanes/cyclones | C3=0.0028328611898017 | C4=0.01875 | C11=Not at all | C12=0.009074410163339383 | C13=0.008333333333333333
+R71: C2=Wildfires (naturally occurring) | C3=0 | C4=0.0125
+R72: C2=Severe thunderstorms | C3=0.0028328611898017 | C4=0.00625
+R73: C2=Land degradation | C3=0.028328611898016998 | C4=0.00625
+R74: C2=Tornadoes | C3=0.0028328611898017 | C4=0
+R75: C2=Landslides | C3=0.015580736543909348 | C4=0
+R77: C2= Percentage of women by strategies used to cope with its effects of shocks/disasters
+R78: C3=Baseline | C4=Midline
+R79: C2=Skipped meals | C3=0.4164305949008499 | C4=0.4375

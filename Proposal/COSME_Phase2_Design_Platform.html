@@ -771,6 +771,32 @@
             background: rgba(0,114,206,0.05);
         }
 
+        /* Diagram editable styling overrides */
+        body.edit-mode .diagram-container .editable-content {
+            outline: 2px dashed rgba(0,166,81,0.35);
+            cursor: text;
+        }
+        body.edit-mode .diagram-container .editable-content:hover {
+            outline-color: rgba(0,166,81,0.7);
+            background: rgba(0,166,81,0.04);
+        }
+        body.edit-mode .diagram-container .editable-content:focus {
+            outline: 2px solid var(--accent);
+            background: rgba(0,166,81,0.07);
+        }
+        body.edit-mode .be-node h5.editable-content {
+            outline-offset: 2px;
+        }
+        body.edit-mode .node-details span.editable-content,
+        body.edit-mode .partner-badge.editable-content {
+            outline-offset: 1px;
+            outline-width: 1.5px;
+        }
+        body.edit-mode .resilience-banner.editable-content,
+        body.edit-mode .be-domain-header.editable-content {
+            outline-offset: 3px;
+        }
+
         /* Edited indicator */
         .edit-indicator {
             display: none;
@@ -2580,7 +2606,20 @@
             '.collapsible-body .highlight-box p',
             '.collapsible-body .title-option',
             '.hero h1',
-            '.hero .subtitle'
+            '.hero .subtitle',
+            // Diagram elements
+            '.diagram-title',
+            '.diagram-subtitle',
+            '.resilience-banner',
+            '.be-domain-header',
+            '.be-node h5',
+            '.be-node .node-details span',
+            '.be-node .node-details:not(:has(span))',
+            '.symbiotic-link',
+            '.be-connector-label',
+            '.partner-badge',
+            '.reflection-card p',
+            '.reflection-card strong'
         ];
 
         editableSelectors.forEach(sel => {
@@ -2677,7 +2716,7 @@
             const section = document.getElementById(edit.sectionId);
             if (!section) return;
 
-            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle');
+            const candidates = section.querySelectorAll('p, li, h3, td, .highlight-box p, .title-option, h1, .subtitle, .diagram-title, .diagram-subtitle, .resilience-banner, .be-domain-header, .be-node h5, .be-node .node-details span, .symbiotic-link, .be-connector-label, .partner-badge, .reflection-card p, .reflection-card strong');
             if (candidates[edit.index]) {
                 candidates[edit.index].innerHTML = edit.content;
                 candidates[edit.index].dataset.original = edit.original;
