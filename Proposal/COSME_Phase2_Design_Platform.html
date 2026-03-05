@@ -28,8 +28,11 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.7;
+            line-height: 1.75;
+            font-size: 15px;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* HEADER */
@@ -134,13 +137,14 @@
 
         .nav-item {
             display: flex; align-items: flex-start; gap: 10px;
-            padding: 10px 20px;
+            padding: 11px 20px;
             cursor: pointer;
             text-decoration: none;
             color: var(--text);
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             border-left: 3px solid transparent;
             transition: all 0.2s;
+            line-height: 1.4;
         }
 
         .nav-item:hover {
@@ -261,41 +265,54 @@
         }
 
         .section-header h2 {
-            font-size: 1.35rem; font-weight: 700; color: var(--primary-dark);
+            font-size: 1.4rem; font-weight: 700; color: var(--primary-dark);
+            letter-spacing: -0.01em;
         }
 
         .section h3 {
-            font-size: 1.1rem; color: var(--primary);
-            margin: 25px 0 12px;
-            font-weight: 600;
+            font-size: 1.18rem; color: var(--primary);
+            margin: 28px 0 14px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
         .section h4 {
-            font-size: 0.95rem; color: var(--primary-dark);
-            margin: 18px 0 8px;
+            font-size: 1.02rem; color: var(--primary-dark);
+            margin: 22px 0 10px;
             font-weight: 600;
         }
 
         .section p {
-            margin-bottom: 14px; color: var(--text);
+            margin-bottom: 16px;
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.8;
         }
 
         .section ul, .section ol {
-            margin: 10px 0 16px 20px;
+            margin: 12px 0 18px 22px;
         }
 
         .section li {
-            margin-bottom: 8px;
-            padding-left: 4px;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .section li strong {
+            color: var(--primary-dark);
         }
 
         /* HIGHLIGHT BOXES */
         .highlight-box {
             background: linear-gradient(135deg, #eaf6f4, #e8f4fd);
-            border-left: 4px solid var(--accent);
-            border-radius: 0 8px 8px 0;
-            padding: 18px 22px;
-            margin: 16px 0;
+            border-left: 5px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 22px 26px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            line-height: 1.8;
         }
 
         .highlight-box.goal {
@@ -313,19 +330,23 @@
         /* TITLE OPTIONS */
         .title-option {
             background: var(--bg);
-            border-radius: 8px;
-            padding: 14px 20px;
-            margin: 8px 0;
+            border-radius: 10px;
+            padding: 16px 22px;
+            margin: 10px 0;
             border: 1px solid var(--border);
             font-style: italic;
             color: var(--primary-dark);
+            font-size: 0.95rem;
+            line-height: 1.7;
         }
 
         .title-option .label {
             font-style: normal;
             font-weight: 700;
             color: var(--accent);
-            font-size: 0.8rem;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* TABLES */
@@ -339,7 +360,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             table-layout: auto;
         }
 
@@ -352,7 +373,7 @@
             padding: 14px 16px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: normal;
@@ -360,10 +381,11 @@
         }
 
         tbody td {
-            padding: 12px 16px;
+            padding: 13px 16px;
             border-bottom: 1px solid var(--border);
             vertical-align: top;
             word-break: break-word;
+            line-height: 1.65;
         }
 
         tbody tr:nth-child(even) { background: #f9fbfd; }
@@ -371,11 +393,12 @@
 
         .level-badge {
             display: inline-block;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 0.76rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .level-impact { background: #d4a843; color: white; }
@@ -396,9 +419,14 @@
         .toc-block {
             background: var(--bg);
             border-radius: 10px;
-            padding: 20px 24px;
-            border-left: 4px solid var(--primary);
+            padding: 22px 26px;
+            border-left: 5px solid var(--primary);
             position: relative;
+        }
+
+        .toc-block li {
+            font-size: 0.93rem;
+            line-height: 1.7;
         }
 
         .toc-block.inputs { border-left-color: #3498db; }
@@ -420,11 +448,12 @@
         /* PILLAR TAG */
         .pillar-tag {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.78rem;
+            font-weight: 700;
             margin: 2px;
+            letter-spacing: 0.3px;
         }
 
         .pillar-1 { background: #e8f4fd; color: #1a6da8; }
@@ -448,18 +477,22 @@
         }
 
         .partner-card h4 {
-            color: var(--primary);
-            margin: 0 0 10px;
-            font-size: 0.95rem;
+            color: var(--primary-dark);
+            margin: 0 0 12px;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
         .partner-card ul {
             margin: 0;
             padding-left: 18px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
-        .partner-card li { margin-bottom: 4px; }
+        .partner-card li {
+            margin-bottom: 6px;
+            line-height: 1.65;
+        }
 
         /* COLLAPSIBLE */
         .collapsible-header {
@@ -499,6 +532,7 @@
         }
 
         .footer strong { color: white; }
+        .footer { font-size: 0.88rem; line-height: 1.6; }
 
         /* PRINT */
         @media print {
@@ -901,9 +935,9 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
         .be-domain-header {
-            padding: 14px 16px;
+            padding: 14px 18px;
             font-weight: 700;
-            font-size: 0.88rem;
+            font-size: 0.92rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             display: flex;
@@ -926,22 +960,23 @@
             background: #eef3f8;
         }
         .be-node h5 {
-            margin: 0 0 5px;
-            font-size: 0.82rem;
+            margin: 0 0 6px;
+            font-size: 0.88rem;
             font-weight: 700;
+            color: var(--primary-dark);
         }
         .be-node .node-details {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-light);
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .be-node .node-details span {
             display: inline-block;
-            background: rgba(0,114,206,0.08);
-            padding: 2px 8px;
+            background: rgba(0,114,206,0.1);
+            padding: 3px 10px;
             border-radius: 10px;
-            font-size: 0.7rem;
-            margin: 2px 2px;
+            font-size: 0.76rem;
+            margin: 2px 3px;
         }
         /* Domain colors */
         .be-domain.conservation { border-color: #00A651; }
@@ -982,9 +1017,9 @@
         /* === Partner overlay badges === */
         .partner-badge {
             display: inline-block;
-            padding: 3px 10px;
+            padding: 4px 11px;
             border-radius: 12px;
-            font-size: 0.68rem;
+            font-size: 0.74rem;
             font-weight: 700;
             letter-spacing: 0.3px;
             margin: 2px;
@@ -1037,11 +1072,11 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             background: var(--primary);
             color: #fff;
             border-radius: 20px;
-            font-size: 0.72rem;
+            font-size: 0.78rem;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.2s;
@@ -1058,26 +1093,31 @@
             background: linear-gradient(135deg, #fefce8, #fef9c3);
             border: 1px solid #fbbf24;
             border-radius: 10px;
-            padding: 18px 20px;
-            margin-bottom: 12px;
+            padding: 20px 22px;
+            margin-bottom: 14px;
         }
         .reflection-card .q-num {
             display: inline-block;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             background: #f59e0b;
             color: #fff;
             border-radius: 50%;
             text-align: center;
-            line-height: 26px;
-            font-size: 0.75rem;
+            line-height: 28px;
+            font-size: 0.78rem;
             font-weight: 700;
-            margin-right: 8px;
+            margin-right: 10px;
+        }
+        .reflection-card strong {
+            font-size: 0.95rem;
+            color: #92400e;
         }
         .reflection-card p {
-            margin: 6px 0 0;
-            font-size: 0.85rem;
+            margin: 8px 0 0;
+            font-size: 0.92rem;
             color: #78350f;
+            line-height: 1.7;
         }
         .reflection-card ul {
             margin: 6px 0 0;
@@ -1142,7 +1182,7 @@
                 </div>
             </div>
             <div class="export-option" onclick="exportEditLog()">
-                <div class="icon">📋</div>
+                <div class="icon"></div>
                 <div class="info">
                     <h4>Export Edit History</h4>
                     <p>CSV log of all changes with contributor details</p>
@@ -1227,7 +1267,7 @@
             <span class="nav-num">5</span> Collaboration Architecture
         </a>
         <a class="nav-item" href="#diagrams" data-section="diagrams">
-            <span class="nav-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));">⊞</span> BE Design Diagrams
+            <span class="nav-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));"></span> BE Design Diagrams
         </a>
     </div>
     <div class="sidebar-section">
@@ -1375,26 +1415,26 @@
                 <p><strong>To improve the economic well-being, resilience, and agency of women and youth in coastal Kenya through inclusive, gender-transformative, and climate-resilient blue economy livelihoods, strengthened market systems, and accountable governance.</strong></p>
             </div>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:14px; margin:20px 0;">
-                <div style="background:#e8f4fd; border-radius:10px; padding:18px; border-top:4px solid #1a6da8;">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; margin:24px 0;">
+                <div style="background:#e8f4fd; border-radius:12px; padding:22px; border-top:4px solid #1a6da8;">
                     <span class="pillar-tag pillar-1">Pillar 1</span>
                     <h4>Climate-Resilient Coastal Livelihoods</h4>
-                    <p style="font-size:0.87rem;">To increase the productivity, diversification, and climate resilience of coastal livelihood systems — particularly <strong>seaweed production</strong> (technology, seed supply, basic value addition, deep sea expansion), <strong>mangrove restoration and conservation</strong> (hectare expansion, community-led, green assets), <strong>upstream forest conservation</strong>, and other <strong>nature-based enterprises</strong> (beekeeping, tourism, crab farming) — for women and youth in target communities. This pillar includes <strong>climate finance readiness</strong> through carbon/biodiversity measurement and verification systems.</p>
+                    <p style="font-size:0.93rem; line-height:1.75;">To increase the productivity, diversification, and climate resilience of coastal livelihood systems — particularly <strong>seaweed production</strong> (technology, seed supply, basic value addition, deep sea expansion), <strong>mangrove restoration and conservation</strong> (hectare expansion, community-led, green assets), <strong>upstream forest conservation</strong>, and other <strong>nature-based enterprises</strong> (beekeeping, tourism, crab farming) — for women and youth in target communities. This pillar includes <strong>climate finance readiness</strong> through carbon/biodiversity measurement and verification systems.</p>
                 </div>
-                <div style="background:#fce4ec; border-radius:10px; padding:18px; border-top:4px solid #c0392b;">
+                <div style="background:#fce4ec; border-radius:12px; padding:22px; border-top:4px solid #c0392b;">
                     <span class="pillar-tag pillar-2">Pillar 2</span>
                     <h4>Women's Economic Empowerment & Gender Justice</h4>
-                    <p style="font-size:0.87rem;">To strengthen the economic agency, leadership, decision-making power, and collective action of women and girls through gender-transformative programming, including <strong>VSLAs</strong>, enterprise governance, <strong>upskilling and capacity building</strong>, and the upgraded Gender Justice Journey. This pillar centers on <strong>gender transformation</strong> — moving beyond participation to address norms, power, and unpaid care.</p>
+                    <p style="font-size:0.93rem; line-height:1.75;">To strengthen the economic agency, leadership, decision-making power, and collective action of women and girls through gender-transformative programming, including <strong>VSLAs</strong>, enterprise governance, <strong>upskilling and capacity building</strong>, and the upgraded Gender Justice Journey. This pillar centers on <strong>gender transformation</strong> — moving beyond participation to address norms, power, and unpaid care.</p>
                 </div>
-                <div style="background:#e8f5e9; border-radius:10px; padding:18px; border-top:4px solid #27ae60;">
+                <div style="background:#e8f5e9; border-radius:12px; padding:22px; border-top:4px solid #27ae60;">
                     <span class="pillar-tag pillar-3">Pillar 3</span>
                     <h4>Market Systems & Value Chain Strengthening</h4>
-                    <p style="font-size:0.87rem;">To facilitate improved value addition, quality standards, aggregation, and inclusive market linkages for coastal products. Scaling is pursued through <strong>organizational structures</strong> (cooperatives, clusters, associations) with <strong>strategic value chain upgrading</strong> — including high-value market access, pull-effect/lead firm approaches, and <strong>access to alternative capital and financing</strong>.</p>
+                    <p style="font-size:0.93rem; line-height:1.75;">To facilitate improved value addition, quality standards, aggregation, and inclusive market linkages for coastal products. Scaling is pursued through <strong>organizational structures</strong> (cooperatives, clusters, associations) with <strong>strategic value chain upgrading</strong> — including high-value market access, pull-effect/lead firm approaches, and <strong>access to alternative capital and financing</strong>.</p>
                 </div>
-                <div style="background:#fff3e0; border-radius:10px; padding:18px; border-top:4px solid #e67e22;">
+                <div style="background:#fff3e0; border-radius:12px; padding:22px; border-top:4px solid #e67e22;">
                     <span class="pillar-tag pillar-4">Pillar 4</span>
                     <h4>Governance, Policy Influence & Institutional Capacity</h4>
-                    <p style="font-size:0.87rem;">To strengthen community institutions (WROs, YLOs, cooperatives, BMUs), <strong>coordination platforms</strong>, and evidence-based policy engagement on blue economy, climate adaptation, and gender-responsive governance. This includes <strong>monitoring, evaluation and research</strong>; <strong>local community-based advocacy</strong> through community-based organizations; and <strong>direct advocacy</strong> — lobbying parliamentarians at regional and national levels on strategic policy needs related to conservation and economic empowerment.</p>
+                    <p style="font-size:0.93rem; line-height:1.75;">To strengthen community institutions (WROs, YLOs, cooperatives, BMUs), <strong>coordination platforms</strong>, and evidence-based policy engagement on blue economy, climate adaptation, and gender-responsive governance. This includes <strong>monitoring, evaluation and research</strong>; <strong>local community-based advocacy</strong> through community-based organizations; and <strong>direct advocacy</strong> — lobbying parliamentarians at regional and national levels on strategic policy needs related to conservation and economic empowerment.</p>
                 </div>
             </div>
 
@@ -1797,10 +1837,10 @@
             <p>Critical cross-cutting components — including research, MEL, learning, policy advocacy, safeguarding, and institutional strengthening — are <strong>jointly designed and delivered</strong> by all five partners to ensure coherence and amplify collective impact. Plan International Kenya plays a soft leadership role in consortium coordination, promoting alignment and trust-building, while acting as a connector between technical partners, community actors, and government institutions.</p>
 
             <h3>5.2 Partner Roles & Value-Add</h3>
-            <p style="font-size:0.88rem; color: var(--text-light); margin-bottom:16px;">The consortium combines <strong>Plan International Kenya / Mission Inclusion</strong> capabilities with <strong>Natural State / MEDA</strong> market expertise, <strong>AECF</strong> financing, and <strong>CICaN</strong> institutional coordination. The diagram below maps the symbiotic relationship between conservation and economic empowerment interventions.</p>
+            <p style="font-size:0.93rem; color: var(--text-light); margin-bottom:18px; line-height:1.7;">The consortium combines <strong>Plan International Kenya / Mission Inclusion</strong> capabilities with <strong>Natural State / MEDA</strong> market expertise, <strong>AECF</strong> financing, and <strong>CICaN</strong> institutional coordination. The diagram below maps the symbiotic relationship between conservation and economic empowerment interventions.</p>
             <div class="partner-grid">
                 <div class="partner-card" style="border-top:4px solid var(--primary);">
-                    <h4>🏛️ Plan International Kenya / Mission Inclusion</h4>
+                    <h4>Plan International Kenya / Mission Inclusion</h4>
                     <ul>
                         <li>Gender-transformative programming (GJJ upgrade, GESI mainstreaming)</li>
                         <li>Women's and youth empowerment, upskilling & leadership</li>
@@ -1814,7 +1854,7 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #27ae60;">
-                    <h4>📊 Natural State / MEDA</h4>
+                    <h4>Natural State / MEDA</h4>
                     <ul>
                         <li>Market systems development & strategic value chains</li>
                         <li>Value addition, processing & quality standards</li>
@@ -1826,7 +1866,7 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #e67e22;">
-                    <h4>💰 AECF</h4>
+                    <h4>AECF</h4>
                     <ul>
                         <li>Enterprise finance & co-financing facilitation</li>
                         <li>Private sector partnership brokering</li>
@@ -1835,7 +1875,7 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #3498db;">
-                    <h4>🌿 REAsee / Natural State</h4>
+                    <h4>REAsee / Natural State</h4>
                     <ul>
                         <li>Sustainable production systems (seaweed, mangrove-linked)</li>
                         <li>Mangrove restoration: hectare expansion, community-led, green assets</li>
@@ -1847,7 +1887,7 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #9b59b6;">
-                    <h4>🤝 CICaN</h4>
+                    <h4>CICaN</h4>
                     <ul>
                         <li>Institutional coordination platforms</li>
                         <li>Organizational development for community groups</li>
@@ -1856,7 +1896,7 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #d4a843;">
-                    <h4>🏛️ Government & Community Institutions</h4>
+                    <h4>Government & Community Institutions</h4>
                     <ul>
                         <li>Policy & regulatory frameworks</li>
                         <li>CIDP, sector plans & budget processes</li>
@@ -1874,26 +1914,26 @@
     <div class="section" id="diagrams">
         <div class="section-header collapsible-header open" onclick="toggleSection(this)">
             <div style="display:flex;align-items:center;gap:14px;">
-                <div class="section-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));">⊞</div>
+                <div class="section-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));"></div>
                 <h2>Blue Economy Program Design — Schematic Diagrams</h2>
             </div>
             <span class="toggle">▼</span>
         </div>
         <div class="collapsible-body open">
-            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:20px;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
+            <p style="font-size:0.93rem; color:var(--text-light); margin-bottom:22px; line-height:1.7;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
 
             <!-- ====== DIAGRAM 1: BE Design Architecture ====== -->
             <div class="diagram-container" id="diagram1">
                 <h4 class="diagram-title">Diagram 1: Blue Economy Program Design Architecture</h4>
                 <p class="diagram-subtitle">Three interconnected domains with a shared resilience framework and symbiotic conservation–empowerment linkage</p>
 
-                <div class="resilience-banner">🌊 RESILIENCE — Climate-Resilient Blue Economy Framework</div>
+                <div class="resilience-banner">RESILIENCE — Climate-Resilient Blue Economy Framework</div>
 
                 <!-- Three Domains -->
                 <div class="be-diagram">
                     <!-- DOMAIN 1: Conservation -->
                     <div class="be-domain conservation">
-                        <div class="be-domain-header">🌿 Conservation & Climate Finance</div>
+                        <div class="be-domain-header">Conservation & Climate Finance</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#00A651;">
                                 <h5>Mangrove Restoration & Conservation</h5>
@@ -1923,7 +1963,7 @@
 
                     <!-- DOMAIN 2: Economic Empowerment -->
                     <div class="be-domain economic">
-                        <div class="be-domain-header">💼 Economic Empowerment & Production</div>
+                        <div class="be-domain-header">Economic Empowerment & Production</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#0072CE;">
                                 <h5>Seaweed Production</h5>
@@ -1978,7 +2018,7 @@
 
                     <!-- DOMAIN 3: Policy -->
                     <div class="be-domain policy">
-                        <div class="be-domain-header">📜 Policy & Governance</div>
+                        <div class="be-domain-header">Policy & Governance</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#d4a843;">
                                 <h5>Monitoring, Evaluation & Research</h5>
@@ -2024,11 +2064,11 @@
                 </div>
 
                 <div class="diagram-links">
-                    <a class="diagram-link-btn" href="#section1">📋 Quick Synthesis of the Design</a>
-                    <a class="diagram-link-btn" href="#section2">📐 Project Design</a>
-                    <a class="diagram-link-btn" href="#section3">📊 Results Framework</a>
-                    <a class="diagram-link-btn" href="#section4">📅 Workplan Matrix</a>
-                    <a class="diagram-link-btn" href="#section5">🤝 Collaboration</a>
+                    <a class="diagram-link-btn" href="#section1">Quick Synthesis of the Design</a>
+                    <a class="diagram-link-btn" href="#section2">Project Design</a>
+                    <a class="diagram-link-btn" href="#section3">Results Framework</a>
+                    <a class="diagram-link-btn" href="#section4">Workplan Matrix</a>
+                    <a class="diagram-link-btn" href="#section5">Collaboration</a>
                 </div>
             </div>
 
@@ -2037,7 +2077,7 @@
                 <h4 class="diagram-title">Diagram 2: Blue Economy Design — Partner Mapping</h4>
                 <p class="diagram-subtitle">Implementing partners mapped to program domains, showing who leads and supports each component</p>
 
-                <div class="resilience-banner">🌊 RESILIENCE — Partner-Led Blue Economy Architecture</div>
+                <div class="resilience-banner">RESILIENCE — Partner-Led Blue Economy Architecture</div>
 
                 <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:18px;">
                     <span class="partner-badge plan">Plan / Mission Inclusion</span>
@@ -2051,7 +2091,7 @@
                 <div class="be-diagram">
                     <!-- Conservation with Partners -->
                     <div class="be-domain conservation">
-                        <div class="be-domain-header">🌿 Conservation & Climate Finance</div>
+                        <div class="be-domain-header">Conservation & Climate Finance</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#00A651;">
                                 <h5>Mangrove Restoration & Conservation</h5>
@@ -2078,7 +2118,7 @@
 
                     <!-- Economic Empowerment with Partners -->
                     <div class="be-domain economic">
-                        <div class="be-domain-header">💼 Economic Empowerment & Production</div>
+                        <div class="be-domain-header">Economic Empowerment & Production</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#0072CE;">
                                 <h5>Seaweed Production</h5>
@@ -2113,7 +2153,7 @@
 
                     <!-- Policy with Partners -->
                     <div class="be-domain policy">
-                        <div class="be-domain-header">📜 Policy & Governance</div>
+                        <div class="be-domain-header">Policy & Governance</div>
                         <div class="be-domain-body">
                             <div class="be-node" style="border-left-color:#d4a843;">
                                 <h5>Monitoring & Evaluation</h5>
@@ -2147,17 +2187,17 @@
                 <div class="symbiotic-link">Symbiotic Relationship — Conservation outcomes reinforce Economic Empowerment outcomes and vice versa</div>
 
                 <div class="diagram-links">
-                    <a class="diagram-link-btn" href="#section5">🤝 Partner Details</a>
-                    <a class="diagram-link-btn" href="#section3">📊 Results Framework</a>
-                    <a class="diagram-link-btn" href="#section4">📅 Workplan</a>
-                    <a class="diagram-link-btn" href="#section7">📘 MEL & Research</a>
-                    <a class="diagram-link-btn" href="#section8">⚠️ Risk Analysis</a>
+                    <a class="diagram-link-btn" href="#section5">Partner Details</a>
+                    <a class="diagram-link-btn" href="#section3">Results Framework</a>
+                    <a class="diagram-link-btn" href="#section4">Workplan</a>
+                    <a class="diagram-link-btn" href="#section7">MEL & Research</a>
+                    <a class="diagram-link-btn" href="#section8">Risk Analysis</a>
                 </div>
             </div>
 
             <!-- ====== REFLECTION QUESTIONS ====== -->
             <h3 style="margin-top:30px;">Design Reflection Questions</h3>
-            <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:16px;">These questions guided the consortium design dialogue and can continue to inform partner engagement and program refinement.</p>
+            <p style="font-size:0.93rem; color:var(--text-light); margin-bottom:18px; line-height:1.7;">These questions guided the consortium design dialogue and can continue to inform partner engagement and program refinement.</p>
 
             <div class="reflection-card">
                 <span class="q-num">1</span> <strong>Collaboration Vision</strong>
@@ -2232,7 +2272,7 @@
                     </ul>
                 </div>
                 <div class="highlight-box warning" style="margin:0;">
-                    <h4>⚠️ What remains BEYOND scope</h4>
+                    <h4>What remains BEYOND scope</h4>
                     <ul>
                         <li>Full transformation of national export markets.</li>
                         <li>Systemic resolution of all climate risks.</li>
