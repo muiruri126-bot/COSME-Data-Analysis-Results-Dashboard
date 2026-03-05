@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230072CE'/%3E%3Ctext y='.82em' x='.15em' font-size='70' fill='white'%3EP%3C/text%3E%3C/svg%3E">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #0072CE;
@@ -1223,6 +1225,25 @@
             cursor: pointer; transition: all 0.2s;
         }
         .tool-download-btn:hover { background: var(--accent); color: white; }
+
+        .dl-dropdown { position: relative; display: inline-block; }
+        .dl-dropdown-content {
+            display: none; position: absolute; right: 0; top: 100%;
+            background: white; min-width: 150px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            border-radius: 8px; z-index: 100; overflow: hidden; margin-top: 4px;
+            border: 1px solid var(--border);
+        }
+        .dl-dropdown.open .dl-dropdown-content { display: block; }
+        .dl-dropdown-content button {
+            width: 100%; padding: 10px 16px; border: none; background: white;
+            text-align: left; font-size: 0.82rem; cursor: pointer; display: flex;
+            align-items: center; gap: 8px; color: var(--text); font-weight: 500;
+            transition: background 0.15s;
+        }
+        .dl-dropdown-content button:hover { background: #f0f5ff; }
+        .dl-dropdown-content button:first-child { border-bottom: 1px solid var(--border); }
+        .dl-icon-pdf { color: #c62828; font-weight: 700; }
+        .dl-icon-xls { color: #2e7d32; font-weight: 700; }
 
         .tool-meta {
             background: #f8fbff; border-radius: 8px; padding: 16px 20px;
@@ -2610,7 +2631,7 @@
                         <h3>1.1 Baseline / Midline / Endline Household Survey</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge">Quantitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-1','COSME2_HH_Survey')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-1-1','COSME2_HH_Survey')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-1-1','COSME2_HH_Survey')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -2795,7 +2816,7 @@
                         <h3>1.2 KAP Survey Tools (Knowledge, Attitudes, Practices)</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge">Quantitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-2','COSME2_KAP_Survey')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-1-2','COSME2_KAP_Survey')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-1-2','COSME2_KAP_Survey')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -2892,7 +2913,7 @@
                         <h3>1.3 Thematic Assessment Tools</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge">Quantitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-3','COSME2_Thematic_Assessments')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-1-3','COSME2_Thematic_Assessments')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-1-3','COSME2_Thematic_Assessments')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3014,7 +3035,7 @@
                         <h3>2.1 Key Informant Interview (KII) Guides</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-qual">Qualitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-1','COSME2_KII_Guides')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-2-1','COSME2_KII_Guides')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-2-1','COSME2_KII_Guides')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3126,7 +3147,7 @@
                         <h3>2.2 Focus Group Discussion (FGD) Guides</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-qual">Qualitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-2','COSME2_FGD_Guides')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-2-2','COSME2_FGD_Guides')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-2-2','COSME2_FGD_Guides')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3206,7 +3227,7 @@
                         <h3>2.3 Outcome Harvesting Guide</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-qual">Qualitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-3','COSME2_Outcome_Harvesting')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-2-3','COSME2_Outcome_Harvesting')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-2-3','COSME2_Outcome_Harvesting')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3271,7 +3292,7 @@
                         <h3>2.4 Most Significant Change (MSC) Tool</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-qual">Qualitative</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-4','COSME2_MSC_Tool')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-2-4','COSME2_MSC_Tool')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-2-4','COSME2_MSC_Tool')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3347,7 +3368,7 @@
                         <h3>3.1 Activity / Training Attendance Register</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-1','COSME2_Attendance_Register')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-1','COSME2_Attendance_Register')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-1','COSME2_Attendance_Register')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3386,7 +3407,7 @@
                         <h3>3.2 Training Quality Evaluation Form</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-2','COSME2_Training_Eval')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-2','COSME2_Training_Eval')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-2','COSME2_Training_Eval')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3415,7 +3436,7 @@
                         <h3>3.3 Producer Group Monitoring Checklist</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-3','COSME2_PG_Monitoring')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-3','COSME2_PG_Monitoring')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-3','COSME2_PG_Monitoring')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3446,7 +3467,7 @@
                         <h3>3.4 Market Linkage Monitoring Tool</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-4','COSME2_Market_Monitoring')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-4','COSME2_Market_Monitoring')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-4','COSME2_Market_Monitoring')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3477,7 +3498,7 @@
                         <h3>3.5 Environmental / Social Safeguards Monitoring Checklist</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-5','COSME2_ESS_Checklist')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-5','COSME2_ESS_Checklist')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-5','COSME2_ESS_Checklist')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3508,7 +3529,7 @@
                         <h3>3.6 Policy Engagement Tracking Tool</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-6','COSME2_Policy_Tracker')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-6','COSME2_Policy_Tracker')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-6','COSME2_Policy_Tracker')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3539,7 +3560,7 @@
                         <h3>3.7 Beneficiary Registration Form</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-routine">Monitoring</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-7','COSME2_Beneficiary_Reg')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-7','COSME2_Beneficiary_Reg')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-7','COSME2_Beneficiary_Reg')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3580,7 +3601,7 @@
                         <h3>4.1 Indicator-to-Tool Mapping Matrix</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-matrix">Matrix</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-4-1','COSME2_Indicator_Matrix')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-4-1','COSME2_Indicator_Matrix')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-4-1','COSME2_Indicator_Matrix')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -3672,7 +3693,7 @@
                         <h3>5.1 Ethics, Safeguarding & Data Protection Protocols</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <span class="tool-badge tool-badge-ethics">Ethics</span>
-                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-5-1','COSME2_Ethics_Protocols')">Download</button>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-5-1','COSME2_Ethics_Protocols')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-5-1','COSME2_Ethics_Protocols')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
                         </div>
                     </div>
                     <div class="tool-body">
@@ -4199,56 +4220,158 @@
         if (btn) btn.classList.add('active');
     }
 
-    // Download individual tool as formatted HTML document
-    function downloadTool(toolId, filename) {
+    // Download dropdown toggle
+    function toggleDlDropdown(el) {
+        const wasOpen = el.classList.contains('open');
+        document.querySelectorAll('.dl-dropdown.open').forEach(d => d.classList.remove('open'));
+        if (!wasOpen) el.classList.add('open');
+    }
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.dl-dropdown.open').forEach(d => d.classList.remove('open'));
+    });
+
+    // Helper: build a styled container for PDF rendering
+    function buildPdfContainer(toolId) {
+        const toolEl = document.getElementById(toolId);
+        if (!toolEl) return null;
+        const toolTitle = toolEl.querySelector('.tool-header h3').textContent;
+        const toolBody = toolEl.querySelector('.tool-body');
+
+        const container = document.createElement('div');
+        container.style.cssText = 'font-family:Inter,Segoe UI,system-ui,sans-serif;max-width:850px;padding:20px 30px;color:#2c3e50;line-height:1.7;font-size:13px;';
+
+        // Header
+        const h1 = document.createElement('h1');
+        h1.style.cssText = 'color:#003C71;font-size:1.3rem;border-bottom:3px solid #0072CE;padding-bottom:8px;margin-bottom:6px;';
+        h1.textContent = toolTitle;
+        container.appendChild(h1);
+
+        const sub = document.createElement('p');
+        sub.style.cssText = 'color:#5a6a7a;font-size:0.8rem;margin-bottom:16px;';
+        sub.textContent = 'COSME Phase 2 – MERL Data Collection Toolkit | Plan International Kenya';
+        container.appendChild(sub);
+
+        // Body content clone
+        const bodyClone = toolBody.cloneNode(true);
+        bodyClone.style.maxHeight = 'none';
+        bodyClone.style.overflow = 'visible';
+        bodyClone.style.padding = '0';
+        // Style tables for PDF
+        bodyClone.querySelectorAll('table').forEach(t => {
+            t.style.cssText = 'width:100%;border-collapse:collapse;font-size:0.82rem;margin:10px 0 16px;';
+        });
+        bodyClone.querySelectorAll('th').forEach(th => {
+            th.style.cssText = 'background:#0072CE;color:white;padding:8px 10px;text-align:left;font-weight:600;font-size:0.78rem;';
+        });
+        bodyClone.querySelectorAll('td').forEach(td => {
+            td.style.cssText = 'padding:7px 10px;border-bottom:1px solid #e1e8ef;vertical-align:top;font-size:0.82rem;';
+        });
+        bodyClone.querySelectorAll('h4').forEach(h => {
+            h.style.cssText = 'color:#0072CE;font-size:0.95rem;margin-top:16px;margin-bottom:6px;';
+        });
+        container.appendChild(bodyClone);
+
+        // Footer
+        const footer = document.createElement('div');
+        footer.style.cssText = 'text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #0072CE;font-size:0.78rem;color:#5a6a7a;';
+        footer.innerHTML = '<p><strong>COSME Phase 2 – Plan International Kenya</strong></p><p>Blue Economy Program | MERL Data Collection Toolkit</p>';
+        container.appendChild(footer);
+
+        return { container, toolTitle };
+    }
+
+    // Download as PDF using html2pdf.js
+    function downloadToolPDF(toolId, filename) {
+        closeDlDropdowns();
+        const result = buildPdfContainer(toolId);
+        if (!result) { alert('Tool not found.'); return; }
+
+        document.body.appendChild(result.container);
+
+        const opt = {
+            margin: [10, 10, 14, 10],
+            filename: filename + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        html2pdf().set(opt).from(result.container).save().then(function() {
+            document.body.removeChild(result.container);
+        });
+    }
+
+    // Download as Excel using SheetJS
+    function downloadToolExcel(toolId, filename) {
+        closeDlDropdowns();
         const toolEl = document.getElementById(toolId);
         if (!toolEl) { alert('Tool not found.'); return; }
 
         const toolTitle = toolEl.querySelector('.tool-header h3').textContent;
         const toolBody = toolEl.querySelector('.tool-body');
+        const tables = toolBody.querySelectorAll('table');
+        const wb = XLSX.utils.book_new();
 
-        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-            '<title>' + toolTitle + ' – COSME Phase 2</title>' +
-            '<style>' +
-            'body{font-family:Inter,Segoe UI,system-ui,sans-serif;max-width:900px;margin:40px auto;padding:0 30px;color:#2c3e50;line-height:1.8;font-size:14px}' +
-            'h1{color:#003C71;font-size:1.4rem;border-bottom:3px solid #0072CE;padding-bottom:10px;margin-bottom:20px}' +
-            'h2{color:#003C71;font-size:1.15rem;margin-top:24px;border-bottom:1px solid #e1e8ef;padding-bottom:6px}' +
-            'h3{color:#0072CE;font-size:1.05rem;margin-top:20px}' +
-            'h4{color:#0072CE;font-size:1rem;margin-top:18px;margin-bottom:8px}' +
-            'table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:12px 0 20px}' +
-            'th{background:#0072CE;color:white;padding:10px 12px;text-align:left;font-weight:600;font-size:0.82rem}' +
-            'td{padding:9px 12px;border-bottom:1px solid #e1e8ef;vertical-align:top}' +
-            'tr:nth-child(even){background:#fafbfd}' +
-            'td:first-child{font-weight:600;color:#0072CE}' +
-            'ol{padding-left:22px}li{margin-bottom:8px}' +
-            '.meta{background:#f8fbff;border-left:4px solid #0072CE;padding:14px 18px;border-radius:6px;margin:12px 0}' +
-            '.consent{background:#fffdf0;border:1px solid #ffe082;padding:16px 20px;border-radius:6px;margin:12px 0}' +
-            '.note{background:#f3e5f5;border-left:4px solid #9c27b0;padding:10px 16px;border-radius:6px;margin:10px 0;color:#6a1b9a}' +
-            '.footer-print{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #0072CE;font-size:0.82rem;color:#5a6a7a}' +
-            '@media print{body{margin:20px}table{page-break-inside:avoid}}' +
-            '</style></head><body>' +
-            '<h1>' + toolTitle + '</h1>' +
-            '<p style="color:#5a6a7a;font-size:0.85rem;">COSME Phase 2 – MERL Data Collection Toolkit | Plan International Kenya</p>' +
-            toolBody.innerHTML
-                .replace(/class="tool-meta"/g, 'class="meta"')
-                .replace(/class="consent-block"/g, 'class="consent"')
-                .replace(/class="enumerator-note"/g, 'class="note"')
-                .replace(/class="tool-table"/g, '')
-                .replace(/class="table-container"/g, '')
-                .replace(/class="kii-guide"/g, '') +
-            '<div class="footer-print"><p><strong>COSME Phase 2 – Plan International Kenya</strong></p>' +
-            '<p>Blue Economy Program | MERL Data Collection Toolkit</p></div>' +
-            '</body></html>';
+        if (tables.length > 0) {
+            // Each table becomes a sheet
+            let sheetIndex = 0;
+            tables.forEach(function(table) {
+                sheetIndex++;
+                // Find section heading before this table
+                let sheetName = 'Sheet ' + sheetIndex;
+                let prev = table.previousElementSibling;
+                while (prev) {
+                    if (prev.tagName === 'H4' || prev.tagName === 'H3') {
+                        sheetName = prev.textContent.trim().substring(0, 31);
+                        break;
+                    }
+                    prev = prev.previousElementSibling;
+                }
+                // Check parent for heading
+                if (sheetName === 'Sheet ' + sheetIndex) {
+                    const parent = table.closest('.table-container');
+                    if (parent) {
+                        prev = parent.previousElementSibling;
+                        while (prev) {
+                            if (prev.tagName === 'H4' || prev.tagName === 'H3') {
+                                sheetName = prev.textContent.trim().substring(0, 31);
+                                break;
+                            }
+                            prev = prev.previousElementSibling;
+                        }
+                    }
+                }
+                // Sanitize sheet name
+                sheetName = sheetName.replace(/[\[\]\*\?\/\\:]/g, '-');
+                // Ensure unique names
+                let finalName = sheetName;
+                let counter = 2;
+                while (wb.SheetNames.indexOf(finalName) !== -1) {
+                    finalName = sheetName.substring(0, 28) + ' (' + counter + ')';
+                    counter++;
+                }
+                const ws = XLSX.utils.table_to_sheet(table);
+                XLSX.utils.book_append_sheet(wb, ws, finalName);
+            });
+        } else {
+            // No tables — extract text content into a single sheet
+            const data = [['COSME Phase 2 – MERL Data Collection Toolkit'], [toolTitle], ['']];
+            toolBody.querySelectorAll('h4, p, li, ol').forEach(function(el) {
+                if (el.tagName === 'H4') data.push(['', ''], [el.textContent]);
+                else if (el.tagName === 'LI') data.push(['  • ' + el.textContent]);
+                else if (el.tagName === 'P') data.push([el.textContent]);
+            });
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            ws['!cols'] = [{ wch: 100 }];
+            XLSX.utils.book_append_sheet(wb, ws, toolTitle.substring(0, 31).replace(/[\[\]\*\?\/\\:]/g, '-'));
+        }
 
-        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename + '.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        XLSX.writeFile(wb, filename + '.xlsx');
+    }
+
+    function closeDlDropdowns() {
+        document.querySelectorAll('.dl-dropdown.open').forEach(d => d.classList.remove('open'));
     }
 </script>
 
