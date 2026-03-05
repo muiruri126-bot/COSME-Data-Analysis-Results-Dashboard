@@ -1160,6 +1160,122 @@
             .be-diagram { grid-template-columns: 1fr; min-width: unset; }
             .be-connectors { flex-direction: column; min-width: unset; }
         }
+
+        /* ===== MERL TOOLKIT STYLES ===== */
+        .toolkit-tab {
+            padding: 10px 22px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .toolkit-tab:hover { background: var(--primary); color: white; }
+        .toolkit-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,114,206,0.3); }
+
+        .toolkit-panel { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tool-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 22px;
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f4f8 100%);
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: background 0.2s;
+        }
+        .tool-header:hover { background: linear-gradient(135deg, #eef5ff 0%, #e8eef4 100%); }
+        .tool-header h3 { font-size: 1.05rem; color: var(--primary-dark); margin: 0; }
+        .tool-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            padding: 0 22px;
+        }
+        .tool-card.tool-open .tool-body {
+            max-height: 200000px;
+            padding: 20px 22px 28px;
+            border-top: 1px solid var(--border);
+        }
+        .tool-badge {
+            padding: 4px 12px; border-radius: 12px;
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            background: #e0f0ff; color: var(--primary);
+        }
+        .tool-badge-qual { background: #e7f5e0; color: #2e7d32; }
+        .tool-badge-routine { background: #fff3e0; color: #e65100; }
+        .tool-badge-matrix { background: #f3e5f5; color: #7b1fa2; }
+        .tool-badge-ethics { background: #fce4ec; color: #c62828; }
+
+        .tool-download-btn {
+            padding: 6px 14px; border: 1px solid var(--accent);
+            background: white; color: var(--accent);
+            border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .tool-download-btn:hover { background: var(--accent); color: white; }
+
+        .tool-meta {
+            background: #f8fbff; border-radius: 8px; padding: 16px 20px;
+            margin-bottom: 18px; border-left: 4px solid var(--primary);
+        }
+        .tool-meta p { margin: 4px 0; font-size: 0.92rem; line-height: 1.7; }
+
+        .tool-table {
+            width: 100%; border-collapse: collapse; font-size: 0.88rem;
+        }
+        .tool-table th {
+            background: var(--primary); color: white;
+            padding: 10px 12px; text-align: left; font-weight: 600;
+            font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;
+            position: sticky; top: 0;
+        }
+        .tool-table td {
+            padding: 10px 12px; border-bottom: 1px solid #eef0f4;
+            vertical-align: top; line-height: 1.65;
+        }
+        .tool-table tr:nth-child(even) { background: #fafbfd; }
+        .tool-table tr:hover { background: #f0f5ff; }
+        .tool-table td:first-child { font-weight: 600; color: var(--primary); white-space: nowrap; }
+
+        .consent-block {
+            background: #fffdf0; border: 1px solid #ffe082;
+            border-radius: 8px; padding: 18px 22px; margin: 16px 0;
+        }
+        .consent-block h4 { color: #f57f17; margin-bottom: 10px; }
+        .consent-block p { font-size: 0.92rem; margin: 6px 0; line-height: 1.7; }
+
+        .enumerator-note {
+            background: #f3e5f5; border-radius: 8px; padding: 12px 18px;
+            margin: 12px 0; font-size: 0.9rem; color: #6a1b9a; line-height: 1.7;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .kii-guide {
+            background: #f8faf8; border-radius: 8px; padding: 18px 22px;
+            margin: 10px 0 20px; border: 1px solid #e8ece8;
+        }
+        .kii-guide ol { padding-left: 22px; }
+        .kii-guide li { margin-bottom: 10px; font-size: 0.93rem; line-height: 1.75; }
+        .kii-guide p { font-size: 0.93rem; margin: 6px 0; line-height: 1.7; }
+
+        @media (max-width: 900px) {
+            .toolkit-tab { padding: 8px 14px; font-size: 0.78rem; }
+            .tool-header h3 { font-size: 0.92rem; }
+            .tool-table { font-size: 0.78rem; }
+            .tool-table th, .tool-table td { padding: 6px 8px; }
+            .tool-body { padding: 0 12px; }
+            .tool-card.tool-open .tool-body { padding: 14px 12px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -1316,6 +1432,12 @@
         <div class="sidebar-label">Summary</div>
         <a class="nav-item" href="#section9" data-section="section9">
             <span class="nav-num">9</span> Executive Summary
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-label">MERL Toolkit</div>
+        <a class="nav-item" href="#section10" data-section="section10">
+            <span class="nav-num">10</span> Data Collection Toolkit
         </a>
     </div>
 </nav>
@@ -2455,6 +2577,1191 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- SECTION 10: MERL DATA COLLECTION TOOLKIT -->
+    <!-- ============================================== -->
+    <div class="section" id="section10">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num">10</div>
+                <h2>MERL Data Collection Toolkit</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <p style="font-size:1rem; color:var(--text-light); margin-bottom:12px; line-height:1.75;">This section contains the complete, implementation-ready data collection toolkit for COSME Phase 2 — aligned with the Results Framework, Theory of Change, and gender-transformative principles. Each tool can be reviewed, edited in-platform, and downloaded individually.</p>
+
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px;">
+                <button class="toolkit-tab active" onclick="showToolkitTab('quant',this)">Quantitative Tools</button>
+                <button class="toolkit-tab" onclick="showToolkitTab('qual',this)">Qualitative Tools</button>
+                <button class="toolkit-tab" onclick="showToolkitTab('routine',this)">Routine Monitoring</button>
+                <button class="toolkit-tab" onclick="showToolkitTab('matrix',this)">Indicator Matrix</button>
+                <button class="toolkit-tab" onclick="showToolkitTab('ethics',this)">Ethics & Safeguarding</button>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- TAB 1: QUANTITATIVE DATA COLLECTION TOOLS -->
+            <!-- ================================================ -->
+            <div class="toolkit-panel" id="toolkit-quant" style="display:block;">
+
+                <!-- ===== TOOL 1.1: BASELINE / MIDLINE / ENDLINE HOUSEHOLD SURVEY ===== -->
+                <div class="tool-card" id="tool-1-1">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>1.1 Baseline / Midline / Endline Household Survey</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge">Quantitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-1','COSME2_HH_Survey')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Measure project outcomes and impact across all four pillars at baseline, midline (Y2), and endline (Y4). Generates disaggregated data by sex, age, county, and value chain.</p>
+                            <p><strong>Respondents:</strong> Primary beneficiary households (women, youth, men in target communities)</p>
+                            <p><strong>Sample:</strong> Stratified random sample across Kilifi, Kwale, Lamu, Tana River (minimum n=400 per round, 95% CI, 5% margin of error)</p>
+                            <p><strong>Frequency:</strong> Baseline (Y1 Q1-Q2), Midline (Y2 Q4), Endline (Y4 Q3-Q4)</p>
+                            <p><strong>Administration:</strong> Trained enumerators using mobile data collection (KoboToolbox/ODK)</p>
+                        </div>
+
+                        <!-- CONSENT -->
+                        <div class="consent-block">
+                            <h4>INFORMED CONSENT SCRIPT</h4>
+                            <p><em>Read aloud to respondent before proceeding:</em></p>
+                            <p>"My name is ________. I work with Plan International Kenya and the COSME Phase 2 project. We are conducting a survey about livelihoods, economic activities, decision-making, and community participation in your area. Your participation is voluntary. You may skip any question or stop at any time without consequence. Your responses are confidential and will be used only for program improvement and reporting — your name will not be linked to your answers. The interview will take approximately 45–60 minutes. You will not receive compensation for participating. Do you have any questions?"</p>
+                            <p><strong>Consent obtained?</strong> ☐ Yes (proceed) ☐ No (thank respondent and end)</p>
+                            <p><strong>Enumerator signature:</strong> ________________ <strong>Date:</strong> ____/____/______</p>
+                        </div>
+
+                        <!-- SECTION A: IDENTIFICATION -->
+                        <h4>Section A: Identification & Demographics</h4>
+                        <p class="enumerator-note"><strong>Enumerator Note:</strong> Complete identification fields before starting. Verify respondent is 18+ or obtain guardian assent for 15-17 year olds.</p>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>A1</td><td>Survey round</td><td>Select one</td><td>1=Baseline; 2=Midline; 3=Endline</td><td>—</td><td>Pre-fill</td></tr>
+                                    <tr><td>A2</td><td>Date of interview</td><td>Date (DD/MM/YYYY)</td><td>—</td><td>—</td><td>Auto-capture</td></tr>
+                                    <tr><td>A3</td><td>County</td><td>Select one</td><td>1=Kilifi; 2=Kwale; 3=Lamu; 4=Tana River</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A4</td><td>Sub-county / Ward</td><td>Open text</td><td>—</td><td>—</td><td>Cascading from A3</td></tr>
+                                    <tr><td>A5</td><td>Village / Community</td><td>Open text</td><td>—</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A6</td><td>Enumerator name</td><td>Open text</td><td>—</td><td>—</td><td>Pre-fill</td></tr>
+                                    <tr><td>A7</td><td>Respondent's sex</td><td>Select one</td><td>1=Female; 2=Male</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A8</td><td>Age of respondent (years)</td><td>Numeric</td><td>Integer 15-99</td><td>If &lt;15 → End</td><td>—</td></tr>
+                                    <tr><td>A9</td><td>Marital status</td><td>Select one</td><td>1=Single; 2=Married; 3=Separated/Divorced; 4=Widowed; 5=Cohabiting</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A10</td><td>Highest level of education completed</td><td>Select one</td><td>0=None; 1=Primary incomplete; 2=Primary complete; 3=Secondary incomplete; 4=Secondary complete; 5=Tertiary/Vocational; 6=University</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A11</td><td>Household size (total members)</td><td>Numeric</td><td>Integer 1-30</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A12</td><td>Are you a person with a disability?</td><td>Select one</td><td>1=Yes; 2=No; 99=Prefer not to say</td><td>—</td><td>Washington Group short set may be used</td></tr>
+                                    <tr><td>A13</td><td>Are you a member of any community group?</td><td>Select multiple</td><td>1=VSLA; 2=Producer group; 3=Cooperative; 4=WRO; 5=YLO; 6=BMU; 7=None; 8=Other (specify)</td><td>—</td><td>—</td></tr>
+                                    <tr><td>A14</td><td>Are you a COSME project participant?</td><td>Select one</td><td>1=Yes; 2=No</td><td>—</td><td>For comparison group</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION B: LIVELIHOODS & INCOME -->
+                        <h4>Section B: Livelihoods, Production & Income</h4>
+                        <p class="enumerator-note"><strong>Enumerator Note:</strong> Ask about ALL income sources. Probe gently on income amounts — use monthly or seasonal estimates as appropriate. Assure confidentiality.</p>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>B1</td><td>What are your main livelihood activities? (select all)</td><td>Select multiple</td><td>1=Seaweed farming; 2=Mangrove-related; 3=Beekeeping; 4=Tourism; 5=Crab farming; 6=Fishing; 7=Farming/crops; 8=Livestock; 9=Trading/retail; 10=Casual labour; 11=Salaried employment; 12=Other (specify)</td><td>—</td><td>Ind. 1.1</td></tr>
+                                    <tr><td>B2</td><td>How many different income sources does your household have?</td><td>Numeric</td><td>Integer 0-10</td><td>—</td><td>Ind. 1.1</td></tr>
+                                    <tr><td>B3</td><td>What is your estimated average MONTHLY income from all sources? (KES)</td><td>Numeric</td><td>KES amount</td><td>—</td><td>Impact Ind. 1</td></tr>
+                                    <tr><td>B4</td><td>Compared to 12 months ago, has your income…</td><td>Select one</td><td>1=Increased significantly; 2=Increased slightly; 3=Stayed the same; 4=Decreased slightly; 5=Decreased significantly</td><td>—</td><td>—</td></tr>
+                                    <tr><td>B5</td><td>In the last 12 months, how many months was your household food secure (had enough food)?</td><td>Numeric</td><td>Integer 0-12</td><td>—</td><td>Resilience proxy</td></tr>
+                                    <tr><td>B6</td><td>What is your primary blue economy / coastal enterprise activity?</td><td>Select one</td><td>1=Seaweed; 2=Mangrove; 3=Beekeeping; 4=Tourism; 5=Crab; 6=Fish processing; 7=None; 8=Other</td><td>If 7 → skip to B10</td><td>—</td></tr>
+                                    <tr><td>B7</td><td>How long have you been involved in this enterprise? (months)</td><td>Numeric</td><td>Integer 0-240</td><td>—</td><td>—</td></tr>
+                                    <tr><td>B8</td><td>What is your estimated monthly income from this enterprise? (KES)</td><td>Numeric</td><td>KES amount</td><td>—</td><td>—</td></tr>
+                                    <tr><td>B9</td><td>What proportion of your total household income comes from coastal/blue economy activities?</td><td>Select one</td><td>1=Less than 25%; 2=25-50%; 3=51-75%; 4=More than 75%</td><td>—</td><td>—</td></tr>
+                                    <tr><td>B10</td><td>In the last 12 months, did you experience income loss from climate shocks? (drought, flooding, coral bleaching, storms)</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to B13</td><td>Ind. 1.2</td></tr>
+                                    <tr><td>B11</td><td>If yes, estimate the amount of income lost (KES)</td><td>Numeric</td><td>KES amount</td><td>—</td><td>Ind. 1.2</td></tr>
+                                    <tr><td>B12</td><td>What coping strategies did you use? (select all)</td><td>Select multiple</td><td>1=Used savings; 2=VSLA loan; 3=Sold assets; 4=Reduced consumption; 5=Diversified activities; 6=Received external support; 7=Did nothing; 8=Other</td><td>—</td><td>—</td></tr>
+                                    <tr><td>B13</td><td>Do you currently use any climate-smart production practices?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to C1</td><td>Ind. 1.1.2</td></tr>
+                                    <tr><td>B14</td><td>Which climate-smart practices do you use? (select all)</td><td>Select multiple</td><td>1=Improved seed/seedling varieties; 2=Climate-resilient farming techniques; 3=Mangrove restoration; 4=Diversified enterprises; 5=Risk reduction planning; 6=Early warning systems; 7=Water harvesting; 8=Other</td><td>—</td><td>Ind. 1.1.2</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION C: GENDER & DECISION-MAKING -->
+                        <h4>Section C: Gender Power Dynamics & Decision-Making</h4>
+                        <p class="enumerator-note"><strong>Enumerator Note:</strong> These are sensitive questions. Create a private, safe space. Do not ask in front of partner/spouse. Use empathetic tone. Remind respondent they can skip any question.</p>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>C1</td><td>Who in your household mainly decides how household income is spent?</td><td>Select one</td><td>1=Myself alone; 2=My spouse/partner alone; 3=Jointly; 4=Other family member; 5=Not applicable</td><td>—</td><td>Impact Ind. 2</td></tr>
+                                    <tr><td>C2</td><td>Who decides about your participation in economic activities outside the home?</td><td>Select one</td><td>1=Myself alone; 2=My spouse/partner alone; 3=Jointly; 4=Other family member</td><td>—</td><td>—</td></tr>
+                                    <tr><td>C3</td><td>Who decides about major household purchases (land, equipment, livestock)?</td><td>Select one</td><td>1=Myself alone; 2=My spouse/partner alone; 3=Jointly; 4=Other family member</td><td>—</td><td>—</td></tr>
+                                    <tr><td>C4</td><td>Do you feel you have equal say in decisions about household resources?</td><td>Likert 1-5</td><td>1=Strongly disagree; 2=Disagree; 3=Neutral; 4=Agree; 5=Strongly agree</td><td>—</td><td>Impact Ind. 2</td></tr>
+                                    <tr><td>C5</td><td>In the last 12 months, have you noticed any positive changes in gender norms or power relations in your household or community?</td><td>Select one</td><td>1=Yes, significant; 2=Yes, some; 3=No change; 4=Worsened</td><td>If 3 or 4 → skip to C7</td><td>Ind. 2.2</td></tr>
+                                    <tr><td>C6</td><td>If yes, describe the changes. (select all that apply)</td><td>Select multiple</td><td>1=More joint decision-making; 2=Greater respect for women's economic role; 3=Reduced conflict; 4=Women taking leadership; 5=Shared domestic responsibilities; 6=Other</td><td>—</td><td>Ind. 2.2</td></tr>
+                                    <tr><td>C7</td><td>On average, how many hours per day do you spend on unpaid care and domestic work?</td><td>Numeric</td><td>Decimal 0-24</td><td>—</td><td>Gender burden measure</td></tr>
+                                    <tr><td>C8</td><td>Do you currently hold any leadership position in a community group or institution?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to C10</td><td>Ind. 2.1</td></tr>
+                                    <tr><td>C9</td><td>If yes, which position(s)? (select all)</td><td>Select multiple</td><td>1=VSLA chairperson/treasurer; 2=Producer group leader; 3=Cooperative official; 4=WRO/YLO leader; 5=BMU member; 6=Community committee; 7=Other</td><td>—</td><td>Ind. 2.1</td></tr>
+                                    <tr><td>C10</td><td>How confident are you in speaking up in public or community meetings?</td><td>Likert 1-5</td><td>1=Not at all; 2=Slightly; 3=Moderately; 4=Very; 5=Extremely confident</td><td>—</td><td>Agency proxy</td></tr>
+                                    <tr><td>C11</td><td>Have you participated in any Gender Justice Journey (GJJ) sessions?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to D1</td><td>Ind. 2.1.1</td></tr>
+                                    <tr><td>C12</td><td>If yes, how many sessions have you completed?</td><td>Numeric</td><td>Integer 0-50</td><td>—</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION D: ECONOMIC EMPOWERMENT & VALUE CHAIN -->
+                        <h4>Section D: Economic Empowerment & Value Chain Participation</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>D1</td><td>Are you currently a member of a VSLA?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to D6</td><td>Ind. 2.2.1</td></tr>
+                                    <tr><td>D2</td><td>How much have you saved in VSLA in the last 12 months? (KES)</td><td>Numeric</td><td>KES amount</td><td>—</td><td>Ind. 2.2.2</td></tr>
+                                    <tr><td>D3</td><td>Have you taken any VSLA loan in the last 12 months?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to D5</td><td>—</td></tr>
+                                    <tr><td>D4</td><td>If yes, what did you use the loan for? (select all)</td><td>Select multiple</td><td>1=Enterprise investment; 2=Education; 3=Health; 4=Food; 5=Household needs; 6=Other</td><td>—</td><td>—</td></tr>
+                                    <tr><td>D5</td><td>Rate the quality of your VSLA operations</td><td>Likert 1-5</td><td>1=Very poor; 2=Poor; 3=Average; 4=Good; 5=Excellent</td><td>—</td><td>—</td></tr>
+                                    <tr><td>D6</td><td>Do you sell your products through organized market channels (cooperative, aggregation center, buyer contract)?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to D9</td><td>Ind. 3.1</td></tr>
+                                    <tr><td>D7</td><td>What proportion of your products do you sell through organized channels?</td><td>Select one</td><td>1=Less than 25%; 2=25-50%; 3=51-75%; 4=More than 75%</td><td>—</td><td>Ind. 3.1</td></tr>
+                                    <tr><td>D8</td><td>What is the estimated value of products sold through organized channels in the last 12 months? (KES)</td><td>Numeric</td><td>KES amount</td><td>—</td><td>Ind. 3.1</td></tr>
+                                    <tr><td>D9</td><td>Have you received any value addition or quality improvement training?</td><td>Select one</td><td>1=Yes; 2=No</td><td>—</td><td>Ind. 3.1.2</td></tr>
+                                    <tr><td>D10</td><td>Does your enterprise currently meet any quality standards or certifications?</td><td>Select one</td><td>1=Yes; 2=No; 3=Don't know</td><td>—</td><td>Ind. 3.1.2</td></tr>
+                                    <tr><td>D11</td><td>Have you received any training from the COSME project in the last 12 months?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to E1</td><td>Ind. 1.1.1</td></tr>
+                                    <tr><td>D12</td><td>What type of training? (select all)</td><td>Select multiple</td><td>1=Climate-resilient production; 2=Business skills; 3=Financial literacy; 4=Value addition; 5=VSLA management; 6=Leadership; 7=Gender justice; 8=Safeguarding; 9=Environmental conservation; 10=Other</td><td>—</td><td>—</td></tr>
+                                    <tr><td>D13</td><td>How useful was the training for your livelihood?</td><td>Likert 1-5</td><td>1=Not useful; 2=Slightly; 3=Moderately; 4=Very; 5=Extremely useful</td><td>—</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION E: CLIMATE, ENVIRONMENT & RESILIENCE -->
+                        <h4>Section E: Climate, Environment & Resilience</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>E1</td><td>Have you observed changes in climate/environment in your area over the past 5 years?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to E4</td><td>Impact Ind. 3</td></tr>
+                                    <tr><td>E2</td><td>What changes have you observed? (select all)</td><td>Select multiple</td><td>1=Sea level rise; 2=More frequent flooding; 3=Drought; 4=Coral bleaching; 5=Mangrove loss; 6=Fish stock decline; 7=Temperature increase; 8=Erosion; 9=Other</td><td>—</td><td>—</td></tr>
+                                    <tr><td>E3</td><td>How have these changes affected your livelihood?</td><td>Select one</td><td>1=Severely affected; 2=Moderately affected; 3=Slightly affected; 4=Not affected</td><td>—</td><td>—</td></tr>
+                                    <tr><td>E4</td><td>Are you involved in any environmental conservation activities?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to E7</td><td>—</td></tr>
+                                    <tr><td>E5</td><td>Which conservation activities? (select all)</td><td>Select multiple</td><td>1=Mangrove planting/restoration; 2=Coral reef protection; 3=Forest conservation; 4=Beach cleanup; 5=Sustainable fishing; 6=Carbon measurement/verification; 7=Other</td><td>—</td><td>—</td></tr>
+                                    <tr><td>E6</td><td>How many hectares of mangrove have you helped restore or protect?</td><td>Numeric</td><td>Decimal (ha)</td><td>—</td><td>Impact Ind. 3</td></tr>
+                                    <tr><td>E7</td><td>Does your household have a climate risk reduction plan?</td><td>Select one</td><td>1=Yes; 2=No; 3=Don't know</td><td>—</td><td>Resilience indicator</td></tr>
+                                    <tr><td>E8</td><td>How would you rate your household's ability to cope with climate shocks?</td><td>Likert 1-5</td><td>1=Very poor; 2=Poor; 3=Average; 4=Good; 5=Very good</td><td>—</td><td>Resilience self-assessment</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION F: GOVERNANCE & INSTITUTIONAL -->
+                        <h4>Section F: Governance, Policy & Institutional Participation</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>F1</td><td>Are you aware of any county policies or plans related to the blue economy?</td><td>Select one</td><td>1=Yes; 2=No</td><td>—</td><td>Ind. 4.1</td></tr>
+                                    <tr><td>F2</td><td>Have you participated in any policy/advocacy events in the last 12 months?</td><td>Select one</td><td>1=Yes; 2=No</td><td>If 2 → skip to F5</td><td>Ind. 4.2.2</td></tr>
+                                    <tr><td>F3</td><td>If yes, how many events?</td><td>Numeric</td><td>Integer 0-50</td><td>—</td><td>—</td></tr>
+                                    <tr><td>F4</td><td>Do you feel your voice was heard and influenced decisions at those events?</td><td>Likert 1-5</td><td>1=Not at all; 2=Slightly; 3=Moderately; 4=Very much; 5=Completely</td><td>—</td><td>—</td></tr>
+                                    <tr><td>F5</td><td>How would you rate the governance quality of the community groups you belong to? (accountability, transparency, participation)</td><td>Likert 1-5</td><td>1=Very poor; 2=Poor; 3=Average; 4=Good; 5=Excellent</td><td>—</td><td>Ind. 4.2</td></tr>
+                                    <tr><td>F6</td><td>Does your community group (WRO/YLO/cooperative) have a functional accountability mechanism?</td><td>Select one</td><td>1=Yes; 2=No; 3=Don't know</td><td>—</td><td>Ind. 4.1.2</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- SECTION G: SAFEGUARDING -->
+                        <h4>Section G: Safeguarding & Protection</h4>
+                        <p class="enumerator-note"><strong>Enumerator Note:</strong> These questions are highly sensitive. Ensure complete privacy. Do NOT force answers. Be ready with referral contacts. Follow Do No Harm principles. If respondent shows distress, pause or stop.</p>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding</th><th>Skip Logic</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>G1</td><td>Are you aware of safeguarding policies and reporting channels in the COSME project?</td><td>Select one</td><td>1=Yes; 2=No</td><td>—</td><td>Ind. 4.3.1</td></tr>
+                                    <tr><td>G2</td><td>Do you feel safe participating in project activities?</td><td>Select one</td><td>1=Always; 2=Most of the time; 3=Sometimes; 4=Rarely; 5=Never</td><td>—</td><td>—</td></tr>
+                                    <tr><td>G3</td><td>Do you know how to report a safeguarding concern?</td><td>Select one</td><td>1=Yes; 2=No</td><td>—</td><td>—</td></tr>
+                                    <tr><td>G4</td><td>In the last 12 months, have you experienced any of the following while participating in project activities? (select all that apply)</td><td>Select multiple</td><td>1=Exclusion from activities; 2=Unfair treatment; 3=Verbal harassment; 4=Physical intimidation; 5=None of the above; 99=Prefer not to answer</td><td>—</td><td>Do not probe beyond answer</td></tr>
+                                    <tr><td>G5</td><td>Do you feel the project has adequate complaint and feedback mechanisms?</td><td>Select one</td><td>1=Yes, adequate; 2=Partially adequate; 3=No; 4=Don't know</td><td>—</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="enumerator-note"><strong>End of Household Survey.</strong> Thank the respondent: "Thank you for your time and honest responses. Your input is valuable for improving the program. If you have any concerns you would like to raise about the project, please contact [provide local contact information]."</p>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 1.2: KAP SURVEY TOOLS ===== -->
+                <div class="tool-card" id="tool-1-2">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>1.2 KAP Survey Tools (Knowledge, Attitudes, Practices)</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge">Quantitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-2','COSME2_KAP_Survey')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Measure changes in knowledge, attitudes, and practices related to gender norms, climate resilience, enterprise readiness, and rights awareness among women, men, and youth groups.</p>
+                            <p><strong>Frequency:</strong> Pre-intervention (Y1), Post-intervention (Y3), and Endline (Y4)</p>
+                        </div>
+
+                        <!-- KAP: WOMEN -->
+                        <h4>1.2a KAP Survey — Women</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Domain</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">KNOWLEDGE</td></tr>
+                                    <tr><td>KW1</td><td>Can you name at least 2 of your economic rights?</td><td>1=Yes correctly; 2=Partially; 3=No</td><td>Rights awareness</td><td>—</td></tr>
+                                    <tr><td>KW2</td><td>Do you know what gender-based violence (GBV) is?</td><td>1=Yes, accurate; 2=Partially; 3=No</td><td>Rights awareness</td><td>—</td></tr>
+                                    <tr><td>KW3</td><td>Can you describe at least 2 climate-smart production techniques?</td><td>1=Yes correctly; 2=Partially; 3=No</td><td>Climate knowledge</td><td>—</td></tr>
+                                    <tr><td>KW4</td><td>Do you know the steps to access financial services (loans, savings)?</td><td>1=Yes; 2=Partially; 3=No</td><td>Enterprise readiness</td><td>—</td></tr>
+                                    <tr><td>KW5</td><td>Can you explain the purpose of the Gender Justice Journey?</td><td>1=Yes; 2=Partially; 3=No</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">ATTITUDES</td></tr>
+                                    <tr><td>AW1</td><td>"Women should have equal say in household financial decisions."</td><td>Likert 1-5 (Strongly disagree → Strongly agree)</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>AW2</td><td>"It is acceptable for a woman to hold a leadership position in a cooperative."</td><td>Likert 1-5</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>AW3</td><td>"Climate change is a serious threat to my livelihood."</td><td>Likert 1-5</td><td>Climate</td><td>—</td></tr>
+                                    <tr><td>AW4</td><td>"I feel confident I can grow and manage my own enterprise."</td><td>Likert 1-5</td><td>Enterprise readiness</td><td>—</td></tr>
+                                    <tr><td>AW5</td><td>"Women and men should share domestic/care work equally."</td><td>Likert 1-5</td><td>Care work</td><td>—</td></tr>
+                                    <tr><td>AW6</td><td>"I believe I can influence community/policy decisions."</td><td>Likert 1-5</td><td>Leadership</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">PRACTICES</td></tr>
+                                    <tr><td>PW1</td><td>How often do you participate in community group meetings?</td><td>1=Weekly; 2=Monthly; 3=Quarterly; 4=Rarely; 5=Never</td><td>Leadership</td><td>—</td></tr>
+                                    <tr><td>PW2</td><td>In the last month, did you make at least one business decision independently?</td><td>1=Yes; 2=No</td><td>Enterprise</td><td>—</td></tr>
+                                    <tr><td>PW3</td><td>Do you currently use climate-smart practices in your enterprise?</td><td>1=Yes, regularly; 2=Sometimes; 3=No</td><td>Climate</td><td>—</td></tr>
+                                    <tr><td>PW4</td><td>Have you discussed gender norms or rights with family members in the last 3 months?</td><td>1=Yes; 2=No</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>PW5</td><td>Have you saved money (VSLA or other) in the last month?</td><td>1=Yes; 2=No</td><td>Enterprise readiness</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- KAP: MEN -->
+                        <h4>1.2b KAP Survey — Men</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Domain</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">KNOWLEDGE</td></tr>
+                                    <tr><td>KM1</td><td>Can you name at least 2 women's economic rights?</td><td>1=Yes; 2=Partially; 3=No</td><td>Rights awareness</td><td>—</td></tr>
+                                    <tr><td>KM2</td><td>Do you know what constitutes gender-based violence?</td><td>1=Yes; 2=Partially; 3=No</td><td>Rights</td><td>—</td></tr>
+                                    <tr><td>KM3</td><td>Can you describe the concept of shared domestic responsibilities?</td><td>1=Yes; 2=Partially; 3=No</td><td>Care work</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">ATTITUDES</td></tr>
+                                    <tr><td>AM1</td><td>"Women should have equal say in household financial decisions."</td><td>Likert 1-5</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>AM2</td><td>"It is a man's responsibility to share domestic and care work."</td><td>Likert 1-5</td><td>Care work</td><td>—</td></tr>
+                                    <tr><td>AM3</td><td>"Women make equally capable leaders in enterprises and community groups."</td><td>Likert 1-5</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>AM4</td><td>"I am comfortable with my wife/partner earning more than me."</td><td>Likert 1-5</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">PRACTICES</td></tr>
+                                    <tr><td>PM1</td><td>How many hours per day do you spend on domestic/care work?</td><td>Numeric (0-24)</td><td>Care work</td><td>Compare with women's responses</td></tr>
+                                    <tr><td>PM2</td><td>Have you participated in GJJ or gender dialogue sessions?</td><td>1=Yes; 2=No</td><td>Gender engagement</td><td>—</td></tr>
+                                    <tr><td>PM3</td><td>In the last 3 months, have you actively supported your spouse/partner's enterprise?</td><td>1=Yes; 2=No</td><td>Gender norms</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- KAP: YOUTH -->
+                        <h4>1.2c KAP Survey — Youth Groups</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Domain</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">KNOWLEDGE</td></tr>
+                                    <tr><td>KY1</td><td>Can you name 2 blue economy livelihood opportunities available to youth?</td><td>1=Yes; 2=Partially; 3=No</td><td>Enterprise</td><td>—</td></tr>
+                                    <tr><td>KY2</td><td>Do you know how to develop a simple business plan?</td><td>1=Yes; 2=Partially; 3=No</td><td>Enterprise readiness</td><td>—</td></tr>
+                                    <tr><td>KY3</td><td>Can you describe 2 effects of climate change on coastal livelihoods?</td><td>1=Yes; 2=Partially; 3=No</td><td>Climate</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">ATTITUDES</td></tr>
+                                    <tr><td>AY1</td><td>"Young people can be successful entrepreneurs in blue economy."</td><td>Likert 1-5</td><td>Enterprise readiness</td><td>—</td></tr>
+                                    <tr><td>AY2</td><td>"Young women and men should have equal access to economic opportunities."</td><td>Likert 1-5</td><td>Gender norms</td><td>—</td></tr>
+                                    <tr><td>AY3</td><td>"I can make a difference in environmental conservation."</td><td>Likert 1-5</td><td>Climate</td><td>—</td></tr>
+                                    <tr><td>AY4</td><td>"Youth should actively participate in community decision-making."</td><td>Likert 1-5</td><td>Leadership</td><td>—</td></tr>
+                                    <tr><td colspan="5" style="background:var(--bg-alt);font-weight:600;">PRACTICES</td></tr>
+                                    <tr><td>PY1</td><td>Are you currently operating or involved in a blue economy enterprise?</td><td>1=Yes; 2=No</td><td>Enterprise</td><td>—</td></tr>
+                                    <tr><td>PY2</td><td>Are you a member of any youth savings or enterprise group?</td><td>1=Yes; 2=No</td><td>Enterprise</td><td>—</td></tr>
+                                    <tr><td>PY3</td><td>Have you participated in any environmental conservation activity in the last 6 months?</td><td>1=Yes; 2=No</td><td>Climate</td><td>—</td></tr>
+                                    <tr><td>PY4</td><td>Have you participated in any advocacy or policy event in the last 12 months?</td><td>1=Yes; 2=No</td><td>Leadership</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 1.3: THEMATIC ASSESSMENT TOOLS ===== -->
+                <div class="tool-card" id="tool-1-3">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>1.3 Thematic Assessment Tools</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge">Quantitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-1-3','COSME2_Thematic_Assessments')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <!-- 1.3a Market Systems / Value Chain Assessment -->
+                        <h4>1.3a Market Systems / Value Chain Assessment Tool</h4>
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Assess market systems, value chain structure, and enterprise performance for coastal products. Aligns with Pillar 3 outcomes.</p>
+                            <p><strong>Respondents:</strong> Enterprise leaders, cooperative officials, value chain actors</p>
+                            <p><strong>Frequency:</strong> Baseline (Y1), Annual updates, Endline</p>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding / Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>MV1</td><td>What product(s) does your enterprise produce or trade?</td><td>Select multiple</td><td>1=Seaweed (raw); 2=Seaweed (processed); 3=Honey; 4=Crab; 5=Mangrove products; 6=Tourism services; 7=Other</td></tr>
+                                    <tr><td>MV2</td><td>What is your average monthly production volume? (Kg or units)</td><td>Numeric</td><td>With unit specification</td></tr>
+                                    <tr><td>MV3</td><td>What is your average selling price per unit?</td><td>Numeric (KES)</td><td>—</td></tr>
+                                    <tr><td>MV4</td><td>Who are your main buyers?</td><td>Select multiple</td><td>1=Local market; 2=Middlemen; 3=Cooperative; 4=Private company; 5=Export buyer; 6=Direct consumer; 7=Other</td></tr>
+                                    <tr><td>MV5</td><td>Does your enterprise/group have any formal market contract or MoU?</td><td>1=Yes; 2=No</td><td>Ind. 3.2.1</td></tr>
+                                    <tr><td>MV6</td><td>What are the top 3 challenges in your value chain?</td><td>Ranking (top 3)</td><td>1=Low prices; 2=Quality standards; 3=Transport; 4=Storage; 5=Inputs; 6=Market information; 7=Capital; 8=Competition; 9=Climate; 10=Other</td></tr>
+                                    <tr><td>MV7</td><td>Does your enterprise practice any value addition (processing, packaging, branding)?</td><td>1=Yes; 2=No</td><td>Ind. 3.1.1</td></tr>
+                                    <tr><td>MV8</td><td>Do you use any aggregation system for selling products?</td><td>1=Yes; 2=No</td><td>—</td></tr>
+                                    <tr><td>MV9</td><td>What is your enterprise's annual revenue? (KES)</td><td>Numeric</td><td>—</td></tr>
+                                    <tr><td>MV10</td><td>How many permanent and casual employees does your enterprise have?</td><td>Numeric (M/F)</td><td>Disaggregated by sex</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 1.3b Climate-Resilient Livelihoods/Production Tool -->
+                        <h4>1.3b Climate-Resilient Livelihoods / Production Assessment Tool</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding / Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>CL1</td><td>What climate-smart production techniques are you currently using?</td><td>Select multiple</td><td>1=Improved varieties; 2=Crop diversification; 3=Conservation agriculture; 4=Water management; 5=Mangrove buffer zones; 6=Early warning; 7=None</td></tr>
+                                    <tr><td>CL2</td><td>How many hectares of mangrove have been restored/protected in your area?</td><td>Numeric (ha)</td><td>—</td></tr>
+                                    <tr><td>CL3</td><td>Has your community established carbon/biodiversity measurement systems?</td><td>1=Yes; 2=In progress; 3=No</td><td>Climate finance readiness</td></tr>
+                                    <tr><td>CL4</td><td>Rate your enterprise's resilience to climate shocks (1-10 scale)</td><td>Scale 1-10</td><td>1=Extremely vulnerable; 10=Highly resilient</td></tr>
+                                    <tr><td>CL5</td><td>In the last 12 months, how many production days were lost due to extreme weather?</td><td>Numeric (days)</td><td>—</td></tr>
+                                    <tr><td>CL6</td><td>Does your group have an environmental/social safeguards plan?</td><td>1=Yes; 2=No</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 1.3c Policy/Governance Assessment -->
+                        <h4>1.3c Policy / Governance Assessment Tool</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding / Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>PG1</td><td>Does your institution have a written constitution/governance charter?</td><td>1=Yes; 2=No</td><td>Ind. 4.1.2</td></tr>
+                                    <tr><td>PG2</td><td>Are regular elections held for leadership positions?</td><td>1=Yes; 2=No</td><td>—</td></tr>
+                                    <tr><td>PG3</td><td>Are financial records kept and shared with members?</td><td>1=Yes, regularly; 2=Sometimes; 3=No</td><td>—</td></tr>
+                                    <tr><td>PG4</td><td>What percentage of leadership positions are held by women?</td><td>Numeric (%)</td><td>Ind. 2.1</td></tr>
+                                    <tr><td>PG5</td><td>Does the institution have a complaint/feedback mechanism?</td><td>1=Yes; 2=No</td><td>—</td></tr>
+                                    <tr><td>PG6</td><td>Has the institution engaged in any policy advocacy in the last 12 months?</td><td>1=Yes; 2=No</td><td>Ind. 4.2.1</td></tr>
+                                    <tr><td>PG7</td><td>Is the institution linked to county government structures?</td><td>1=Yes, formally; 2=Informally; 3=No</td><td>Ind. 4.1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 1.3d VSLA Performance Monitoring -->
+                        <h4>1.3d Enterprise / VSLA Performance Monitoring Tool</h4>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Coding / Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>VS1</td><td>VSLA name and registration number</td><td>Open text</td><td>—</td></tr>
+                                    <tr><td>VS2</td><td>Total number of members (M/F)</td><td>Numeric (M/F)</td><td>—</td></tr>
+                                    <tr><td>VS3</td><td>Meeting frequency and attendance rate (%)</td><td>Select one + Numeric</td><td>1=Weekly; 2=Bi-weekly; 3=Monthly + attendance %</td></tr>
+                                    <tr><td>VS4</td><td>Total savings mobilized this cycle (KES)</td><td>Numeric</td><td>Ind. 2.2.2</td></tr>
+                                    <tr><td>VS5</td><td>Total loans disbursed this cycle (KES)</td><td>Numeric</td><td>—</td></tr>
+                                    <tr><td>VS6</td><td>Loan repayment rate (%)</td><td>Numeric (%)</td><td>—</td></tr>
+                                    <tr><td>VS7</td><td>Is the VSLA linked to any formal financial institution?</td><td>1=Yes; 2=No</td><td>—</td></tr>
+                                    <tr><td>VS8</td><td>Number of VSLA modules completed (out of 20)</td><td>Numeric 0-20</td><td>—</td></tr>
+                                    <tr><td>VS9</td><td>Overall quality rating (based on VSLA quality standards checklist)</td><td>1=Poor; 2=Fair; 3=Good; 4=Very Good; 5=Excellent</td><td>Ind. 2.2.1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 1.3e Training Pre/Post Test -->
+                        <h4>1.3e Training Pre / Post-Test Questionnaire (Template)</h4>
+                        <div class="tool-meta">
+                            <p><strong>Instructions:</strong> Adapt questions to specific training topic. Administer before training (pre-test) and immediately after (post-test). Compare scores to measure knowledge gain.</p>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>PP1</td><td>Participant ID / Code</td><td>Open text</td><td>Same code for pre and post</td></tr>
+                                    <tr><td>PP2</td><td>Training topic</td><td>Open text</td><td>—</td></tr>
+                                    <tr><td>PP3</td><td>Date</td><td>Date</td><td>—</td></tr>
+                                    <tr><td>PP4</td><td>Test type</td><td>1=Pre-test; 2=Post-test</td><td>—</td></tr>
+                                    <tr><td>PP5-PP14</td><td>[Insert 10 topic-specific knowledge questions]</td><td>Multiple choice (a, b, c, d)</td><td>Mark correct answer. Score /10</td></tr>
+                                    <tr><td>PP15</td><td>How confident do you feel about applying this knowledge?</td><td>Likert 1-5</td><td>Post-test only</td></tr>
+                                    <tr><td>PP16</td><td>What additional support do you need to apply what you learned?</td><td>Open text</td><td>Post-test only</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- TAB 2: QUALITATIVE DATA COLLECTION TOOLS -->
+            <!-- ================================================ -->
+            <div class="toolkit-panel" id="toolkit-qual" style="display:none;">
+
+                <!-- ===== TOOL 2.1: KII GUIDES ===== -->
+                <div class="tool-card" id="tool-2-1">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>2.1 Key Informant Interview (KII) Guides</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-qual">Qualitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-1','COSME2_KII_Guides')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Gather in-depth perspectives from key stakeholders on program progress, gender dynamics, market systems, governance, and policy influence.</p>
+                            <p><strong>Duration:</strong> 45-60 minutes per interview</p>
+                            <p><strong>Recording:</strong> Audio recording with written consent; detailed notes</p>
+                        </div>
+
+                        <!-- KII: County Government -->
+                        <h4>2.1a KII Guide — County Government Officials</h4>
+                        <div class="kii-guide">
+                            <p><strong>Opening:</strong> Thank the informant. Explain the purpose of the interview, confidentiality, voluntary participation, and permission to record.</p>
+                            <ol>
+                                <li><strong>Role & Engagement:</strong> What is your role, and how does your department engage with the blue economy / coastal livelihoods sector?</li>
+                                <li><strong>Policy Landscape:</strong> What county policies, plans, or budgets currently address blue economy, climate resilience, or gender equality? How adequate are they?</li>
+                                <li><strong>COSME Contribution:</strong> How has the COSME project contributed to policy development or budget allocation in your county? Can you give specific examples?</li>
+                                <li><strong>Gender & Inclusion:</strong> To what extent are women and youth meaningfully included in blue economy governance and decision-making at county level? What barriers remain?</li>
+                                <li><strong>Market Systems:</strong> What are the key market system challenges for coastal products in your county? What has improved?</li>
+                                <li><strong>Climate Resilience:</strong> How are climate adaptation and resilience integrated into county development plans? What role has COSME played?</li>
+                                <li><strong>Institutional Coordination:</strong> How effective are coordination platforms (CICaN, BMUs, multi-stakeholder forums) in your county?</li>
+                                <li><strong>Sustainability:</strong> What structures or systems need to be in place for these gains to continue beyond the project?</li>
+                                <li><strong>Recommendations:</strong> What should the project do differently? What should it continue or scale?</li>
+                            </ol>
+                            <p><strong>Probes:</strong> Can you give an example? What evidence supports that? How did that change occur? Who was involved?</p>
+                        </div>
+
+                        <!-- KII: Producer Groups -->
+                        <h4>2.1b KII Guide — Producer Group Leaders</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Group Profile:</strong> Tell me about your group — when it formed, membership, primary activities, current challenges.</li>
+                                <li><strong>Production & Enterprise:</strong> What products do you produce? How has production changed since COSME support began? What climate challenges affect production?</li>
+                                <li><strong>Market Access:</strong> How and where do you sell your products? What market linkages have been established? What barriers remain?</li>
+                                <li><strong>Capacity & Skills:</strong> What training or support has your group received? How has it changed your practices? What gaps remain?</li>
+                                <li><strong>Gender Dynamics:</strong> How are decisions made in the group? Are women and youth equally involved in leadership and decision-making? Has this changed?</li>
+                                <li><strong>Financial Services:</strong> Does your group have a VSLA or access to financial services? How has this supported your enterprise?</li>
+                                <li><strong>Governance:</strong> Does your group have a constitution, accountability systems, and financial records? How well do they function?</li>
+                                <li><strong>Climate Resilience:</strong> What climate-smart practices have you adopted? How have they affected your resilience?</li>
+                                <li><strong>Sustainability:</strong> Can your group sustain its activities without external support? What is needed?</li>
+                            </ol>
+                        </div>
+
+                        <!-- KII: Private Sector -->
+                        <h4>2.1c KII Guide — Private Sector Actors</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Business Profile:</strong> Describe your business and its relationship to coastal products / blue economy.</li>
+                                <li><strong>Market Engagement:</strong> What products do you source from COSME-supported groups? What are the quality, volume, and consistency requirements?</li>
+                                <li><strong>Value Addition:</strong> What value addition opportunities exist for coastal products? What investments are needed?</li>
+                                <li><strong>Partnership Experience:</strong> How effectively has the COSME project facilitated your engagement with producer groups? MoUs, contracts?</li>
+                                <li><strong>Gender & Inclusion:</strong> How do you ensure inclusive sourcing (women-led, youth-led enterprises)? Any challenges?</li>
+                                <li><strong>Market Trends:</strong> What are the market trends for coastal products? Opportunities for high-value markets?</li>
+                                <li><strong>Sustainability:</strong> What would make these business relationships sustainable beyond the project?</li>
+                            </ol>
+                        </div>
+
+                        <!-- KII: WROs and YLOs -->
+                        <h4>2.1d KII Guide — Women-Led & Youth-Led Organizations (WROs/YLOs)</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Organization Profile:</strong> Describe your organization — membership, mission, geographic scope, key activities.</li>
+                                <li><strong>Gender Justice:</strong> How has the Gender Justice Journey affected your members' lives, relationships, and decision-making power?</li>
+                                <li><strong>Economic Empowerment:</strong> How has COSME support strengthened your economic activities? Income changes? Enterprise development?</li>
+                                <li><strong>Leadership & Agency:</strong> How has women's/youth leadership changed in your organization and community? Concrete examples?</li>
+                                <li><strong>Social Norms:</strong> Have you observed changes in community attitudes toward women's economic participation and leadership? What drives change? What resists?</li>
+                                <li><strong>Governance & Accountability:</strong> How has your organization's governance capacity changed? Financial management? Accountability systems?</li>
+                                <li><strong>Policy Engagement:</strong> Has your organization engaged in any advocacy or policy dialogue? What were the results?</li>
+                                <li><strong>Safeguarding:</strong> Do you feel safe in project activities? Are safeguarding and protection mechanisms adequate?</li>
+                                <li><strong>Future Vision:</strong> What does your organization need to sustain and grow beyond the project?</li>
+                            </ol>
+                        </div>
+
+                        <!-- KII: Community Leaders -->
+                        <h4>2.1e KII Guide — Community Leaders</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Community Context:</strong> Describe the main livelihood activities, challenges, and opportunities in your community.</li>
+                                <li><strong>Gender Norms:</strong> How have gender norms and attitudes changed in the community? What are the main barriers to women's empowerment?</li>
+                                <li><strong>Project Impact:</strong> What changes have you observed since COSME began working in your community?</li>
+                                <li><strong>Climate & Environment:</strong> What environmental changes have you observed? How are community members adapting?</li>
+                                <li><strong>Institutional Strength:</strong> How strong are community institutions (BMUs, cooperatives, WROs, YLOs)? What has improved?</li>
+                                <li><strong>Safeguarding:</strong> Are community members aware of safeguarding and protection mechanisms? Are they effective?</li>
+                                <li><strong>Sustainability:</strong> What community-level structures will last beyond the project?</li>
+                            </ol>
+                        </div>
+
+                        <!-- KII: Development Partners -->
+                        <h4>2.1f KII Guide — Development Partners / Consortium Members</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Partnership Model:</strong> How effectively does the consortium collaboration model work? What are its strengths and weaknesses?</li>
+                                <li><strong>Technical Contributions:</strong> What is your organization's specific technical contribution? How has it evolved?</li>
+                                <li><strong>Gender Integration:</strong> How well is gender-transformative programming integrated across the consortium's work?</li>
+                                <li><strong>MEL & Learning:</strong> How effective are the joint MEL systems? What evidence has been most useful for decision-making?</li>
+                                <li><strong>Safeguarding:</strong> How effective are consortium-wide safeguarding systems? Challenges?</li>
+                                <li><strong>Coordination:</strong> How effective is coordination with government institutions and community platforms?</li>
+                                <li><strong>Scale & Sustainability:</strong> What aspects of the program are most scalable? What sustainability risks exist?</li>
+                                <li><strong>Lessons Learned:</strong> What are the key lessons from Phase 2 implementation?</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 2.2: FGD GUIDES ===== -->
+                <div class="tool-card" id="tool-2-2">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>2.2 Focus Group Discussion (FGD) Guides</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-qual">Qualitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-2','COSME2_FGD_Guides')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Explore group perspectives on social norms, livelihood transitions, climate resilience, and access to resources.</p>
+                            <p><strong>Participants:</strong> 8-12 per group. Separate groups for women, men, youth, and mixed.</p>
+                            <p><strong>Duration:</strong> 60-90 minutes</p>
+                            <p><strong>Facilitation:</strong> 1 facilitator + 1 note-taker. Audio recording with group consent.</p>
+                        </div>
+
+                        <!-- FGD: Women -->
+                        <h4>2.2a FGD Guide — Women's Groups</h4>
+                        <div class="kii-guide">
+                            <p><strong>Ground Rules:</strong> Introduce team, explain purpose, obtain group consent, establish ground rules (respect, confidentiality, one person speaks at a time, no right/wrong answers).</p>
+                            <ol>
+                                <li><strong>Livelihood Transitions:</strong> "Tell us about the main livelihood activities women are engaged in. How have these changed over the past 2 years? What has improved? What challenges remain?"</li>
+                                <li><strong>Decision-Making & Agency:</strong> "Who makes decisions about money, enterprise, and property in your households? Has this changed? How do you feel about your ability to make decisions?"</li>
+                                <li><strong>Social Norms:</strong> "What do people in your community think about women running businesses? Being leaders? Has this changed? What drives or blocks change?"</li>
+                                <li><strong>Unpaid Care Work:</strong> "How much time do you spend on domestic/care work? Has this changed? Do men share these responsibilities? What would help?"</li>
+                                <li><strong>Group Participation & Benefits:</strong> "What groups (VSLA, cooperative, WRO) do you belong to? What benefits have you gained? What challenges have you faced?"</li>
+                                <li><strong>Climate & Resilience:</strong> "How has climate change affected your livelihoods? What coping strategies do you use? What support have you received?"</li>
+                                <li><strong>Market Access:</strong> "How and where do you sell your products? Has market access improved? What barriers remain?"</li>
+                                <li><strong>Safeguarding & Safety:</strong> "Do you feel safe participating in project activities and community groups? Are there any concerns about safety, exclusion, or unfair treatment?"</li>
+                                <li><strong>Most Significant Change:</strong> "What is the single most important change in your life as a result of the COSME project?"</li>
+                            </ol>
+                        </div>
+
+                        <!-- FGD: Men -->
+                        <h4>2.2b FGD Guide — Men's Groups</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Community Livelihoods:</strong> "What are the main livelihood activities in your community? How have they changed? What challenges do households face?"</li>
+                                <li><strong>Gender Roles & Norms:</strong> "What are the traditional roles of men and women in economic activities? Have these changed? What do you think about women's increasing economic participation?"</li>
+                                <li><strong>Shared Responsibilities:</strong> "How do you share domestic and care responsibilities with your partner? Has this changed? What do other men think about sharing care work?"</li>
+                                <li><strong>GJJ Participation:</strong> "Have you participated in Gender Justice Journey sessions? What did you learn? Has it changed your attitudes or behavior?"</li>
+                                <li><strong>Climate & Environment:</strong> "What environmental changes have you observed? How do they affect your household? What are you doing differently?"</li>
+                                <li><strong>Support for Women's Enterprise:</strong> "How do you support your partner's enterprise activities? What challenges arise? What would help?"</li>
+                                <li><strong>Institutional Participation:</strong> "What community groups or institutions do you participate in? How effective are they?"</li>
+                            </ol>
+                        </div>
+
+                        <!-- FGD: Youth -->
+                        <h4>2.2c FGD Guide — Youth Groups</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Aspirations:</strong> "What are your aspirations for the future? How does the blue economy fit into your plans?"</li>
+                                <li><strong>Enterprise & Employment:</strong> "What economic activities are you currently engaged in? What opportunities exist? What barriers do youth face?"</li>
+                                <li><strong>Gender & Inclusion:</strong> "Do young women and men have equal opportunities in your community? What differences exist? What needs to change?"</li>
+                                <li><strong>Skills & Training:</strong> "What skills have you gained from the COSME project? How are you applying them? What more do you need?"</li>
+                                <li><strong>Climate Awareness:</strong> "How does climate change affect your community? What are you doing about it?"</li>
+                                <li><strong>Voice & Participation:</strong> "Do youth have a voice in community decision-making? Policy processes? How can youth participation be strengthened?"</li>
+                                <li><strong>Digital & Innovation:</strong> "How can technology and innovation support blue economy livelihoods for youth?"</li>
+                                <li><strong>Safety:</strong> "Do you feel safe in project activities? Are there any concerns you want to raise?"</li>
+                            </ol>
+                        </div>
+
+                        <!-- FGD: Mixed -->
+                        <h4>2.2d FGD Guide — Mixed Groups (Community Dialogue)</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Community Change:</strong> "What are the most significant changes in your community over the past 2 years related to livelihoods, environment, and gender?"</li>
+                                <li><strong>Shocks & Resilience:</strong> "What shocks has your community experienced? How did you cope? What helped most?"</li>
+                                <li><strong>Resource Access:</strong> "Who controls access to land, water, markets, and financial services in your community? Has this changed?"</li>
+                                <li><strong>Institutional Effectiveness:</strong> "How effective are community groups (BMUs, cooperatives, WROs, YLOs) in representing your interests?"</li>
+                                <li><strong>Policy & Governance:</strong> "Do you feel your community's concerns are heard by county government? How effective is local advocacy?"</li>
+                                <li><strong>Cross-Group Dynamics:</strong> "How do different groups (women, men, youth, elders) work together? What tensions exist? What collaboration works well?"</li>
+                                <li><strong>Sustainability:</strong> "What changes will last after the project ends? What still needs support?"</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 2.3: OUTCOME HARVESTING ===== -->
+                <div class="tool-card" id="tool-2-3">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>2.3 Outcome Harvesting Guide</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-qual">Qualitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-3','COSME2_Outcome_Harvesting')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Identify, formulate, verify, and analyze outcomes — especially emergent, unintended, or systemic outcomes — that COSME Phase 2 has contributed to.</p>
+                            <p><strong>Frequency:</strong> Quarterly harvesting sessions; Annual synthesis</p>
+                            <p><strong>Facilitator:</strong> MEL Coordinator with support from partner MEL focal points</p>
+                        </div>
+
+                        <h4>Step 1: Outcome Identification</h4>
+                        <p><strong>Guiding Questions for Harvesters (staff, partners, community members):</strong></p>
+                        <div class="kii-guide">
+                            <ol>
+                                <li>"What changes have you observed in the behavior, relationships, actions, activities, policies, or practices of individuals, groups, communities, organizations, or institutions that the project may have influenced?"</li>
+                                <li>"Who changed? What exactly did they do differently? When did this change happen?"</li>
+                                <li>"How did the project contribute to this change? What project activities, outputs, or relationships influenced this outcome?"</li>
+                                <li>"What significance does this change have? For whom? At what level (individual, group, community, institutional, policy)?"</li>
+                                <li>"Was this change expected or unexpected? Positive or negative?"</li>
+                            </ol>
+                        </div>
+
+                        <h4>Step 2: Outcome Description Template</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Description</th><th>Example</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Outcome Statement</strong></td><td>Clear, specific description of WHAT changed, for WHOM, and WHEN</td><td>"In June 2027, Kilifi County government allocated KES 5M to mangrove restoration in its annual budget for the first time."</td></tr>
+                                    <tr><td><strong>Social Actor(s)</strong></td><td>Who changed their behavior/practice/policy?</td><td>"Kilifi County Executive Committee for Environment"</td></tr>
+                                    <tr><td><strong>Change Type</strong></td><td>Behavior, relationship, action, policy, practice</td><td>"Policy/Budget allocation"</td></tr>
+                                    <tr><td><strong>Significance</strong></td><td>Why this outcome matters (for whom, at what level)</td><td>"First dedicated county budget for mangrove restoration, demonstrating institutionalization."</td></tr>
+                                    <tr><td><strong>Contribution</strong></td><td>How COSME contributed (activities, outputs, relationships)</td><td>"COSME evidence brief on ecosystem economic value + advocacy events with CICaN + community voice testimonials at budget hearing."</td></tr>
+                                    <tr><td><strong>Domains of Change</strong></td><td>Which ToC pathway does this relate to?</td><td>"Pillar 4: Governance & Policy Influence"</td></tr>
+                                    <tr><td><strong>Level</strong></td><td>Individual / Group / Community / Institutional / Policy / Market</td><td>"Institutional/Policy"</td></tr>
+                                    <tr><td><strong>Source(s)</strong></td><td>Who reported or observed this outcome?</td><td>"CICaN coordinator, County Budget Officer, Plan advocacy team"</td></tr>
+                                    <tr><td><strong>Date Harvested</strong></td><td>When was this outcome documented?</td><td>"September 2027"</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Step 3: Verification & Substantiation</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li>Can the outcome be confirmed by at least 2 independent sources?</li>
+                                <li>Is there documentary evidence (minutes, policy documents, budgets, photos, media)?</li>
+                                <li>Does the social actor confirm the change occurred?</li>
+                                <li>Can the project's contribution be reasonably demonstrated (not necessarily sole cause)?</li>
+                                <li>Are there alternative explanations for the change? How significant is the project's contribution relative to other factors?</li>
+                            </ol>
+                        </div>
+
+                        <h4>Step 4: Analysis & Synthesis</h4>
+                        <p>Group harvested outcomes by: (a) Pillar/ToC pathway; (b) Level of change; (c) Expected vs. unexpected; (d) Gender-transformative significance. Identify patterns, gaps, and implications for adaptive management.</p>
+
+                        <p class="enumerator-note"><strong>Facilitator Instruction:</strong> Conduct quarterly harvesting workshops with all five consortium partners. Use flip charts / sticky notes for initial brainstorming. Document in the standardized template. Prioritize outcomes through group deliberation. Feed findings into quarterly reflection meetings and annual learning reviews.</p>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 2.4: MOST SIGNIFICANT CHANGE ===== -->
+                <div class="tool-card" id="tool-2-4">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>2.4 Most Significant Change (MSC) Tool</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-qual">Qualitative</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-2-4','COSME2_MSC_Tool')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <div class="tool-meta">
+                            <p><strong>Purpose:</strong> Collect and select stories of significant change from project participants and stakeholders to understand impact from the perspective of those who experience it.</p>
+                            <p><strong>Frequency:</strong> Bi-annual story collection rounds</p>
+                        </div>
+
+                        <h4>Domains of Change</h4>
+                        <ul>
+                            <li><strong>Domain 1:</strong> Changes in economic well-being and livelihoods</li>
+                            <li><strong>Domain 2:</strong> Changes in women's agency, leadership, and gender relations</li>
+                            <li><strong>Domain 3:</strong> Changes in climate resilience and environmental practices</li>
+                            <li><strong>Domain 4:</strong> Changes in governance, institutions, and policy</li>
+                            <li><strong>Domain 5:</strong> Changes in community norms, attitudes, and social cohesion</li>
+                        </ul>
+
+                        <h4>Story Collection Prompts</h4>
+                        <div class="kii-guide">
+                            <p><strong>Introduction:</strong> "We are collecting stories about important changes that people have experienced. We would like to hear your story. There are no right or wrong answers — we want to hear what matters most to you."</p>
+                            <ol>
+                                <li>"Looking back over the past [6 months / 1 year], what do you think was the most significant change in your life or community as a result of the COSME project?"</li>
+                                <li>"Why is this change significant to you? Why did you choose this change above all others?"</li>
+                                <li>"When did this change happen? Describe the situation before and after."</li>
+                                <li>"What role did the COSME project play in this change? What specific activities, training, or support contributed?"</li>
+                                <li>"Who else was involved in or benefited from this change?"</li>
+                                <li>"Has this change affected other aspects of your life? (e.g., relationships, health, children, community standing)"</li>
+                                <li>"What would you have done differently? What additional support would have helped?"</li>
+                            </ol>
+                        </div>
+
+                        <h4>Story Documentation Template</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Content</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Story Title</td><td>[Short descriptive title]</td></tr>
+                                    <tr><td>Storyteller</td><td>Name (or anonymous), Sex, Age, County, Group</td></tr>
+                                    <tr><td>Date Collected</td><td>DD/MM/YYYY</td></tr>
+                                    <tr><td>Collector</td><td>Name of enumerator/facilitator</td></tr>
+                                    <tr><td>Domain of Change</td><td>[Select from domains above]</td></tr>
+                                    <tr><td>Story Narrative</td><td>[Full story in storyteller's own words — aim for 300-500 words]</td></tr>
+                                    <tr><td>Why Significant</td><td>[Storyteller's explanation of significance]</td></tr>
+                                    <tr><td>Project Contribution</td><td>[How COSME contributed]</td></tr>
+                                    <tr><td>Verification</td><td>[Corroborating evidence or witnesses]</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Story Selection Process</h4>
+                        <ol>
+                            <li><strong>Collection:</strong> Enumerators collect 5-10 stories per community per round.</li>
+                            <li><strong>First Review:</strong> Field teams select top 3 stories per community with written justification.</li>
+                            <li><strong>County Panel:</strong> County-level panel selects top story per domain with written justification.</li>
+                            <li><strong>Consortium Panel:</strong> Annual consortium panel reviews county-selected stories, selects overall top stories, and documents selection rationale.</li>
+                            <li><strong>Feedback:</strong> Selected stories shared back with communities for validation and documentation consent.</li>
+                        </ol>
+
+                        <p class="enumerator-note"><strong>Enumerator Guidance:</strong> Record stories in the storyteller's own words. Do not lead or prompt specific answers. Be patient — allow time for reflection. If the story involves sensitive topics (GBV, displacement), follow safeguarding protocols. Obtain written consent before using any story in reports or publications.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- TAB 3: ROUTINE MONITORING TOOLS -->
+            <!-- ================================================ -->
+            <div class="toolkit-panel" id="toolkit-routine" style="display:none;">
+
+                <!-- ===== TOOL 3.1: ATTENDANCE REGISTER ===== -->
+                <div class="tool-card" id="tool-3-1">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.1 Activity / Training Attendance Register</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-1','COSME2_Attendance_Register')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Format</th><th>Instructions</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Activity / Training Title</td><td>Text</td><td>Full title of the session</td></tr>
+                                    <tr><td>Date(s)</td><td>DD/MM/YYYY</td><td>Start and end date if multi-day</td></tr>
+                                    <tr><td>Venue / Location</td><td>Text</td><td>County, sub-county, venue name</td></tr>
+                                    <tr><td>Facilitator(s)</td><td>Text</td><td>Name(s) and organization(s)</td></tr>
+                                    <tr><td>Output Reference</td><td>Select</td><td>e.g., Output 1.1, Output 2.1</td></tr>
+                                    <tr><td>Pillar</td><td>Select</td><td>Pillar 1, 2, 3, or 4</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h4>Participant List</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>#</th><th>Full Name</th><th>Sex (M/F)</th><th>Age</th><th>County</th><th>Group / Organization</th><th>Disability (Y/N)</th><th>Phone</th><th>Signature</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr><td colspan="9" style="text-align:center;color:var(--text-light);">Continue as needed…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Summary:</strong> Total participants: ___ | Female: ___ | Male: ___ | Youth (&lt;30): ___ | PWD: ___</p>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.2: TRAINING QUALITY EVALUATION ===== -->
+                <div class="tool-card" id="tool-3-2">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.2 Training Quality Evaluation Form</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-2','COSME2_Training_Eval')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Instructions:</strong> Distribute to all participants at the end of each training session. Anonymous responses encouraged.</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Q#</th><th>Question</th><th>Response Format</th></tr></thead>
+                                <tbody>
+                                    <tr><td>TQ1</td><td>Overall, how would you rate this training?</td><td>1=Poor; 2=Fair; 3=Good; 4=Very Good; 5=Excellent</td></tr>
+                                    <tr><td>TQ2</td><td>How relevant was the content to your needs?</td><td>1=Not relevant; 2=Slightly; 3=Moderately; 4=Very; 5=Extremely</td></tr>
+                                    <tr><td>TQ3</td><td>How clear was the facilitation/teaching?</td><td>1=Very unclear; 2=Unclear; 3=Average; 4=Clear; 5=Very clear</td></tr>
+                                    <tr><td>TQ4</td><td>Did the training use appropriate language?</td><td>1=Yes; 2=Partially; 3=No</td></tr>
+                                    <tr><td>TQ5</td><td>Did you feel comfortable asking questions and participating?</td><td>1=Yes; 2=Partially; 3=No</td></tr>
+                                    <tr><td>TQ6</td><td>What did you learn that you will apply in your work/life?</td><td>Open text</td></tr>
+                                    <tr><td>TQ7</td><td>What could be improved in future trainings?</td><td>Open text</td></tr>
+                                    <tr><td>TQ8</td><td>Was the training environment safe and inclusive?</td><td>1=Yes; 2=Partially; 3=No</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.3: PRODUCER GROUP MONITORING ===== -->
+                <div class="tool-card" id="tool-3-3">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.3 Producer Group Monitoring Checklist</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-3','COSME2_PG_Monitoring')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Frequency:</strong> Quarterly field visits</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>#</th><th>Monitoring Area</th><th>Status</th><th>Score (1-5)</th><th>Comments / Action Needed</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>Group has a current constitution and governance structure</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>2</td><td>Regular meetings held as per schedule</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>3</td><td>Minutes and records are kept</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>4</td><td>Leadership includes women in decision-making positions</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>5</td><td>Financial records maintained and transparent</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>6</td><td>Members trained in climate-resilient production techniques</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>7</td><td>Active production and enterprise activities underway</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>8</td><td>Market linkages established</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>9</td><td>Safeguarding and complaint mechanisms in place</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                    <tr><td>10</td><td>Members aware of environmental/social safeguards</td><td>☐ Yes ☐ No ☐ Partial</td><td></td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.4: MARKET LINKAGE MONITORING ===== -->
+                <div class="tool-card" id="tool-3-4">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.4 Market Linkage Monitoring Tool</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-4','COSME2_Market_Monitoring')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Frequency:</strong> Quarterly</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Format</th><th>Instructions</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Enterprise / Group Name</td><td>Text</td><td>—</td></tr>
+                                    <tr><td>Product(s)</td><td>Select multiple</td><td>Seaweed, Honey, Crab, Mangrove products, Tourism, Other</td></tr>
+                                    <tr><td>Buyer / Market Partner</td><td>Text</td><td>Name of buyer, company, or market</td></tr>
+                                    <tr><td>Type of Linkage</td><td>Select one</td><td>1=Formal contract/MoU; 2=Informal agreement; 3=Spot market; 4=Cooperative channel</td></tr>
+                                    <tr><td>Volume Sold (Kg / units)</td><td>Numeric</td><td>This quarter</td></tr>
+                                    <tr><td>Revenue Generated (KES)</td><td>Numeric</td><td>This quarter</td></tr>
+                                    <tr><td>Price Received per Unit (KES)</td><td>Numeric</td><td>Average</td></tr>
+                                    <tr><td>Quality Standards Met?</td><td>1=Yes; 2=No; 3=Partial</td><td>—</td></tr>
+                                    <tr><td>Challenges Experienced</td><td>Open text</td><td>—</td></tr>
+                                    <tr><td>Support Needed</td><td>Open text</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.5: ENVIRONMENTAL SAFEGUARDS ===== -->
+                <div class="tool-card" id="tool-3-5">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.5 Environmental / Social Safeguards Monitoring Checklist</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-5','COSME2_ESS_Checklist')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Frequency:</strong> Semi-annual site visits</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>#</th><th>Safeguard Area</th><th>Compliant?</th><th>Evidence / Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>Environmental Impact Assessment (EIA) completed where required</td><td>☐ Yes ☐ No ☐ N/A</td><td></td></tr>
+                                    <tr><td>2</td><td>Activities do not cause deforestation or habitat destruction</td><td>☐ Yes ☐ No</td><td></td></tr>
+                                    <tr><td>3</td><td>Waste management and pollution prevention practices in place</td><td>☐ Yes ☐ No ☐ Partial</td><td></td></tr>
+                                    <tr><td>4</td><td>Community consent / FPIC obtained for conservation activities</td><td>☐ Yes ☐ No ☐ N/A</td><td></td></tr>
+                                    <tr><td>5</td><td>No child labor or exploitative practices observed</td><td>☐ Yes ☐ Concern identified</td><td></td></tr>
+                                    <tr><td>6</td><td>GBV/safeguarding posters and reporting channels visible</td><td>☐ Yes ☐ No</td><td></td></tr>
+                                    <tr><td>7</td><td>Workers / participants have adequate safety equipment</td><td>☐ Yes ☐ No ☐ N/A</td><td></td></tr>
+                                    <tr><td>8</td><td>Grievance mechanism is functional and accessible</td><td>☐ Yes ☐ No ☐ Partial</td><td></td></tr>
+                                    <tr><td>9</td><td>Benefit-sharing arrangements are equitable and transparent</td><td>☐ Yes ☐ No ☐ N/A</td><td></td></tr>
+                                    <tr><td>10</td><td>Climate adaptation measures integrated into activities</td><td>☐ Yes ☐ No</td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.6: POLICY ENGAGEMENT TRACKER ===== -->
+                <div class="tool-card" id="tool-3-6">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.6 Policy Engagement Tracking Tool</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-6','COSME2_Policy_Tracker')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Frequency:</strong> Ongoing; compiled quarterly</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Format</th><th>Instructions</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Activity / Event Name</td><td>Text</td><td>—</td></tr>
+                                    <tr><td>Date</td><td>DD/MM/YYYY</td><td>—</td></tr>
+                                    <tr><td>Level</td><td>Select one</td><td>1=Community; 2=Sub-county; 3=County; 4=National; 5=Regional</td></tr>
+                                    <tr><td>Type of Engagement</td><td>Select one</td><td>1=Policy brief; 2=Advocacy event; 3=Budget hearing; 4=CIDP input; 5=Parliamentary engagement; 6=Media; 7=Other</td></tr>
+                                    <tr><td>Policy / Plan Targeted</td><td>Text</td><td>Name of policy, plan, or budget</td></tr>
+                                    <tr><td>Community Voices Involved (#)</td><td>Numeric (M/F)</td><td>Disaggregate</td></tr>
+                                    <tr><td>Government Officials Engaged (#)</td><td>Numeric</td><td>—</td></tr>
+                                    <tr><td>Outcome / Result</td><td>Open text</td><td>What happened as a result?</td></tr>
+                                    <tr><td>Evidence Produced</td><td>Select multiple</td><td>1=Policy brief; 2=Research report; 3=Case study; 4=Scorecard; 5=Community testimony; 6=Other</td></tr>
+                                    <tr><td>Follow-Up Actions</td><td>Open text</td><td>—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TOOL 3.7: BENEFICIARY REGISTRATION ===== -->
+                <div class="tool-card" id="tool-3-7">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.7 Beneficiary Registration Form</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-3-7','COSME2_Beneficiary_Reg')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Format</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Participant ID</td><td>Auto-generated</td><td>Unique identifier</td></tr>
+                                    <tr><td>Full Name</td><td>Text</td><td>—</td></tr>
+                                    <tr><td>Sex</td><td>1=Female; 2=Male</td><td>—</td></tr>
+                                    <tr><td>Date of Birth</td><td>DD/MM/YYYY</td><td>Auto-calculate age</td></tr>
+                                    <tr><td>National ID / Birth Certificate #</td><td>Text</td><td>Optional — for verification</td></tr>
+                                    <tr><td>County</td><td>Select one</td><td>Kilifi, Kwale, Lamu, Tana River</td></tr>
+                                    <tr><td>Sub-County / Ward / Village</td><td>Text</td><td>—</td></tr>
+                                    <tr><td>Phone Number</td><td>Numeric</td><td>For follow-up</td></tr>
+                                    <tr><td>Disability Status</td><td>1=Yes; 2=No; 99=Prefer not to say</td><td>Washington Group</td></tr>
+                                    <tr><td>Group Membership</td><td>Select multiple</td><td>VSLA, Producer Group, WRO, YLO, BMU, Cooperative, Other</td></tr>
+                                    <tr><td>Primary Livelihood Activity</td><td>Select one</td><td>Seaweed, Mangrove, Beekeeping, Tourism, Crab, Fishing, Other</td></tr>
+                                    <tr><td>Previous COSME Participation</td><td>1=Yes (P1); 2=No (New)</td><td>—</td></tr>
+                                    <tr><td>Consent for Data Use</td><td>1=Yes; 2=No</td><td>Must be Yes to register</td></tr>
+                                    <tr><td>Date of Registration</td><td>DD/MM/YYYY</td><td>Auto-capture</td></tr>
+                                    <tr><td>Registered By</td><td>Text</td><td>Staff name</td></tr>
+                                    <tr><td>Photo</td><td>Image</td><td>Optional — with consent</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- TAB 4: INDICATOR MAPPING MATRIX -->
+            <!-- ================================================ -->
+            <div class="toolkit-panel" id="toolkit-matrix" style="display:none;">
+
+                <div class="tool-card tool-open" id="tool-4-1">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>4.1 Indicator-to-Tool Mapping Matrix</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-matrix">Matrix</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-4-1','COSME2_Indicator_Matrix')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <h4>Impact Level</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool & Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr><td>% change in average monthly income (by sex, age, county)</td><td>HH Survey B3, B4</td><td>HH Survey, enterprise records</td><td>Baseline, Midline, Endline</td><td>MEL Lead (Plan)</td></tr>
+                                    <tr><td>% of women reporting increased decision-making power</td><td>HH Survey C1, C4, C5, C6</td><td>HH Survey, FGDs, GJJ tools</td><td>Baseline, Midline, Endline</td><td>MEL Lead (Plan)</td></tr>
+                                    <tr><td>Improvement in coastal ecosystem health indicators</td><td>HH Survey E6, Thematic CL2</td><td>Ecological assessments, community data</td><td>Baseline, Endline</td><td>Natural State, Plan</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Pillar 1: Climate-Resilient Coastal Livelihoods</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool & Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1.1 # and % with diversified income sources</td><td>HH Survey B1, B2</td><td>HH Survey</td><td>Annual; Midline; Endline</td><td>Plan, Natural State</td></tr>
+                                    <tr><td>1.2 % reduction in income loss from climate shocks</td><td>HH Survey B10, B11</td><td>HH Survey, resilience assessments</td><td>Annual; Midline; Endline</td><td>Plan, Natural State</td></tr>
+                                    <tr><td>1.1.1 # trained (sex, age, value chain)</td><td>Attendance Register 3.1</td><td>Training records</td><td>Quarterly</td><td>Plan, Natural State</td></tr>
+                                    <tr><td>1.1.2 % adopting ≥2 climate-smart practices</td><td>HH Survey B13, B14; KAP PW3</td><td>HH Survey, follow-up surveys</td><td>Semi-annual</td><td>Plan, Natural State</td></tr>
+                                    <tr><td>1.2.1 # enterprises supported</td><td>PG Monitoring 3.3; Market Tool 3.4</td><td>Enterprise mapping, field verification</td><td>Semi-annual</td><td>Plan, Natural State</td></tr>
+                                    <tr><td>1.2.2 # diversified activities operational</td><td>HH Survey B1; Thematic CL1</td><td>Enterprise mapping</td><td>Annual</td><td>Plan, Natural State, CICaN</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Pillar 2: Women's Economic Empowerment & Gender Justice</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool & Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr><td>2.1 % of women in leadership positions</td><td>HH Survey C8, C9; Governance PG4</td><td>HH Survey, governance assessments</td><td>Annual</td><td>Plan</td></tr>
+                                    <tr><td>2.2 % reporting positive changes in norms</td><td>HH Survey C5, C6; KAP AW1-AW6</td><td>HH Survey, FGDs, GJJ tools</td><td>Annual</td><td>Plan</td></tr>
+                                    <tr><td>2.1.1 # groups completing GJJ</td><td>GJJ delivery records</td><td>Facilitator reports</td><td>Quarterly</td><td>Plan</td></tr>
+                                    <tr><td>2.1.2 # GJJ participants (sex, age)</td><td>HH Survey C11, C12; Attendance 3.1</td><td>GJJ records</td><td>Quarterly</td><td>Plan</td></tr>
+                                    <tr><td>2.2.1 # VSLAs operational (quality)</td><td>VSLA Tool VS1-VS9</td><td>VSLA monitoring data, quality audits</td><td>Quarterly</td><td>Plan</td></tr>
+                                    <tr><td>2.2.2 Total savings mobilized (KES)</td><td>VSLA Tool VS4</td><td>VSLA records</td><td>Quarterly</td><td>Plan</td></tr>
+                                    <tr><td>2.3.1 # in mentorship/leadership programs</td><td>Attendance Register 3.1</td><td>Program records</td><td>Quarterly</td><td>Plan</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Pillar 3: Market Systems & Value Chain Strengthening</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool & Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr><td>3.1 % increase in value of products sold through organized channels</td><td>HH Survey D6-D8; Market Tool 3.4</td><td>Transaction records, buyer surveys</td><td>Annual</td><td>MEDA, AECF, Plan</td></tr>
+                                    <tr><td>3.2 # market linkages/contracts established</td><td>Market Tool 3.4; Thematic MV5</td><td>MoUs, partnership agreements</td><td>Annual</td><td>MEDA, AECF</td></tr>
+                                    <tr><td>3.1.1 # value addition units operational</td><td>Thematic MV7; Market Tool 3.4</td><td>Facility records</td><td>Semi-annual</td><td>MEDA, AECF</td></tr>
+                                    <tr><td>3.1.2 # enterprises meeting quality standards</td><td>HH Survey D9, D10; Thematic MV7</td><td>Quality audits</td><td>Annual</td><td>MEDA, AECF, Plan</td></tr>
+                                    <tr><td>3.2.1 # private sector partnerships/MoUs</td><td>Market Tool 3.4</td><td>MoU records</td><td>Annual</td><td>MEDA, AECF</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Pillar 4: Governance, Policy Influence & Institutional Capacity</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool & Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr><td>4.1 # policies/plans/budgets influenced</td><td>Policy Tracker 3.6; Outcome Harvesting 2.3</td><td>Policy tracking, advocacy records</td><td>Annual</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.2 % of institutions meeting governance standards</td><td>Governance Tool PG1-PG7; PG Monitor 3.3</td><td>Institutional assessments</td><td>Annual</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.1.1 # institutions receiving capacity building</td><td>Attendance Register 3.1</td><td>Training records</td><td>Quarterly</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.1.2 # with functional accountability mechanisms</td><td>Governance Tool PG5; PG Monitor 3.3</td><td>Capacity assessments, audits</td><td>Semi-annual</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.2.1 # advocacy events/policy briefs</td><td>Policy Tracker 3.6</td><td>Event reports, briefs</td><td>Semi-annual</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.2.2 # community voices in policy spaces</td><td>HH Survey F2, F3; Policy Tracker 3.6</td><td>Participation records</td><td>Annual</td><td>Plan, CICaN</td></tr>
+                                    <tr><td>4.3.1 # partners with operational safeguarding</td><td>ESS Checklist 3.5</td><td>Safeguarding audits</td><td>Annual</td><td>Plan</td></tr>
+                                    <tr><td>4.3.2 # learning products produced</td><td>Policy Tracker 3.6</td><td>Publication records</td><td>Semi-annual</td><td>Plan</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- TAB 5: ETHICS & SAFEGUARDING -->
+            <!-- ================================================ -->
+            <div class="toolkit-panel" id="toolkit-ethics" style="display:none;">
+
+                <div class="tool-card tool-open" id="tool-5-1">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>5.1 Ethics, Safeguarding & Data Protection Protocols</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-ethics">Ethics</span>
+                            <button class="tool-download-btn" onclick="event.stopPropagation();downloadTool('tool-5-1','COSME2_Ethics_Protocols')">Download</button>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+
+                        <h4>5.1a Informed Consent Script — Standard (Adults 18+)</h4>
+                        <div class="consent-block">
+                            <p>"My name is [name], working with Plan International Kenya and the COSME Phase 2 program. We are conducting [survey/interview/discussion] about [topic]. The purpose is to help us understand [purpose] so we can improve our programs.</p>
+                            <p>Your participation is entirely voluntary. You can refuse to participate, skip any question, or stop at any time without any consequences. There are no right or wrong answers. Your responses will be kept strictly confidential — your name will not be connected to your answers in any report.</p>
+                            <p>This [survey/interview/discussion] will take approximately [time]. You will not receive any payment or direct benefit for participating.</p>
+                            <p>If you have questions or concerns about this research, you may contact [local contact name and phone number]. If you have concerns about your safety or well-being related to the project, you can contact the safeguarding focal point at [number].</p>
+                            <p>Do you have any questions? Do you agree to participate?"</p>
+                            <p><strong>☐ Yes, I consent to participate</strong> &nbsp; <strong>☐ No, I do not wish to participate</strong></p>
+                            <p><strong>☐ I consent to audio recording</strong> &nbsp; <strong>☐ I do not consent to audio recording</strong></p>
+                            <p>Participant signature / thumbprint: _________________ Date: ___/___/______</p>
+                            <p>Enumerator name: _________________ Signature: _________________ Date: ___/___/______</p>
+                        </div>
+
+                        <h4>5.1b Assent Script for Minors (Ages 15-17)</h4>
+                        <div class="consent-block">
+                            <p>"Hello, my name is [name]. I work with an organization called Plan International. We are talking to people in your community about their lives, activities, and what they think about different things.</p>
+                            <p>We would like to ask you some questions too. You don't have to talk to us if you don't want to. If you decide to talk to us, you can stop at any time or skip questions you don't want to answer. Nothing bad will happen if you say no.</p>
+                            <p>Everything you tell us is private — we won't tell anyone your specific answers. This will take about [time].</p>
+                            <p>Your parent/guardian has said it's okay for you to participate, but the choice is yours. Would you like to participate?"</p>
+                            <p><strong>☐ Yes, I agree</strong> &nbsp; <strong>☐ No, I don't want to</strong></p>
+                            <p><strong>Guardian consent obtained?</strong> ☐ Yes &nbsp; Guardian name: _________________</p>
+                        </div>
+
+                        <h4>5.1c Enumerator Conduct Requirements</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Safety First:</strong> Do not endanger yourself or respondents. If any situation feels unsafe, end the interview.</li>
+                                <li><strong>Informed Consent:</strong> Always read the consent script completely. Never pressure anyone to participate.</li>
+                                <li><strong>Confidentiality:</strong> Keep all data secure. Do not share individual responses. Use participant IDs, not names, in data systems.</li>
+                                <li><strong>Sensitivity:</strong> Topics about gender, income, and safety are sensitive. Use empathetic tone. Watch for signs of distress.</li>
+                                <li><strong>Privacy:</strong> Conduct interviews in private. Do not ask sensitive questions when others can hear.</li>
+                                <li><strong>Vulnerable Populations:</strong> Extra care with minors (15-17), persons with disability, elderly, and GBV survivors. Follow safeguarding protocols.</li>
+                                <li><strong>Referrals:</strong> If a respondent discloses abuse, exploitation, or immediate danger, follow the safeguarding referral pathway. Do NOT investigate yourself.</li>
+                                <li><strong>Professional Conduct:</strong> Dress appropriately. Be respectful. Do not accept gifts or favors. Do not make promises about project benefits.</li>
+                                <li><strong>Accuracy:</strong> Record responses exactly as given. Do not interpret or modify answers. Note any problems or uncertainties.</li>
+                                <li><strong>Debriefing:</strong> Participate in daily debriefings with the field supervisor. Report any incidents, challenges, or safeguarding concerns immediately.</li>
+                            </ol>
+                        </div>
+
+                        <h4>5.1d Gender-Sensitive Questioning Guidance</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Separate spaces:</strong> Interview women separately from men where possible, especially for sections on decision-making, agency, GBV, and care work.</li>
+                                <li><strong>Same-sex enumerators:</strong> Where culturally appropriate, use female enumerators for women respondents on sensitive topics.</li>
+                                <li><strong>Non-judgmental language:</strong> Avoid leading or judgmental phrasing. Use neutral, open-ended prompts.</li>
+                                <li><strong>Power dynamics:</strong> Be aware of power dynamics between enumerator and respondent. Create a safe, equal-feeling space.</li>
+                                <li><strong>Time sensitivity:</strong> Be mindful of women's time constraints (care work, enterprise). Schedule interviews at convenient times.</li>
+                                <li><strong>Literacy levels:</strong> Adapt methods for respondents with limited literacy. Use visual aids where helpful.</li>
+                                <li><strong>Cultural sensitivity:</strong> Respect local customs while maintaining ethical standards. Consult with community leaders on appropriate protocols.</li>
+                            </ol>
+                        </div>
+
+                        <h4>5.1e Do-No-Harm & Trauma-Informed Data Collection</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li><strong>Risk assessment:</strong> Before field deployment, assess potential risks to respondents and enumerators. Mitigate identified risks.</li>
+                                <li><strong>Trigger awareness:</strong> Questions about income loss, climate shocks, gender violence, and exclusion may trigger emotional responses. Be prepared.</li>
+                                <li><strong>Pause and support:</strong> If a respondent becomes distressed, pause the interview. Offer support. Allow them to decide whether to continue.</li>
+                                <li><strong>No mandatory disclosure:</strong> Never require a respondent to disclose personal experiences of violence, abuse, or trauma.</li>
+                                <li><strong>Referral pathway:</strong> Have a written referral pathway ready before fieldwork begins — including local health services, counseling, GBV response, and child protection contacts.</li>
+                                <li><strong>Data security:</strong> Encrypt all digital data. Secure physical forms in locked storage. Limit access to named team members only.</li>
+                                <li><strong>Anonymization:</strong> Remove identifying information before analysis and reporting. Use aggregate data in all external documents.</li>
+                                <li><strong>Follow-up:</strong> For respondents who disclose safeguarding concerns, ensure follow-up through the safeguarding focal point within 24 hours.</li>
+                            </ol>
+                        </div>
+
+                        <h4>5.1f Data Protection & Storage</h4>
+                        <div class="kii-guide">
+                            <ol>
+                                <li>All digital data collected using KoboToolbox/ODK with encrypted transmission.</li>
+                                <li>Data stored on Plan International's secure servers with role-based access.</li>
+                                <li>Personal identifiers separated from survey responses and stored in a secure, password-protected file.</li>
+                                <li>Consent forms stored separately from data in locked physical storage.</li>
+                                <li>Data retention: Active project period + 5 years, then securely destroyed.</li>
+                                <li>Compliance with Kenya Data Protection Act 2019 and Plan International Data Protection Policy.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
 </main>
 
 <!-- FOOTER -->
@@ -2880,6 +4187,69 @@
     // Load saved edits on page load
     loadSavedEdits();
     renderHistory();
+
+    // ===== MERL TOOLKIT FUNCTIONS =====
+
+    // Tab switching
+    function showToolkitTab(tabId, btn) {
+        document.querySelectorAll('.toolkit-panel').forEach(p => p.style.display = 'none');
+        document.querySelectorAll('.toolkit-tab').forEach(t => t.classList.remove('active'));
+        const panel = document.getElementById('toolkit-' + tabId);
+        if (panel) panel.style.display = 'block';
+        if (btn) btn.classList.add('active');
+    }
+
+    // Download individual tool as formatted HTML document
+    function downloadTool(toolId, filename) {
+        const toolEl = document.getElementById(toolId);
+        if (!toolEl) { alert('Tool not found.'); return; }
+
+        const toolTitle = toolEl.querySelector('.tool-header h3').textContent;
+        const toolBody = toolEl.querySelector('.tool-body');
+
+        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+            '<title>' + toolTitle + ' – COSME Phase 2</title>' +
+            '<style>' +
+            'body{font-family:Inter,Segoe UI,system-ui,sans-serif;max-width:900px;margin:40px auto;padding:0 30px;color:#2c3e50;line-height:1.8;font-size:14px}' +
+            'h1{color:#003C71;font-size:1.4rem;border-bottom:3px solid #0072CE;padding-bottom:10px;margin-bottom:20px}' +
+            'h2{color:#003C71;font-size:1.15rem;margin-top:24px;border-bottom:1px solid #e1e8ef;padding-bottom:6px}' +
+            'h3{color:#0072CE;font-size:1.05rem;margin-top:20px}' +
+            'h4{color:#0072CE;font-size:1rem;margin-top:18px;margin-bottom:8px}' +
+            'table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:12px 0 20px}' +
+            'th{background:#0072CE;color:white;padding:10px 12px;text-align:left;font-weight:600;font-size:0.82rem}' +
+            'td{padding:9px 12px;border-bottom:1px solid #e1e8ef;vertical-align:top}' +
+            'tr:nth-child(even){background:#fafbfd}' +
+            'td:first-child{font-weight:600;color:#0072CE}' +
+            'ol{padding-left:22px}li{margin-bottom:8px}' +
+            '.meta{background:#f8fbff;border-left:4px solid #0072CE;padding:14px 18px;border-radius:6px;margin:12px 0}' +
+            '.consent{background:#fffdf0;border:1px solid #ffe082;padding:16px 20px;border-radius:6px;margin:12px 0}' +
+            '.note{background:#f3e5f5;border-left:4px solid #9c27b0;padding:10px 16px;border-radius:6px;margin:10px 0;color:#6a1b9a}' +
+            '.footer-print{text-align:center;margin-top:40px;padding-top:20px;border-top:2px solid #0072CE;font-size:0.82rem;color:#5a6a7a}' +
+            '@media print{body{margin:20px}table{page-break-inside:avoid}}' +
+            '</style></head><body>' +
+            '<h1>' + toolTitle + '</h1>' +
+            '<p style="color:#5a6a7a;font-size:0.85rem;">COSME Phase 2 – MERL Data Collection Toolkit | Plan International Kenya</p>' +
+            toolBody.innerHTML
+                .replace(/class="tool-meta"/g, 'class="meta"')
+                .replace(/class="consent-block"/g, 'class="consent"')
+                .replace(/class="enumerator-note"/g, 'class="note"')
+                .replace(/class="tool-table"/g, '')
+                .replace(/class="table-container"/g, '')
+                .replace(/class="kii-guide"/g, '') +
+            '<div class="footer-print"><p><strong>COSME Phase 2 – Plan International Kenya</strong></p>' +
+            '<p>Blue Economy Program | MERL Data Collection Toolkit</p></div>' +
+            '</body></html>';
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename + '.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 </script>
 
 </body>
