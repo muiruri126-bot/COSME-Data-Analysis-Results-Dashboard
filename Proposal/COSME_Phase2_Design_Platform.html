@@ -856,6 +856,240 @@
             font-size: 0.75rem;
             color: var(--text-light);
         }
+
+        /* ============ SCHEMATIC DIAGRAMS ============ */
+        .diagram-container {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 28px 24px;
+            margin: 24px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        .diagram-container h4.diagram-title {
+            text-align: center;
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        .diagram-container .diagram-subtitle {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-light);
+            margin-bottom: 22px;
+        }
+
+        /* === Three-column domain layout === */
+        .be-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            min-width: 700px;
+        }
+        .be-domain {
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            border: 2px solid;
+            background: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .be-domain:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        .be-domain-header {
+            padding: 14px 16px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .be-domain-body {
+            padding: 14px 16px;
+        }
+        .be-node {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+            cursor: default;
+            transition: background 0.2s;
+        }
+        .be-node:hover {
+            background: #eef3f8;
+        }
+        .be-node h5 {
+            margin: 0 0 5px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+        .be-node .node-details {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        .be-node .node-details span {
+            display: inline-block;
+            background: rgba(0,114,206,0.08);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin: 2px 2px;
+        }
+        /* Domain colors */
+        .be-domain.conservation { border-color: #00A651; }
+        .be-domain.conservation .be-domain-header { background: linear-gradient(135deg, #00A651, #00874a); color: #fff; }
+        .be-domain.conservation .be-node { border-left-color: #00A651; }
+        .be-domain.economic { border-color: #0072CE; }
+        .be-domain.economic .be-domain-header { background: linear-gradient(135deg, #0072CE, #003C71); color: #fff; }
+        .be-domain.economic .be-node { border-left-color: #0072CE; }
+        .be-domain.policy { border-color: #FFD200; }
+        .be-domain.policy .be-domain-header { background: linear-gradient(135deg, #d4a843, #b8860b); color: #fff; }
+        .be-domain.policy .be-node { border-left-color: #d4a843; }
+
+        /* Connector arrows between domains */
+        .be-connectors {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 14px 0;
+            min-width: 700px;
+        }
+        .be-connector-label {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0,114,206,0.2);
+        }
+        .be-connector-arrow {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        /* === Partner overlay badges === */
+        .partner-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin: 2px;
+        }
+        .partner-badge.plan { background: #e8f0fe; color: #003C71; }
+        .partner-badge.meda { background: #e8f5e9; color: #1b5e20; }
+        .partner-badge.aecf { background: #fff3e0; color: #e65100; }
+        .partner-badge.reasee { background: #e3f2fd; color: #0d47a1; }
+        .partner-badge.cican { background: #f3e5f5; color: #6a1b9a; }
+        .partner-badge.natstate { background: #e0f2f1; color: #00695c; }
+        .partner-badge.mission { background: #fce4ec; color: #880e4f; }
+
+        /* Resilience banner */
+        .resilience-banner {
+            background: linear-gradient(135deg, #003C71 0%, #0072CE 50%, #00A651 100%);
+            color: #fff;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Symbiotic label */
+        .symbiotic-link {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            font-style: italic;
+        }
+        .symbiotic-link::before, .symbiotic-link::after {
+            content: ' ⟷ ';
+            color: var(--accent);
+        }
+
+        /* Diagram link buttons */
+        .diagram-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .diagram-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .diagram-link-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Reflection questions */
+        .reflection-card {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border: 1px solid #fbbf24;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+        }
+        .reflection-card .q-num {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background: #f59e0b;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .reflection-card p {
+            margin: 6px 0 0;
+            font-size: 0.85rem;
+            color: #78350f;
+        }
+        .reflection-card ul {
+            margin: 6px 0 0;
+            padding-left: 20px;
+            font-size: 0.82rem;
+            color: #92400e;
+        }
+
+        @media (max-width: 900px) {
+            .be-diagram { grid-template-columns: 1fr; min-width: unset; }
+            .be-connectors { flex-direction: column; min-width: unset; }
+        }
     </style>
 </head>
 <body>
@@ -992,6 +1226,9 @@
         <a class="nav-item" href="#section5" data-section="section5">
             <span class="nav-num">5</span> Collaboration Architecture
         </a>
+        <a class="nav-item" href="#diagrams" data-section="diagrams">
+            <span class="nav-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));">⊞</span> BE Design Diagrams
+        </a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-label">Risk & Quality</div>
@@ -1083,7 +1320,7 @@
                 <li><strong>Strong potential for women-led enterprises</strong> when supported holistically (demonstrated in Phase 1).</li>
                 <li><strong>Devolution</strong> creates county-level entry points for policy engagement, budgeting, and blue economy governance.</li>
                 <li><strong>Growing blue economy discourse</strong> nationally and regionally increases political will and donor interest.</li>
-                <li><strong>Increased climate finance interest</strong> offers new resource mobilization and co-financing opportunities.</li>
+                <li><strong>Increased climate finance interest</strong> offers new resource mobilization, co-financing, and <strong>carbon/biodiversity readiness</strong> opportunities through measurement and verification systems.</li>
                 <li><strong>Established trust and community systems</strong> from Phase 1 provide a foundation for deepening.</li>
                 <li><strong>COSME Phase 1 evidence base</strong> can be leveraged for advocacy, adaptive programming, and influence.</li>
                 <li><strong>Partner complementarity</strong> — clear, non-duplicative roles across the five consortium members.</li>
@@ -1121,7 +1358,7 @@
 
             <h3>2.2 Background and Rationale</h3>
             <h4>Context of Coastal Communities and Blue Economy Opportunities</h4>
-            <p>Kenya's coastal counties — including Kilifi, Kwale, Lamu, and Tana River — are home to communities whose livelihoods depend on marine and coastal resources, including seaweed farming, mangrove-linked enterprises, and small-scale fisheries. Despite the significant economic potential of the blue economy, coastal communities face persistent poverty, gender inequality, limited market access, and escalating climate risks. Women and youth, who form the backbone of coastal production systems, remain disproportionately excluded from decision-making, value chain governance, and equitable economic returns. Kenya's devolution framework and the growing national discourse on the blue economy present an unprecedented opportunity to address these structural barriers at county and national levels.</p>
+            <p>Kenya's coastal counties — including Kilifi, Kwale, Lamu, and Tana River — are home to communities whose livelihoods depend on marine and coastal resources, including seaweed farming, mangrove-linked enterprises, beekeeping, tourism, crab farming, and small-scale fisheries. Despite the significant economic potential of the blue economy, coastal communities face persistent poverty, gender inequality, limited market access, and escalating climate risks. Women and youth, who form the backbone of coastal production systems, remain disproportionately excluded from decision-making, value chain governance, and equitable economic returns. Kenya's devolution framework, growing national blue economy discourse, and emerging <strong>climate finance opportunities</strong> (carbon/biodiversity measurement and verification) present an unprecedented opportunity to address these structural barriers at county and national levels.</p>
 
             <h4>Phase 1 Achievements and Key Learnings</h4>
             <p>COSME Phase 1 established a solid implementation foundation, demonstrating that women-led enterprises thrive when supported holistically with production inputs, savings (VSLAs), skills development, and mentorship. Phase 1 built community trust, established women- and youth-led groups, piloted the Gender Justice Journey at household level, initiated seaweed and mangrove-linked livelihoods, and generated an evidence base on coastal livelihoods and gender dynamics. However, Phase 1 also revealed critical limitations: fragmented value chains, low production volumes, uneven institutional capacity among community groups, and insufficient linkage between community innovation and policy influence.</p>
@@ -1142,22 +1379,22 @@
                 <div style="background:#e8f4fd; border-radius:10px; padding:18px; border-top:4px solid #1a6da8;">
                     <span class="pillar-tag pillar-1">Pillar 1</span>
                     <h4>Climate-Resilient Coastal Livelihoods</h4>
-                    <p style="font-size:0.87rem;">To increase the productivity, diversification, and climate resilience of coastal livelihood systems — particularly seaweed, mangrove-linked, and conservation-based enterprises — for women and youth in target communities.</p>
+                    <p style="font-size:0.87rem;">To increase the productivity, diversification, and climate resilience of coastal livelihood systems — particularly <strong>seaweed production</strong> (technology, seed supply, basic value addition, deep sea expansion), <strong>mangrove restoration and conservation</strong> (hectare expansion, community-led, green assets), <strong>upstream forest conservation</strong>, and other <strong>nature-based enterprises</strong> (beekeeping, tourism, crab farming) — for women and youth in target communities. This pillar includes <strong>climate finance readiness</strong> through carbon/biodiversity measurement and verification systems.</p>
                 </div>
                 <div style="background:#fce4ec; border-radius:10px; padding:18px; border-top:4px solid #c0392b;">
                     <span class="pillar-tag pillar-2">Pillar 2</span>
                     <h4>Women's Economic Empowerment & Gender Justice</h4>
-                    <p style="font-size:0.87rem;">To strengthen the economic agency, leadership, decision-making power, and collective action of women and girls through gender-transformative programming, including VSLAs, enterprise governance, and the upgraded Gender Justice Journey.</p>
+                    <p style="font-size:0.87rem;">To strengthen the economic agency, leadership, decision-making power, and collective action of women and girls through gender-transformative programming, including <strong>VSLAs</strong>, enterprise governance, <strong>upskilling and capacity building</strong>, and the upgraded Gender Justice Journey. This pillar centers on <strong>gender transformation</strong> — moving beyond participation to address norms, power, and unpaid care.</p>
                 </div>
                 <div style="background:#e8f5e9; border-radius:10px; padding:18px; border-top:4px solid #27ae60;">
                     <span class="pillar-tag pillar-3">Pillar 3</span>
                     <h4>Market Systems & Value Chain Strengthening</h4>
-                    <p style="font-size:0.87rem;">To facilitate improved value addition, quality standards, aggregation, and inclusive market linkages for coastal products, enabling women- and youth-led enterprises to participate equitably in markets.</p>
+                    <p style="font-size:0.87rem;">To facilitate improved value addition, quality standards, aggregation, and inclusive market linkages for coastal products. Scaling is pursued through <strong>organizational structures</strong> (cooperatives, clusters, associations) with <strong>strategic value chain upgrading</strong> — including high-value market access, pull-effect/lead firm approaches, and <strong>access to alternative capital and financing</strong>.</p>
                 </div>
                 <div style="background:#fff3e0; border-radius:10px; padding:18px; border-top:4px solid #e67e22;">
                     <span class="pillar-tag pillar-4">Pillar 4</span>
                     <h4>Governance, Policy Influence & Institutional Capacity</h4>
-                    <p style="font-size:0.87rem;">To strengthen community institutions (WROs, YLOs, cooperatives, BMUs), coordination platforms, and evidence-based policy engagement on blue economy, climate adaptation, and gender-responsive governance.</p>
+                    <p style="font-size:0.87rem;">To strengthen community institutions (WROs, YLOs, cooperatives, BMUs), <strong>coordination platforms</strong>, and evidence-based policy engagement on blue economy, climate adaptation, and gender-responsive governance. This includes <strong>monitoring, evaluation and research</strong>; <strong>local community-based advocacy</strong> through community-based organizations; and <strong>direct advocacy</strong> — lobbying parliamentarians at regional and national levels on strategic policy needs related to conservation and economic empowerment.</p>
                 </div>
             </div>
 
@@ -1171,12 +1408,14 @@
                 <div class="toc-block inputs">
                     <h4 style="color:#3498db;">⬇ IF (Inputs & Activities)</h4>
                     <ul>
-                        <li>Plan International Kenya delivers gender-transformative programming (GJJ upgrade, leadership, VSLA strengthening, enterprise governance).</li>
-                        <li>Plan co-leads community institutional strengthening (WROs, YLOs, cooperatives, BMUs).</li>
-                        <li>MEDA & AECF facilitate market access, processing, advanced value addition, and private sector partnerships.</li>
-                        <li>REAsee & CICaN support production systems, technical training, and institutional coordination.</li>
+                        <li>Plan International Kenya delivers gender-transformative programming (GJJ upgrade, leadership, VSLA strengthening, enterprise governance, upskilling).</li>
+                        <li>Plan co-leads community institutional strengthening (WROs, YLOs, cooperatives, BMUs) and coordination platforms.</li>
+                        <li>MEDA & AECF facilitate market access, strategic value chain upgrading (value addition, high-value market access, lead firm approach), and private sector partnerships.</li>
+                        <li>REAsee & CICaN support production systems (seaweed, mangrove restoration, upstream forest conservation), technical training, and institutional coordination.</li>
                         <li>All partners jointly deliver research, MEL, advocacy, safeguarding, and learning.</li>
-                        <li>Climate-smart production support for seaweed, mangrove-linked, and conservation enterprises.</li>
+                        <li>Climate-smart production support for seaweed, mangrove-linked, and nature-based enterprises (beekeeping, tourism, crab farming).</li>
+                        <li>Climate finance readiness — carbon/biodiversity measurement and verification systems established.</li>
+                        <li>Scaling through organizations (cooperatives, clusters, associations) with access to alternative capital and financing.</li>
                     </ul>
                 </div>
                 <div class="toc-arrow">⬇</div>
@@ -1558,28 +1797,32 @@
             <p>Critical cross-cutting components — including research, MEL, learning, policy advocacy, safeguarding, and institutional strengthening — are <strong>jointly designed and delivered</strong> by all five partners to ensure coherence and amplify collective impact. Plan International Kenya plays a soft leadership role in consortium coordination, promoting alignment and trust-building, while acting as a connector between technical partners, community actors, and government institutions.</p>
 
             <h3>5.2 Partner Roles & Value-Add</h3>
+            <p style="font-size:0.88rem; color: var(--text-light); margin-bottom:16px;">The consortium combines <strong>Plan International Kenya / Mission Inclusion</strong> capabilities with <strong>Natural State / MEDA</strong> market expertise, <strong>AECF</strong> financing, and <strong>CICaN</strong> institutional coordination. The diagram below maps the symbiotic relationship between conservation and economic empowerment interventions.</p>
             <div class="partner-grid">
                 <div class="partner-card" style="border-top:4px solid var(--primary);">
-                    <h4>🏛️ Plan International Kenya</h4>
+                    <h4>🏛️ Plan International Kenya / Mission Inclusion</h4>
                     <ul>
                         <li>Gender-transformative programming (GJJ upgrade, GESI mainstreaming)</li>
-                        <li>Women's and youth empowerment & leadership</li>
+                        <li>Women's and youth empowerment, upskilling & leadership</li>
                         <li>Community institutional strengthening (WROs, YLOs, cooperatives, BMUs)</li>
                         <li>Safeguarding leadership (consortium-wide)</li>
                         <li>Evidence generation & participatory action research</li>
-                        <li>Policy engagement & advocacy</li>
+                        <li>Policy engagement, direct advocacy & community-based advocacy</li>
                         <li>MEL co-leadership</li>
                         <li>Consortium coordination (soft leadership)</li>
+                        <li>VSLAs & access to alternative capital and financing</li>
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #27ae60;">
-                    <h4>📊 MEDA</h4>
+                    <h4>📊 Natural State / MEDA</h4>
                     <ul>
-                        <li>Market systems development</li>
+                        <li>Market systems development & strategic value chains</li>
                         <li>Value addition, processing & quality standards</li>
-                        <li>Aggregation systems</li>
-                        <li>Private sector partnerships & buyer linkages</li>
+                        <li>Aggregation systems & cooperative clustering</li>
+                        <li>Private sector partnerships, buyer linkages & lead firm approach</li>
                         <li>Enterprise mentoring & business plan support</li>
+                        <li>High-value market access & pull-effect strategies</li>
+                        <li>Mangrove restoration & seaweed production support</li>
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #e67e22;">
@@ -1592,11 +1835,15 @@
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #3498db;">
-                    <h4>🌿 REAsee</h4>
+                    <h4>🌿 REAsee / Natural State</h4>
                     <ul>
                         <li>Sustainable production systems (seaweed, mangrove-linked)</li>
+                        <li>Mangrove restoration: hectare expansion, community-led, green assets</li>
+                        <li>Upstream forest conservation</li>
+                        <li>Seaweed production: technology, seed supply, basic value addition, deep sea</li>
                         <li>Technical training & production quality</li>
                         <li>Climate-smart agriculture & conservation TA</li>
+                        <li>Climate finance: carbon/biodiversity measurement & verification readiness</li>
                     </ul>
                 </div>
                 <div class="partner-card" style="border-top:4px solid #9b59b6;">
@@ -1617,6 +1864,336 @@
                         <li>WROs/YLOs: grassroots implementation, accountability, peer learning</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SCHEMATIC DIAGRAMS SECTION -->
+    <!-- ============================================== -->
+    <div class="section" id="diagrams">
+        <div class="section-header collapsible-header open" onclick="toggleSection(this)">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="section-num" style="background: linear-gradient(135deg, var(--primary), var(--accent));">⊞</div>
+                <h2>Blue Economy Program Design — Schematic Diagrams</h2>
+            </div>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="collapsible-body open">
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:20px;">These interactive diagrams visualize the COSME Phase 2 Blue Economy program architecture. <strong>Diagram 1</strong> shows the three interconnected domains and their intervention components. <strong>Diagram 2</strong> maps implementing partners to each component, showing the symbiotic relationship between conservation and economic empowerment.</p>
+
+            <!-- ====== DIAGRAM 1: BE Design Architecture ====== -->
+            <div class="diagram-container" id="diagram1">
+                <h4 class="diagram-title">Diagram 1: Blue Economy Program Design Architecture</h4>
+                <p class="diagram-subtitle">Three interconnected domains with a shared resilience framework and symbiotic conservation–empowerment linkage</p>
+
+                <div class="resilience-banner">🌊 RESILIENCE — Climate-Resilient Blue Economy Framework</div>
+
+                <!-- Three Domains -->
+                <div class="be-diagram">
+                    <!-- DOMAIN 1: Conservation -->
+                    <div class="be-domain conservation">
+                        <div class="be-domain-header">🌿 Conservation & Climate Finance</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#00A651;">
+                                <h5>Mangrove Restoration & Conservation</h5>
+                                <div class="node-details">
+                                    <span>Ha Expansion</span>
+                                    <span>Community-Led</span>
+                                    <span>Green Assets</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#2e7d32;">
+                                <h5>Upstream Forest Conservation</h5>
+                                <div class="node-details">
+                                    <span>Terrestrial ecosystems</span>
+                                    <span>Watershed protection</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#1b5e20;">
+                                <h5>Climate Finance</h5>
+                                <div class="node-details">
+                                    <span>Carbon / Biodiversity</span>
+                                    <span>Readiness</span>
+                                    <span>Measurement & Verification</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOMAIN 2: Economic Empowerment -->
+                    <div class="be-domain economic">
+                        <div class="be-domain-header">💼 Economic Empowerment & Production</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#0072CE;">
+                                <h5>Seaweed Production</h5>
+                                <div class="node-details">
+                                    <span>Technology</span>
+                                    <span>Seed Supply</span>
+                                    <span>Basic Value Addition</span>
+                                    <span>Deep Sea</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#1565c0;">
+                                <h5>Other Nature-Based Enterprises</h5>
+                                <div class="node-details">
+                                    <span>Beekeeping</span>
+                                    <span>Tourism</span>
+                                    <span>Crab Farming</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#003C71;">
+                                <h5>Gender Transformation & VSLAs</h5>
+                                <div class="node-details">
+                                    <span>Gender Transformation</span>
+                                    <span>VSLAs</span>
+                                    <span>Upskilling</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#0d47a1;">
+                                <h5>Scale Through Organizations</h5>
+                                <div class="node-details">
+                                    <span>Cooperatives</span>
+                                    <span>Clusters</span>
+                                    <span>Associations</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#1976d2;">
+                                <h5>Value Chain Upgrading</h5>
+                                <div class="node-details">
+                                    <span>Strategic Value Chains</span>
+                                    <span>HV Market Access</span>
+                                    <span>Pull-Effect / Lead Firm</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#42a5f5;">
+                                <h5>Access to Alternative Capital & Financing</h5>
+                                <div class="node-details">
+                                    <span>Co-financing</span>
+                                    <span>Enterprise finance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DOMAIN 3: Policy -->
+                    <div class="be-domain policy">
+                        <div class="be-domain-header">📜 Policy & Governance</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#d4a843;">
+                                <h5>Monitoring, Evaluation & Research</h5>
+                                <div class="node-details">
+                                    <span>Outcome harvesting</span>
+                                    <span>Evidence generation</span>
+                                    <span>Learning systems</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#f9a825;">
+                                <h5>Coordination Platform</h5>
+                                <div class="node-details">
+                                    <span>Community-Based Orgs</span>
+                                    <span>Multi-stakeholder forums</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#ef6c00;">
+                                <h5>Local Community-Based Advocacy</h5>
+                                <div class="node-details">
+                                    <span>Community voice</span>
+                                    <span>Grassroots engagement</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#e65100;">
+                                <h5>Direct Advocacy</h5>
+                                <div class="node-details">
+                                    <span>Lobby Parliamentarians</span>
+                                    <span>Regional & National</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#bf360c;">
+                                <h5>Strategic Policy Linkage</h5>
+                                <div class="node-details">Strategic policy needs and gaps specifically related to conservation and economic empowerment interventions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="symbiotic-link">Symbiotic Relationship between Conservation & Economic Empowerment</div>
+
+                <div class="be-connectors">
+                    <div class="be-connector-label">Conservation ↔ Economic Empowerment ↔ Policy</div>
+                </div>
+
+                <div class="diagram-links">
+                    <a class="diagram-link-btn" href="#section1">📋 Quick Synthesis</a>
+                    <a class="diagram-link-btn" href="#section2">📐 Project Design</a>
+                    <a class="diagram-link-btn" href="#section3">📊 Results Framework</a>
+                    <a class="diagram-link-btn" href="#section4">📅 Workplan Matrix</a>
+                    <a class="diagram-link-btn" href="#section5">🤝 Collaboration</a>
+                </div>
+            </div>
+
+            <!-- ====== DIAGRAM 2: BE Design with Partners ====== -->
+            <div class="diagram-container" id="diagram2">
+                <h4 class="diagram-title">Diagram 2: Blue Economy Design — Partner Mapping</h4>
+                <p class="diagram-subtitle">Implementing partners mapped to program domains, showing who leads and supports each component</p>
+
+                <div class="resilience-banner">🌊 RESILIENCE — Partner-Led Blue Economy Architecture</div>
+
+                <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:18px;">
+                    <span class="partner-badge plan">Plan / Mission Inclusion</span>
+                    <span class="partner-badge natstate">Natural State</span>
+                    <span class="partner-badge meda">MEDA</span>
+                    <span class="partner-badge aecf">AECF</span>
+                    <span class="partner-badge cican">CICaN</span>
+                </div>
+
+                <!-- Three Domains with Partner badges -->
+                <div class="be-diagram">
+                    <!-- Conservation with Partners -->
+                    <div class="be-domain conservation">
+                        <div class="be-domain-header">🌿 Conservation & Climate Finance</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#00A651;">
+                                <h5>Mangrove Restoration & Conservation</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge natstate">Natural State</span>
+                                    <span class="partner-badge plan">Plan</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#2e7d32;">
+                                <h5>Upstream Forest Conservation</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge natstate">Natural State</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#1b5e20;">
+                                <h5>Climate Finance — Measurement & Verification</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge natstate">Natural State</span>
+                                    <span class="partner-badge meda">MEDA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Economic Empowerment with Partners -->
+                    <div class="be-domain economic">
+                        <div class="be-domain-header">💼 Economic Empowerment & Production</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#0072CE;">
+                                <h5>Seaweed Production</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                    <span class="partner-badge natstate">Natural State</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#003C71;">
+                                <h5>Gender Transformation / VSLAs / Upskilling</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                    <span class="partner-badge mission">Mission Inclusion</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#1976d2;">
+                                <h5>Value Chain Upgrading & Scale</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge meda">MEDA</span>
+                                    <span class="partner-badge natstate">Natural State</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#42a5f5;">
+                                <h5>Access to Capital & Financing</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge aecf">AECF</span>
+                                    <span class="partner-badge meda">MEDA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Policy with Partners -->
+                    <div class="be-domain policy">
+                        <div class="be-domain-header">📜 Policy & Governance</div>
+                        <div class="be-domain-body">
+                            <div class="be-node" style="border-left-color:#d4a843;">
+                                <h5>Monitoring & Evaluation</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#f9a825;">
+                                <h5>Research</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#ef6c00;">
+                                <h5>Coordination Platform</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge cican">CICaN</span>
+                                </div>
+                            </div>
+                            <div class="be-node" style="border-left-color:#e65100;">
+                                <h5>Local & Direct Advocacy</h5>
+                                <div class="node-details">
+                                    <span class="partner-badge plan">Plan</span>
+                                    <span class="partner-badge cican">CICaN</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="symbiotic-link">Symbiotic Relationship — Conservation outcomes reinforce Economic Empowerment outcomes and vice versa</div>
+
+                <div class="diagram-links">
+                    <a class="diagram-link-btn" href="#section5">🤝 Partner Details</a>
+                    <a class="diagram-link-btn" href="#section3">📊 Results Framework</a>
+                    <a class="diagram-link-btn" href="#section4">📅 Workplan</a>
+                    <a class="diagram-link-btn" href="#section7">📘 MEL & Research</a>
+                    <a class="diagram-link-btn" href="#section8">⚠️ Risk Analysis</a>
+                </div>
+            </div>
+
+            <!-- ====== REFLECTION QUESTIONS ====== -->
+            <h3 style="margin-top:30px;">Design Reflection Questions</h3>
+            <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:16px;">These questions guided the consortium design dialogue and can continue to inform partner engagement and program refinement.</p>
+
+            <div class="reflection-card">
+                <span class="q-num">1</span> <strong>Collaboration Vision</strong>
+                <p>What is your vision for collaboration among implementing agencies in Phase 2? Consider dividing by geography, assigning technical areas, designing technically connected interventions, or collaborating on strategic components (research, policy advocacy).</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">2</span> <strong>Scaling Definition</strong>
+                <p>What does "scaling up" mean for your organization? Expanding geographic coverage? Increasing participants? Introducing new interventions? Deepening engagement with existing participants?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">3</span> <strong>Intervention Scope</strong>
+                <p>What would scale up look like for your organization? What main intervention "buckets" or initiatives do you envision? What expected outcomes? How are these related to Phase 1 challenges and opportunities?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">4</span> <strong>Intervention Boundaries</strong>
+                <p>What boundaries or limits apply to your proposed interventions? How far in scope and expected outcomes? (e.g., "work with 7 strategic value chains, cluster 3,000 producers, enter high-value export markets")</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">5</span> <strong>Collaboration Synergies</strong>
+                <p>Based on your proposed intervention and knowledge of other partners' work, what collaboration opportunities, entry points, and synergies exist or should be explored?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">6</span> <strong>Strategic Elements</strong>
+                <p>A Phase 2 design should incorporate (i) research, (ii) coordinated evidence-based advocacy, and (iii) strengthened institutional coordination. What challenges, opportunities, or programming ideas exist in these areas?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">7</span> <strong>Design Resonance</strong>
+                <p>Does this design resonate with you? Do you feel identified with the overall vision? Is it about adding, removing, or reshuffling interventions — or a totally new vision?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">8</span> <strong>Organizational Reflection</strong>
+                <p>Do you see your organization's ideas reflected in this design? Which are reflected? Which are not? What would you keep or change?</p>
+            </div>
+            <div class="reflection-card">
+                <span class="q-num">9</span> <strong>Implementation Fit</strong>
+                <p>Which components would you implement? Which are a natural fit for the work you are currently doing under P4C? Which intervention areas would you stay away from? Why?</p>
             </div>
         </div>
     </div>
