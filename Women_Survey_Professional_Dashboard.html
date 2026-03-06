@@ -3918,7 +3918,7 @@
             <button class="tab-button" onclick="showOutputType(event, 'gjj')">GJJ</button>
             <button class="tab-button" onclick="showOutputType(event, 'vsla')">VSLA</button>
             <button class="tab-button" onclick="showOutputType(event, 'schools')">Schools</button>
-            <button class="tab-button" onclick="showOutputType(event, 'results-framework')">Results Framework</button>
+            <button class="tab-button" onclick="showOutputType(event, 'results-framework')">Outputs Progress</button>
         </div>
 
         <!-- PROJECT OUTPUT SECTION -->
@@ -4798,13 +4798,13 @@
             </div>
 
             <!-- ═══════════════════════════════════════════════════════════ -->
-            <!-- RESULTS FRAMEWORK — Complete Project Outputs Tracker       -->
+            <!-- OUTPUTS PROGRESS — Complete Project Outputs Tracker        -->
             <!-- ═══════════════════════════════════════════════════════════ -->
             <div id="output-results-framework" style="display:none;">
 
                 <!-- HEADER -->
                 <div class="output-header" style="background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);">
-                    <h2>COSME Project — Results Framework Dashboard</h2>
+                    <h2>COSME Project — Outputs Progress Dashboard</h2>
                     <p>Complete Project Outputs & Deliverables Tracker across all Immediate Outcomes</p>
                 </div>
 
@@ -5132,7 +5132,7 @@
                 </div>
 
             </div>
-            <!-- END RESULTS FRAMEWORK -->
+            <!-- END OUTPUTS PROGRESS -->
 
         </div>
 
@@ -12368,7 +12368,7 @@
             }
         }
 
-        // ====== RESULTS FRAMEWORK CHARTS ======
+        // ====== OUTPUTS PROGRESS CHARTS ======
         const rfChartInstances = {};
         function renderResultsFrameworkCharts() {
             Object.values(rfChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
