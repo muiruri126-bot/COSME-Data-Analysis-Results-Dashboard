@@ -374,58 +374,83 @@
         /* TABLES */
         .table-container {
             overflow-x: auto;
-            margin: 20px 0;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            margin: 22px 0;
+            border-radius: 12px;
+            border: 1px solid #d5dce6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            background: #fff;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.94rem;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.92rem;
             table-layout: auto;
         }
 
         thead {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            background: linear-gradient(135deg, #0e3a5f 0%, #186aab 100%);
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
 
         thead th {
-            padding: 14px 16px;
+            padding: 14px 18px;
             text-align: left;
-            font-weight: 600;
-            font-size: 0.82rem;
+            font-weight: 700;
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: normal;
-            word-break: break-word;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+            border-bottom: 2px solid rgba(255,255,255,0.15);
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
+        thead th:last-child { border-right: none; }
 
         tbody td {
-            padding: 13px 16px;
-            border-bottom: 1px solid var(--border);
+            padding: 12px 18px;
+            border-bottom: 1px solid #edf0f5;
+            border-right: 1px solid #f3f5f8;
             vertical-align: top;
             word-break: break-word;
-            line-height: 1.65;
+            line-height: 1.7;
+            color: #2c3e50;
+            transition: background 0.15s ease;
         }
+        tbody td:last-child { border-right: none; }
+        tbody td:first-child { font-weight: 600; }
 
-        tbody tr:nth-child(even) { background: #f9fbfd; }
-        tbody tr:hover { background: #eef5fb; }
+        tbody tr:nth-child(even) { background: #f7f9fc; }
+        tbody tr:hover { background: #e8f0fa; }
+
+        /* IMO / section-header rows */
+        tbody tr[style*='background:#f0faf0'] td,
+        tbody tr[style*='background:#e3f2fd'] td {
+            font-size: 0.88rem;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #c8e6c9;
+        }
+        tbody tr[style*='background:#e3f2fd'] td {
+            border-bottom-color: #bbdefb;
+        }
 
         .level-badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 5px;
-            font-size: 0.76rem;
-            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
 
-        .level-impact { background: #d4a843; color: white; }
-        .level-outcome { background: var(--primary); color: white; }
-        .level-output { background: var(--accent); color: white; }
+        .level-impact { background: linear-gradient(135deg, #c9952e, #e6b84d); color: white; }
+        .level-outcome { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; }
+        .level-output { background: linear-gradient(135deg, #1d8348, var(--accent)); color: white; }
 
         /* RISK MATRIX */
         .risk-high { color: #e74c3c; font-weight: 700; }
@@ -591,19 +616,26 @@
 
             /* Tables: scroll hint + shadow */
             .table-container { position: relative; }
+            .table-container::before {
+                content: '';
+                position: absolute; top: 0; right: 0; bottom: 0; width: 24px;
+                background: linear-gradient(to left, rgba(0,0,0,0.04), transparent);
+                pointer-events: none; z-index: 3; border-radius: 0 12px 12px 0;
+            }
             .table-container::after {
-                content: '← Scroll →';
+                content: '⟵ Scroll ⟶';
                 display: block;
                 text-align: center;
-                font-size: 0.7rem;
+                font-size: 0.68rem;
                 color: var(--text-light);
-                padding: 4px;
-                background: #f5f7fa;
-                border-radius: 0 0 8px 8px;
+                padding: 5px;
+                background: linear-gradient(to right, #f5f7fa, #eef1f6, #f5f7fa);
+                border-radius: 0 0 12px 12px;
+                letter-spacing: 1px;
             }
             table { font-size: 0.82rem; }
-            thead th { padding: 10px 10px; font-size: 0.72rem; }
-            tbody td { padding: 9px 10px; font-size: 0.82rem; }
+            thead th { padding: 11px 12px; font-size: 0.7rem; white-space: nowrap; }
+            tbody td { padding: 9px 12px; font-size: 0.82rem; }
 
             /* Inline 2-col grids → 1-col */
             [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
@@ -702,6 +734,8 @@
 
             /* ===== MOBILE TABLE → STACKED CARD LAYOUT ===== */
             .table-container::after { content: none; }
+            .table-container::before { display: none; }
+            .table-container { border: none; box-shadow: none; background: transparent; }
 
             .table-container table,
             .table-container thead,
@@ -721,40 +755,57 @@
 
             .table-container tbody tr {
                 background: #fff;
-                border: 1px solid var(--border);
+                border: 1px solid #dde3eb;
+                border-left: 4px solid var(--primary);
                 border-radius: 10px;
-                margin-bottom: 12px;
-                padding: 6px 0;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                margin-bottom: 14px;
+                padding: 8px 0;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             }
-            .table-container tbody tr:nth-child(even) { background: #fafbfd; }
+            .table-container tbody tr:nth-child(even) { background: #fafbfd; border-left-color: var(--accent); }
 
             .table-container tbody td {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                gap: 8px;
-                padding: 8px 14px;
+                gap: 10px;
+                padding: 9px 16px;
                 border-bottom: 1px solid #f0f2f5;
+                border-right: none;
                 font-size: 0.82rem;
-                line-height: 1.55;
+                line-height: 1.6;
                 text-align: right;
             }
             .table-container tbody td:last-child {
                 border-bottom: none;
+            }
+            .table-container tbody td:first-child {
+                background: #f5f8fc;
+                border-radius: 6px 6px 0 0;
+                font-size: 0.84rem;
             }
 
             .table-container tbody td::before {
                 content: attr(data-label);
                 font-weight: 700;
                 color: var(--primary);
-                font-size: 0.74rem;
+                font-size: 0.72rem;
                 text-transform: uppercase;
-                letter-spacing: 0.3px;
+                letter-spacing: 0.4px;
                 white-space: nowrap;
                 flex-shrink: 0;
                 text-align: left;
                 min-width: 90px;
+            }
+
+            /* IMO/section-header rows on mobile */
+            .table-container tbody tr[style*='background:#f0faf0'] {
+                border-left-color: #00A651;
+                background: #f0faf0 !important;
+            }
+            .table-container tbody tr[style*='background:#e3f2fd'] {
+                border-left-color: #0072CE;
+                background: #e3f2fd !important;
             }
 
             /* Tool-tables in MERL toolkit — same treatment */
@@ -776,25 +827,29 @@
 
             .tool-table tbody tr {
                 background: #fff;
-                border: 1px solid #e8ecf0;
+                border: 1px solid #dde3eb;
+                border-left: 4px solid var(--primary);
                 border-radius: 8px;
-                margin-bottom: 10px;
-                padding: 4px 0;
+                margin-bottom: 12px;
+                padding: 6px 0;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.04);
             }
+            .tool-table tbody tr:nth-child(even) { border-left-color: var(--accent); }
 
             .tool-table tbody td {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                gap: 6px;
-                padding: 6px 12px;
+                gap: 8px;
+                padding: 7px 14px;
                 border-bottom: 1px solid #f0f2f5;
+                border-right: none;
                 font-size: 0.78rem;
                 text-align: right;
                 white-space: normal;
             }
             .tool-table tbody td:last-child { border-bottom: none; }
-            .tool-table tbody td:first-child { white-space: normal; }
+            .tool-table tbody td:first-child { white-space: normal; background: #f5f8fc; border-radius: 4px 4px 0 0; }
 
             .tool-table tbody td::before {
                 content: attr(data-label);
@@ -802,7 +857,7 @@
                 color: var(--primary);
                 font-size: 0.7rem;
                 text-transform: uppercase;
-                letter-spacing: 0.3px;
+                letter-spacing: 0.4px;
                 white-space: nowrap;
                 flex-shrink: 0;
                 text-align: left;
@@ -1872,21 +1927,26 @@
         .tool-meta p { margin: 4px 0; font-size: 0.92rem; line-height: 1.7; }
 
         .tool-table {
-            width: 100%; border-collapse: collapse; font-size: 0.88rem;
+            width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.88rem;
             display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
         }
         .tool-table th {
-            background: var(--primary); color: white;
-            padding: 10px 12px; text-align: left; font-weight: 600;
-            font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;
-            position: sticky; top: 0;
+            background: linear-gradient(135deg, #0e3a5f, #186aab); color: white;
+            padding: 12px 14px; text-align: left; font-weight: 700;
+            font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.5px;
+            position: sticky; top: 0; border-right: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(255,255,255,0.15);
         }
+        .tool-table th:last-child { border-right: none; }
         .tool-table td {
-            padding: 10px 12px; border-bottom: 1px solid #eef0f4;
-            vertical-align: top; line-height: 1.65;
+            padding: 11px 14px; border-bottom: 1px solid #edf0f5;
+            border-right: 1px solid #f3f5f8;
+            vertical-align: top; line-height: 1.7; color: #2c3e50;
+            transition: background 0.15s ease;
         }
-        .tool-table tr:nth-child(even) { background: #fafbfd; }
-        .tool-table tr:hover { background: #f0f5ff; }
+        .tool-table td:last-child { border-right: none; }
+        .tool-table tr:nth-child(even) { background: #f7f9fc; }
+        .tool-table tr:hover { background: #e8f0fa; }
         .tool-table td:first-child { font-weight: 600; color: var(--primary); white-space: nowrap; }
 
         .consent-block {
@@ -1914,9 +1974,12 @@
             .toolkit-tab { padding: 8px 14px; font-size: 0.78rem; }
             .tool-header h3 { font-size: 0.92rem; }
             .tool-table { font-size: 0.78rem; }
-            .tool-table th, .tool-table td { padding: 6px 8px; }
+            .tool-table th, .tool-table td { padding: 8px 10px; }
             .tool-body { padding: 0 12px; }
             .tool-card.tool-open .tool-body { padding: 14px 12px 20px; }
+        }
+        @media (max-width: 480px) {
+            .tool-table { font-size: 0.75rem; }
         }
         @media (max-width: 480px) {
             .toolkit-tab { padding: 6px 10px; font-size: 0.72rem; border-radius: 18px; }
