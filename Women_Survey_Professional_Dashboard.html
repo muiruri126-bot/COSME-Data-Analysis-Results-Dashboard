@@ -9247,7 +9247,7 @@
                 title: 'Mangrove Resources Survey',
                 footerTitle: '<strong>Mangrove Resources Survey — Resource Adequacy Assessment by Gender</strong>',
                 footerSample: 'Mangrove Restoration Groups | Female & Male Members | Resource Adequacy Threshold Analysis',
-                renderFn: () => renderMangroveResourcesCharts()
+                renderFn: () => window.renderMangroveResourcesCharts()
             }
         };
 
@@ -17841,7 +17841,7 @@
         }
 
         // ====== MANGROVE RESOURCES TAB SWITCHING ======
-        function showMangroveResTab(evt, tabName) {
+        window.showMangroveResTab = function(evt, tabName) {
             const tabContents = document.querySelectorAll('.mangrove-res-tab-content');
             tabContents.forEach(tab => {
                 tab.classList.remove('active');
@@ -17868,7 +17868,7 @@
         // ====== MANGROVE RESOURCES CHART INSTANCES ======
         const mgrChartInstances = {};
 
-        function renderMangroveResourcesCharts() {
+        window.renderMangroveResourcesCharts = function() {
             Object.values(mgrChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
 
             const MGR = {
