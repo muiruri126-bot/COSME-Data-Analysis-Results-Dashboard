@@ -8788,8 +8788,49 @@
                     <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px;">
                         <div class="chart-wrapper">
                             <div class="chart-title">Relational Indicators — "Always" Frequency (Baseline vs Endline)</div>
-                            <div class="chart-container" style="height: 340px;">
-                                <canvas id="awp-chart-relational-always"></canvas>
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 0.92em;">
+                                    <thead>
+                                        <tr style="background: linear-gradient(135deg, #4A148C, #6A1B9A); color: #fff;">
+                                            <th style="padding: 12px 14px; text-align: left; border-radius: 8px 0 0 0;">Indicator</th>
+                                            <th style="padding: 12px 14px; text-align: center;">Baseline</th>
+                                            <th style="padding: 12px 14px; text-align: center;">Endline</th>
+                                            <th style="padding: 12px 14px; text-align: center; border-radius: 0 8px 0 0;">Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="background: #F3E5F5;">
+                                            <td style="padding: 10px 14px; border-bottom: 1px solid #E1BEE7; font-weight: 500;">Respected by Partner</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #7B1FA2;">43.1%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #00897B;">39.1%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 700; color: #C62828;">−4.0pp</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px 14px; border-bottom: 1px solid #E1BEE7; font-weight: 500;">Voice Disagreement</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #7B1FA2;">26.9%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #00897B;">27.1%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 700; color: #2E7D32;">+0.2pp</td>
+                                        </tr>
+                                        <tr style="background: #F3E5F5;">
+                                            <td style="padding: 10px 14px; border-bottom: 1px solid #E1BEE7; font-weight: 500;">Laugh Together</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #7B1FA2;">38.4%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #00897B;">42.8%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 700; color: #2E7D32;">+4.4pp</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px 14px; border-bottom: 1px solid #E1BEE7; font-weight: 500;">Share Feelings</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #7B1FA2;">31.2%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #00897B;">35.6%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 700; color: #2E7D32;">+4.4pp</td>
+                                        </tr>
+                                        <tr style="background: #F3E5F5;">
+                                            <td style="padding: 10px 14px; border-bottom: 1px solid #E1BEE7; font-weight: 500;">Consent Respect</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #7B1FA2;">45.8%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 600; color: #00897B;">52.3%</td>
+                                            <td style="padding: 10px 14px; text-align: center; border-bottom: 1px solid #E1BEE7; font-weight: 700; color: #2E7D32;">+6.5pp</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="chart-insight">Consent respect improved 45.8%→52.3% (+6.5pp). Laugh together: 38.4%→42.8%. Share feelings: 31.2%→35.6%. Some indicators stable or slightly decreased.</div>
                         </div>
@@ -19600,26 +19641,6 @@
                         x: { stacked: true },
                         y: { stacked: true, max: 100, title: { display: true, text: '% (Endline Distribution)' } }
                     }
-                }
-            });
-
-            // 7. Relational Indicators — "Always" Frequency
-            awpChart('awp-chart-relational-always', {
-                type: 'bar',
-                data: {
-                    labels: ['Respected by\nPartner', 'Voice\nDisagreement', 'Laugh\nTogether', 'Share\nFeelings', 'Consent\nRespect'],
-                    datasets: [
-                        { label: 'Baseline', data: [43.1, 26.9, 38.4, 31.2, 45.8], backgroundColor: AWP.baseline },
-                        { label: 'Endline', data: [39.1, 27.1, 42.8, 35.6, 52.3], backgroundColor: AWP.midline }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top' },
-                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
-                    },
-                    scales: { y: { beginAtZero: true, max: 65, title: { display: true, text: '% "Always"' } } }
                 }
             });
 
