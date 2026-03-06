@@ -3930,6 +3930,8 @@
         <!-- AWP PRESENTATION SUB-SELECTOR (Topics) -->
         <div class="tabs-container" id="awp-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showAWPType(event, 'lifeskills')" style="background: #4A148C; color: #fff;">A. Life Skills & Psychosocial Empowerment</button>
+            <button class="tab-button" onclick="showAWPType(event, 'socialnorms')">B. Social Norms & Gender Attitudes</button>
+            <button class="tab-button" onclick="showAWPType(event, 'climate')">C. Climate Change & NbS Knowledge</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -9045,6 +9047,424 @@
 
             </div>
             <!-- END awp-lifeskills -->
+
+            <!-- B. SOCIAL NORMS & GENDER ATTITUDES -->
+            <div id="awp-socialnorms" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #1565C0 0%, #1976D2 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">B. Social Norms & Gender Attitudes</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Gender Justice Journey — Shifting Norms Around Roles, Responsibilities & Decision-Making</p>
+                </div>
+
+                <!-- SOURCE 1: WOMEN SURVEY — ROLES & RESPONSIBILITIES -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #BBDEFB;">
+                        <span style="font-size: 1.3em;">👩</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Source: Women COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Percentage of women stating roles and responsibilities should be 'Joint, both men and women'</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women — Roles & Responsibilities Should Be Joint (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 420px;">
+                                <canvas id="awp-chart-women-roles"></canvas>
+                            </div>
+                            <div class="chart-insight">All 10 role categories show dramatic increases towards joint responsibility. Largest gain: Prepare & cook food +58.8pp (12.5%→71.3%). Fetch water +56.4pp (21.4%→77.8%). Average gain across all roles: +47.5pp.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 2: WOMEN SURVEY — DECISION MAKING -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #BBDEFB;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Source: Women COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Percentage of women stating decision-making should be 'Joint, both men and women'</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women — Decision-Making Should Be Joint (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 450px;">
+                                <canvas id="awp-chart-women-decisions"></canvas>
+                            </div>
+                            <div class="chart-insight">Joint decision-making increased across all 11 categories. Largest gain: Go to market +42.6pp (28.0%→70.6%). Routine household purchases +27.5pp (35.0%→62.5%). All categories now at 62.5% or above.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 3: MEN SURVEY — SOCIAL NORMS STATEMENTS -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #BBDEFB;">
+                        <span style="font-size: 1.3em;">👨</span>
+                        <div>
+                            <h3 style="margin: 0; color: #0D47A1; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Percentage of men agreeing or strongly agreeing with social norms statements</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men — Agreement with Social Norms Statements (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 520px;">
+                                <canvas id="awp-chart-men-norms"></canvas>
+                            </div>
+                            <div class="chart-insight">Harmful norms declining significantly: "Man's job to earn money" dropped -34.7pp (63.1%→28.4%). "Inappropriate dress = her fault" dropped -36.9pp (67.6%→30.7%). "Only men should drive boats" dropped -36.5pp (59.2%→22.7%). Progressive norms strengthened: "Women stronger = communities stronger" 76.1%→79.5%.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 4: MEN SURVEY — ROLES & RESPONSIBILITIES -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #BBDEFB;">
+                        <span style="font-size: 1.3em;">👨</span>
+                        <div>
+                            <h3 style="margin: 0; color: #0D47A1; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Percentage of men stating roles and responsibilities should be 'Joint, both men and women'</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men — Roles & Responsibilities Should Be Joint (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 420px;">
+                                <canvas id="awp-chart-men-roles"></canvas>
+                            </div>
+                            <div class="chart-insight">Men's views on joint roles shifted dramatically. Clean/sweep house +59.6pp (17.7%→77.3%). Prepare & cook food +50.5pp (17.7%→68.2%). Fetch firewood +56.8pp (14.8%→71.6%). Care for children +46.2pp (33.3%→79.5%). Average gain: +49.3pp.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 5: MEN SURVEY — DECISION MAKING -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #BBDEFB;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <div>
+                            <h3 style="margin: 0; color: #0D47A1; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Percentage of men stating decision-making should be 'Joint, both men and women'</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men — Decision-Making Should Be Joint (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 450px;">
+                                <canvas id="awp-chart-men-decisions"></canvas>
+                            </div>
+                            <div class="chart-insight">Joint decision-making endorsed by over 70% of men in all 11 categories at midline. Household loans +21.4pp (75.2%→96.6%). Routine purchases +34.1pp (54.5%→88.6%). Invest money +19.5pp (78.2%→97.7%). Highest: Invest money borrowed/saved 97.7%.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border-radius: 12px; padding: 28px; margin-bottom: 28px; border: 2px solid #64B5F6;">
+                    <h3 style="margin: 0 0 18px 0; color: #1565C0; font-size: 1.2em;">📋 Summary, Highlights & Insights</h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <!-- Key Highlights -->
+                        <div style="background: #fff; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+                            <h4 style="margin: 0 0 14px 0; color: #1565C0; font-size: 1.05em;">🔑 Key Highlights</h4>
+                            <ul style="padding-left: 18px; color: #444; line-height: 1.9; margin: 0;">
+                                <li><strong>Women — Joint roles:</strong> All 10 household role categories surged toward joint responsibility. Preparing food jumped <strong>12.5% → 71.3%</strong> (+58.8pp); fetching water <strong>21.4% → 77.8%</strong> (+56.4pp)</li>
+                                <li><strong>Women — Joint decisions:</strong> All 11 decision categories improved. "Go to market" rose <strong>28.0% → 70.6%</strong> (+42.6pp). Financial decision-making (savings, loans, investments) now at 87–89%</li>
+                                <li><strong>Men — Harmful norms declining:</strong> "Man's job to earn money; woman to look after home" dropped <strong>63.1% → 28.4%</strong> (−34.7pp). "Only men should drive boats" dropped <strong>59.2% → 22.7%</strong> (−36.5pp)</li>
+                                <li><strong>Men — Joint roles:</strong> Cooking as joint duty surged <strong>17.7% → 68.2%</strong> (+50.5pp). Cleaning house <strong>17.7% → 77.3%</strong> (+59.6pp). All 10 categories now above 68%</li>
+                                <li><strong>Men — Joint decisions:</strong> "Invest money borrowed or saved" reached <strong>97.7%</strong> at midline. "Household loans" reached <strong>96.6%</strong>. All 11 categories now above 70%</li>
+                                <li><strong>Embarrassment about domestic chores</strong> (men) dropped from <strong>30.4% → 11.4%</strong> (−19.0pp) — practical norm change in action</li>
+                                <li><strong>Progressive statement maintained:</strong> "Stronger women = stronger communities" held at <strong>76.1% → 79.5%</strong> — foundational belief intact</li>
+                                <li><strong>"When women gain rights, men lose"</strong> declined from <strong>28.4% → 13.6%</strong> (−14.8pp) — zero-sum thinking eroding</li>
+                            </ul>
+                        </div>
+
+                        <!-- Strategic Insights -->
+                        <div style="background: #fff; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+                            <h4 style="margin: 0 0 14px 0; color: #1565C0; font-size: 1.05em;">💡 Strategic Insights</h4>
+                            <ul style="padding-left: 18px; color: #444; line-height: 1.9; margin: 0;">
+                                <li><strong>Convergent norms shift:</strong> Both men and women independently report dramatic increases in endorsing joint roles and joint decision-making — the shift is not one-sided but mutual and reinforcing</li>
+                                <li><strong>Domestic sphere breakthrough:</strong> Cooking, cleaning, and childcare — traditionally the most gendered domestic tasks — showed the largest gains (50–60pp), indicating deep norm change beyond surface attitudes</li>
+                                <li><strong>Financial empowerment convergence:</strong> Joint financial decision-making (savings, loans, investments) now exceeds 87% for both genders — financial partnerships are becoming the norm rather than the exception</li>
+                                <li><strong>Structural masculinity norms eroding:</strong> The dramatic drops in "man's job to earn money" (−34.7pp), "only men drive boats" (−36.5pp), and "embarrassing for men to do chores" (−19pp) indicate structural masculinity norms are actively being renegotiated</li>
+                                <li><strong>GBV-related attitudes improving:</strong> "Dressed inappropriately = her fault" halved from 67.6% to 30.7% (−36.9pp) — a critical shift for violence prevention. However, 30.7% remaining suggests continued programming needed</li>
+                                <li><strong>Remaining resistance area:</strong> "Men have better business ideas" only decreased from 41.9% to 38.6% (−3.3pp) and "Good wife cooks/cleans" increased 64.6%→69.3% — these represent sticky traditional norms that may need targeted intervention</li>
+                                <li><strong>Programme design validation:</strong> The parallel GJJ programming for both men and women is producing convergent results — men and women are shifting together toward more equitable attitudes, reducing the risk of backlash from one-sided empowerment</li>
+                                <li><strong>Scale of transformation:</strong> Average gains of 47–49pp across all role categories for both genders within one programme cycle represents unusually rapid norm change — suggesting strong programme design and community engagement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-socialnorms -->
+
+            <!-- C. CLIMATE CHANGE & NBS KNOWLEDGE -->
+            <div id="awp-climate" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #2E7D32 0%, #388E3C 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">C. Climate Change & NbS Knowledge</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Awareness of Climate Change, Nature-based Solutions & Ecosystem Restoration</p>
+                </div>
+
+                <!-- SOURCE 1: WOMEN — CLIMATE CHANGE AWARENESS -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌍</span>
+                        <div>
+                            <h3 style="margin: 0; color: #2E7D32; font-size: 1.1em;">Source: Women COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Climate Change Awareness & Effects Identification</small>
+                        </div>
+                    </div>
+
+                    <!-- Heard of Climate Change KPI -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px;">
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of Climate Change (Baseline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">60.5%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Not Heard (Baseline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #E65100;">39.5%</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women — Effects of Climate Change on Environment (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 450px;">
+                                <canvas id="awp-chart-women-climate-effects"></canvas>
+                            </div>
+                            <div class="chart-insight">Increased drought recognition rose 54.7%→75.9% (+21.2pp). Hotter temperatures 39.5%→67.5% (+28.0pp). "I do not know" dropped from 21.2% to 4.1% (−17.1pp). Understanding of ocean-related impacts improved but remains low.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 2: WOMEN — NBS AWARENESS -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌱</span>
+                        <div>
+                            <h3 style="margin: 0; color: #2E7D32; font-size: 1.1em;">Source: Women COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Nature-based Solutions (NbS) Awareness & Examples</small>
+                        </div>
+                    </div>
+
+                    <!-- NbS Awareness KPIs -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px;">
+                        <div style="padding: 16px; background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of NbS (Baseline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #E65100;">23.1%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of NbS (Midline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">77.8%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+54.7pp</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Women — Examples of NbS (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-women-nbs-examples"></canvas>
+                            </div>
+                            <div class="chart-insight">Reforestation recognition surged 13.6%→64.1% (+50.5pp). Mangrove restoration 10.1%→40.0% (+29.9pp). "I do not know" dropped 77.1%→22.8% (−54.3pp). Sustainable agriculture up 10.5%→19.4%.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Women — Awareness of NbS (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-women-nbs-aware"></canvas>
+                            </div>
+                            <div class="chart-insight">NbS awareness tripled from 23.1% to 77.8%. "Do not know" NbS plunged from 76.9% to 22.2% — a +54.7pp improvement in foundational NbS knowledge.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 3: WOMEN — ECOSYSTEM RESTORATION KNOWLEDGE -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌿</span>
+                        <div>
+                            <h3 style="margin: 0; color: #2E7D32; font-size: 1.1em;">Source: Women COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Knowledge of Mangrove Restoration, Seaweed Farming & Forest Management</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Women — Mangrove Restoration Awareness</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-women-mangrove"></canvas>
+                            </div>
+                            <div class="chart-insight">Full understanding (restoration + importance): 20.9%→60.7% (+39.8pp). "Not heard" collapsed from 33.8% to 3.8%. Near-universal mangrove awareness at midline (96.2%).</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Women — Seaweed Farming Awareness</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-women-seaweed"></canvas>
+                            </div>
+                            <div class="chart-insight">Full understanding (farming + economic/ecosystem benefits): 15.2%→41.0% (+25.8pp). "Not heard" dropped from 66.0% to 39.9%. Seaweed awareness still has room for growth.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Women — Forest Management & Conservation</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-women-forest"></canvas>
+                            </div>
+                            <div class="chart-insight">Forest management awareness reached near-universal: 65.7%→97.8% (+32.1pp). "Not heard" collapsed from 34.3% to just 2.2%. Forest-related programming showing strongest ecosystem knowledge gains.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 4: MEN — CLIMATE CHANGE AWARENESS -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌍</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1B5E20; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Climate Change Awareness & Effects Identification</small>
+                        </div>
+                    </div>
+
+                    <!-- Men - Heard of Climate Change KPIs -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px;">
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of CC (Baseline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">77.8%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #A5D6A7); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of CC (Midline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">100.0%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+22.2pp</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men — Effects of Climate Change on Environment (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 450px;">
+                                <canvas id="awp-chart-men-climate-effects"></canvas>
+                            </div>
+                            <div class="chart-insight">Increased drought recognition rose 66.9%→80.7% (+13.8pp). Hotter temperatures 53.3%→76.1% (+22.8pp). Extreme weather events 18.9%→37.5% (+18.6pp). "I do not know" nearly eliminated: 11.3%→1.1%.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 5: MEN — NBS AWARENESS -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌱</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1B5E20; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Nature-based Solutions (NbS) Awareness & Examples</small>
+                        </div>
+                    </div>
+
+                    <!-- NbS Awareness KPIs - Men -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px;">
+                        <div style="padding: 16px; background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of NbS (Baseline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #E65100;">42.4%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Heard of NbS (Midline)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">89.8%</div>
+                        </div>
+                        <div style="padding: 16px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 0.78em; color: #666; font-weight: 600; margin-bottom: 4px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+47.4pp</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men — Examples of NbS (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-men-nbs-examples"></canvas>
+                            </div>
+                            <div class="chart-insight">Reforestation recognition surged 57.1%→81.0% (+23.9pp). Mangrove restoration 43.6%→57.0% (+13.4pp). Sustainable agriculture 27.9%→39.2% (+11.3pp). "I do not know" eliminated: 1.8%→0.0%.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOURCE 6: MEN — ECOSYSTEM RESTORATION KNOWLEDGE -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #C8E6C9;">
+                        <span style="font-size: 1.3em;">🌿</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1B5E20; font-size: 1.1em;">Source: Men COSME Survey (Midline)</h3>
+                            <small style="color: #888;">Knowledge of Mangrove Restoration, Seaweed Farming & Forest Management</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Men — Mangrove Restoration Awareness</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-men-mangrove"></canvas>
+                            </div>
+                            <div class="chart-insight">Full understanding (restoration + importance): 27.6%→64.5% (+36.9pp). "Not heard" collapsed from 17.3% to 3.2%. Near-universal mangrove awareness (96.8%).</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Men — Seaweed Farming Awareness</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-men-seaweed"></canvas>
+                            </div>
+                            <div class="chart-insight">Full understanding (farming + economic/ecosystem benefits): 18.5%→43.5% (+25.0pp). "Not heard" dropped 51.1%→41.9%. Similar seaweed awareness trajectory as women.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Men — Forest Management & Conservation</div>
+                            <div class="chart-container" style="height: 340px;">
+                                <canvas id="awp-chart-men-forest"></canvas>
+                            </div>
+                            <div class="chart-insight">Forest management awareness reached universal: 75.7%→100.0% (+24.3pp). All men now aware of forest management and conservation at midline.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 12px; padding: 28px; margin-bottom: 28px; border: 2px solid #66BB6A;">
+                    <h3 style="margin: 0 0 18px 0; color: #2E7D32; font-size: 1.2em;">📋 Summary, Highlights & Insights</h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <!-- Key Highlights -->
+                        <div style="background: #fff; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+                            <h4 style="margin: 0 0 14px 0; color: #2E7D32; font-size: 1.05em;">🔑 Key Highlights</h4>
+                            <ul style="padding-left: 18px; color: #444; line-height: 1.9; margin: 0;">
+                                <li><strong>Climate change awareness:</strong> Women baseline 60.5%, men baseline 77.8% rising to <strong>100%</strong> at midline. Universal climate awareness achieved among men</li>
+                                <li><strong>NbS awareness — Women:</strong> Tripled from <strong>23.1% → 77.8%</strong> (+54.7pp). "Do not know" cut from 76.9% to 22.2%</li>
+                                <li><strong>NbS awareness — Men:</strong> Rose from <strong>42.4% → 89.8%</strong> (+47.4pp). "Do not know" NbS examples eliminated (1.8%→0.0%)</li>
+                                <li><strong>Top recognised effect:</strong> Increased drought — women 54.7%→75.9%; men 66.9%→80.7%. Hotter temperatures — women 39.5%→67.5%; men 53.3%→76.1%</li>
+                                <li><strong>Reforestation:</strong> Women surged 13.6%→64.1% (+50.5pp). Men: 57.1%→81.0%. Top NbS example for both genders</li>
+                                <li><strong>Mangrove restoration:</strong> Full understanding — women 20.9%→60.7% (+39.8pp); men 27.6%→64.5% (+36.9pp). "Not heard" collapsed to 3–4%</li>
+                                <li><strong>Forest management:</strong> Women 65.7%→97.8%; Men 75.7%→100.0%. Near-universal awareness achieved for both genders</li>
+                                <li><strong>Seaweed farming:</strong> Full understanding — women 15.2%→41.0% (+25.8pp); men 18.5%→43.5% (+25.0pp). "Not heard" still at ~40% — largest remaining awareness gap</li>
+                                <li><strong>"I do not know" eliminated:</strong> Climate effects "don't know" dropped to 4.1% (women) and 1.1% (men). NbS "don't know" dropped to 0% for men</li>
+                            </ul>
+                        </div>
+
+                        <!-- Strategic Insights -->
+                        <div style="background: #fff; border-radius: 10px; padding: 22px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+                            <h4 style="margin: 0 0 14px 0; color: #2E7D32; font-size: 1.05em;">💡 Strategic Insights</h4>
+                            <ul style="padding-left: 18px; color: #444; line-height: 1.9; margin: 0;">
+                                <li><strong>Knowledge revolution:</strong> NbS awareness among women tripling (23.1%→77.8%) represents one of the most dramatic knowledge shifts in the programme — community-level environmental literacy is transforming rapidly</li>
+                                <li><strong>Gender knowledge gap closing:</strong> Baseline showed men consistently ahead of women in environmental knowledge; midline shows convergence — women narrowing the gap in NbS examples, climate effects, and restoration awareness</li>
+                                <li><strong>Terrestrial vs marine knowledge disparity:</strong> Forest management (97–100%) and reforestation (64–81%) vastly outpace seaweed farming (41–44%) and ocean-related impacts (1–23%). Programming may need to strengthen marine/coastal literacy modules</li>
+                                <li><strong>Experiential learning effect:</strong> The strongest knowledge gains align with visible, hands-on programme activities (mangrove planting, forest nurseries, reforestation) — suggesting experiential learning drives knowledge more effectively than classroom-only approaches</li>
+                                <li><strong>Scientific literacy gap:</strong> Ocean acidification (0.6–1.3%), species migration (2–5%), and vector-borne diseases (1–5%) remain poorly understood — more complex climate science concepts need simplified, visual communication strategies</li>
+                                <li><strong>Seaweed opportunity:</strong> With 40% of both genders still not having heard of sustainable seaweed farming, this represents the largest remaining awareness gap and a clear opportunity for an intensified seaweed module</li>
+                                <li><strong>Foundation for action:</strong> Near-universal awareness of climate change and NbS creates fertile ground for the programme's next phase — transitioning from knowledge to practice and sustained community-led conservation behaviours</li>
+                                <li><strong>Programme attribution strong:</strong> The parallel, large-scale improvements across both genders and multiple knowledge domains (NbS +47–55pp, reforestation +24–51pp, mangrove +37–40pp) provide strong evidence of programme impact rather than secular trends</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-climate -->
 
         </div>
         <!-- END AWP PRESENTATION SECTION -->
@@ -19635,8 +20055,7 @@
         const awpChartInstances = {};
 
         window.showAWPType = function(evt, typeName) {
-            // For now, only 'lifeskills' tab — future tabs will be added here
-            const allTypes = ['lifeskills'];
+            const allTypes = ['lifeskills', 'socialnorms', 'climate'];
             allTypes.forEach(t => {
                 const el = document.getElementById('awp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -19653,6 +20072,9 @@
                 evt.currentTarget.style.background = '#4A148C';
                 evt.currentTarget.style.color = '#fff';
             }
+            // Render charts for the selected tab
+            if (typeName === 'socialnorms') renderAWPSocialNormsCharts();
+            if (typeName === 'climate') renderAWPClimateCharts();
         };
 
         window.renderAWPCharts = function() {
@@ -19852,6 +20274,408 @@
                         datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
                     },
                     scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% Strongly Agree' } } }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION B: SOCIAL NORMS CHARTS ======
+        window.renderAWPSocialNormsCharts = function() {
+            const AWP = {
+                baseline: '#7B1FA2',
+                midline: '#00897B',
+                menBaseline: '#1565C0',
+                menMidline: '#F57C00'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Women — Roles & Responsibilities
+            awpChart('awp-chart-women-roles', {
+                type: 'bar',
+                data: {
+                    labels: ['Fetch\nFirewood', 'Main Income\nProvider', 'Clean/Sweep\nHouse', 'Look After\nLivestock', 'Look After\nIll/Elderly', 'Maintain\nGarden', 'Prepare &\nCook Food', 'Care for\nChildren', 'Fetch\nWater', 'Wash\nClothes'],
+                    datasets: [
+                        { label: 'Baseline', data: [14.4, 22.7, 13.5, 43.3, 37.4, 57.2, 12.5, 26.5, 21.4, 15.6], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [60.6, 64.7, 66.9, 66.9, 72.5, 78.8, 71.3, 72.2, 77.8, 67.8], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 100, title: { display: true, text: '% Joint, Both Men and Women' } },
+                        y: { ticks: { font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Women — Decision Making
+            awpChart('awp-chart-women-decisions', {
+                type: 'bar',
+                data: {
+                    labels: ['Routine HH\nPurchases', 'Women Work\non Farm', 'Use Main\nHH Income', 'Women Go\nto Market', 'Routine Work\nMangrove/Seaweed', 'Using HH\nSavings', 'Invest Money\nBorrowed/Saved', 'Education\nof Children', 'Large HH\nPurchases', 'Start Small\nBusiness', 'HH Take\nOut Loan'],
+                    datasets: [
+                        { label: 'Baseline', data: [35.0, 52.7, 64.2, 28.0, 46.7, 69.8, 71.8, 80.0, 51.8, 72.2, 72.2], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [62.5, 73.8, 83.1, 70.6, 72.5, 87.2, 88.4, 86.6, 82.8, 89.1, 88.8], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 110, title: { display: true, text: '% Joint, Both Men and Women' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Men — Social Norms Statements
+            awpChart('awp-chart-men-norms', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Woman earns income,\nhusband handles money',
+                        'Men have better\nbusiness ideas',
+                        "Man's job: money;\nWoman's job: home",
+                        'Dressed inappropriately =\nher fault',
+                        'Good wife cooks\n& cleans',
+                        'Embarrassing for men\nto do chores',
+                        'Planting is\nwomens work',
+                        'Ecosystem restoration\nis womens work',
+                        'Only men should\ndrive boats',
+                        'OK for women to cry,\nnot for men',
+                        'Support people who\nexperience violence',
+                        'Women gain rights,\nmen lose',
+                        'Stronger women =\nstronger communities'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [41.9, 41.9, 63.1, 67.6, 64.6, 30.4, 15.6, 12.4, 59.2, 35.4, 95.2, 28.4, 76.1], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [19.3, 38.6, 28.4, 30.7, 69.3, 11.4, 5.7, 5.7, 22.7, 28.4, 87.5, 13.6, 79.5], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 110, title: { display: true, text: '% Agree / Strongly Agree' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Men — Roles & Responsibilities
+            awpChart('awp-chart-men-roles', {
+                type: 'bar',
+                data: {
+                    labels: ['Prepare &\nCook Food', 'Clean/Sweep\nHouse', 'Look After\nLivestock', 'Maintain\nGarden', 'Look After\nIll/Elderly', 'Fetch\nFirewood', 'Fetch\nWater', 'Wash\nClothes', 'Main Income\nProvider', 'Care for\nChildren'],
+                    datasets: [
+                        { label: 'Baseline', data: [17.7, 17.7, 29.2, 61.1, 52.5, 14.8, 29.8, 20.6, 18.6, 33.3], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [68.2, 77.3, 73.9, 83.0, 85.2, 71.6, 79.5, 73.9, 69.3, 79.5], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 100, title: { display: true, text: '% Joint, Both Men and Women' } },
+                        y: { ticks: { font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Men — Decision Making
+            awpChart('awp-chart-men-decisions', {
+                type: 'bar',
+                data: {
+                    labels: ['Start Small\nBusiness', 'Large HH\nPurchases', 'Using HH\nSavings', 'HH Take\nOut Loan', 'Education\nof Children', 'Routine HH\nPurchases', 'Routine Work\nMangrove/Seaweed', 'Use Main\nHH Income', 'Women Go\nto Market', 'Women Work\non Farm', 'Invest Money\nBorrowed/Saved'],
+                    datasets: [
+                        { label: 'Baseline', data: [73.1, 59.6, 69.7, 75.2, 81.7, 54.5, 63.8, 72.6, 46.4, 74.4, 78.2], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [81.8, 89.8, 90.9, 96.6, 95.5, 88.6, 84.1, 90.9, 70.5, 78.4, 97.7], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 110, title: { display: true, text: '% Joint, Both Men and Women' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION C: CLIMATE CHANGE & NBS CHARTS ======
+        window.renderAWPClimateCharts = function() {
+            const AWP = {
+                baseline: '#7B1FA2',
+                midline: '#2E7D32',
+                menBaseline: '#1565C0',
+                menMidline: '#F57C00'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Women — Climate Change Effects
+            awpChart('awp-chart-women-climate-effects', {
+                type: 'bar',
+                data: {
+                    labels: ['Hotter\nTemperatures', 'Extreme Weather\nEvents', 'Increased\nDrought', 'Warming of\nOceans', 'Sea Level\nRise', 'Loss of\nSpecies', 'Migration\nof Species', 'Animal Migration\nPatterns', 'Disease &\nAlgal Blooms', 'Ocean\nAcidification', 'Species Invasions\n& Diseases', 'I Do Not\nKnow'],
+                    datasets: [
+                        { label: 'Baseline', data: [39.5, 25.5, 54.7, 2.5, 7.1, 5.1, 2.1, 3.5, 2.3, 0.6, 4.0, 21.2], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [67.5, 28.8, 75.9, 15.0, 8.1, 15.3, 1.3, 2.2, 3.8, 1.3, 0.9, 4.1], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 90, title: { display: true, text: '% Identifying Effect' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Women — NbS Examples
+            awpChart('awp-chart-women-nbs-examples', {
+                type: 'bar',
+                data: {
+                    labels: ['Mangrove\nRestoration', 'Coral Reef\nRestoration', 'Reforestation', 'Sustainable\nSeaweed', 'I Do Not\nKnow', 'Rainwater\nHarvesting', 'Sustainable\nAgriculture', 'Solar\nEnergy'],
+                    datasets: [
+                        { label: 'Baseline', data: [10.1, 2.4, 13.6, 4.7, 77.1, 6.4, 10.5, 2.3], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [40.0, 3.4, 64.1, 13.4, 22.8, 13.8, 19.4, 9.1], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 90, title: { display: true, text: '% Providing Example' } } }
+                }
+            });
+
+            // Women — NbS Awareness (Yes/No)
+            awpChart('awp-chart-women-nbs-aware', {
+                type: 'bar',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [
+                        { label: 'Baseline', data: [23.1, 76.9], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [77.8, 22.2], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // Women — Mangrove Restoration
+            awpChart('awp-chart-women-mangrove', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard of Restoration\n& Its Importance', 'Heard of\nRestoration Only', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [20.9, 45.3, 33.8], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [60.7, 35.5, 3.8], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 80, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // Women — Seaweed Farming
+            awpChart('awp-chart-women-seaweed', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard: Farming +\nEconomic/Ecosystem', 'Heard: Farming\nOnly', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [15.2, 18.8, 66.0], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [41.0, 19.1, 39.9], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 80, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // Women — Forest Management
+            awpChart('awp-chart-women-forest', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard of Forest\nMgmt & Conservation', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [65.7, 34.3], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [97.8, 2.2], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // Men — Climate Change Effects
+            awpChart('awp-chart-men-climate-effects', {
+                type: 'bar',
+                data: {
+                    labels: ['Hotter\nTemperatures', 'Extreme Weather\nEvents', 'Increased\nDrought', 'Warming of\nOceans', 'Sea Level\nRise', 'Loss of\nSpecies', 'Migration\nof Species', 'Animal Migration\nPatterns', 'Disease &\nAlgal Blooms', 'Ocean\nAcidification', 'Species Invasions\n& Diseases', 'I Do Not\nKnow'],
+                    datasets: [
+                        { label: 'Baseline', data: [53.3, 18.9, 66.9, 4.5, 9.4, 8.0, 5.3, 6.8, 7.0, 1.8, 3.3, 11.3], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [76.1, 37.5, 80.7, 22.7, 10.2, 10.2, 4.5, 2.3, 1.1, 1.1, 4.5, 1.1], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 95, title: { display: true, text: '% Identifying Effect' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Men — NbS Examples
+            awpChart('awp-chart-men-nbs-examples', {
+                type: 'bar',
+                data: {
+                    labels: ['Mangrove\nRestoration', 'Coral Reef\nRestoration', 'Reforestation', 'Sustainable\nSeaweed', 'I Do Not\nKnow', 'Rainwater\nHarvesting', 'Sustainable\nAgriculture', 'Solar\nEnergy'],
+                    datasets: [
+                        { label: 'Baseline', data: [43.6, 5.4, 57.1, 18.2, 1.8, 38.6, 27.9, 23.2], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [57.0, 3.8, 81.0, 24.1, 0.0, 16.5, 39.2, 6.3], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 95, title: { display: true, text: '% Providing Example' } } }
+                }
+            });
+
+            // Men — Mangrove Restoration
+            awpChart('awp-chart-men-mangrove', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard of Restoration\n& Its Importance', 'Heard of\nRestoration Only', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [27.6, 55.1, 17.3], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [64.5, 32.3, 3.2], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 80, title: { display: true, text: '% of Men' } } }
+                }
+            });
+
+            // Men — Seaweed Farming
+            awpChart('awp-chart-men-seaweed', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard: Farming +\nEconomic/Ecosystem', 'Heard: Farming\nOnly', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [18.5, 30.4, 51.1], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [43.5, 14.5, 41.9], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 65, title: { display: true, text: '% of Men' } } }
+                }
+            });
+
+            // Men — Forest Management
+            awpChart('awp-chart-men-forest', {
+                type: 'bar',
+                data: {
+                    labels: ['Heard of Forest\nMgmt & Conservation', 'Not Heard'],
+                    datasets: [
+                        { label: 'Baseline', data: [75.7, 24.3], backgroundColor: AWP.menBaseline },
+                        { label: 'Midline', data: [100.0, 0.0], backgroundColor: AWP.menMidline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 115, title: { display: true, text: '% of Men' } } }
                 }
             });
         };
