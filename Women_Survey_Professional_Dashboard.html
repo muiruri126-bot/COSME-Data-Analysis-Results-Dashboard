@@ -3918,6 +3918,7 @@
             <button class="tab-button" onclick="showOutputType(event, 'gjj')">GJJ</button>
             <button class="tab-button" onclick="showOutputType(event, 'vsla')">VSLA</button>
             <button class="tab-button" onclick="showOutputType(event, 'schools')">Schools</button>
+            <button class="tab-button" onclick="showOutputType(event, 'results-framework')">Results Framework</button>
         </div>
 
         <!-- PROJECT OUTPUT SECTION -->
@@ -4795,6 +4796,343 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- RESULTS FRAMEWORK — Complete Project Outputs Tracker       -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <div id="output-results-framework" style="display:none;">
+
+                <!-- HEADER -->
+                <div class="output-header" style="background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);">
+                    <h2>COSME Project — Results Framework Dashboard</h2>
+                    <p>Complete Project Outputs & Deliverables Tracker across all Immediate Outcomes</p>
+                </div>
+
+                <!-- OVERALL PROGRESS SUMMARY KPIs -->
+                <div class="output-card">
+                    <h3>Overall Project Progress Summary</h3>
+                    <div class="output-kpi-grid">
+                        <div class="output-kpi green">
+                            <div class="kpi-label">Total Outputs Tracked</div>
+                            <div class="kpi-value">32</div>
+                            <div class="kpi-sub">Across 9 Immediate Outcomes</div>
+                        </div>
+                        <div class="output-kpi green">
+                            <div class="kpi-label">Completed / On Track</div>
+                            <div class="kpi-value">18</div>
+                            <div class="kpi-sub">56% of all outputs</div>
+                        </div>
+                        <div class="output-kpi orange">
+                            <div class="kpi-label">Ongoing</div>
+                            <div class="kpi-value">10</div>
+                            <div class="kpi-sub">31% of all outputs</div>
+                        </div>
+                        <div class="output-kpi" style="border-left: 4px solid #C62828;">
+                            <div class="kpi-label">Not Started / Behind</div>
+                            <div class="kpi-value">4</div>
+                            <div class="kpi-sub">13% of all outputs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OVERVIEW CHARTS ROW -->
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Progress by Immediate Outcome (%)</h4>
+                        <div style="height: 380px;"><canvas id="rf-outcome-progress"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>Output Status Distribution</h4>
+                        <div style="height: 380px;"><canvas id="rf-status-distribution"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- ─── OUTCOME 1110: MANGROVE ─── -->
+                <div class="output-card" style="border-left: 4px solid #2E7D32;">
+                    <h3 style="color: #2E7D32;">Immediate Outcome 1110 — Mangrove Restoration</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased capacity of communities, especially women, to undertake gender responsive and equitable mangrove</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1111</td><td style="text-align:left;">Biodiversity Assessments conducted</td><td>N/A</td><td>0</td><td>1</td><td>1</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1112a</td><td style="text-align:left;">Mangrove Groups established</td><td>N/A</td><td>3</td><td>42</td><td>40</td><td>105%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1112b</td><td style="text-align:left;">Mangrove Group members trained (F:840, M:360)</td><td>T: 1,200</td><td>T: 864</td><td>T: 843</td><td>T: 1,200</td><td>70%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1113</td><td style="text-align:left;">Mangrove groups equipped with restoration tools</td><td>5</td><td>5</td><td>10</td><td>6</td><td>167%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1120: SEAWEED ─── -->
+                <div class="output-card" style="border-left: 4px solid #00897B;">
+                    <h3 style="color: #00897B;">Immediate Outcome 1120 — Seaweed Production</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased capacity of women-led seaweed groups to undertake regenerative and sustainable seaweed production, value addition and commercialization</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1121a</td><td style="text-align:left;">Assessments carried out</td><td>2</td><td>0</td><td>2</td><td>2</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1121b</td><td style="text-align:left;">Seaweed Groups established</td><td>20</td><td>19</td><td>19</td><td>20</td><td>95%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1122</td><td style="text-align:left;">Seaweed Group members</td><td>600</td><td>462</td><td>462</td><td>600</td><td>77%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1123</td><td style="text-align:left;">Seaweed Groups equipped</td><td>20</td><td>19</td><td>19</td><td>20</td><td>95%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1124</td><td style="text-align:left;">Women in value addition (innovation pilots)</td><td>60</td><td>0</td><td>20</td><td>60</td><td>33%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1130: FOREST MANAGEMENT ─── -->
+                <div class="output-card" style="border-left: 4px solid #33691E;">
+                    <h3 style="color: #33691E;">Immediate Outcome 1130 — Forest Management & Conservation</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased capacity of communities, especially women, to undertake gender-responsive, locally-led forest management and conservation</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1131a</td><td style="text-align:left;">Regional/local authorities sensitized (Kenya + Tanzania)</td><td>N/A</td><td>—</td><td>Kenya: F:574, Tanzania: T:880</td><td>—</td><td>—</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1131b</td><td style="text-align:left;">People trained in gender responsive forest mgmt (Kenya: F:945, M:405; Tanzania: T:1,350)</td><td>T: 1,350</td><td>Kenya: T:1,030; Tanzania: T:675</td><td>Kenya: F:1,215; Tanzania: T:1,800</td><td>T: 1,350</td><td>—</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1132</td><td style="text-align:left;">Women's groups supported (Kenya + Tanzania)</td><td>102</td><td>63</td><td>185</td><td>98</td><td>189%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CHARTS: Environmental Outcomes (1110, 1120, 1130) -->
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Mangrove 1110 — Target vs Cumulative</h4>
+                        <div style="height: 320px;"><canvas id="rf-mangrove-progress"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>Seaweed 1120 — Target vs Cumulative</h4>
+                        <div style="height: 320px;"><canvas id="rf-seaweed-progress"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- ─── OUTCOME 1210: KNOWLEDGE & SKILLS ─── -->
+                <div class="output-card" style="border-left: 4px solid #1565C0;">
+                    <h3 style="color: #1565C0;">Immediate Outcome 1210 — Knowledge & Skills on Gender Responsive NbS</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased knowledge and skills of women on gender responsive NbS, economic rights, life skills, and GE&I, including UPCW</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1211</td><td style="text-align:left;">Women trained on gender responsive NbS, life skills, GE&I</td><td>3,000</td><td>2,370</td><td>2,370</td><td>3,000</td><td>79%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1220: RESILIENCE BUILDING ─── -->
+                <div class="output-card" style="border-left: 4px solid #EF6C00;">
+                    <h3 style="color: #EF6C00;">Immediate Outcome 1220 — Resilience Building Assets</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased access to resilience building assets and opportunities for women</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1221a</td><td style="text-align:left;">Women's Savings Groups established</td><td>130</td><td>—</td><td>140</td><td>130</td><td>108%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1221b</td><td style="text-align:left;">Savings Groups members trained</td><td>3,000</td><td>2,333</td><td>2,333</td><td>3,000</td><td>78%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1222a</td><td style="text-align:left;">Women from targeted households trained on regenerative agriculture</td><td>F: 525, M: 225</td><td>—</td><td>F: 525</td><td>T: 750</td><td>70%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1222b</td><td style="text-align:left;">Demonstration plots supported</td><td>14</td><td>0</td><td>0</td><td>14</td><td>0%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1223</td><td style="text-align:left;">Women received solar and/or improved technology solutions</td><td>3,000</td><td>—</td><td>3,668</td><td>3,000</td><td>122%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1230: COMMUNITY CAPACITY ─── -->
+                <div class="output-card" style="border-left: 4px solid #6A1B9A;">
+                    <h3 style="color: #6A1B9A;">Immediate Outcome 1230 — Community Capacity & Leadership</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased capacity of community members and leaders, particularly men, to promote and support gender responsive NbS, economic rights and GE&I, including UPCW</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1231a</td><td style="text-align:left;">SBCC strategy developed</td><td>N/A</td><td>1</td><td>1</td><td>1</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1231b</td><td style="text-align:left;">SBCC initiatives undertaken</td><td>93</td><td>75</td><td>79</td><td>90</td><td>88%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1232a</td><td style="text-align:left;">Change Agents trained (F:13, M:11)</td><td>N/A</td><td>F:13, M:11</td><td>T: 24</td><td>T: 24</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1232b</td><td style="text-align:left;">Community sensitization action plans</td><td>24</td><td>24</td><td>24</td><td>24</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1233</td><td style="text-align:left;">Men and boys trained to promote and support gender</td><td>850</td><td>587</td><td>587</td><td>850</td><td>69%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1234</td><td style="text-align:left;">Transformative household action plans developed</td><td>850</td><td>0</td><td>0</td><td>850</td><td>0%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CHARTS: Social Outcomes (1210, 1220, 1230) -->
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Resilience Building 1220 — Target vs Cumulative</h4>
+                        <div style="height: 320px;"><canvas id="rf-resilience-progress"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>Community Capacity 1230 — Target vs Cumulative</h4>
+                        <div style="height: 320px;"><canvas id="rf-community-progress"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- ─── OUTCOME 1310: SCHOOL CHILDREN ─── -->
+                <div class="output-card" style="border-left: 4px solid #F57F17;">
+                    <h3 style="color: #F57F17;">Immediate Outcome 1310 — School Children Awareness</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased awareness and knowledge of primary school children, particularly girls, on climate change, NbS, and conservation</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1311a</td><td style="text-align:left;">4K and Roots & Shoots clubs established</td><td>110</td><td>Kenya: 66, Tanzania: 30</td><td>Kenya: 66, Tanzania: 45</td><td>110</td><td>101%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1311b</td><td style="text-align:left;">4K & R&S club members trained (by sex)</td><td>T: 6,150</td><td>T: 11,815</td><td>T: 12,175</td><td>F: 3,661, M: 2,489</td><td>198%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                            <tr><td style="text-align:left;">1312</td><td style="text-align:left;">4K clubs implementing community-based climate change conservation</td><td>110</td><td>Kenya: 12, Tanzania: 45</td><td>Total: 98</td><td>110</td><td>89%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1313</td><td style="text-align:left;">Schools receiving clean water solutions</td><td>65</td><td>65</td><td>65</td><td>65</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1320: COMMUNITY GOVERNANCE ─── -->
+                <div class="output-card" style="border-left: 4px solid #AD1457;">
+                    <h3 style="color: #AD1457;">Immediate Outcome 1320 — Community Governance</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Strengthened gender responsive community governance structures to reduce risk and enhance preparedness to climate change</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1321</td><td style="text-align:left;">Gender responsive adaptation and DRR plans</td><td>5</td><td>0</td><td>0</td><td>65</td><td>0%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1322</td><td style="text-align:left;">Communities supported</td><td>N/A</td><td>0</td><td>0</td><td>30</td><td>0%</td><td><span style="color: #C62828; font-weight: bold;">Not Started</span></td></tr>
+                            <tr><td style="text-align:left;">1323</td><td style="text-align:left;">Learning and sharing events held</td><td>N/A</td><td>0</td><td>1</td><td>1</td><td>100%</td><td><span style="color: #2E7D32; font-weight: bold;">Completed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── OUTCOME 1330: WRO & YLOs ─── -->
+                <div class="output-card" style="border-left: 4px solid #4527A0;">
+                    <h3 style="color: #4527A0;">Immediate Outcome 1330 — WRO & YLO Advocacy</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Increased ability of WRO and YLOs to undertake evidenced-based advocacy for gender responsive and inclusive climate adaptation and resilience</p>
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Output</th>
+                                <th style="text-align:left;">Indicator</th>
+                                <th>Annual Target</th>
+                                <th>Actual (Period)</th>
+                                <th>Cumulative</th>
+                                <th>End Target</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:left;">1331</td><td style="text-align:left;">Evidence on drivers of gender responsive climate adaptation</td><td>N/A</td><td>0</td><td>0</td><td>7</td><td>0%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1332</td><td style="text-align:left;">Dissemination events</td><td>16</td><td>1</td><td>0</td><td>18</td><td>0%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1333</td><td style="text-align:left;">WRO/YLO members trained (F:150, M:50)</td><td>T: 200</td><td>F: 150</td><td>—</td><td>T: 200</td><td>75%</td><td><span style="color: #FF8F00; font-weight: bold;">Ongoing</span></td></tr>
+                            <tr><td style="text-align:left;">1334</td><td style="text-align:left;">WRO/YLO evidence-based advocacy plans</td><td>4</td><td>0</td><td>4</td><td>4</td><td>100%</td><td><span style="color: #C62828; font-weight: bold;">Not Started</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CHARTS: Institutional Outcomes (1310, 1320, 1330) -->
+                <div class="output-charts-row">
+                    <div class="output-chart-box">
+                        <h4>Schools 1310 — Target vs Cumulative</h4>
+                        <div style="height: 320px;"><canvas id="rf-schools-progress"></canvas></div>
+                    </div>
+                    <div class="output-chart-box">
+                        <h4>4K/R&S Club Members — Gender Breakdown</h4>
+                        <div style="height: 320px;"><canvas id="rf-schools-gender"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- GENDER DISAGGREGATION SUMMARY -->
+                <div class="output-card">
+                    <h3>Gender Disaggregation Summary — Key Outputs</h3>
+                    <div class="output-charts-row" style="margin-top: 10px;">
+                        <div class="output-chart-box">
+                            <h4>Female vs Male — Training Outputs</h4>
+                            <div style="height: 380px;"><canvas id="rf-gender-training"></canvas></div>
+                        </div>
+                        <div class="output-chart-box">
+                            <h4>Overall Outcome Progress Radar</h4>
+                            <div style="height: 380px;"><canvas id="rf-radar-progress"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END RESULTS FRAMEWORK -->
 
         </div>
 
@@ -11483,7 +11821,7 @@
             event.currentTarget.style.color = '#fff';
 
             // Hide all output sub-types
-            const outputTypes = ['mangrove', 'forestry', 'seaweed', 'gjj', 'vsla', 'schools'];
+            const outputTypes = ['mangrove', 'forestry', 'seaweed', 'gjj', 'vsla', 'schools', 'results-framework'];
             outputTypes.forEach(t => {
                 const el = document.getElementById('output-' + t);
                 if (el) el.style.display = 'none';
@@ -11503,6 +11841,7 @@
             if (typeName === 'gjj') renderGJJOutputCharts();
             if (typeName === 'vsla') renderVSLAOutputCharts();
             if (typeName === 'schools') renderSchoolsOutputCharts();
+            if (typeName === 'results-framework') renderResultsFrameworkCharts();
         }
 
         // OUTPUT CHARTS — stored references so we can destroy/recreate
@@ -12027,6 +12366,258 @@
                     }
                 });
             }
+        }
+
+        // ====== RESULTS FRAMEWORK CHARTS ======
+        const rfChartInstances = {};
+        function renderResultsFrameworkCharts() {
+            Object.values(rfChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            const C = {
+                green: '#2E7D32', teal: '#00897B', forest: '#33691E', blue: '#1565C0',
+                orange: '#EF6C00', purple: '#6A1B9A', amber: '#F57F17', magenta: '#AD1457',
+                indigo: '#4527A0', red: '#C62828', grey: '#757575'
+            };
+
+            function rfChart(id, config) {
+                const el = document.getElementById(id);
+                if (!el) return null;
+                const existing = Chart.getChart(el);
+                if (existing) existing.destroy();
+                const chart = new Chart(el, config);
+                rfChartInstances[id] = chart;
+                return chart;
+            }
+
+            // CHART 1 — Overall Progress by Immediate Outcome (%)
+            rfChart('rf-outcome-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['1110\nMangrove', '1120\nSeaweed', '1130\nForest', '1210\nKnowledge', '1220\nResilience', '1230\nCommunity', '1310\nSchools', '1320\nGovernance', '1330\nWRO/YLO'],
+                    datasets: [{
+                        label: 'Average Progress (%)',
+                        data: [110, 80, 126, 79, 76, 76, 122, 33, 44],
+                        backgroundColor: [C.green, C.teal, C.forest, C.blue, C.orange, C.purple, C.amber, C.magenta, C.indigo],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 200, title: { display: true, text: 'Progress (%)' },
+                            ticks: { callback: v => v + '%' }
+                        },
+                        y: { ticks: { font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // CHART 2 — Status Distribution (Doughnut)
+            rfChart('rf-status-distribution', {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed (18)', 'Ongoing (10)', 'Not Started (4)'],
+                    datasets: [{
+                        data: [18, 10, 4],
+                        backgroundColor: [C.green, C.orange, C.red],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 13 } } },
+                        datalabels: {
+                            display: true, font: { size: 15, weight: 'bold' }, color: '#fff',
+                            formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a,b)=>a+b,0); return Math.round(v/t*100)+'%'; }
+                        }
+                    }
+                }
+            });
+
+            // CHART 3 — Mangrove 1110 Target vs Cumulative
+            rfChart('rf-mangrove-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['Biodiversity\nAssessments', 'Groups\nEstablished', 'Members\nTrained', 'Groups\nEquipped'],
+                    datasets: [
+                        { label: 'End Target', data: [1, 40, 1200, 6], backgroundColor: '#C8E6C9', borderRadius: 4 },
+                        { label: 'Cumulative', data: [1, 42, 843, 10], backgroundColor: C.green, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // CHART 4 — Seaweed 1120 Target vs Cumulative
+            rfChart('rf-seaweed-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['Assessments', 'Groups\nEstablished', 'Group\nMembers', 'Groups\nEquipped', 'Women in\nValue Add.'],
+                    datasets: [
+                        { label: 'End Target', data: [2, 20, 600, 20, 60], backgroundColor: '#B2DFDB', borderRadius: 4 },
+                        { label: 'Cumulative', data: [2, 19, 462, 19, 20], backgroundColor: C.teal, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' } }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // CHART 5 — Resilience Building 1220
+            rfChart('rf-resilience-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['Savings\nGroups', 'SG\nMembers', 'Regen Ag\nTrained', 'Demo\nPlots', 'Solar/Tech\nSolutions'],
+                    datasets: [
+                        { label: 'End Target', data: [130, 3000, 750, 14, 3000], backgroundColor: '#FFE0B2', borderRadius: 4 },
+                        { label: 'Cumulative', data: [140, 2333, 525, 0, 3668], backgroundColor: C.orange, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // CHART 6 — Community Capacity 1230
+            rfChart('rf-community-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['SBCC\nStrategy', 'SBCC\nInitiatives', 'Change\nAgents', 'Action\nPlans', 'Men/Boys\nTrained', 'HH Action\nPlans'],
+                    datasets: [
+                        { label: 'End Target', data: [1, 90, 24, 24, 850, 850], backgroundColor: '#E1BEE7', borderRadius: 4 },
+                        { label: 'Cumulative', data: [1, 79, 24, 24, 587, 0], backgroundColor: C.purple, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // CHART 7 — Schools 1310
+            rfChart('rf-schools-progress', {
+                type: 'bar',
+                data: {
+                    labels: ['4K/R&S Clubs\nEstablished', 'Club Members\nTrained', 'Clubs Implementing\nConservation', 'Schools with\nClean Water'],
+                    datasets: [
+                        { label: 'End Target', data: [110, 6150, 110, 65], backgroundColor: '#FFF9C4', borderRadius: 4 },
+                        { label: 'Cumulative', data: [111, 12175, 98, 65], backgroundColor: C.amber, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // CHART 8 — Schools Gender Breakdown
+            rfChart('rf-schools-gender', {
+                type: 'bar',
+                data: {
+                    labels: ['Kenya', 'Tanzania', 'Total'],
+                    datasets: [
+                        { label: 'Female', data: [5965, 6810, 6581], backgroundColor: '#E91E63', borderRadius: 4 },
+                        { label: 'Male', data: [3217, 3464, 5494], backgroundColor: '#1565C0', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Students' } } }
+                }
+            });
+
+            // CHART 9 — Gender Disaggregation across training outputs
+            rfChart('rf-gender-training', {
+                type: 'bar',
+                data: {
+                    labels: ['Mangrove\nTraining', 'Forest Mgmt\n(Kenya)', 'Women\nNbS Training', 'Regen Ag\nTraining', 'Change\nAgents', 'WRO/YLO\nTraining'],
+                    datasets: [
+                        { label: 'Female', data: [849, 1215, 2370, 525, 13, 150], backgroundColor: '#E91E63', borderRadius: 4 },
+                        { label: 'Male', data: [194, 585, 0, 225, 11, 50], backgroundColor: '#1565C0', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' },
+                            formatter: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+                        }
+                    },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'People Trained' } } }
+                }
+            });
+
+            // CHART 10 — Radar Progress (average % across each outcome)
+            rfChart('rf-radar-progress', {
+                type: 'radar',
+                data: {
+                    labels: ['1110 Mangrove', '1120 Seaweed', '1130 Forest', '1210 Knowledge', '1220 Resilience', '1230 Community', '1310 Schools', '1320 Governance', '1330 WRO/YLO'],
+                    datasets: [{
+                        label: 'Progress (%)',
+                        data: [110, 80, 126, 79, 76, 76, 122, 33, 44],
+                        fill: true,
+                        backgroundColor: 'rgba(26, 35, 126, 0.15)',
+                        borderColor: '#1a237e',
+                        pointBackgroundColor: '#1a237e',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, font: { size: 11, weight: 'bold' }, color: '#1a237e', formatter: v => v + '%' }
+                    },
+                    scales: {
+                        r: { beginAtZero: true, max: 200, ticks: { stepSize: 40, callback: v => v + '%' }, pointLabels: { font: { size: 11 } } }
+                    }
+                }
+            });
         }
 
         // ====== SCHOOLS DASHBOARD SUB-TAB SWITCHER ======
