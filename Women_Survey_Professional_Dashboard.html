@@ -3898,7 +3898,7 @@
         <!-- PRE & POST TEST SUB-SELECTOR (Forest / Seaweed / Mangrove) -->
         <div class="tabs-container" id="prepost-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">Forest Conservation</button>
-            <button class="tab-button" onclick="showPrePostType(event, 'seaweed')" disabled style="opacity: 0.5; cursor: not-allowed;" title="Coming Soon">Seaweed Farming</button>
+            <button class="tab-button" onclick="showPrePostType(event, 'seaweed')">Seaweed Farming</button>
             <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">Mangrove Restoration</button>
         </div>
 
@@ -6234,6 +6234,138 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ═══════ SEAWEED FARMING PRE/POST CONTENT ═══════ -->
+            <div id="pp-seaweed-content" style="display: none;">
+                <div class="section">
+                    <div class="section-title">SEAWEED FARMING — KNOWLEDGE TEST RESULTS (BASELINE vs ENDLINE)</div>
+                    <div class="highlight-box">
+                        <h4>Knowledge Assessment Summary — Seaweed Farming Training</h4>
+                        <p>Overall adequate knowledge (≥70 points) <strong>declined</strong> from <strong>67.4%</strong> at baseline to <strong>29.3%</strong> at endline (−38.1pp). By gender, females dropped from 67.4% to 28.8% and males from 67.6% to 32.4%. At the ≥60 threshold, adequate knowledge went from 85.1% to 66.5%. Average standardized scores fell from 72.7 to 64.7, with females scoring 64.6 and males 65.2 at endline. Several questions saw large declines, with Q2 (−47.6pp), Q20 (−34.0pp), and Q5 (−27.5pp) being the most affected. However, Q8 (+30.0pp) and Q14 (+5.8pp) showed notable improvement.</p>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                        <div class="kpi-card" style="border-left: 4px solid #C62828;">
+                            <div class="kpi-label">Adequate Knowledge (≥70)</div>
+                            <div class="kpi-value" style="color: #C62828;">29.3%</div>
+                            <div class="kpi-change" style="color: #C62828;">↓ from 67.4% (−38.1pp)</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 4px solid #EF6C00;">
+                            <div class="kpi-label">Adequate Knowledge (≥60)</div>
+                            <div class="kpi-value" style="color: #EF6C00;">66.5%</div>
+                            <div class="kpi-change" style="color: #EF6C00;">↓ from 85.1% (−18.6pp)</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 4px solid #1565C0;">
+                            <div class="kpi-label">Avg Score (All)</div>
+                            <div class="kpi-value" style="color: #1565C0;">64.7</div>
+                            <div class="kpi-change" style="color: #C62828;">↓ from 72.7 (−8.0)</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 4px solid #E91E63;">
+                            <div class="kpi-label">Avg Score (Female)</div>
+                            <div class="kpi-value" style="color: #E91E63;">64.6</div>
+                            <div class="kpi-change" style="color: #C62828;">↓ from 72.8 (−8.2)</div>
+                        </div>
+                        <div class="kpi-card" style="border-left: 4px solid #1565C0;">
+                            <div class="kpi-label">Avg Score (Male)</div>
+                            <div class="kpi-value" style="color: #1565C0;">65.2</div>
+                            <div class="kpi-change" style="color: #C62828;">↓ from 72.6 (−7.4)</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 1: Adequate Knowledge -->
+                    <div class="charts-grid">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Adequate Knowledge by Threshold — Baseline vs Endline (%)</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-threshold"></canvas></div>
+                            <div class="chart-insight">≥70 threshold: 67.4%→29.3% (−38.1pp). ≥60 threshold: 85.1%→66.5% (−18.6pp). Both thresholds show significant decline.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Adequate Knowledge (≥70) by Gender — Baseline vs Endline (%)</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-gender70"></canvas></div>
+                            <div class="chart-insight">Female: 67.4%→28.8% (−38.6pp). Male: 67.6%→32.4% (−35.2pp). Both genders declined significantly.</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 2: Scores -->
+                    <div class="charts-grid">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Average Standardized Score by Gender — Baseline vs Endline</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-scores"></canvas></div>
+                            <div class="chart-insight">Female: 72.8→64.6 (−8.2). Male: 72.6→65.2 (−7.4). Overall: 72.7→64.7 (−8.0). Males slightly higher at endline.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Adequate Knowledge (≥60) by Gender — Baseline vs Endline (%)</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-gender60"></canvas></div>
+                            <div class="chart-insight">Female: 85.5%→65.1% (−20.4pp). Male: 83.8%→76.5% (−7.3pp). Males retained more knowledge at ≥60 threshold.</div>
+                        </div>
+                    </div>
+
+                    <!-- Question-by-Question Table -->
+                    <div style="margin-top: 30px; overflow-x: auto;">
+                        <h4 style="color: #1a237e; margin-bottom: 10px;">Question-by-Question Analysis — Baseline vs Endline (% Correct)</h4>
+                        <table class="comparison-table" style="font-size: 0.85em;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; width: 50%;">#</th>
+                                    <th>Baseline</th>
+                                    <th>Endline</th>
+                                    <th>Diff (E-B)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td style="text-align:left;">Q1. Three broad seaweed groups</td><td>92.6%</td><td>70.7%</td><td style="color:#C62828; font-weight:bold;">−21.8%</td></tr>
+                                <tr style="background:#FFEBEE;"><td style="text-align:left;">Q2. Seaweed group grown in Kenya</td><td>52.6%</td><td>4.9%</td><td style="color:#C62828; font-weight:bold;">−47.6%</td></tr>
+                                <tr><td style="text-align:left;">Q3. Two seaweed varieties in Kwale</td><td>98.3%</td><td>97.3%</td><td style="color:#EF6C00;">−0.9%</td></tr>
+                                <tr><td style="text-align:left;">Q4. Potential uses for seaweed</td><td>50.9%</td><td>27.4%</td><td style="color:#C62828; font-weight:bold;">−23.5%</td></tr>
+                                <tr style="background:#FFEBEE;"><td style="text-align:left;">Q5. Recommended farm has 10 plots</td><td>74.3%</td><td>46.8%</td><td style="color:#C62828; font-weight:bold;">−27.5%</td></tr>
+                                <tr><td style="text-align:left;">Q6. Common seaweed farming methods</td><td>7.4%</td><td>3.4%</td><td style="color:#EF6C00;">−4.0%</td></tr>
+                                <tr><td style="text-align:left;">Q7. Off-bottom method inputs</td><td>96.6%</td><td>81.4%</td><td style="color:#C62828; font-weight:bold;">−15.2%</td></tr>
+                                <tr style="background:#E8F5E9;"><td style="text-align:left;">Q8. Healthy seaweed characteristics</td><td>28.6%</td><td>58.6%</td><td style="color:#2E7D32; font-weight:bold;">+30.0%</td></tr>
+                                <tr><td style="text-align:left;">Q9. Primary method to attach seaweed seedlings</td><td>95.4%</td><td>97.3%</td><td style="color:#2E7D32;">+1.9%</td></tr>
+                                <tr><td style="text-align:left;">Q10. Statements regarding the process</td><td>78.3%</td><td>70.7%</td><td style="color:#EF6C00;">−7.6%</td></tr>
+                                <tr><td style="text-align:left;">Q11. Routine farm management</td><td>72.0%</td><td>64.6%</td><td style="color:#EF6C00;">−7.4%</td></tr>
+                                <tr><td style="text-align:left;">Q12. Steps involved in harvesting</td><td>53.7%</td><td>34.2%</td><td style="color:#C62828; font-weight:bold;">−19.5%</td></tr>
+                                <tr><td style="text-align:left;">Q13. Disease affects seaweed</td><td>96.6%</td><td>97.0%</td><td style="color:#2E7D32;">+0.4%</td></tr>
+                                <tr style="background:#E8F5E9;"><td style="text-align:left;">Q14. Methods to control seaweed</td><td>40.6%</td><td>46.4%</td><td style="color:#2E7D32; font-weight:bold;">+5.8%</td></tr>
+                                <tr><td style="text-align:left;">Q15. Drying seaweed on mats</td><td>98.3%</td><td>92.0%</td><td style="color:#EF6C00;">−6.3%</td></tr>
+                                <tr><td style="text-align:left;">Q16. Dried seaweed on ground</td><td>74.9%</td><td>58.6%</td><td style="color:#C62828; font-weight:bold;">−16.3%</td></tr>
+                                <tr><td style="text-align:left;">Q17. Seaweed farming can only be done in sea</td><td>97.1%</td><td>97.7%</td><td style="color:#2E7D32;">+0.6%</td></tr>
+                                <tr><td style="text-align:left;">Q18. Primary method to attach seaweed</td><td>94.3%</td><td>99.2%</td><td style="color:#2E7D32; font-weight:bold;">+5.0%</td></tr>
+                                <tr><td style="text-align:left;">Q19. Common pest that affects seaweed</td><td>65.7%</td><td>69.6%</td><td style="color:#2E7D32;">+3.9%</td></tr>
+                                <tr style="background:#FFEBEE;"><td style="text-align:left;">Q20. Seaweed helps in reducing ocean acidification</td><td>88.0%</td><td>54.0%</td><td style="color:#C62828; font-weight:bold;">−34.0%</td></tr>
+                                <tr><td style="text-align:left;">Q21. Most common harvesting method</td><td>97.1%</td><td>99.6%</td><td style="color:#2E7D32;">+2.5%</td></tr>
+                                <tr><td style="text-align:left;">Q22. Seaweed should not be used as a biofertilizer</td><td>46.9%</td><td>52.1%</td><td style="color:#2E7D32;">+5.2%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Charts Row 3: Question performance -->
+                    <div class="charts-grid" style="margin-top: 25px;">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Top Gains — Questions with Largest Improvement</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-gains"></canvas></div>
+                            <div class="chart-insight">Q8 Healthy seaweed characteristics (+30.0pp) was the standout improvement. Q14 Methods to control (+5.8pp) and Q22 Biofertilizer (+5.2pp) also improved.</div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <div class="chart-title">Largest Declines — Questions with Biggest Drop</div>
+                            <div class="chart-container"><canvas id="pp-sw-chart-declines"></canvas></div>
+                            <div class="chart-insight">Q2 Seaweed grown in Kenya (−47.6pp) had the steepest decline. Q20 Ocean acidification (−34.0pp) and Q5 Farm plots (−27.5pp) also dropped sharply.</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart: All questions comparison -->
+                    <div style="margin-top: 25px;">
+                        <div class="chart-wrapper">
+                            <div class="chart-title">All 22 Questions — Baseline vs Endline (% Correct)</div>
+                            <div class="chart-container" style="height: 450px;"><canvas id="pp-sw-chart-allq"></canvas></div>
+                            <div class="chart-insight">Visual comparison across all 22 knowledge questions. Green bars above baseline indicate improvement; red bars below indicate decline.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END SEAWEED FARMING PRE/POST -->
+
         </div>
         <!-- END PRE & POST TEST SECTION -->
 
@@ -11783,6 +11915,8 @@
             // Hide all sub-type content
             document.getElementById('pp-forest-content').style.display = 'none';
             document.getElementById('pp-mangrove-content').style.display = 'none';
+            var swEl = document.getElementById('pp-seaweed-content');
+            if (swEl) swEl.style.display = 'none';
 
             if (typeName === 'forest') {
                 document.getElementById('pp-forest-content').style.display = 'block';
@@ -11805,6 +11939,12 @@
                 document.getElementById('pp-meta-pre').textContent = 'Kilifi & Kwale';
                 document.getElementById('pp-meta-post').textContent = 'Counties';
                 updateMangrovePrePostCharts();
+            } else if (typeName === 'seaweed') {
+                var swContent = document.getElementById('pp-seaweed-content');
+                if (swContent) swContent.style.display = 'block';
+                document.getElementById('pp-meta-pre').textContent = 'Baseline';
+                document.getElementById('pp-meta-post').textContent = 'Endline';
+                updateSeaweedPrePostCharts();
             }
         }
 
@@ -15306,6 +15446,140 @@
             });
         }
 
+        // ====== SEAWEED FARMING PRE/POST CHARTS ======
+        function updateSeaweedPrePostCharts() {
+            const swColors = { baseline: '#1565C0', endline: '#E91E63' };
+
+            function swChart(id, config) {
+                const canvas = document.getElementById(id);
+                if (!canvas) { console.warn('SW Canvas not found:', id); return; }
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                return new Chart(canvas, config);
+            }
+
+            const swDefaults = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: { font: { size: 13, weight: 'bold' }, color: '#fff', backgroundColor: '#333', borderRadius: 6, padding: 5, formatter: v => v.toFixed(1) + '%', display: true }
+                }
+            };
+
+            // Chart 1: Adequate Knowledge by Threshold
+            swChart('pp-sw-chart-threshold', {
+                type: 'bar',
+                data: {
+                    labels: ['≥70 Threshold (All)', '≥60 Threshold (All)'],
+                    datasets: [
+                        { label: 'Baseline', data: [67.4, 85.1], backgroundColor: swColors.baseline },
+                        { label: 'Endline', data: [29.3, 66.5], backgroundColor: swColors.endline }
+                    ]
+                },
+                options: { ...swDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Adequate' } } } }
+            });
+
+            // Chart 2: Adequate Knowledge (≥70) by Gender
+            swChart('pp-sw-chart-gender70', {
+                type: 'bar',
+                data: {
+                    labels: ['Female', 'Male', 'All'],
+                    datasets: [
+                        { label: 'Baseline', data: [67.4, 67.6, 67.4], backgroundColor: swColors.baseline },
+                        { label: 'Endline', data: [28.8, 32.4, 29.3], backgroundColor: swColors.endline }
+                    ]
+                },
+                options: { ...swDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% with ≥70 Score' } } } }
+            });
+
+            // Chart 3: Average Standardized Scores by Gender
+            swChart('pp-sw-chart-scores', {
+                type: 'bar',
+                data: {
+                    labels: ['Female', 'Male', 'All'],
+                    datasets: [
+                        { label: 'Baseline', data: [72.8, 72.6, 72.7], backgroundColor: swColors.baseline },
+                        { label: 'Endline', data: [64.6, 65.2, 64.7], backgroundColor: swColors.endline }
+                    ]
+                },
+                options: { ...swDefaults, plugins: { ...swDefaults.plugins, datalabels: { ...swDefaults.plugins.datalabels, formatter: v => v.toFixed(1) } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score' } } } }
+            });
+
+            // Chart 4: Adequate Knowledge (≥60) by Gender
+            swChart('pp-sw-chart-gender60', {
+                type: 'bar',
+                data: {
+                    labels: ['Female', 'Male', 'All'],
+                    datasets: [
+                        { label: 'Baseline', data: [85.5, 83.8, 85.1], backgroundColor: swColors.baseline },
+                        { label: 'Endline', data: [65.1, 76.5, 66.5], backgroundColor: swColors.endline }
+                    ]
+                },
+                options: { ...swDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% with ≥60 Score' } } } }
+            });
+
+            // Chart 5: Top Gains
+            swChart('pp-sw-chart-gains', {
+                type: 'bar',
+                data: {
+                    labels: ['Q8. Healthy\ncharacteristics', 'Q14. Control\nmethods', 'Q22. Biofertilizer', 'Q18. Attach\nmethod', 'Q19. Common\npest', 'Q21. Harvesting\nmethod'],
+                    datasets: [{
+                        label: 'Change (pp)',
+                        data: [30.0, 5.8, 5.2, 5.0, 3.9, 2.5],
+                        backgroundColor: '#2E7D32',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 12, weight: 'bold' }, color: '#2E7D32', formatter: v => '+' + v.toFixed(1) + 'pp' } },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Change (pp)' } } }
+                }
+            });
+
+            // Chart 6: Largest Declines
+            swChart('pp-sw-chart-declines', {
+                type: 'bar',
+                data: {
+                    labels: ['Q2. Seaweed in\nKenya', 'Q20. Ocean\nacidification', 'Q5. Farm 10\nplots', 'Q4. Potential\nuses', 'Q1. Three broad\ngroups', 'Q12. Harvesting\nsteps'],
+                    datasets: [{
+                        label: 'Change (pp)',
+                        data: [-47.6, -34.0, -27.5, -23.5, -21.8, -19.5],
+                        backgroundColor: '#C62828',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'start', align: 'left', font: { size: 12, weight: 'bold' }, color: '#C62828', formatter: v => v.toFixed(1) + 'pp' } },
+                    scales: { x: { max: 0, min: -55, title: { display: true, text: 'Change (pp)' } } }
+                }
+            });
+
+            // Chart 7: All 22 Questions Baseline vs Endline
+            const qLabels = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13','Q14','Q15','Q16','Q17','Q18','Q19','Q20','Q21','Q22'];
+            const baseData = [92.6,52.6,98.3,50.9,74.3,7.4,96.6,28.6,95.4,78.3,72.0,53.7,96.6,40.6,98.3,74.9,97.1,94.3,65.7,88.0,97.1,46.9];
+            const endData = [70.7,4.9,97.3,27.4,46.8,3.4,81.4,58.6,97.3,70.7,64.6,34.2,97.0,46.4,92.0,58.6,97.7,99.2,69.6,54.0,99.6,52.1];
+            swChart('pp-sw-chart-allq', {
+                type: 'bar',
+                data: {
+                    labels: qLabels,
+                    datasets: [
+                        { label: 'Baseline', data: baseData, backgroundColor: swColors.baseline, borderRadius: 3 },
+                        { label: 'Endline', data: endData, backgroundColor: swColors.endline, borderRadius: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: false }
+                    },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } }
+                }
+            });
+        }
+
         // Tab Navigation (Updated)
         function showTab(evt, tabName) {
             const tabContents = document.querySelectorAll('.tab-content');
@@ -17796,7 +18070,7 @@
         if (typeof _origShowPrePost === 'function') {
             window.showPrePostType = function(evt, typeName) {
                 _origShowPrePost(evt, typeName);
-                var contentId = typeName === 'forest' ? 'pp-forest-content' : 'pp-mangrove-content';
+                var contentId = typeName === 'forest' ? 'pp-forest-content' : (typeName === 'seaweed' ? 'pp-seaweed-content' : 'pp-mangrove-content');
                 var el = document.getElementById(contentId);
                 if (el) animateSectionEnter(el);
                 refreshScrollReveal();
