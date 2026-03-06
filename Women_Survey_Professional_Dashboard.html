@@ -8793,20 +8793,7 @@
                             </div>
                             <div class="chart-insight">Consent respect improved 45.8%→52.3% (+6.5pp). Laugh together: 38.4%→42.8%. Share feelings: 31.2%→35.6%. Some indicators stable or slightly decreased.</div>
                         </div>
-                        <div class="chart-wrapper">
-                            <div class="chart-title">"Feeling Respected by Partner" — Full Frequency Breakdown</div>
-                            <div class="chart-container" style="height: 340px;">
-                                <canvas id="awp-chart-respected"></canvas>
-                            </div>
-                            <div class="chart-insight">"Always" respected: 43.1%→39.1%. "Often" increased 28.3%→31.7% — shift from Always to Often, potentially reflecting more nuanced self-assessment.</div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <div class="chart-title">"Voicing Disagreement Comfortably" — Full Frequency Breakdown</div>
-                            <div class="chart-container" style="height: 340px;">
-                                <canvas id="awp-chart-disagreement"></canvas>
-                            </div>
-                            <div class="chart-insight">"Often" voicing disagreement: 24.5%→28.3% (+3.8pp). "Never": 6.2%→4.7% (-1.5pp). Slight positive trend in comfortable disagreement.</div>
-                        </div>
+
                         <div class="chart-wrapper">
                             <div class="chart-title">RELATIONAL Statements — Strongly Agree % (Baseline vs Endline)</div>
                             <div class="chart-container" style="height: 340px;">
@@ -19636,45 +19623,7 @@
                 }
             });
 
-            // 8. Feeling Respected by Partner — Full Breakdown
-            awpChart('awp-chart-respected', {
-                type: 'bar',
-                data: {
-                    labels: ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
-                    datasets: [
-                        { label: 'Baseline', data: [43.1, 28.3, 18.6, 7.2, 2.8], backgroundColor: AWP.baseline },
-                        { label: 'Endline', data: [39.1, 31.7, 19.5, 7.4, 2.3], backgroundColor: AWP.midline }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top' },
-                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
-                    },
-                    scales: { y: { beginAtZero: true, max: 55, title: { display: true, text: '%' } } }
-                }
-            });
 
-            // 9. Voicing Disagreement — Full Breakdown
-            awpChart('awp-chart-disagreement', {
-                type: 'bar',
-                data: {
-                    labels: ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'],
-                    datasets: [
-                        { label: 'Baseline', data: [26.9, 24.5, 28.8, 13.6, 6.2], backgroundColor: AWP.baseline },
-                        { label: 'Endline', data: [27.1, 28.3, 27.6, 12.3, 4.7], backgroundColor: AWP.midline }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top' },
-                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
-                    },
-                    scales: { y: { beginAtZero: true, max: 40, title: { display: true, text: '%' } } }
-                }
-            });
 
             // 10. RELATIONAL Statements — Strongly Agree %
             awpChart('awp-chart-relational-statements', {
