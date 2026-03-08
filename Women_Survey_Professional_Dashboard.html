@@ -3986,6 +3986,7 @@
         <!-- RESILIENCE BUILDING ASSETS SUB-SELECTOR -->
         <div class="tabs-container" id="rba-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showRBAType(event, 'savings')" style="background: #1B5E20; color: #fff;">A. Savings</button>
+            <button class="tab-button" onclick="showRBAType(event, 'solarcooking')">B. Solar Panels & Cooking Stoves</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -10308,6 +10309,75 @@
 
             </div>
             <!-- END rba-savings -->
+
+            <!-- B. SOLAR PANELS & COOKING STOVES -->
+            <div id="rba-solarcooking" style="display:none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">B. Solar Panels & Cooking Stoves</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Resilience Building Assets — Access to Time-Saving & Environmentally Friendly Technologies</p>
+                </div>
+
+                <!-- INDICATOR 1220b KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #1B5E20;">
+                    <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Indicator 1220b: Percentage of women with access to time-saving and environmentally friendly solar panels and cooking stoves</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">50.8%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">80.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">83.1%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+32.3pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #A5D6A7; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.6em; font-weight: 800; color: #1B5E20;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHARTS: Solar Panels + Cooking Stoves -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Solar Panels — Ownership Pattern</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-solar-panels"></canvas></div>
+                    </div>
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Fuel-Efficient Cooking Stoves — Ownership Pattern</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-cooking-stoves"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- COMBINED COMPARISON CHART -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Baseline vs Midline — Combined Asset Access Comparison</h3>
+                    <div style="height: 360px;"><canvas id="rba-chart-combined-assets"></canvas></div>
+                </div>
+
+                <!-- INSIGHTS PANEL -->
+                <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; border-left: 5px solid #1B5E20;">
+                    <h3 style="color: #1B5E20; margin: 0 0 12px 0;">💡 Key Insights — Solar Panels & Cooking Stoves</h3>
+                    <ul style="color: #333; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>Cooking stoves transformation:</strong> Fuel-efficient cooking stoves saw the most dramatic growth — household access surged from 12.0% to 66.6% (+54.6pp), reflecting successful programme distribution and adoption of cleaner cooking technologies</li>
+                        <li><strong>Sole ownership rising sharply:</strong> Women's sole ownership of cooking stoves jumped from 3.5% to 39.7% and solar panels from 9.2% to 31.6%, indicating a significant shift toward women directly controlling these productive assets</li>
+                        <li><strong>Solar panels growing steadily:</strong> Household access to solar panels increased from 53.4% to 64.7% (+11.3pp), with the growth driven primarily by sole ownership rather than joint ownership — suggesting women are acquiring panels independently</li>
+                        <li><strong>Joint ownership declining:</strong> For both assets, joint ownership decreased (solar 35.6%→28.8%, stoves 8.1%→26.3% for stoves it rose from very low base) while sole ownership surged — women are moving from shared to independent asset control</li>
+                        <li><strong>Target exceeded:</strong> The combined indicator (1220b) exceeded its 80.0% target at 83.1%, driven particularly by the massive uptake of cooking stoves which reduces women's time burden on fuel collection and cooking while cutting indoor air pollution</li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- END rba-solarcooking -->
 
         </div>
         <!-- END RESILIENCE BUILDING ASSETS SECTION -->
@@ -21055,7 +21125,7 @@
         const rbaChartInstances = {};
 
         window.showRBAType = function(evt, typeName) {
-            const allTypes = ['savings'];
+            const allTypes = ['savings', 'solarcooking'];
             allTypes.forEach(t => {
                 const el = document.getElementById('rba-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -21171,6 +21241,68 @@
                         datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
                     },
                     scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // ── Section B: Solar Panels & Cooking Stoves ──
+
+            // 5. Solar Panels — Ownership Pattern
+            rbaChart('rba-chart-solar-panels', {
+                type: 'bar',
+                data: {
+                    labels: ['In Household', 'Owned Jointly', 'Owned Solely'],
+                    datasets: [
+                        { label: 'Baseline', data: [53.4, 35.6, 9.2], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [64.7, 28.8, 31.6], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 85, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // 6. Cooking Stoves — Ownership Pattern
+            rbaChart('rba-chart-cooking-stoves', {
+                type: 'bar',
+                data: {
+                    labels: ['In Household', 'Owned Jointly', 'Owned Solely'],
+                    datasets: [
+                        { label: 'Baseline', data: [12.0, 8.1, 3.5], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [66.6, 26.3, 39.7], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 85, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // 7. Combined Asset Access Comparison
+            rbaChart('rba-chart-combined-assets', {
+                type: 'bar',
+                data: {
+                    labels: ['Solar Panels\nIn HH', 'Solar Panels\nJoint', 'Solar Panels\nSole', 'Cooking Stoves\nIn HH', 'Cooking Stoves\nJoint', 'Cooking Stoves\nSole'],
+                    datasets: [
+                        { label: 'Baseline', data: [53.4, 35.6, 9.2, 12.0, 8.1, 3.5], backgroundColor: '#1B5E20' },
+                        { label: 'Midline', data: [64.7, 28.8, 31.6, 66.6, 26.3, 39.7], backgroundColor: '#FF8F00' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 85, title: { display: true, text: '% of Women' } } }
                 }
             });
         };
