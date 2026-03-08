@@ -21141,6 +21141,9 @@
                 evt.currentTarget.style.background = '#1B5E20';
                 evt.currentTarget.style.color = '#fff';
             }
+            // Re-render charts for the selected section (Chart.js needs visible canvas)
+            if (typeName === 'solarcooking') renderRBASolarCookingCharts();
+            if (typeName === 'savings') window.renderRBACharts();
         };
 
         window.renderRBACharts = function() {
@@ -21244,7 +21247,20 @@
                 }
             });
 
-            // ── Section B: Solar Panels & Cooking Stoves ──
+            // ── Section B charts rendered via renderRBASolarCookingCharts() ──
+        };
+
+        function renderRBASolarCookingCharts() {
+            function rbaChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                rbaChartInstances[canvasId] = chart;
+                return chart;
+            }
+            const RBA = { baseline: '#1B5E20', midline: '#FF8F00' };
 
             // 5. Solar Panels — Ownership Pattern
             rbaChart('rba-chart-solar-panels', {
@@ -21305,7 +21321,7 @@
                     scales: { y: { beginAtZero: true, max: 85, title: { display: true, text: '% of Women' } } }
                 }
             });
-        };
+        }
 
         // ====== AWP PRESENTATION — CHARTS & TAB SWITCHING ======
         const awpChartInstances = {};
