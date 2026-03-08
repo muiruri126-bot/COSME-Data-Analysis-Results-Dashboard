@@ -52,7 +52,7 @@ streamlit run forestry_dashboard.py
 
 Open any `.html` dashboard file directly in your browser:
 
-- `result_dashboard (19).html` — Main COSME Results Dashboard
+- `COSME_Offline_Dashboard.html` — Main COSME Results Dashboard
 - `Women_Survey_Professional_Dashboard.html` — Women's Survey Dashboard
 - `Men_Survey_Professional_Dashboard.html` — Men's Survey Dashboard
 - `donor_report.html` — Donor Report
@@ -61,7 +61,7 @@ Open any `.html` dashboard file directly in your browser:
 ## 📁 Project Structure
 
 ```
-├── result_dashboard (19).html       # Main COSME Results Dashboard
+├── COSME_Offline_Dashboard.html      # Main COSME Results Dashboard
 ├── forestry_dashboard.py            # Streamlit Forestry Dashboard
 ├── Women_Survey_Professional_Dashboard.html
 ├── Men_Survey_Professional_Dashboard.html
