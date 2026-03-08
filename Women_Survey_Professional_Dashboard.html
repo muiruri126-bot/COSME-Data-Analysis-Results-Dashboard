@@ -3965,6 +3965,7 @@
             <button class="tab-button" onclick="showAWPType(event, 'socialnorms')">B. Social Norms & Gender Attitudes</button>
             <button class="tab-button" onclick="showAWPType(event, 'climate')">C. Climate Change & NbS Knowledge</button>
             <button class="tab-button" onclick="showAWPType(event, 'decisionmaking')">D. Decision Making</button>
+            <button class="tab-button" onclick="showAWPType(event, 'accesscontrol')">E. Access & Control</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -9720,6 +9721,115 @@
 
             </div>
             <!-- END awp-decisionmaking -->
+
+            <!-- E. ACCESS AND CONTROL -->
+            <div id="awp-accesscontrol" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #AD1457 0%, #D81B60 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">E. Access & Control</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Gender Justice Journey — Women's Ownership of Assets & Access to Productive Inputs</p>
+                </div>
+
+                <!-- INDICATOR 1200c KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #AD1457;">
+                    <h3 style="margin: 0 0 16px 0; color: #AD1457; font-size: 1.15em;">Indicator 1200c: Percentage of targeted women with adequate access and control over household and enterprise resources</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #FCE4EC; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #AD1457;">41.2%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #FCE4EC; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #AD1457;">50.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">53.8%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+12.6pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.4em; font-weight: 800; color: #2E7D32;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 1: Asset Ownership -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #F8BBD0;">
+                        <span style="font-size: 1.3em;">🏠</span>
+                        <div>
+                            <h3 style="margin: 0; color: #AD1457; font-size: 1.1em;">Women Who Own Assets (Solely or Jointly)</h3>
+                            <small style="color: #888;">Percentage of women reporting sole or joint ownership of household assets</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women's Asset Ownership — Solely or Jointly (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 600px;">
+                                <canvas id="awp-chart-asset-ownership"></canvas>
+                            </div>
+                            <div class="chart-insight">Fuel-efficient cooking stoves saw the largest gain: +54.3pp (11.6%→65.9%). Solar panels (+15.6pp), small livestock (+15.4pp), and non-mechanized farm equipment (+14.3pp) also rose significantly. Some assets declined — household furniture (−21.7pp), television (−12.1pp), house/building (−7.5pp) — possibly reflecting changes in survey interpretation or asset redistribution patterns.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 2: Input Access -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #F8BBD0;">
+                        <span style="font-size: 1.3em;">🌱</span>
+                        <div>
+                            <h3 style="margin: 0; color: #AD1457; font-size: 1.1em;">Women With Access to Productive Inputs</h3>
+                            <small style="color: #888;">Percentage of women stating inputs are available in their HH and they can use them</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women's Access to Productive Inputs (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-input-access"></canvas>
+                            </div>
+                            <div class="chart-insight">Natural/organic fertilizers showed the largest gain: +17.8pp (32.2%→50.0%). Animal feed access tripled: +17.1pp (8.5%→25.6%). Veterinary drugs rose +9.8pp (16.1%→25.9%). Seeds declined slightly (−6.4pp) and aquaculture inputs (fingerlings, fish feed) remain very low or dropped to zero, reflecting the programme's land-based rather than aquaculture focus.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #F8BBD0;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <h3 style="margin: 0; color: #AD1457; font-size: 1.1em;">Summary, Highlights & Insights</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #FCE4EC; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #AD1457;">📈 Key Highlights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Target exceeded:</strong> Indicator 1200c reached 53.8% against a 50.0% target (+12.6pp from 41.2% baseline), showing meaningful progress in women's access to and control over resources</li>
+                                <li><strong>Energy access transformed:</strong> Fuel-efficient cooking stoves ownership surged from 11.6% to 65.9% (+54.3pp) — the single largest asset gain, likely linked to programme distribution or promotion activities</li>
+                                <li><strong>Productive asset gains:</strong> Solar panels (+15.6pp), small livestock (+15.4pp), non-mechanized farm tools (+14.3pp), and cellphones (+8.5pp) all increased, strengthening women's economic capacity</li>
+                                <li><strong>Agricultural input access improved:</strong> Natural fertilizers (+17.8pp), animal feed (+17.1pp), and veterinary drugs (+9.8pp) increased, aligning with NbS and livelihood programming</li>
+                                <li><strong>Mixed results in traditional assets:</strong> Furniture (−21.7pp), TV (−12.1pp), and house/building (−7.5pp) declined — may reflect economic pressures, asset redistribution, or survey methodology differences</li>
+                            </ul>
+                        </div>
+                        <div style="background: #E8F5E9; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2E7D32;">🔍 Programme Insights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Programme-linked assets rising:</strong> The strongest gains are in assets directly linked to COSME programming — fuel-efficient stoves, solar panels, farm tools, and livestock — suggesting successful asset-building interventions</li>
+                                <li><strong>Input access aligns with NbS focus:</strong> The surge in organic fertilizers (+17.8pp) and animal feed (+17.1pp) connects directly to the nature-based solutions and sustainable agriculture training provided by the programme</li>
+                                <li><strong>Aquaculture gap persists:</strong> Fingerlings dropped to 0% and fish feed to 0.9% — indicating that aquaculture inputs remain outside the programme's current scope or supply chain reach</li>
+                                <li><strong>Digital inclusion progressing:</strong> Cellphone ownership rose from 74.9% to 83.4% (+8.5pp), supporting women's access to information, mobile money, and market connectivity</li>
+                                <li><strong>Need for deeper analysis:</strong> The decline in some traditional assets (furniture, TV, housing) warrants investigation — whether this reflects genuine asset loss, changes in joint ownership reporting, or sampling differences between baseline and midline</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-accesscontrol -->
 
         </div>
         <!-- END AWP PRESENTATION SECTION -->
@@ -20458,7 +20568,7 @@
         const awpChartInstances = {};
 
         window.showAWPType = function(evt, typeName) {
-            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking'];
+            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking', 'accesscontrol'];
             allTypes.forEach(t => {
                 const el = document.getElementById('awp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -20479,6 +20589,7 @@
             if (typeName === 'socialnorms') renderAWPSocialNormsCharts();
             if (typeName === 'climate') renderAWPClimateCharts();
             if (typeName === 'decisionmaking') renderAWPDecisionMakingCharts();
+            if (typeName === 'accesscontrol') renderAWPAccessControlCharts();
         };
 
         window.renderAWPCharts = function() {
@@ -21204,6 +21315,102 @@
                     scales: {
                         x: { beginAtZero: true, max: 75, title: { display: true, text: '% To a Large Extent' } },
                         y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION E: ACCESS & CONTROL CHARTS ======
+        window.renderAWPAccessControlCharts = function() {
+            const AWP = {
+                baseline: '#7B1FA2',
+                midline: '#AD1457'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Asset Ownership
+            awpChart('awp-chart-asset-ownership', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Jerry Cans/\nWater Jugs',
+                        'Bed',
+                        'Cellphone',
+                        'Household\nFurniture',
+                        'House/\nBuilding',
+                        'Fuel-Efficient\nCooking Stoves',
+                        'Non-Mechanized\nFarm Equipment',
+                        'Small Livestock\n(Sheep/Goats)',
+                        'Solar\nPanels',
+                        'Land/\nPlot',
+                        'Television',
+                        'Large Livestock\n(Cattle/Donkeys)',
+                        'Bicycle',
+                        'Motorcycle',
+                        'Boat',
+                        'Fridge',
+                        'Gas/Electric\nCooker',
+                        'Mechanized Farm\nEquipment',
+                        'Fishing\nGear',
+                        'Boat\nEngine'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [92.8, 84.4, 74.9, 77.6, 75.6, 11.6, 47.6, 45.2, 44.8, 58.8, 22.1, 17.7, 6.2, 6.8, 1.4, 3.5, 4.1, 0.0, 2.7, 0.4], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [90.9, 80.3, 83.4, 55.9, 68.1, 65.9, 61.9, 60.6, 60.3, 52.2, 10.0, 18.8, 8.8, 6.6, 4.7, 2.2, 1.6, 3.4, 2.2, 1.6], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 105, title: { display: true, text: '% Own Solely or Jointly' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Input Access
+            awpChart('awp-chart-input-access', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Seeds',
+                        'Natural/Organic\nFertilizers',
+                        'Animal\nFeed',
+                        'Veterinary\nDrugs',
+                        'Pesticide/\nHerbicides',
+                        'Commercial\nFertilizers',
+                        'Fingerlings/\nJuvenile Fish',
+                        'Fish\nFeed'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [56.7, 32.2, 8.5, 16.1, 24.5, 18.6, 2.7, 2.5], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [50.3, 50.0, 25.6, 25.9, 24.4, 19.7, 0.0, 0.9], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 70, title: { display: true, text: '% Available & Can Use' } },
+                        y: { ticks: { font: { size: 11 } } }
                     }
                 }
             });
