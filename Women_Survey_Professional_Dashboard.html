@@ -3967,6 +3967,7 @@
             <button class="tab-button" onclick="showAWPType(event, 'decisionmaking')">D. Decision Making</button>
             <button class="tab-button" onclick="showAWPType(event, 'accesscontrol')">E. Access & Control</button>
             <button class="tab-button" onclick="showAWPType(event, 'timepoverty')">F. Time Poverty, Roles & Responsibilities</button>
+            <button class="tab-button" onclick="showAWPType(event, 'familysupport')">G. Family Support</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -9960,6 +9961,155 @@
 
             </div>
             <!-- END awp-timepoverty -->
+
+            <!-- G. FAMILY SUPPORT -->
+            <div id="awp-familysupport" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #00695C 0%, #00897B 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">G. Family Support</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Gender Justice Journey — Men's Support for Female Household Members in NbS Livelihood Activities</p>
+                </div>
+
+                <!-- INDICATOR 1230a KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #00695C;">
+                    <h3 style="margin: 0 0 16px 0; color: #00695C; font-size: 1.15em;">Indicator 1230a: Percentage of male family members with adequate knowledge and practical skills to promote and support NbS, economic rights of women and GE&I</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E0F2F1; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #00695C;">54.70%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E0F2F1; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #00695C;">65.00%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">80.3%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+25.6pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.4em; font-weight: 800; color: #2E7D32;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 1: Support Overview -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #80CBC4;">
+                        <span style="font-size: 1.3em;">🤝</span>
+                        <div>
+                            <h3 style="margin: 0; color: #00695C; font-size: 1.1em;">Men Supporting Female HH Members — Overview</h3>
+                            <small style="color: #888;">Percentage of men reporting 'Yes' support across three NbS livelihood activities</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men Supporting Female HH Members — Yes / No / Somehow (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-support-overview"></canvas>
+                            </div>
+                            <div class="chart-insight">Male support surged across all three activities. Mangrove support ('Yes') jumped from 29.7% to 80.7% (+51pp). Seaweed support leapt from 15.7% to 83.9% (+68.2pp). Forest support reached 95.8% at midline, up from 33.7% (+62.1pp). 'No' responses dropped dramatically — to 17.5%, 0%, and 0% respectively.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 2: Mangrove Support Types -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #80CBC4;">
+                        <span style="font-size: 1.3em;">🌊</span>
+                        <div>
+                            <h3 style="margin: 0; color: #00695C; font-size: 1.1em;">Type of Support — Mangrove Restoration</h3>
+                            <small style="color: #888;">How men support female HH members in their mangrove restoration efforts</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men's Type of Support for Mangrove Restoration (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-mangrove-support"></canvas>
+                            </div>
+                            <div class="chart-insight">Active support forms all increased: direct mangrove work support doubled (13.1%→27.3%), encouragement more than doubled (8.9%→21.8%), and household chore support rose (8.9%→20.0%). 'None' dropped sharply from 61.4% to 21.8%. Community support-seeking tripled (1.2%→3.6%) though remains low.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 3: Seaweed Support Types -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #80CBC4;">
+                        <span style="font-size: 1.3em;">🌿</span>
+                        <div>
+                            <h3 style="margin: 0; color: #00695C; font-size: 1.1em;">Type of Support — Seaweed Farming</h3>
+                            <small style="color: #888;">How men support female HH members in their seaweed farming efforts</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men's Type of Support for Seaweed Farming (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-seaweed-support"></canvas>
+                            </div>
+                            <div class="chart-insight">Seaweed farming work support saw the largest increase: 8.2%→28.0% (+19.8pp). Encouragement rose from 2.7% to 10.0%, and material/input purchase support increased (1.9%→6.0%). 'None' halved from 82.5% to 50.0%, though remains high — suggesting room for further engagement in this activity.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 4: Forest Support Types -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #80CBC4;">
+                        <span style="font-size: 1.3em;">🌲</span>
+                        <div>
+                            <h3 style="margin: 0; color: #00695C; font-size: 1.1em;">Type of Support — Forest Management & Conservation</h3>
+                            <small style="color: #888;">How men support female HH members in their forest management and conservation efforts</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Men's Type of Support for Forest Management & Conservation (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-forest-support"></canvas>
+                            </div>
+                            <div class="chart-insight">Encouragement saw the largest gain: 6.5%→41.7% (+35.2pp). Material/input purchase support surged (2.4%→25.0%). Community support-seeking rose from 0.8% to 4.2%. 'None' collapsed from 45.5% to just 4.2% — the strongest engagement shift across all three NbS activities. Direct forest work and household chore support saw slight reductions, possibly reflecting a shift toward other support types.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #80CBC4;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <h3 style="margin: 0; color: #00695C; font-size: 1.1em;">Summary, Highlights & Insights</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #E0F2F1; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #00695C;">📈 Key Highlights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Target exceeded:</strong> Indicator 1230a reached 80.3% against a 65.0% target (+25.6pp from 54.7% baseline), demonstrating significant growth in men's knowledge and skills to support NbS, economic rights, and GE&I</li>
+                                <li><strong>Forest support near-universal:</strong> 95.8% of men now support female HH members in forest management (up from 33.7%), with 'None' collapsing from 45.5% to just 4.2% — the strongest shift across all three activities</li>
+                                <li><strong>Seaweed support transformed:</strong> Male support for seaweed farming jumped from 15.7% to 83.9% ('Yes'), the largest absolute gain (+68.2pp) among the three activities</li>
+                                <li><strong>Mangrove engagement strong:</strong> Support rose from 29.7% to 80.7%, with direct mangrove work support doubling (13.1%→27.3%) and encouragement more than doubling (8.9%→21.8%)</li>
+                                <li><strong>Disengagement plummeting:</strong> 'None' responses dropped across all activities — mangrove (61.4%→21.8%), seaweed (82.5%→50.0%), forest (45.5%→4.2%) — showing men actively moving from passive to supportive roles</li>
+                            </ul>
+                        </div>
+                        <div style="background: #E8F5E9; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2E7D32;">🔍 Programme Insights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Men's engagement model works:</strong> The dramatic increase across all support categories demonstrates that the programme's male engagement strategy — combining awareness, skills-building, and norm change — is producing tangible behavioural shifts</li>
+                                <li><strong>Encouragement is the leading support type:</strong> Across activities, encouragement consistently grew the fastest (especially forest: +35.2pp), suggesting men are moving from indifference to active advocacy for women's participation</li>
+                                <li><strong>Seaweed support has room to grow:</strong> While 'Yes' support reached 83.9%, 'None' for seaweed support types remains at 50% — indicating men declare support but may not yet be providing specific tangible assistance in this activity</li>
+                                <li><strong>Forest as a model:</strong> Forest management shows the most complete transformation — near-universal support (95.8%), lowest 'None' (4.2%), and the widest range of active support types. This pattern can inform engagement strategies for mangrove and seaweed</li>
+                                <li><strong>Material support emerging:</strong> Purchase of materials/inputs for forest activities surged (2.4%→25.0%), showing men are investing financially — a deeper level of support beyond time and encouragement that strengthens women's economic participation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-familysupport -->
 
         </div>
         <!-- END AWP PRESENTATION SECTION -->
@@ -20698,7 +20848,7 @@
         const awpChartInstances = {};
 
         window.showAWPType = function(evt, typeName) {
-            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking', 'accesscontrol', 'timepoverty'];
+            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking', 'accesscontrol', 'timepoverty', 'familysupport'];
             allTypes.forEach(t => {
                 const el = document.getElementById('awp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -20721,6 +20871,7 @@
             if (typeName === 'decisionmaking') renderAWPDecisionMakingCharts();
             if (typeName === 'accesscontrol') renderAWPAccessControlCharts();
             if (typeName === 'timepoverty') renderAWPTimePovertyCharts();
+            if (typeName === 'familysupport') renderAWPFamilySupportCharts();
         };
 
         window.renderAWPCharts = function() {
@@ -21640,6 +21791,144 @@
                     },
                     scales: {
                         x: { beginAtZero: true, max: 60, title: { display: true, text: '% Reporting Joint Responsibility' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION G: FAMILY SUPPORT CHARTS ======
+        window.renderAWPFamilySupportCharts = function() {
+            const AWP = {
+                baseline: '#00695C',
+                midline: '#26A69A'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Chart 1: Support Overview (grouped bar — Yes/No/Somehow for 3 activities)
+            awpChart('awp-chart-support-overview', {
+                type: 'bar',
+                data: {
+                    labels: ['Mangrove\nBaseline', 'Mangrove\nMidline', 'Seaweed\nBaseline', 'Seaweed\nMidline', 'Forest\nBaseline', 'Forest\nMidline'],
+                    datasets: [
+                        { label: 'Yes', data: [29.7, 80.7, 15.7, 83.9, 33.7, 95.8], backgroundColor: '#2E7D32' },
+                        { label: 'No', data: [63.4, 17.5, 2.2, 0.0, 1.6, 0.0], backgroundColor: '#C62828' },
+                        { label: 'Somehow', data: [6.8, 1.8, 82.1, 16.1, 64.7, 4.2], backgroundColor: '#F9A825' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v > 0 ? v + '%' : '' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 110, title: { display: true, text: '% of Men' } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Chart 2: Mangrove Support Types
+            awpChart('awp-chart-mangrove-support', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Supported with\nmangrove work',
+                        'Encouraged\nparticipation',
+                        'Supported with\nHH chores',
+                        'Purchased materials\n& inputs',
+                        'Sought community\nsupport',
+                        'None',
+                        'Other'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [13.1, 8.9, 8.9, 5.8, 1.2, 61.4, 0.8], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [27.3, 21.8, 20.0, 5.5, 3.6, 21.8, 0.0], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 75, title: { display: true, text: '% of Men' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Chart 3: Seaweed Support Types
+            awpChart('awp-chart-seaweed-support', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Supported with\nseaweed work',
+                        'Encouraged\nparticipation',
+                        'Purchased materials\n& inputs',
+                        'Supported with\nHH chores',
+                        'Sought community\nsupport',
+                        'None',
+                        'Other'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [8.2, 2.7, 1.9, 3.5, 0.4, 82.5, 0.8], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [28.0, 10.0, 6.0, 4.0, 2.0, 50.0, 0.0], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 95, title: { display: true, text: '% of Men' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Chart 4: Forest Support Types
+            awpChart('awp-chart-forest-support', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Encouraged\nparticipation',
+                        'Purchased materials\n& inputs',
+                        'Supported with\nforest work',
+                        'Supported with\nHH chores',
+                        'Sought community\nsupport',
+                        'None',
+                        'Other'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [6.5, 2.4, 23.6, 19.5, 0.8, 45.5, 1.6], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [41.7, 25.0, 12.5, 12.5, 4.2, 4.2, 0.0], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 55, title: { display: true, text: '% of Men' } },
                         y: { ticks: { font: { size: 10 } } }
                     }
                 }
