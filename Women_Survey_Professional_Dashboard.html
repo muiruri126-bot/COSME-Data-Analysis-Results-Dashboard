@@ -3773,6 +3773,9 @@
                     <button class="sidebar-item" onclick="sidebarNav('cross-dataset', this)" data-key="cross-dataset">
                         <span class="item-label">Cross-Dataset Synthesis</span>
                     </button>
+                    <button class="sidebar-item" onclick="sidebarNav('cosme-pmf', this)" data-key="cosme-pmf">
+                        <span class="item-label">COSME PMF – Midline</span>
+                    </button>
                 </div>
             </div>
 
@@ -3800,6 +3803,9 @@
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('schools-presentation', this)" data-key="schools-presentation">
                         <span class="item-label">Schools</span>
+                    </button>
+                    <button class="sidebar-item" onclick="sidebarNav('pmf-presentation', this)" data-key="pmf-presentation">
+                        <span class="item-label">COSME PMF – Midline</span>
                     </button>
                 </div>
             </div>
@@ -3905,6 +3911,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('automated-insights', this)">
                     Impact & Evidence
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('cosme-pmf', this)">
+                    COSME PMF – Midline
+                </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('awp-presentation', this)">
                     🎯 GJJ
                 </button>
@@ -3922,6 +3931,9 @@
                 </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('schools-presentation', this)">
                     🏫 Schools
+                </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('pmf-presentation', this)">
+                    📊 COSME PMF – Midline
                 </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
                     📄 Report Generation
@@ -3958,12 +3970,14 @@
                 <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
                 <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
                 <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
+                <button class="survey-btn" onclick="switchSurvey('cosme-pmf')">📊 COSME PMF – Midline</button>
                 <button class="survey-btn" onclick="switchSurvey('awp-presentation')">🎯 GJJ</button>
                 <button class="survey-btn" onclick="switchSurvey('resilience-assets')">💰 Resilience Building Assets</button>
                 <button class="survey-btn" onclick="switchSurvey('forestry-presentation')">🌲 Forestry</button>
                 <button class="survey-btn" onclick="switchSurvey('seaweed-presentation')">🌊 Seaweed</button>
                 <button class="survey-btn" onclick="switchSurvey('mangrove-presentation')">🌳 Mangrove</button>
                 <button class="survey-btn" onclick="switchSurvey('schools-presentation')">🏫 Schools</button>
+                <button class="survey-btn" onclick="switchSurvey('pmf-presentation')">📊 COSME PMF</button>
                 <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
                 <button class="survey-btn" onclick="switchSurvey('analytics-dashboard')">📊 Analytics</button>
             </div>
@@ -8680,6 +8694,91 @@
         <!-- END IMPACT & EVIDENCE SECTION -->
 
         <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- COSME PMF – MIDLINE SECTION                                -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="cosme-pmf-section" class="survey-section" style="display:none;">
+
+            <!-- HEADER -->
+            <div style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%); color: #fff; padding: 28px 30px; border-radius: 12px; margin-bottom: 24px;">
+                <h2 style="margin: 0 0 8px 0; font-size: 1.6em;">📊 COSME PMF – Midline Survey Results</h2>
+                <p style="margin: 0; opacity: 0.92; font-size: 0.95em;">This tab presents COSME Project Performance Measurement Framework (PMF) midline results, comparing Baseline, Midline and Target values for key indicators, and highlighting progress with traffic-light status.</p>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <label style="font-weight: 600; color: #333;">Filter by Thematic Area:</label>
+                <select id="pmf-theme-filter" onchange="window.filterPMF()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.95em; min-width: 240px;">
+                    <option value="all">All Thematic Areas</option>
+                </select>
+                <label style="font-weight: 600; color: #333; margin-left: 16px;">Sort by:</label>
+                <select id="pmf-sort" onchange="window.filterPMF()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.95em;">
+                    <option value="code">Indicator Code</option>
+                    <option value="achievement-desc">% Achievement (High → Low)</option>
+                    <option value="achievement-asc">% Achievement (Low → High)</option>
+                </select>
+            </div>
+
+            <!-- SUMMARY KPIs -->
+            <div id="pmf-summary-kpis" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px;"></div>
+
+            <!-- PMF TABLE -->
+            <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto;">
+                <h3 style="margin: 0 0 16px 0; color: #005a9e; font-size: 1.15em;">PMF Indicator Performance Table</h3>
+                <table id="pmf-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 800px;"></table>
+            </div>
+
+            <!-- MAIN BAR CHART -->
+            <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                <h3 style="margin: 0 0 16px 0; color: #005a9e; font-size: 1.15em;">Baseline vs Midline vs Target — All Indicators</h3>
+                <div style="height: 420px; position: relative;"><canvas id="pmf-chart-main"></canvas></div>
+            </div>
+
+            <!-- CHARTS ROW 1: Radar + NbS hectares -->
+            <div class="charts-grid" style="margin-bottom: 28px;">
+                <div class="chart-wrapper">
+                    <div class="chart-title">Index & Perception Indicators — Radar</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-radar"></canvas></div>
+                    <div class="chart-insight">Comparing Baseline, Midline and Target for Resilience Index (1000a), WGEI (1000b), Gender Equality Perception by Women (1210c) and by Men (1230b).</div>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-title">1100a — Area Under Rehabilitation (Hectares)</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-hectares"></canvas></div>
+                    <div class="chart-insight">Gender-responsive NbS with biodiversity benefits: 63 ha rehabilitated at Midline against 123.8 ha target (50.9% progress).</div>
+                </div>
+            </div>
+
+            <!-- CHARTS ROW 2: 1100c disaggregation + 1110a gender -->
+            <div class="charts-grid" style="margin-bottom: 28px;">
+                <div class="chart-wrapper">
+                    <div class="chart-title">1100c — Seaweed Groups by Activity Type (Midline)</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-1100c"></canvas></div>
+                    <div class="chart-insight">Of 19 seaweed groups: 17 in Production, 13 in Value Addition, 9 in Commercialization. Combined midline = 39 (target 20).</div>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-title">1110a — Mangrove Knowledge by Gender</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-1110a"></canvas></div>
+                    <div class="chart-insight">Female participants showed the strongest gain (+52.7pp), exceeding male participants. All subgroups exceeded the 57% target.</div>
+                </div>
+            </div>
+
+            <!-- CHART ROW 3: Time use -->
+            <div class="charts-grid" style="margin-bottom: 28px;">
+                <div class="chart-wrapper">
+                    <div class="chart-title">1200b — Women's Unpaid Work Time (Hours/Day)</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-timeuse"></canvas></div>
+                    <div class="chart-insight">Unpaid work time decreased from 9.3 to 7.7 hours/day, exceeding the 8.3-hour target. Lower is better.</div>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-title">Achievement Against Target (%)</div>
+                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-achievement"></canvas></div>
+                    <div class="chart-insight">Horizontal bar showing % achievement for each indicator. Green ≥100%, amber 80–99%, red &lt;80%.</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END COSME PMF SECTION -->
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
         <!-- REPORT GENERATION SECTION                                  -->
         <!-- ═══════════════════════════════════════════════════════════ -->
         <div id="report-generation-section" class="survey-section" style="display:none;">
@@ -13327,6 +13426,14 @@
                 footerSample: 'Real-time visitor tracking, tab usage, device breakdown & engagement metrics',
                 renderFn: () => renderAnalyticsDashboard()
             },
+            'cosme-pmf': {
+                showSection: 'cosme-pmf-section',
+                subSelector: null,
+                title: 'COSME PMF – Midline Survey Results',
+                footerTitle: '<strong>COSME PMF — Performance Measurement Framework Midline Results</strong>',
+                footerSample: 'Baseline vs Midline vs Target for 20 key indicators across 7 thematic areas',
+                renderFn: () => window.renderCosmePMF()
+            },
             'mangrove-resources': {
                 showSection: 'mangrove-resources-section',
                 subSelector: null,
@@ -13382,6 +13489,14 @@
                 footerTitle: '<strong>Schools — Access to Clean Water, Water Infrastructure & 4K Clubs</strong>',
                 footerSample: '65 Schools | Kwale & Kilifi Counties | Baseline to Midline Assessment',
                 renderFn: () => window.renderSchoolsPresCleanWaterCharts()
+            },
+            'pmf-presentation': {
+                showSection: 'cosme-pmf-section',
+                subSelector: null,
+                title: 'COSME PMF – Midline Results',
+                footerTitle: '<strong>COSME PMF – Performance Measurement Framework Midline Results</strong>',
+                footerSample: 'Baseline vs Midline vs Target | 20+ Indicators | Traffic-Light Status',
+                renderFn: () => window.renderCosmePMF()
             }
         };
 
@@ -13395,7 +13510,8 @@
             'awp-presentation-section', 'resilience-assets-section', 'forestry-presentation-section',
             'seaweed-presentation-section',
             'mangrove-presentation-section',
-            'schools-presentation-section'
+            'schools-presentation-section',
+            'cosme-pmf-section'
         ];
         const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
 
@@ -22840,6 +22956,344 @@
             // Smooth scroll to detail panel
             panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- COSME PMF – MIDLINE RENDER ENGINE                             -->
+    <!-- ============================================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ── INDICATOR DATA ────────────────────────────────────────
+        const cosmePmfIndicators = [
+            { code: '1000a', name: 'Resilience Index (RI)', baseline: 37.0, midline: 43.0, target: 45.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
+            { code: '1000b', name: 'Women & Girls Empowerment Index (WGEI)', baseline: 51.2, midline: 68.3, target: 60.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
+            { code: '1110a', name: 'Mangrove knowledge (All)', baseline: 36.9, midline: 81.9, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1110a (F)', name: 'Mangrove knowledge (Female)', baseline: 34.7, midline: 87.4, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1110a (M)', name: 'Mangrove knowledge (Male)', baseline: 38.2, midline: 80.2, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1100a', name: 'Area under rehabilitation (hectares)', baseline: 0, midline: 63, target: 123.8, unit: 'ha', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1100c', name: 'Seaweed groups in production/VA/commercialization', baseline: 0, midline: 39, target: 20, unit: 'groups', theme: 'NbS / Environment', direction: 'increase_good', disagg: { Production: 17, 'Production + VA': 13, Commercialization: 9 } },
+            { code: '1200a', name: 'Women with decision-making power', baseline: 57.6, midline: 95.9, target: 65.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
+            { code: '1200b', name: "Women's unpaid work time (hours/day)", baseline: 9.3, midline: 7.7, target: 8.3, unit: 'hrs', theme: 'Unpaid Care & Time Use', direction: 'decrease_good' },
+            { code: '1200c', name: 'Women with equitable access to resources', baseline: 41.2, midline: 53.8, target: 50.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
+            { code: '1110b', name: 'Sustainable NbS management practices adopted', baseline: 0, midline: 52, target: 70, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1120a', name: 'Seaweed farming knowledge', baseline: 49.3, midline: 29.3, target: 68.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1120b', name: 'Women with adequate resources for seaweed production', baseline: 0, midline: 34, target: 75, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1210a', name: 'Women with improved gender norms awareness', baseline: 20.7, midline: 80.9, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1210b', name: 'Women using improved climate-adaptive practices', baseline: 32.7, midline: 46.3, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1210c', name: 'Gender Equality Perception Score (Women)', baseline: 42.1, midline: 64.7, target: 55.0, unit: '/100', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1220a', name: 'Women participating in green economic activities', baseline: 28.8, midline: 91.9, target: 70.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
+            { code: '1220b', name: 'Women accessing green technology/tools', baseline: 50.8, midline: 83.1, target: 80.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
+            { code: '1230a', name: 'Male family members supporting gender equality', baseline: 43.57, midline: 89.77, target: 65.00, unit: '%', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' },
+            { code: '1230b', name: 'Male Family Engagement Score', baseline: 41.2, midline: 70.2, target: 55.0, unit: '/100', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' }
+        ];
+
+        // ── CALCULATIONS ──────────────────────────────────────────
+        function calcIndicator(ind) {
+            const { baseline, midline, target, direction } = ind;
+            const diffMT = direction === 'decrease_good' ? target - midline : midline - target;
+            const gap = direction === 'decrease_good' ? baseline - target : target - baseline;
+            const progress = direction === 'decrease_good' ? baseline - midline : midline - baseline;
+            const pctAchievement = gap !== 0 ? Math.round((progress / gap) * 1000) / 10 : (progress >= 0 ? 100 : 0);
+            let status, statusColor, statusLabel;
+            if (pctAchievement >= 100) { status = 'green'; statusColor = '#27ae60'; statusLabel = 'Achieved / Exceeded'; }
+            else if (pctAchievement >= 80) { status = 'amber'; statusColor = '#f39c12'; statusLabel = 'On Track'; }
+            else if (pctAchievement >= 0) { status = 'red'; statusColor = '#e74c3c'; statusLabel = 'Below Target'; }
+            else { status = 'red'; statusColor = '#e74c3c'; statusLabel = 'Regressed'; }
+            return { ...ind, diffMT: Math.round(diffMT * 10) / 10, pctAchievement, status, statusColor, statusLabel };
+        }
+
+        let enrichedData = cosmePmfIndicators.map(calcIndicator);
+
+        // ── STATUS BADGE HTML ─────────────────────────────────────
+        function badge(color, label) {
+            return '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;color:#fff;background:' + color + ';">' + label + '</span>';
+        }
+
+        // ── CHART HELPER ─────────────────────────────────────────
+        function pmfChart(canvasId, config) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return null;
+            const existing = Chart.getChart(ctx);
+            if (existing) existing.destroy();
+            return new Chart(ctx.getContext('2d'), config);
+        }
+
+        // ── FILTER / SORT ─────────────────────────────────────────
+        window.filterPMF = function() {
+            const theme = document.getElementById('pmf-theme-filter').value;
+            const sort = document.getElementById('pmf-sort').value;
+            let data = enrichedData.slice();
+            if (theme !== 'all') data = data.filter(d => d.theme === theme);
+            if (sort === 'achievement-desc') data.sort((a, b) => b.pctAchievement - a.pctAchievement);
+            else if (sort === 'achievement-asc') data.sort((a, b) => a.pctAchievement - b.pctAchievement);
+            renderPMFTable(data);
+            renderPMFMainChart(data);
+            renderAchievementChart(data);
+        };
+
+        // ── SUMMARY KPIs ─────────────────────────────────────────
+        function renderSummaryKPIs() {
+            const total = enrichedData.length;
+            const green = enrichedData.filter(d => d.status === 'green').length;
+            const amber = enrichedData.filter(d => d.status === 'amber').length;
+            const red = enrichedData.filter(d => d.status === 'red').length;
+            const avgAchievement = Math.round(enrichedData.reduce((s, d) => s + d.pctAchievement, 0) / total * 10) / 10;
+            const container = document.getElementById('pmf-summary-kpis');
+            if (!container) return;
+            const kpis = [
+                { label: 'Total Indicators', value: total, color: '#0072CE', icon: '📊' },
+                { label: 'Achieved / Exceeded', value: green, color: '#27ae60', icon: '✅' },
+                { label: 'On Track (80-99%)', value: amber, color: '#f39c12', icon: '🟡' },
+                { label: 'Below Target', value: red, color: '#e74c3c', icon: '🔴' },
+                { label: 'Avg Achievement', value: avgAchievement + '%', color: '#6c5ce7', icon: '📈' }
+            ];
+            container.innerHTML = kpis.map(k =>
+                '<div style="background:#fff;border-radius:12px;padding:18px 16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-top:4px solid ' + k.color + ';">' +
+                    '<div style="font-size:1.4em;margin-bottom:4px;">' + k.icon + '</div>' +
+                    '<div style="font-size:1.7em;font-weight:700;color:' + k.color + ';">' + k.value + '</div>' +
+                    '<div style="font-size:0.82em;color:#666;margin-top:4px;">' + k.label + '</div>' +
+                '</div>'
+            ).join('');
+        }
+
+        // ── PMF TABLE ─────────────────────────────────────────────
+        function renderPMFTable(data) {
+            const table = document.getElementById('pmf-table');
+            if (!table) return;
+            const hdrStyle = 'padding:10px 12px;text-align:center;font-weight:600;color:#fff;background:#005a9e;border:1px solid #ddd;font-size:0.88em;';
+            const cellStyle = 'padding:8px 12px;text-align:center;border:1px solid #eee;font-size:0.88em;';
+            let html = '<thead><tr>' +
+                '<th style="' + hdrStyle + 'text-align:left;">Indicator</th>' +
+                '<th style="' + hdrStyle + '">Baseline</th>' +
+                '<th style="' + hdrStyle + '">Midline</th>' +
+                '<th style="' + hdrStyle + '">Target</th>' +
+                '<th style="' + hdrStyle + '">Unit</th>' +
+                '<th style="' + hdrStyle + '">Diff (M–T)</th>' +
+                '<th style="' + hdrStyle + '">% Achievement</th>' +
+                '<th style="' + hdrStyle + '">Status</th>' +
+                '</tr></thead><tbody>';
+            data.forEach((d, i) => {
+                const bgRow = i % 2 === 0 ? '#f9fbfd' : '#fff';
+                html += '<tr style="background:' + bgRow + ';">' +
+                    '<td style="' + cellStyle + 'text-align:left;font-weight:600;">' + d.code + ' — ' + d.name + '</td>' +
+                    '<td style="' + cellStyle + '">' + d.baseline + '</td>' +
+                    '<td style="' + cellStyle + 'font-weight:600;">' + d.midline + '</td>' +
+                    '<td style="' + cellStyle + '">' + d.target + '</td>' +
+                    '<td style="' + cellStyle + '">' + d.unit + '</td>' +
+                    '<td style="' + cellStyle + 'color:' + (d.diffMT >= 0 ? '#27ae60' : '#e74c3c') + ';font-weight:600;">' + (d.diffMT >= 0 ? '+' : '') + d.diffMT + '</td>' +
+                    '<td style="' + cellStyle + 'font-weight:700;color:' + d.statusColor + ';">' + d.pctAchievement + '%</td>' +
+                    '<td style="' + cellStyle + '">' + badge(d.statusColor, d.statusLabel) + '</td>' +
+                '</tr>';
+            });
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        // ── MAIN CLUSTERED BAR CHART ──────────────────────────────
+        function renderPMFMainChart(data) {
+            pmfChart('pmf-chart-main', {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.code),
+                    datasets: [
+                        { label: 'Baseline', data: data.map(d => d.baseline), backgroundColor: 'rgba(108,92,231,0.7)', borderColor: '#6c5ce7', borderWidth: 1 },
+                        { label: 'Midline', data: data.map(d => d.midline), backgroundColor: 'rgba(0,114,206,0.7)', borderColor: '#0072CE', borderWidth: 1 },
+                        { label: 'Target', data: data.map(d => d.target), backgroundColor: 'rgba(39,174,96,0.5)', borderColor: '#27ae60', borderWidth: 1, borderDash: [5, 5] }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Value' } },
+                        x: { ticks: { maxRotation: 45, minRotation: 45, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // ── RADAR CHART (INDEX INDICATORS) ────────────────────────
+        function renderRadarChart() {
+            const radarCodes = ['1000a', '1000b', '1210c', '1230b'];
+            const radarData = radarCodes.map(c => enrichedData.find(d => d.code === c)).filter(Boolean);
+            pmfChart('pmf-chart-radar', {
+                type: 'radar',
+                data: {
+                    labels: radarData.map(d => d.code + '\n' + d.name.split('(')[0].trim()),
+                    datasets: [
+                        { label: 'Baseline', data: radarData.map(d => d.baseline), borderColor: '#6c5ce7', backgroundColor: 'rgba(108,92,231,0.15)', pointBackgroundColor: '#6c5ce7', borderWidth: 2 },
+                        { label: 'Midline', data: radarData.map(d => d.midline), borderColor: '#0072CE', backgroundColor: 'rgba(0,114,206,0.15)', pointBackgroundColor: '#0072CE', borderWidth: 2 },
+                        { label: 'Target', data: radarData.map(d => d.target), borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.10)', pointBackgroundColor: '#27ae60', borderWidth: 2, borderDash: [5, 5] }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' }, datalabels: { display: false } },
+                    scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } }
+                }
+            });
+        }
+
+        // ── HECTARES CHART (1100a) ────────────────────────────────
+        function renderHectaresChart() {
+            pmfChart('pmf-chart-hectares', {
+                type: 'bar',
+                data: {
+                    labels: ['Baseline', 'Midline', 'Target'],
+                    datasets: [{
+                        label: 'Hectares',
+                        data: [0, 63, 123.8],
+                        backgroundColor: ['#bdc3c7', '#0072CE', 'rgba(39,174,96,0.5)'],
+                        borderColor: ['#95a5a6', '#005a9e', '#27ae60'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + ' ha' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 140, title: { display: true, text: 'Hectares' } } }
+                }
+            });
+        }
+
+        // ── 1100c DISAGGREGATION CHART ────────────────────────────
+        function render1100cChart() {
+            pmfChart('pmf-chart-1100c', {
+                type: 'bar',
+                data: {
+                    labels: ['Production', 'Production + VA', 'Commercialization'],
+                    datasets: [{
+                        label: 'No. of Groups (Midline)',
+                        data: [17, 13, 9],
+                        backgroundColor: ['#0072CE', '#2ecc71', '#f39c12'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' } }
+                    },
+                    scales: { y: { beginAtZero: true, max: 22, title: { display: true, text: 'Number of Groups' } } }
+                }
+            });
+        }
+
+        // ── 1110a GENDER GAP CHART ────────────────────────────────
+        function render1110aChart() {
+            pmfChart('pmf-chart-1110a', {
+                type: 'bar',
+                data: {
+                    labels: ['All', 'Female', 'Male'],
+                    datasets: [
+                        { label: 'Baseline', data: [36.9, 34.7, 38.2], backgroundColor: 'rgba(108,92,231,0.7)' },
+                        { label: 'Midline', data: [81.9, 87.4, 80.2], backgroundColor: 'rgba(0,114,206,0.7)' },
+                        { label: 'Target', data: [57, 57, 57], backgroundColor: 'rgba(39,174,96,0.5)', borderDash: [5, 5] }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '%' } } }
+                }
+            });
+        }
+
+        // ── TIME USE CHART (1200b) ────────────────────────────────
+        function renderTimeUseChart() {
+            pmfChart('pmf-chart-timeuse', {
+                type: 'bar',
+                data: {
+                    labels: ['Baseline', 'Midline', 'Target'],
+                    datasets: [{
+                        label: 'Hours/Day',
+                        data: [9.3, 7.7, 8.3],
+                        backgroundColor: ['#e74c3c', '#0072CE', 'rgba(39,174,96,0.5)'],
+                        borderColor: ['#c0392b', '#005a9e', '#27ae60'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + ' hrs' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 12, title: { display: true, text: 'Hours per Day' } } }
+                }
+            });
+        }
+
+        // ── ACHIEVEMENT HORIZONTAL BAR ────────────────────────────
+        function renderAchievementChart(data) {
+            pmfChart('pmf-chart-achievement', {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.code),
+                    datasets: [{
+                        label: '% Achievement vs Target',
+                        data: data.map(d => d.pctAchievement),
+                        backgroundColor: data.map(d => d.statusColor + 'cc'),
+                        borderColor: data.map(d => d.statusColor),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: v => v + '%', color: '#333' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, title: { display: true, text: '% Achievement' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // ── POPULATE THEME FILTER ─────────────────────────────────
+        function populateThemeFilter() {
+            const sel = document.getElementById('pmf-theme-filter');
+            if (!sel) return;
+            const themes = [...new Set(cosmePmfIndicators.map(d => d.theme))];
+            themes.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                sel.appendChild(opt);
+            });
+        }
+
+        // ── MAIN RENDER ──────────────────────────────────────────
+        window.renderCosmePMF = function() {
+            enrichedData = cosmePmfIndicators.map(calcIndicator);
+            populateThemeFilter();
+            renderSummaryKPIs();
+            renderPMFTable(enrichedData);
+            renderPMFMainChart(enrichedData);
+            renderRadarChart();
+            renderHectaresChart();
+            render1100cChart();
+            render1110aChart();
+            renderTimeUseChart();
+            renderAchievementChart(enrichedData);
+        };
+
+    })();
     </script>
 
     <!-- ============================================================ -->
