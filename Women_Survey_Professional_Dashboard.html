@@ -3786,6 +3786,9 @@
                     <button class="sidebar-item" onclick="sidebarNav('awp-presentation', this)" data-key="awp-presentation">
                         <span class="item-label">GJJ</span>
                     </button>
+                    <button class="sidebar-item" onclick="sidebarNav('resilience-assets', this)" data-key="resilience-assets">
+                        <span class="item-label">Resilience Building Assets</span>
+                    </button>
                 </div>
             </div>
 
@@ -3893,6 +3896,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('awp-presentation', this)">
                     🎯 GJJ
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('resilience-assets', this)">
+                    💰 Resilience Building Assets
+                </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
                     📄 Report Generation
                 </button>
@@ -3929,6 +3935,7 @@
                 <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
                 <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
                 <button class="survey-btn" onclick="switchSurvey('awp-presentation')">🎯 GJJ</button>
+                <button class="survey-btn" onclick="switchSurvey('resilience-assets')">💰 Resilience Building Assets</button>
                 <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
                 <button class="survey-btn" onclick="switchSurvey('analytics-dashboard')">📊 Analytics</button>
             </div>
@@ -3974,6 +3981,11 @@
             <button class="tab-button" onclick="showAWPType(event, 'accesscontrol')">E. Access & Control</button>
             <button class="tab-button" onclick="showAWPType(event, 'timepoverty')">F. Time Poverty, Roles & Responsibilities</button>
             <button class="tab-button" onclick="showAWPType(event, 'familysupport')">G. Family Support</button>
+        </div>
+
+        <!-- RESILIENCE BUILDING ASSETS SUB-SELECTOR -->
+        <div class="tabs-container" id="rba-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
+            <button class="tab-button active" onclick="showRBAType(event, 'savings')" style="background: #1B5E20; color: #fff;">A. Savings</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -10120,6 +10132,186 @@
         </div>
         <!-- END AWP PRESENTATION SECTION -->
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- RESILIENCE BUILDING ASSETS SECTION                         -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="resilience-assets-section" class="survey-section" style="display:none;">
+
+            <!-- RBA HEADER -->
+            <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);">
+                <h1>Resilience Building Assets</h1>
+                <div class="header-subtitle">Savings, Loans & VSLA Performance — Women Survey Midline</div>
+            </div>
+
+            <!-- A. SAVINGS -->
+            <div id="rba-savings">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">A. Savings</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Resilience Building Assets — Savings Behaviour, Mechanisms & Loan Access</p>
+                </div>
+
+                <!-- INDICATOR 1220a KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #1B5E20;">
+                    <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Indicator 1220a: Percentage of targeted women and young women who report having savings</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">28.8%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">70.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">91.9%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+63.1pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #A5D6A7; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.6em; font-weight: 800; color: #1B5E20;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW 1: Women Saving + Saving Mechanisms -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Women Personally Saving</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-saving-yesno"></canvas></div>
+                    </div>
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Saving Mechanisms Used</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-saving-mechanisms"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW 2: Intended Use + Taking Loans -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Intended Use of Savings</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-intended-use"></canvas></div>
+                    </div>
+                    <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                        <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Women Taking Loans</h3>
+                        <div style="height: 320px;"><canvas id="rba-chart-taking-loans"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- VSLA SUMMARY TABLE -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <h3 style="color: #1B5E20; margin: 0 0 16px 0;">VSLA Summary — Data Monitoring (June 2025)</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.92em;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #1B5E20, #2E7D32); color: #fff;">
+                                    <th style="padding: 12px 16px; text-align: left; border-radius: 8px 0 0 0;">Metric</th>
+                                    <th style="padding: 12px 16px; text-align: right;">Kilifi</th>
+                                    <th style="padding: 12px 16px; text-align: right;">Kwale</th>
+                                    <th style="padding: 12px 16px; text-align: right; border-radius: 0 8px 0 0;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">VSLAs Assessed</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">95</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">116</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">211</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Total Members</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">2,692</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">3,375</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">6,067</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Female Members</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">2,102</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">2,659</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">4,761</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Male Members</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">590</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">716</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">1,306</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Members Left</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">224</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">338</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">562</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Attrition Rate</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">8.3%</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">10.0%</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">9.3%</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Actively Saving</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">2,311</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">2,932</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">5,243</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Total Savings (KES)</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">10,155,460</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">12,688,614</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">22,844,074</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Loans Disbursed (KES)</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">6,825,600</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">10,291,500</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">17,117,100</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Loans Repaid (KES)</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">4,032,350</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">6,351,400</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">10,383,750</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: 600;">Interest Earned (KES)</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">910,040</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right;">1,439,410</td>
+                                    <td style="padding: 10px 16px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">2,349,450</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 16px; font-weight: 600; border-radius: 0 0 0 8px;">Social Fund (KES)</td>
+                                    <td style="padding: 10px 16px; text-align: right;">1,363,010</td>
+                                    <td style="padding: 10px 16px; text-align: right;">1,818,270</td>
+                                    <td style="padding: 10px 16px; text-align: right; font-weight: 700; border-radius: 0 0 8px 0;">3,181,280</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- INSIGHTS PANEL -->
+                <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; border-left: 5px solid #1B5E20;">
+                    <h3 style="color: #1B5E20; margin: 0 0 12px 0;">💡 Key Insights — Savings</h3>
+                    <ul style="color: #333; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>Massive savings uptake:</strong> Women personally saving surged from 43.1% to 93.4% — a near-universal adoption driven by VSLA membership and structured savings mechanisms</li>
+                        <li><strong>VSLA dominance:</strong> VSLA became the overwhelmingly preferred saving mechanism (43.6%→98.0%), displacing informal methods. At-home saving dropped to 0.0% and bank saving fell to 2.7%</li>
+                        <li><strong>Asset-oriented saving:</strong> The biggest shift in intended use is toward large household assets (10.2%→63.9%), signalling a move from consumption-based saving to investment-oriented financial behaviour</li>
+                        <li><strong>Loan access transformed:</strong> Women taking loans nearly tripled (28.0%→79.1%), with VSLA providing accessible credit that formal institutions could not — supporting productive investments and household resilience</li>
+                        <li><strong>Strong VSLA performance:</strong> 211 VSLAs with 6,067 members have accumulated KES 22.8M in savings, disbursed KES 17.1M in loans, and maintained a healthy 9.3% attrition rate — demonstrating sustainability and member commitment</li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- END rba-savings -->
+
+        </div>
+        <!-- END RESILIENCE BUILDING ASSETS SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -11233,6 +11425,14 @@
                 footerTitle: '<strong>GJJ — Gender Justice Journey</strong>',
                 footerSample: 'Annual Work Plan Data Presentation | Life Skills & Psychosocial Empowerment',
                 renderFn: () => window.renderAWPCharts()
+            },
+            'resilience-assets': {
+                showSection: 'resilience-assets-section',
+                subSelector: 'rba-type-selector',
+                title: 'Resilience Building Assets',
+                footerTitle: '<strong>Resilience Building Assets — Savings, Loans & VSLA</strong>',
+                footerSample: 'Women Survey Midline | Savings, Loan Access & VSLA Performance',
+                renderFn: () => window.renderRBACharts()
             }
         };
 
@@ -11243,9 +11443,9 @@
             'seaweed-section', 'vsla-section', 'mangrove-resources-section',
             'cross-dataset-section', 'automated-insights-section',
             'report-generation-section', 'analytics-dashboard-section',
-            'awp-presentation-section'
+            'awp-presentation-section', 'resilience-assets-section'
         ];
-        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector'];
+        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector'];
 
         // Shared helper: hide all content sections
         function hideAllSections() {
@@ -19254,7 +19454,8 @@
             'vsla-monitoring': 'VSLA Monitoring',
             'cross-dataset': 'Cross-Dataset Synthesis',
             'automated-insights': 'Impact & Evidence',
-            'awp-presentation': 'GJJ'
+            'awp-presentation': 'GJJ',
+            'resilience-assets': 'Resilience Building Assets'
         };
 
         // Toggle mobile nav drawer
@@ -20850,6 +21051,130 @@
             [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation].forEach(c => { if (c) c.destroy(); });
         }
 
+        // ====== RESILIENCE BUILDING ASSETS — CHARTS & TAB SWITCHING ======
+        const rbaChartInstances = {};
+
+        window.showRBAType = function(evt, typeName) {
+            const allTypes = ['savings'];
+            allTypes.forEach(t => {
+                const el = document.getElementById('rba-' + t);
+                if (el) el.style.display = (t === typeName) ? 'block' : 'none';
+            });
+            const container = document.getElementById('rba-type-selector');
+            if (container) {
+                container.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = '';
+                    btn.style.color = '';
+                });
+                evt.currentTarget.classList.add('active');
+                evt.currentTarget.style.background = '#1B5E20';
+                evt.currentTarget.style.color = '#fff';
+            }
+        };
+
+        window.renderRBACharts = function() {
+            Object.values(rbaChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            const RBA = {
+                baseline: '#1B5E20',
+                midline: '#FF8F00',
+                baselineLight: 'rgba(27,94,32,0.15)',
+                midlineLight: 'rgba(255,143,0,0.15)'
+            };
+
+            function rbaChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                rbaChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // 1. Women Personally Saving (Yes/No)
+            rbaChart('rba-chart-saving-yesno', {
+                type: 'bar',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [
+                        { label: 'Baseline', data: [43.1, 56.9], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [93.4, 6.6], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% of Women' } } }
+                }
+            });
+
+            // 2. Saving Mechanisms
+            rbaChart('rba-chart-saving-mechanisms', {
+                type: 'bar',
+                data: {
+                    labels: ['At Home', 'Bank', 'Informal\nLender', 'Informal\nSavings Group', 'MPESA', 'VSLA'],
+                    datasets: [
+                        { label: 'Baseline', data: [12.9, 14.5, 6.9, 23.4, 8.3, 43.6], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [0.0, 2.7, 3.7, 3.7, 1.7, 98.0], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 115, title: { display: true, text: '% of Savers' } } }
+                }
+            });
+
+            // 3. Intended Use of Savings
+            rbaChart('rba-chart-intended-use', {
+                type: 'bar',
+                data: {
+                    labels: ['Pay Debts', 'Food', 'Education', 'Small HH\nAssets', 'Large HH\nAssets', 'Agriculture/\nFishing', 'Productive\nBusiness'],
+                    datasets: [
+                        { label: 'Baseline', data: [18.2, 46.2, 64.0, 12.5, 10.2, 10.9, 24.1], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [12.4, 28.4, 17.7, 10.7, 63.9, 30.4, 3.7], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { x: { beginAtZero: true, max: 80, title: { display: true, text: '% of Savers' } } }
+                }
+            });
+
+            // 4. Women Taking Loans
+            rbaChart('rba-chart-taking-loans', {
+                type: 'bar',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [
+                        { label: 'Baseline', data: [28.0, 72.0], backgroundColor: RBA.baseline },
+                        { label: 'Midline', data: [79.1, 20.9], backgroundColor: RBA.midline }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Women' } } }
+                }
+            });
+        };
+
         // ====== AWP PRESENTATION — CHARTS & TAB SWITCHING ======
         const awpChartInstances = {};
 
@@ -22074,7 +22399,8 @@
                     'automated-insights': 'Impact & Evidence',
                     'report-generation': 'Reports',
                     'analytics-dashboard': 'Analytics',
-                    'awp-presentation': 'GJJ'
+                    'awp-presentation': 'GJJ',
+                    'resilience-assets': 'Resilience Building Assets'
                 };
 
                 const sortedTabs = Object.entries(tabCounts)
