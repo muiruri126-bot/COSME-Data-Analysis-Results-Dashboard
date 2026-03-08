@@ -3999,6 +3999,7 @@
         <!-- FORESTRY PRESENTATION SUB-SELECTOR -->
         <div class="tabs-container" id="forestry-pres-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showForestryPresType(event, 'knowledge')" style="background: #33691E; color: #fff;">A. Knowledge</button>
+            <button class="tab-button" onclick="showForestryPresType(event, 'functionality')">B. Functionality</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -10479,6 +10480,320 @@
 
             </div>
             <!-- END fp-knowledge -->
+
+            <!-- B. FUNCTIONALITY -->
+            <div id="fp-functionality" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">B. Functionality</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Community Forest Conservation Groups — Forest Functionality Assessment: Baseline to Midline Analysis</p>
+                </div>
+
+                <!-- INDICATOR 1130b KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #1B5E20;">
+                    <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Indicator 1130b: Percentage and Number of community forest conservation groups that are functional (disaggregated by location)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Groups Assessed</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">28 Groups</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline (≥60%)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">81.4%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline (≥60%)</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">96.4%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+15.0pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #A5D6A7; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Overall Score</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">84.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERNAL TABS FOR FUNCTIONALITY SUB-SECTIONS -->
+                <div class="tabs-container" id="fp-func-tabs-container" style="margin-bottom: 20px;">
+                    <button class="tab-button active" onclick="showFPFunctionalityTab(event, 'fp2tab-overview')">A. Overview & Functionality</button>
+                    <button class="tab-button" onclick="showFPFunctionalityTab(event, 'fp2tab-characteristics')">B. Group Characteristics</button>
+                    <button class="tab-button" onclick="showFPFunctionalityTab(event, 'fp2tab-governance')">C. Rights & Governance</button>
+                    <button class="tab-button" onclick="showFPFunctionalityTab(event, 'fp2tab-training')">D. Training & Assets</button>
+                    <button class="tab-button" onclick="showFPFunctionalityTab(event, 'fp2tab-gender')">E. Gender Equality</button>
+                    <button class="tab-button" onclick="showFPFunctionalityTab(event, 'fp2tab-effectiveness')">F. Effectiveness & Conservation</button>
+                </div>
+
+                <!-- TAB A: OVERVIEW & FUNCTIONALITY -->
+                <div id="fp2tab-overview" class="fp2-tab-content" style="display: block;">
+                    <div class="section">
+                        <div class="section-title">A. OVERVIEW & FUNCTIONALITY SCORES</div>
+                        <div class="highlight-box">
+                            <h4>Functionality Assessment Summary</h4>
+                            <p>Overall group functionality improved significantly from baseline (n=43) to midline (n=28). Groups meeting the ≥60% threshold increased from 81.4% to 96.4% (+15.0pp). Groups meeting the ≥70% threshold surged from 53.5% to 85.7% (+32.2pp). Overall score improved from 70.6 to 84.2 (+13.6pp), with the strongest gains in Gender domain (+52.6pp).</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Functionality Threshold — Groups Meeting ≥60% & ≥70% Benchmarks</div>
+                                <div class="chart-container"><canvas id="fp2-chart-threshold"></canvas></div>
+                                <div class="chart-insight">Groups meeting ≥60% threshold: 81.4%→96.4% (+15.0pp). Groups meeting ≥70% threshold: 53.5%→85.7% (+32.2pp). Strong upward trajectory across both benchmarks.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Domain Scores — Management, Gender & Effectiveness</div>
+                                <div class="chart-container"><canvas id="fp2-chart-domains"></canvas></div>
+                                <div class="chart-insight">Management: 78.6%→78.0% (−0.6pp). Gender: 32.9%→85.5% (+52.6pp — strongest gain). Effectiveness: 72.0%→90.1% (+18.1pp). Overall: 70.6%→84.2% (+13.6pp).</div>
+                            </div>
+                            <div class="chart-wrapper full-width">
+                                <div class="chart-title">Functionality Score Distribution — Average, Max & Min (Baseline n=43, Midline n=28)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-scores"></canvas></div>
+                                <div class="chart-insight">Average score improved from 70.6 to 84.2 (+13.6). Maximum improved from 90.4 to 98.5. Minimum lifted from 37.0 to 46.7, indicating weakest groups are also improving.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB B: GROUP CHARACTERISTICS -->
+                <div id="fp2tab-characteristics" class="fp2-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">B. GROUP CHARACTERISTICS</div>
+                        <div class="highlight-box">
+                            <h4>Group Profile Summary</h4>
+                            <p>Average group membership grew from 27 to 31 members, with female membership increasing from 19 to 23 (21% growth). Male membership averaged 7→8 members. Most groups operate in the 0-3 year range at baseline (34.9%) shifting slightly at midline (37.0%).</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Average Group Membership — Male vs Female</div>
+                                <div class="chart-container"><canvas id="fp2-chart-membership"></canvas></div>
+                                <div class="chart-insight">Male: 7→8 (+14.3%). Female: 19→23 (+21.1%). Total: 27→31 (+14.8%). Female membership growing faster than male.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Group Affiliations — AMCOS, Beekeepers & Wellness</div>
+                                <div class="chart-container"><canvas id="fp2-chart-affiliations"></canvas></div>
+                                <div class="chart-insight">AMCOS: 42.5%→52.5% (+10.0pp). Beekeepers: 27.5%→35.0% (+7.5pp). Wellness: 15.0%→25.0% (+10.0pp). All affiliations growing.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Years of Operation — Distribution</div>
+                                <div class="chart-container"><canvas id="fp2-chart-years"></canvas></div>
+                                <div class="chart-insight">Years distribution: 0-3 yrs: 34.9%→37.0%. 4-5 yrs: 30.2%→22.2%. 6-10 yrs: 20.9%→29.6%. 11+ yrs: 14.0%→11.1%.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Legal Registration Status</div>
+                                <div class="chart-container"><canvas id="fp2-chart-legal"></canvas></div>
+                                <div class="chart-insight">Registered groups increased from 72.5% to 85.0% (+12.5pp). Unregistered decreased 27.5%→15.0%. Formalization is progressing well.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Size Distribution (Hectares)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-forestsize"></canvas></div>
+                                <div class="chart-insight">Forest size distribution: 0 ha: 14.0%→0%. 1-5 ha: 30.2%→71.4%. 11-100 ha: 23.3%→7.1%. Midline shows concentration in 1-5 ha range.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Communities Near Forest — Distribution</div>
+                                <div class="chart-container"><canvas id="fp2-chart-communities"></canvas></div>
+                                <div class="chart-insight">More communities engaging: 7-10 communities increased 15.0%→20.0%. Groups with 1-3 communities declined 45.0%→35.0%, suggesting broader reach.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB C: RIGHTS & GOVERNANCE -->
+                <div id="fp2tab-governance" class="fp2-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">C. OBJECTIVES, RIGHTS & GOVERNANCE</div>
+                        <div class="highlight-box">
+                            <h4>Governance Improvements</h4>
+                            <p>Groups with fully written objectives already high at baseline: 95.3%→100%. Board roles well-defined & understood improved from 67.4% to 92.9%. Regular meetings with full quorum at 95.3%→96.4%. Women in significant leadership positions increased from 69.8% to 89.3%. Management practices (Agree+SA) remain strong above 82% across all 6 indicators.</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Groups with Objectives in Written Format</div>
+                                <div class="chart-container"><canvas id="fp2-chart-objectives"></canvas></div>
+                                <div class="chart-insight">Written objectives: No 2.3%→0%, Partially 2.3%→0%, Yes 95.3%→100%. Near-universal objective documentation.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Board/Committee Roles Definition & Understanding</div>
+                                <div class="chart-container"><canvas id="fp2-chart-boardroles"></canvas></div>
+                                <div class="chart-insight">Well-defined & understood: 67.4%→92.9% (+25.5pp). Not defined at all: 2.3%→3.6%. Governance clarity strengthening.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Meeting Regularity & Attendance</div>
+                                <div class="chart-container"><canvas id="fp2-chart-meetings"></canvas></div>
+                                <div class="chart-insight">Regular/Full quorum: 95.3%→96.4% (+1.1pp). Occasional/Low: 2.3%→0%. Meeting participation consistently strong.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Women in Leadership Positions</div>
+                                <div class="chart-container"><canvas id="fp2-chart-womenleadership"></canvas></div>
+                                <div class="chart-insight">Significant leadership: 69.8%→89.3% (+19.5pp). No leadership/no voice: 0%→0%. Strong female leadership in governance.</div>
+                            </div>
+                            <div class="chart-wrapper full-width">
+                                <div class="chart-title">Management Practices — Agree + Strongly Agree (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-mgmtpractices"></canvas></div>
+                                <div class="chart-insight">Transparent elections: 95.3%→89.3%. Inclusive decisions: 97.7%→89.3%. Grievance mechanism: 97.7%→82.1%. Benefit sharing: 88.4%→92.9%. All indicators remain high (>82%).</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB D: TRAINING & ASSETS -->
+                <div id="fp2tab-training" class="fp2-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">D. TRAINING & ASSETS</div>
+                        <div class="highlight-box">
+                            <h4>Training & Resource Mobilization</h4>
+                            <p>Training coverage improved substantially: groups where "Most Members" received training grew from 11.6% to 71.4% (+59.8pp). Groups receiving no training dropped from 67.4% to 10.7%. Assets/inputs received increased from 18.6% to 78.6%. Key training topics include Climate Change & Forests (84%), CFM Concepts (52%), and Gender & Governance (52%).</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Training Coverage — Member Participation Levels</div>
+                                <div class="chart-container"><canvas id="fp2-chart-training"></canvas></div>
+                                <div class="chart-insight">Most members trained: 11.6%→71.4% (+59.8pp). No training: 67.4%→10.7% (-56.7pp). Training reach expanding dramatically.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Top Training Topics Received (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-topics"></canvas></div>
+                                <div class="chart-insight">Climate Change & Forests: 57.1%→84.0%. CFM Concepts: 35.7%→52.0%. Forest Livelihoods: 21.4%→44.0%. Gender & Governance: 0%→52.0%.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Assets & Inputs Received</div>
+                                <div class="chart-container"><canvas id="fp2-chart-assets"></canvas></div>
+                                <div class="chart-insight">Groups receiving assets: 18.6%→78.6% (+60.0pp). Seedlings/nursery most common (63.6% at midline), followed by tools & equipment (77.3%) and water & irrigation (40.9%).</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Asset Types Received by Groups (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-assettypes"></canvas></div>
+                                <div class="chart-insight">Seedlings/Nursery: 4.7%→63.6%. Tools & Equipment: 9.3%→77.3%. Beekeeping: 2.3%→27.3%. Energy (Solar/Stoves): 0%→40.9%.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB E: GENDER EQUALITY -->
+                <div id="fp2tab-gender" class="fp2-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">E. GENDER EQUALITY</div>
+                        <div class="highlight-box">
+                            <h4>Gender Equality Progress</h4>
+                            <p>Groups discussing gender equality increased from 23.3% to 96.4% (+73.1pp). Groups taking gender equality actions improved from 39.5% to 92.9%. Key topics discussed include equitable roles/responsibilities (96.3%), women's leadership & voice (81.5%), and resource sharing (55.6%). Gender action completion ("All actions") changed from 76.5% to 42.3%.</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Groups Discussing Gender Equality</div>
+                                <div class="chart-container"><canvas id="fp2-chart-gediscussion"></canvas></div>
+                                <div class="chart-insight">Yes: 23.3%→96.4% (+73.1pp). No: 76.7%→3.6%. Gender equality conversations now near-universal in forest groups.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Gender Equality Topics Discussed (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-getopics"></canvas></div>
+                                <div class="chart-insight">Equitable roles: 60.0%→96.3%. Resource sharing: 30.0%→55.6%. Women leadership & voice: 50.0%→81.5%. Strong gains across all topics.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Gender Equality Actions Taken</div>
+                                <div class="chart-container"><canvas id="fp2-chart-geactions"></canvas></div>
+                                <div class="chart-insight">Yes (fully): 39.5%→92.9% (+53.4pp). No: 53.5%→7.1% (-46.4pp). Partially: 7.0%→0%. Groups moving decisively from discussion to action.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Gender Action Completion Level</div>
+                                <div class="chart-container"><canvas id="fp2-chart-gecompletion"></canvas></div>
+                                <div class="chart-insight">All actions completed: 76.5%→42.3%. Many: 23.5%→50.0%. None: 0%→0%. Action completion shifting from "all" to "many" as scope of actions expanded.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB F: EFFECTIVENESS & CONSERVATION -->
+                <div id="fp2tab-effectiveness" class="fp2-tab-content" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">F. EFFECTIVENESS & FOREST CONSERVATION</div>
+                        <div class="highlight-box">
+                            <h4>Conservation Outcomes</h4>
+                            <p>Forest condition rated "Good" varied across characteristics: Area 39.5%→42.9%, Biodiversity 39.5%→50.0%, Ecosystem Services 39.5%→39.3%. Threat levels were generally low: Fire (High) at 2.3%→0%, Charcoal (High) at 9.3%→7.1%. Income-generating groups increased from 46.5% to 53.6%. Agroforestry adoption grew from 55.8% to 60.7%.</p>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Condition — "Good" Rating Baseline vs Midline (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-condition"></canvas></div>
+                                <div class="chart-insight">Area: 39.5%→42.9%. Volume/Biomass: 44.2%→25.0%. Regeneration: 44.2%→42.9%. Biodiversity: 39.5%→50.0%. Ecosystem Services: 39.5%→39.3%.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Condition Breakdown — Baseline (Good / Medium / Poor)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-condition-bl"></canvas></div>
+                                <div class="chart-insight">Baseline: Good ratings range 39.5–44.2%. Medium ratings 25.6–37.2%. Poor ratings 23.3–30.2%. Volume/Biomass and Regeneration show highest Good ratings.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Condition Breakdown — Midline (Good / Medium / Poor)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-condition-ml"></canvas></div>
+                                <div class="chart-insight">Midline: Good ratings range 25.0–50.0%. Medium ratings 35.7–50.0%. Poor ratings 7.1–25.0%. Biodiversity improved to 50.0% Good rating.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Status Changes — Baseline (Decrease / No Change / Increase)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-status-bl"></canvas></div>
+                                <div class="chart-insight">Baseline: Increase dominant across characteristics (55.8–65.9%). No Change ranges 16.3–27.9%. Decrease observed in 9.8–23.3% of groups.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Status Changes — Midline (Decrease / No Change / Increase)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-status-ml"></canvas></div>
+                                <div class="chart-insight">Midline: Decrease reduced (7.1–10.7%). No Change ranges 11.1–28.6%. Increase grew to 64.3–81.5%, showing strong positive conservation trajectory.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Status — Perceived Increase Baseline vs Midline (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-status-increase"></canvas></div>
+                                <div class="chart-insight">Groups perceiving increase: Area 60.5%→64.3%, Volume 60.5%→71.4%, Regeneration 55.8%→81.5%, Biodiversity 60.5%→81.5%, Ecosystem 65.9%→71.4%.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Forest Threats — "High" Level Baseline vs Midline (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-threats"></canvas></div>
+                                <div class="chart-insight">Fire: 2.3%→0% (-2.3pp). Charcoal: 9.3%→7.1% (-2.2pp). Encroachment: 11.6%→3.6% (-8.0pp). Threat levels already low at baseline.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Threats Breakdown — Baseline (Low / Medium / High)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-threats-bl"></canvas></div>
+                                <div class="chart-insight">Baseline: High threats low overall. Fuelwood highest at 16.3%, Encroachment and Land Grabbing at 11.6%. Most threats predominantly Low level (65–93%).</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Threats Breakdown — Midline (Low / Medium / High)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-threats-ml"></canvas></div>
+                                <div class="chart-insight">Midline: High threats further reduced (0–7.1%). Low threats dominant (71.4–89.3%). Medium levels stable. Continued low threat environment.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Threat Changes — Perceived Decrease Baseline vs Midline (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-threat-decrease"></canvas></div>
+                                <div class="chart-insight">Groups perceiving threat decrease: Fire 48.8%→66.7%, Charcoal 48.8%→75.0%, Fuelwood 42.9%→67.9%. More groups reporting threat reduction at midline.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Income Generation & Agroforestry Adoption</div>
+                                <div class="chart-container"><canvas id="fp2-chart-income"></canvas></div>
+                                <div class="chart-insight">Income-generating: 46.5%→53.6% (+7.1pp). Agroforestry adopted: 55.8%→60.7% (+4.9pp). Moderate economic growth observed.</div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <div class="chart-title">Harvest Products — "Substantial" Amount (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-harvest"></canvas></div>
+                                <div class="chart-insight">NWFPs: 7.0%→3.6%. Food: 9.3%→3.6%. Woodfuel: 2.3%→0% (declining — positive conservation signal). Timber: 0%→0% (no extraction). Substantial harvesting minimal overall.</div>
+                            </div>
+                            <div class="chart-wrapper full-width">
+                                <div class="chart-title">Agroforestry Practices & Objectives (%)</div>
+                                <div class="chart-container"><canvas id="fp2-chart-agroforestry"></canvas></div>
+                                <div class="chart-insight">Top practices: Intercropping 83.3%→82.4%, Beekeeping 8.3%→23.5%, Alley Cropping 20.8%→0%. Top objectives: Biodiversity, soil fertility, income diversification.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INSIGHTS PANEL — FUNCTIONALITY -->
+                <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; border-left: 5px solid #1B5E20;">
+                    <h3 style="color: #1B5E20; margin: 0 0 12px 0;">💡 Key Insights — Forest Group Functionality</h3>
+                    <ul style="color: #333; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>Functionality threshold exceeded:</strong> Groups meeting ≥60% functionality rose from 81.4% to 96.4% (+15.0pp), while those at ≥70% surged from 53.5% to 85.7% (+32.2pp), demonstrating broad-based improvement</li>
+                        <li><strong>Gender domain transformed:</strong> Gender equality scores leapt from 32.9% to 85.5% (+52.6pp) — the strongest domain gain. Groups discussing gender equality grew from 23.3% to 96.4%, and those taking gender actions from 39.5% to 92.9%</li>
+                        <li><strong>Training reach dramatically expanded:</strong> Groups where "Most Members" were trained grew from 11.6% to 71.4% (+59.8pp). Asset receipt increased from 18.6% to 78.6% (+60.0pp), with tools/equipment (77.3%) and seedlings (63.6%) most common</li>
+                        <li><strong>Governance remains strong:</strong> Written objectives at 100%, board role clarity at 92.9% (+25.5pp from baseline), women in significant leadership at 89.3% (+19.5pp). All management practices above 82% agreement</li>
+                        <li><strong>Conservation trajectory positive:</strong> Groups perceiving biodiversity increase grew from 60.5% to 81.5%. High threats declined across all categories. Agroforestry adoption steady at 60.7%, with beekeeping emerging as a growing practice (8.3%→23.5%)</li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- END fp-functionality -->
 
         </div>
         <!-- END FORESTRY PRESENTATION SECTION -->
@@ -21235,7 +21550,7 @@
         const fpChartInstances = {};
 
         window.showForestryPresType = function(evt, typeName) {
-            const allTypes = ['knowledge'];
+            const allTypes = ['knowledge', 'functionality'];
             allTypes.forEach(t => {
                 const el = document.getElementById('fp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -21251,6 +21566,8 @@
                 evt.currentTarget.style.background = '#33691E';
                 evt.currentTarget.style.color = '#fff';
             }
+            if (typeName === 'functionality') renderForestryPresFunctionalityCharts();
+            if (typeName === 'knowledge') window.renderForestryPresCharts();
         };
 
         window.renderForestryPresCharts = function() {
@@ -21328,6 +21645,495 @@
                 }
             });
         };
+
+        // ====== FORESTRY PRES — FUNCTIONALITY TAB SWITCHING & CHARTS ======
+        const fp2ChartInstances = {};
+
+        window.showFPFunctionalityTab = function(evt, tabName) {
+            const tabContents = document.querySelectorAll('.fp2-tab-content');
+            tabContents.forEach(tab => tab.style.display = 'none');
+            const tabButtons = document.getElementById('fp-func-tabs-container').querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            const target = document.getElementById(tabName);
+            if (target) target.style.display = 'block';
+            evt.currentTarget.classList.add('active');
+            requestAnimationFrame(() => {
+                if (target) {
+                    target.querySelectorAll('canvas').forEach(canvas => {
+                        const chart = Chart.getChart(canvas);
+                        if (chart) chart.resize();
+                    });
+                }
+            });
+        };
+
+        function renderForestryPresFunctionalityCharts() {
+            Object.values(fp2ChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            const fColors = { baseline: colors.baseline, midline: colors.midline };
+            const fDefaults = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: {
+                        font: { size: 14, weight: 'bold' }, color: '#fff', backgroundColor: '#333',
+                        borderRadius: 6, padding: 6, formatter: (value) => value.toFixed(1) + '%', display: true
+                    }
+                }
+            };
+
+            function fp2Chart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) { console.warn('Canvas not found:', canvasId); return null; }
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                fp2ChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // === TAB A: OVERVIEW & FUNCTIONALITY ===
+            fp2Chart('fp2-chart-threshold', {
+                type: 'bar',
+                data: {
+                    labels: ['≥60% Threshold', '≥70% Threshold'],
+                    datasets: [
+                        { label: 'Baseline (n=43)', data: [81.4, 53.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline (n=28)', data: [96.4, 85.7], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-domains', {
+                type: 'bar',
+                data: {
+                    labels: ['Management', 'Gender', 'Effectiveness', 'Overall'],
+                    datasets: [
+                        { label: 'Baseline', data: [78.6, 32.9, 72.0, 70.6], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [78.0, 85.5, 90.1, 84.2], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Domain Score (%)' } } } }
+            });
+
+            fp2Chart('fp2-chart-scores', {
+                type: 'bar',
+                data: {
+                    labels: ['Average', 'Maximum', 'Minimum'],
+                    datasets: [
+                        { label: 'Baseline (n=43)', data: [70.6, 90.4, 37.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline (n=28)', data: [84.2, 98.5, 46.7], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score' } } } }
+            });
+
+            // === TAB B: GROUP CHARACTERISTICS ===
+            fp2Chart('fp2-chart-membership', {
+                type: 'bar',
+                data: {
+                    labels: ['Male', 'Female', 'All'],
+                    datasets: [
+                        { label: 'Baseline (n=43)', data: [7, 19, 27], backgroundColor: fColors.baseline },
+                        { label: 'Midline (n=28)', data: [8, 23, 31], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 35, title: { display: true, text: 'Avg Members' } } } }
+            });
+
+            fp2Chart('fp2-chart-affiliations', {
+                type: 'bar',
+                data: {
+                    labels: ['AMCOS', 'Beekeepers', 'Wellness'],
+                    datasets: [
+                        { label: 'Baseline', data: [42.5, 27.5, 15.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [52.5, 35.0, 25.0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% Yes' } } } }
+            });
+
+            fp2Chart('fp2-chart-years', {
+                type: 'bar',
+                data: {
+                    labels: ['0-3 years', '4-5 years', '6-10 years', '11+ years'],
+                    datasets: [
+                        { label: 'Baseline', data: [34.9, 30.2, 20.9, 14.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [37.0, 22.2, 29.6, 11.1], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 55, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-legal', {
+                type: 'bar',
+                data: {
+                    labels: ['Registered', 'Not Registered'],
+                    datasets: [
+                        { label: 'Baseline', data: [72.5, 27.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [85.0, 15.0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-forestsize', {
+                type: 'bar',
+                data: {
+                    labels: ['0 ha', '1-5 ha', '6-10 ha', '11-100 ha', '101-999 ha', '1000+ ha'],
+                    datasets: [
+                        { label: 'Baseline', data: [14.0, 30.2, 9.3, 23.3, 16.3, 2.3], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [0, 71.4, 0, 7.1, 10.7, 0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 40, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-communities', {
+                type: 'bar',
+                data: {
+                    labels: ['1-3', '4-6', '7-10', '11+'],
+                    datasets: [
+                        { label: 'Baseline', data: [45.0, 30.0, 15.0, 10.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [35.0, 32.5, 20.0, 12.5], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 55, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            // === TAB C: RIGHTS & GOVERNANCE ===
+            fp2Chart('fp2-chart-objectives', {
+                type: 'bar',
+                data: {
+                    labels: ['No', 'Partially', 'Yes'],
+                    datasets: [
+                        { label: 'Baseline', data: [2.3, 2.3, 95.3], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [0, 0, 100], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-boardroles', {
+                type: 'bar',
+                data: {
+                    labels: ['Well Defined &\nUnderstood', 'Defined, Not\nAll Understand', 'Not Well\nDefined', 'Not Defined\nat All'],
+                    datasets: [
+                        { label: 'Baseline', data: [67.4, 20.9, 9.3, 2.3], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [92.9, 3.6, 0, 3.6], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-meetings', {
+                type: 'bar',
+                data: {
+                    labels: ['Occasional/Low', 'Often/Moderate', 'Regular/Full Quorum'],
+                    datasets: [
+                        { label: 'Baseline', data: [2.3, 2.3, 95.3], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [0, 3.6, 96.4], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 65, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-womenleadership', {
+                type: 'bar',
+                data: {
+                    labels: ['No Leadership\nNo Voice', 'No Leadership\nOccasional Voice', 'Some\nLeadership', 'Significant\nLeadership'],
+                    datasets: [
+                        { label: 'Baseline', data: [0, 0, 30.2, 69.8], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [0, 0, 10.7, 89.3], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 45, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-mgmtpractices', {
+                type: 'bar',
+                data: {
+                    labels: ['Transparent\nElections', 'Inclusive\nDecisions', 'Clear\nProcedures', 'Grievance\nMechanism', 'Benefit\nSharing', 'Decisions\nCommunicated'],
+                    datasets: [
+                        { label: 'Baseline (Agree+SA)', data: [95.3, 97.7, 100, 97.7, 88.4, 100], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Agree+SA)', data: [89.3, 89.3, 92.9, 82.1, 92.9, 89.3], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 90, title: { display: true, text: '% Agree+SA' } } } }
+            });
+
+            // === TAB D: TRAINING & ASSETS ===
+            fp2Chart('fp2-chart-training', {
+                type: 'bar',
+                data: {
+                    labels: ['None', 'A Few Members', 'Many Members', 'Most Members'],
+                    datasets: [
+                        { label: 'Baseline', data: [67.4, 14.0, 7.0, 11.6], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [10.7, 3.6, 14.3, 71.4], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 55, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-topics', {
+                type: 'bar',
+                data: {
+                    labels: ['Climate Change\n& Forests', 'CFM\nConcepts', 'Forest\nLivelihoods', 'Leadership', 'Gender &\nGovernance', 'Forest\nAssessment', 'DRM'],
+                    datasets: [
+                        { label: 'Baseline', data: [57.1, 35.7, 21.4, 7.1, 0, 7.1, 7.1], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [84.0, 52.0, 44.0, 40.0, 52.0, 28.0, 16.0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 80, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-assets', {
+                type: 'bar',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [
+                        { label: 'Baseline', data: [18.6, 81.4], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [78.6, 21.4], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-assettypes', {
+                type: 'bar',
+                data: {
+                    labels: ['Seedlings/\nNursery', 'Tools &\nEquipment', 'Beekeeping\nInputs', 'Energy\n(Solar/Stoves)', 'Agri\nInputs', 'Water &\nIrrigation', 'Infrastructure'],
+                    datasets: [
+                        { label: 'Baseline', data: [4.7, 9.3, 2.3, 0, 4.7, 2.3, 2.3], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [63.6, 77.3, 27.3, 40.9, 22.7, 40.9, 18.2], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            // === TAB E: GENDER EQUALITY ===
+            fp2Chart('fp2-chart-gediscussion', {
+                type: 'bar',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [
+                        { label: 'Baseline', data: [23.3, 76.7], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [96.4, 3.6], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-getopics', {
+                type: 'bar',
+                data: {
+                    labels: ['Equitable Roles/\nResponsibilities', 'Resource\nSharing', 'Women Leadership\n& Voice', 'Other'],
+                    datasets: [
+                        { label: 'Baseline', data: [60.0, 30.0, 50.0, 10.0], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [96.3, 55.6, 81.5, 0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 75, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-geactions', {
+                type: 'bar',
+                data: {
+                    labels: ['No', 'Partially', 'Yes'],
+                    datasets: [
+                        { label: 'Baseline', data: [53.5, 7.0, 39.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [7.1, 0, 92.9], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 65, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            fp2Chart('fp2-chart-gecompletion', {
+                type: 'bar',
+                data: {
+                    labels: ['None', 'A Few', 'Many', 'All'],
+                    datasets: [
+                        { label: 'Baseline', data: [0, 0, 23.5, 76.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [0, 7.7, 50.0, 42.3], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 90, title: { display: true, text: '% of Groups' } } } }
+            });
+
+            // === TAB F: EFFECTIVENESS & CONSERVATION ===
+            const condLabels = ['Area', 'Volume/\nBiomass', 'Regeneration', 'Biodiversity', 'Ecosystem\nServices'];
+            const threatLabels = ['Fire', 'Fuelwood', 'Charcoal', 'Other\nWood', 'Poaching', 'Encroachment', 'Land\nGrabbing', 'Poles'];
+            const stackedOpts = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+                    datalabels: { font: { size: 11, weight: 'bold' }, color: '#fff', formatter: (v) => v.toFixed(1) + '%', display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 5 }
+                },
+                scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } }
+            };
+
+            fp2Chart('fp2-chart-condition', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Baseline (Good)', data: [39.5, 44.2, 44.2, 39.5, 39.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Good)', data: [42.9, 25.0, 42.9, 50.0, 39.3], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% Good' } } } }
+            });
+
+            fp2Chart('fp2-chart-condition-bl', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Good', data: [39.5, 44.2, 44.2, 39.5, 39.5], backgroundColor: colors.success },
+                        { label: 'Medium', data: [32.6, 25.6, 27.9, 34.9, 37.2], backgroundColor: colors.warning },
+                        { label: 'Poor', data: [27.9, 30.2, 27.9, 25.6, 23.3], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-condition-ml', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Good', data: [42.9, 25.0, 42.9, 50.0, 39.3], backgroundColor: colors.success },
+                        { label: 'Medium', data: [42.9, 50.0, 35.7, 42.9, 42.9], backgroundColor: colors.warning },
+                        { label: 'Poor', data: [14.3, 25.0, 21.4, 7.1, 17.9], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-status-bl', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Decrease', data: [23.3, 18.6, 23.3, 11.6, 9.8], backgroundColor: colors.danger },
+                        { label: 'No Change', data: [16.3, 20.9, 20.9, 27.9, 24.4], backgroundColor: '#9E9E9E' },
+                        { label: 'Increase', data: [60.5, 60.5, 55.8, 60.5, 65.9], backgroundColor: colors.success }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-status-ml', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Decrease', data: [7.1, 10.7, 7.4, 7.4, 10.7], backgroundColor: colors.danger },
+                        { label: 'No Change', data: [28.6, 17.9, 11.1, 11.1, 17.9], backgroundColor: '#9E9E9E' },
+                        { label: 'Increase', data: [64.3, 71.4, 81.5, 81.5, 71.4], backgroundColor: colors.success }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-status-increase', {
+                type: 'bar',
+                data: {
+                    labels: condLabels,
+                    datasets: [
+                        { label: 'Baseline (Increase)', data: [60.5, 60.5, 55.8, 60.5, 65.9], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Increase)', data: [64.3, 71.4, 81.5, 81.5, 71.4], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '% Increase' } } } }
+            });
+
+            fp2Chart('fp2-chart-threats', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Baseline (High)', data: [2.3, 16.3, 9.3, 9.3, 0, 11.6, 11.6, 4.7], backgroundColor: colors.danger },
+                        { label: 'Midline (High)', data: [0, 7.1, 7.1, 7.1, 0, 3.6, 0, 3.6], backgroundColor: colors.success }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 50, title: { display: true, text: '% High Threat' } } } }
+            });
+
+            fp2Chart('fp2-chart-threats-bl', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Low', data: [86.0, 65.1, 79.1, 76.7, 93.0, 72.1, 76.7, 69.8], backgroundColor: colors.success },
+                        { label: 'Medium', data: [11.6, 18.6, 11.6, 14.0, 7.0, 16.3, 11.6, 25.6], backgroundColor: colors.warning },
+                        { label: 'High', data: [2.3, 16.3, 9.3, 9.3, 0, 11.6, 11.6, 4.7], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-threats-ml', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Low', data: [89.3, 78.6, 71.4, 75.0, 85.7, 75.0, 78.6, 75.0], backgroundColor: colors.success },
+                        { label: 'Medium', data: [10.7, 14.3, 21.4, 17.9, 14.3, 21.4, 21.4, 21.4], backgroundColor: colors.warning },
+                        { label: 'High', data: [0, 7.1, 7.1, 7.1, 0, 3.6, 0, 3.6], backgroundColor: colors.danger }
+                    ]
+                },
+                options: stackedOpts
+            });
+
+            fp2Chart('fp2-chart-threat-decrease', {
+                type: 'bar',
+                data: {
+                    labels: threatLabels,
+                    datasets: [
+                        { label: 'Baseline (Decrease)', data: [48.8, 42.9, 48.8, 44.2, 51.2, 40.5, 31.0, 46.5], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Decrease)', data: [66.7, 67.9, 75.0, 67.9, 71.4, 75.0, 66.7, 69.2], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: '% Decrease' } } } }
+            });
+
+            fp2Chart('fp2-chart-income', {
+                type: 'bar',
+                data: {
+                    labels: ['Income Generating', 'Agroforestry Adopted'],
+                    datasets: [
+                        { label: 'Baseline (Yes)', data: [46.5, 55.8], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Yes)', data: [53.6, 60.7], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 80, title: { display: true, text: '% Yes' } } } }
+            });
+
+            fp2Chart('fp2-chart-harvest', {
+                type: 'bar',
+                data: {
+                    labels: ['NWFPs', 'Food', 'Woodfuel', 'Fodder', 'Timber', 'Poles', 'Leaf Mulch', 'Wildlife'],
+                    datasets: [
+                        { label: 'Baseline (Substantial)', data: [7.0, 9.3, 2.3, 0, 0, 2.3, 2.3, 0], backgroundColor: fColors.baseline },
+                        { label: 'Midline (Substantial)', data: [3.6, 3.6, 0, 0, 0, 0, 0, 0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 15, title: { display: true, text: '% Substantial' } } } }
+            });
+
+            fp2Chart('fp2-chart-agroforestry', {
+                type: 'bar',
+                data: {
+                    labels: ['Intercropping', 'Beekeeping', 'Forest\nFarming', 'Silvopasture', 'Alley\nCropping'],
+                    datasets: [
+                        { label: 'Baseline', data: [83.3, 8.3, 8.3, 4.2, 20.8], backgroundColor: fColors.baseline },
+                        { label: 'Midline', data: [82.4, 23.5, 17.6, 5.9, 0], backgroundColor: fColors.midline }
+                    ]
+                },
+                options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
+            });
+        }
 
         // ====== RESILIENCE BUILDING ASSETS — CHARTS & TAB SWITCHING ======
         const rbaChartInstances = {};
