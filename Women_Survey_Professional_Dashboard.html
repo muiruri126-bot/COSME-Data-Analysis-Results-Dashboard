@@ -3798,6 +3798,9 @@
                     <button class="sidebar-item" onclick="sidebarNav('mangrove-presentation', this)" data-key="mangrove-presentation">
                         <span class="item-label">Mangrove</span>
                     </button>
+                    <button class="sidebar-item" onclick="sidebarNav('schools-presentation', this)" data-key="schools-presentation">
+                        <span class="item-label">Schools</span>
+                    </button>
                 </div>
             </div>
 
@@ -3917,6 +3920,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('mangrove-presentation', this)">
                     🌳 Mangrove
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('schools-presentation', this)">
+                    🏫 Schools
+                </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
                     📄 Report Generation
                 </button>
@@ -3957,6 +3963,7 @@
                 <button class="survey-btn" onclick="switchSurvey('forestry-presentation')">🌲 Forestry</button>
                 <button class="survey-btn" onclick="switchSurvey('seaweed-presentation')">🌊 Seaweed</button>
                 <button class="survey-btn" onclick="switchSurvey('mangrove-presentation')">🌳 Mangrove</button>
+                <button class="survey-btn" onclick="switchSurvey('schools-presentation')">🏫 Schools</button>
                 <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
                 <button class="survey-btn" onclick="switchSurvey('analytics-dashboard')">📊 Analytics</button>
             </div>
@@ -4020,13 +4027,20 @@
         <div class="tabs-container" id="seaweed-pres-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showSeaweedPresType(event, 'knowledge')" style="background: #00695C; color: #fff;">A. Knowledge</button>
             <button class="tab-button" onclick="showSeaweedPresType(event, 'assessment')">B. Assessment</button>
-            <button class="tab-button" onclick="showSeaweedPresType(event, 'farmer-dashboard')">G. Farmer Dashboard</button>
+            <button class="tab-button" onclick="showSeaweedPresType(event, 'farmer-dashboard')">C. Farmer Dashboard</button>
         </div>
 
         <!-- MANGROVE PRESENTATION SUB-SELECTOR -->
         <div class="tabs-container" id="mangrove-pres-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showMangrovePresType(event, 'knowledge')" style="background: #1B5E20; color: #fff;">A. Knowledge</button>
             <button class="tab-button" onclick="showMangrovePresType(event, 'resources')">B. Resources</button>
+        </div>
+
+        <div class="tabs-container" id="schools-pres-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
+            <button class="tab-button active" onclick="showSchoolsPresType(event, 'clean-water')" style="background: #1565C0; color: #fff;">A. Access to Clean Water</button>
+            <button class="tab-button" onclick="showSchoolsPresType(event, 'water-midline')">B. Water in Schools</button>
+            <button class="tab-button" onclick="showSchoolsPresType(event, 'four-k-clubs')">C. 4K Clubs</button>
+            <button class="tab-button" onclick="showSchoolsPresType(event, 'overall-insights')">Overall Insights</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -11809,6 +11823,313 @@
         </div>
         <!-- END MANGROVE PRESENTATION SECTION -->
 
+        <!-- ========================================================== -->
+        <!-- ========== SCHOOLS PRESENTATION SECTION ================== -->
+        <!-- ========================================================== -->
+        <div id="schools-presentation-section" class="survey-section" style="display:none;">
+
+            <!-- SCHOOLS HEADER -->
+            <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%);">
+                <h1>Schools</h1>
+                <div class="header-subtitle">Schools Programme — Access to Clean Water, Water Infrastructure & 4K Clubs</div>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Schools Assessed</div>
+                        <div class="meta-value">65 Schools</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Counties</div>
+                        <div class="meta-value">Kwale & Kilifi</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Period</div>
+                        <div class="meta-value">Baseline to Midline</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCHOOLS INDICATOR LOGFRAME -->
+            <div class="section" style="margin-bottom: 30px;">
+                <button class="collapsible-header" onclick="toggleCollapsible(this)">Schools Programme — Program Target vs Result</button>
+                <div class="collapsible-content">
+                    <div class="highlight-box">
+                        <h4>Indicator 1310c Performance</h4>
+                        <p>The percentage of targeted schools with access to sustainable clean water solutions <strong>exceeded the 60% target</strong>, rising from <strong>23.4%</strong> at baseline to <strong>62.5%</strong> at midline — a gain of <strong>+39.1pp</strong>. This represents a significant achievement, demonstrating that COSME interventions in water infrastructure, rainwater harvesting, and school-based water management are delivering measurable impact.</p>
+                    </div>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">Indicator</th>
+                                <th style="width: 15%;">Baseline</th>
+                                <th style="width: 15%;">Midline</th>
+                                <th style="width: 15%;">Target</th>
+                                <th style="width: 10%;">Change</th>
+                                <th style="width: 10%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #1565C0; font-weight: 600;">
+                                <td colspan="6"><strong style="color: white;">OUTPUT LEVEL — Schools Programme (1310-series)</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>1310c. Percentage of targeted schools with access to sustainable clean water solutions</strong></td>
+                                <td>23.4%</td>
+                                <td>62.5%</td>
+                                <td>60%</td>
+                                <td>+39.1pp</td>
+                                <td><span style="background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 4px; font-weight: 600;">EXCEEDED</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ========== A. ACCESS TO CLEAN WATER ========== -->
+            <div id="schp-clean-water">
+                <div class="output-header" style="background: linear-gradient(135deg, #0277BD 0%, #01579B 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+                    <h2 style="margin: 0; font-size: 1.5em;">A. Access to Clean Water: Baseline vs. Midline Comparison</h2>
+                    <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Between the Baseline (September 2023) and Midline (July 2025) assessments</p>
+                </div>
+
+                <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Borehole Access</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">52.3%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 44.2%</div></div>
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Rainwater Harvesting</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">27.7%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 13.0%</div></div>
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Water Tanks</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">9.2%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 2.6%</div></div>
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Piped Water Access</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">35.4%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 31.2%</div></div>
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Year-round Availability</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">55.4%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 49.4%</div></div>
+                    <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Indicator 1310c (Composite)</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #1b5e20;">62.5%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">↑ from 23.4%</div></div>
+                </div>
+
+                <div style="background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 25px;">
+                    <h3 style="color: #0D47A1; margin-bottom: 15px; font-size: 1.15em;">Narrative Summary</h3>
+                    <div style="line-height: 1.8; color: #444;">
+                        <p style="margin-bottom: 12px;">Between the <strong>Baseline (September 2023)</strong> and <strong>Midline (July 2025)</strong> assessments, several indicators related to access to clean water in schools showed notable changes:</p>
+                        <h4 style="color: #01579B; margin: 12px 0 6px;">Water Source Improvements:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li>Borehole access increased from <strong>44.2%</strong> to <strong>52.3%</strong></li>
+                            <li>Rainwater harvesting rose from <strong>13.0%</strong> to <strong>27.7%</strong></li>
+                            <li>Water tanks usage increased significantly from <strong>2.6%</strong> to <strong>9.2%</strong></li>
+                            <li>Piped water access improved slightly from <strong>31.2%</strong> to <strong>35.4%</strong></li>
+                            <li>River and pond usage decreased, indicating a shift away from unsafe sources</li>
+                        </ul>
+                        <h4 style="color: #01579B; margin: 12px 0 6px;">Ownership of Water Infrastructure:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li>Schools with <strong>private ownership</strong> of water infrastructure increased from <strong>63.6%</strong> to <strong>81.5%</strong></li>
+                            <li><strong>Public/communal ownership</strong> dropped from <strong>36.4%</strong> to <strong>15.4%</strong></li>
+                        </ul>
+                        <h4 style="color: #01579B; margin: 12px 0 6px;">Additional Indicators:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li>Schools reporting <strong>year-round availability</strong> rose from <strong>49.4%</strong> to <strong>55.4%</strong></li>
+                            <li>Schools reporting <strong>clean/safe drinking water</strong> slightly decreased from <strong>81.2%</strong> to <strong>78.5%</strong></li>
+                            <li>Functional rainwater harvesting systems increased from <strong>37.7%</strong> to <strong>53.8%</strong></li>
+                            <li>The percentage of schools with <strong>sustainable clean water solutions</strong> rose from <strong>23.4%</strong> to <strong>62.5%</strong> (Indicator 1310c)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Water Source: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-water-source-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure Ownership: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-ownership-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Key Indicators: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-indicators-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Indicator 1310c — Sustainable Clean Water Solutions (%)</div><div style="height: 320px;"><canvas id="schp-composite-chart"></canvas></div></div>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insight-panel green">
+                        <h4 style="color: #1b5e20;">General Insights & Trends</h4>
+                        <ul>
+                            <li>Clear trend toward <strong>improved infrastructure and safer water sources</strong>, particularly through increased borehole and rainwater harvesting systems</li>
+                            <li>Shift from public to private ownership suggests greater <strong>school-level control</strong> and possibly better maintenance</li>
+                            <li>Despite infrastructure gains, the <strong>perception of water safety declined slightly</strong>, which may reflect increased awareness or persistent quality issues</li>
+                        </ul>
+                    </div>
+                    <div class="insight-panel blue">
+                        <h4 style="color: #0D47A1;">Recommendations</h4>
+                        <ul>
+                            <li><strong>Strengthen water quality monitoring</strong> to address concerns about safety</li>
+                            <li>Continue investing in <strong>rainwater harvesting and borehole development</strong>, especially in areas with limited piped water</li>
+                            <li>Provide <strong>technical support and training</strong> for maintenance of water systems to ensure long-term sustainability</li>
+                            <li>Investigate reasons behind the <strong>decline in perceived water safety</strong> despite infrastructure improvements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END schp-clean-water -->
+
+            <!-- ========== B. WATER IN SCHOOLS: MIDLINE RESULTS ========== -->
+            <div id="schp-water-midline" style="display: none;">
+                <div class="output-header" style="background: linear-gradient(135deg, #00695C 0%, #004D40 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+                    <h2 style="margin: 0; font-size: 1.5em;">B. Water in Schools: Midline Results</h2>
+                    <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Midline data from sections A, B, and C</p>
+                </div>
+
+                <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Schools Received Tanks & Gutters</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00695C;">83%</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Tanks Installed</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #e65100;">34%</div><div class="kpi-change" style="color: #e65100; font-size: 0.8em;">Low uptake</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Gutters Installed</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #e65100;">32%</div><div class="kpi-change" style="color: #e65100; font-size: 0.8em;">Low uptake</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Solvatten Kits Used</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00695C;">49%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">14% partially used</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Maintenance Budget</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #e65100;">20%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">46% partially</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Hygiene Training Programs</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00695C;">74%</div></div>
+                </div>
+
+                <div style="background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 25px;">
+                    <h3 style="color: #00695C; margin-bottom: 15px; font-size: 1.15em;">Narrative Summary</h3>
+                    <div style="line-height: 1.8; color: #444;">
+                        <h4 style="color: #004D40; margin: 12px 0 6px;">COSME Project Interventions:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>83%</strong> of schools received water tanks and gutters</li>
+                            <li>However, only <strong>34%</strong> of schools installed tanks, and <strong>32%</strong> installed gutters</li>
+                            <li>Usage rates were lower: <strong>35%</strong> used tanks, <strong>27%</strong> used gutters</li>
+                            <li>Only <strong>30%</strong> of schools had tanks and gutters connected for rainwater harvesting</li>
+                        </ul>
+                        <h4 style="color: #004D40; margin: 12px 0 6px;">Solvatten Kits:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li>All <strong>65 schools</strong> received kits</li>
+                            <li><strong>49%</strong> used them, <strong>14%</strong> partially used, and <strong>37%</strong> did not use them</li>
+                        </ul>
+                        <h4 style="color: #004D40; margin: 12px 0 6px;">Sustainability Measures:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>20%</strong> of schools had budgets for maintenance; <strong>46%</strong> partially</li>
+                            <li><strong>57%</strong> had trained staff/students managing systems</li>
+                            <li><strong>65%</strong> conducted repairs/maintenance in the past year</li>
+                            <li><strong>74%</strong> had hygiene training programs for students</li>
+                            <li><strong>74%</strong> involved community members in oversight</li>
+                            <li><strong>63%</strong> had income-generating activities linked to water use</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure: Received vs Installed vs Used (%)</div><div style="height: 320px;"><canvas id="schp-infra-usage-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Solvatten Kit Usage (%)</div><div style="height: 320px;"><canvas id="schp-solvatten-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Sustainability Measures (%)</div><div style="height: 320px;"><canvas id="schp-sustainability-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Tank & Gutter Pipeline: Received → Installed → Used (%)</div><div style="height: 320px;"><canvas id="schp-pipeline-chart"></canvas></div></div>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insight-panel teal">
+                        <h4 style="color: #004D40;">General Insights & Patterns</h4>
+                        <ul>
+                            <li>While distribution of infrastructure was high, <strong>installation and usage lagged</strong>, suggesting barriers beyond access — likely financial or technical</li>
+                            <li><strong>Solvatten kits</strong> had better uptake than tanks/gutters, possibly due to ease of use</li>
+                            <li>Schools are increasingly engaging in <strong>sustainability practices</strong>, but <strong>funding remains a major constraint</strong></li>
+                            <li><strong>Community involvement</strong> and student training are strong, which bodes well for long-term impact</li>
+                        </ul>
+                    </div>
+                    <div class="insight-panel blue">
+                        <h4 style="color: #0D47A1;">Recommendations</h4>
+                        <ul>
+                            <li>Provide <strong>installation support</strong> and <strong>technical assistance</strong> post-distribution</li>
+                            <li>Develop <strong>maintenance funding models</strong>, possibly through community partnerships or government support</li>
+                            <li>Expand <strong>training programs</strong> for staff and students to improve system management</li>
+                            <li>Monitor and evaluate <strong>usage of distributed resources</strong> to ensure effectiveness</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END schp-water-midline -->
+
+            <!-- ========== C. 4K CLUBS: MIDLINE RESULTS ========== -->
+            <div id="schp-four-k-clubs" style="display: none;">
+                <div class="output-header" style="background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+                    <h2 style="margin: 0; font-size: 1.5em;">C. 4K Clubs: Midline Results</h2>
+                    <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">4K Club Establishment, Training & Support, and Environmental Initiatives</p>
+                </div>
+
+                <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Schools with 4K Clubs</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #2E7D32;">97%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">3% had two clubs</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Total Members</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">5,065</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">2,917 girls · 2,148 boys</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Materials Received</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #2E7D32;">92%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">6% partially</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Curriculum Completed ~50%</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #e65100;">66%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">14% almost, 17% less</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Environmental Initiatives</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #2E7D32;">81.5%</div><div class="kpi-change" style="color: #666; font-size: 0.8em;">of clubs initiated activities</div></div>
+                    <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Patrons Agree: Adequate Training</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #2E7D32;">85%</div></div>
+                </div>
+
+                <div style="background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 25px;">
+                    <h3 style="color: #2E7D32; margin-bottom: 15px; font-size: 1.15em;">Narrative Summary</h3>
+                    <div style="line-height: 1.8; color: #444;">
+                        <h4 style="color: #1B5E20; margin: 12px 0 6px;">4K Club Establishment:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>97%</strong> of schools had at least one club; <strong>3%</strong> had two</li>
+                            <li>Total members: <strong>2,917 girls</strong> and <strong>2,148 boys</strong></li>
+                        </ul>
+                        <h4 style="color: #1B5E20; margin: 12px 0 6px;">Training & Support:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>85%</strong> agreed patrons received adequate training</li>
+                            <li><strong>88%</strong> agreed patrons actively support clubs</li>
+                            <li><strong>85%</strong> agreed training materials are adequate</li>
+                            <li><strong>89%</strong> agreed club members are committed</li>
+                            <li><strong>89%</strong> agreed clubs are functional and active</li>
+                        </ul>
+                        <h4 style="color: #1B5E20; margin: 12px 0 6px;">Material Distribution:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>92%</strong> of schools received materials; <strong>6%</strong> partially</li>
+                            <li>Beneficiaries: <strong>2,153 girls</strong>, <strong>1,632 boys</strong></li>
+                        </ul>
+                        <h4 style="color: #1B5E20; margin: 12px 0 6px;">Curriculum Delivery:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>66%</strong> of schools completed around half</li>
+                            <li><strong>14%</strong> almost completed, <strong>17%</strong> less than half</li>
+                        </ul>
+                        <h4 style="color: #1B5E20; margin: 12px 0 6px;">Environmental Initiatives:</h4>
+                        <ul style="padding-left: 25px; margin-bottom: 10px;">
+                            <li><strong>81.5%</strong> of clubs initiated activities</li>
+                            <li>Most common: <strong>Tree planting (38)</strong>, <strong>Farming (32)</strong>, <strong>Environmental conservation (9)</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Training & Support Agreement (%)</div><div style="height: 320px;"><canvas id="schp-4k-training-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">4K Club Members: Gender Split</div><div style="height: 320px;"><canvas id="schp-4k-gender-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Environmental Initiatives by Type</div><div style="height: 320px;"><canvas id="schp-4k-enviro-chart"></canvas></div></div>
+                    <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Curriculum Delivery Progress</div><div style="height: 320px;"><canvas id="schp-4k-curriculum-chart"></canvas></div></div>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insight-panel green">
+                        <h4 style="color: #1B5E20;">General Insights & Patterns</h4>
+                        <ul>
+                            <li>4K Clubs are <strong>widely adopted and well-supported</strong>, with high levels of engagement</li>
+                            <li>Girls outnumber boys in club participation and material benefit</li>
+                            <li>Environmental initiatives are <strong>diverse and impactful</strong>, with strong emphasis on sustainability</li>
+                            <li>Curriculum delivery is progressing but <strong>needs acceleration</strong> to reach full completion</li>
+                        </ul>
+                    </div>
+                    <div class="insight-panel blue">
+                        <h4 style="color: #0D47A1;">Recommendations</h4>
+                        <ul>
+                            <li>Support <strong>full curriculum implementation</strong> through targeted follow-ups and resources</li>
+                            <li>Encourage <strong>gender-balanced participation</strong>, especially for boys</li>
+                            <li>Expand <strong>environmental initiative guidance</strong> to help clubs diversify and deepen impact</li>
+                            <li>Continue investing in <strong>training and materials</strong>, which are clearly valued and effective</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END schp-four-k-clubs -->
+
+            <!-- ========== OVERALL INSIGHTS ========== -->
+            <div id="schp-overall-insights" style="display: none;">
+                <div class="output-header" style="background: linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+                    <h2 style="margin: 0; font-size: 1.5em;">Overall Insights</h2>
+                    <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Cross-cutting findings across Schools Programme components</p>
+                </div>
+
+                <div class="insight-card red"><h3 style="color: #c62828;">Financial Limitations Dominate</h3><p>The most recurring theme is <strong>lack of financial resources</strong>. Schools frequently cited "cash" or "lack of funding" as the primary barrier to installing or completing water systems. This includes costs for tanks, gutters, plinths, and repairs.</p></div>
+                <div class="insight-card orange"><h3 style="color: #e65100;">Infrastructure Gaps</h3><p>Many schools lack basic infrastructure such as <strong>storage tanks, gutters, or functional roofs</strong> for rainwater harvesting. Even when materials are provided, installation is often delayed due to lack of funds or technical support.</p></div>
+                <div class="insight-card orange"><h3 style="color: #d84315;">Security and Vandalism</h3><p>Several schools face <strong>insecurity issues</strong>, including theft and vandalism of water infrastructure. The absence of perimeter fencing exacerbates these problems.</p></div>
+                <div class="insight-card darkblue"><h3 style="color: #0277BD;">Community Needs and Shared Use</h3><p>In some cases, water systems are shared with the <strong>local community</strong>, creating strain on limited resources and complicating maintenance responsibilities.</p></div>
+                <div class="insight-card brown"><h3 style="color: #795548;">Environmental and Logistical Challenges</h3><p>Schools in <strong>dry regions</strong> or with <strong>unreliable water sources</strong> struggle more, even when infrastructure is present. This underscores the need for context-specific solutions.</p></div>
+                <div class="insight-card green"><h3 style="color: #1B5E20;">Positive Outcomes</h3><ul style="padding-left: 20px;"><li>A few schools reported <strong>successful installations</strong> that improved irrigation and water availability.</li><li>A few schools report <strong>successful irrigation</strong> and <strong>crop watering</strong>, often linked to community or parental support.</li><li>Some schools express <strong>gratitude for support</strong> received, especially when water tanks help mitigate unreliable piped water.</li></ul></div>
+                <div class="insight-card green"><h3 style="color: #2E7D32;">Environmental Initiatives Engagement</h3><div><p style="margin-bottom: 10px;"><strong>Widespread Engagement:</strong> A total of <strong>65 schools</strong> reported environmental initiatives, indicating strong engagement from youth clubs in environmental action.</p><h4 style="color: #1B5E20; margin: 10px 0 6px;">Dominant Themes:</h4><ul style="padding-left: 25px; margin-bottom: 10px;"><li><strong>Tree Planting</strong> is the most common initiative, often linked to environmental conservation and climate resilience</li><li><strong>Farming</strong>, including vegetable gardens and crop cultivation, is a close second</li></ul><h4 style="color: #1B5E20; margin: 10px 0 6px;">Emerging Practices:</h4><ul style="padding-left: 25px; margin-bottom: 10px;"><li><strong>Waste Management</strong> and <strong>Water Conservation</strong> are less frequently mentioned but represent growing areas of interest</li><li>A few schools are exploring <strong>hygiene education</strong>, <strong>irrigation</strong>, and <strong>poultry farming</strong></li></ul></div></div>
+                <div class="insight-card amber"><h3 style="color: #e65100;">Key Challenges Identified</h3><ul style="padding-left: 20px;"><li><strong>Financial Constraints:</strong> Many schools cite lack of funds as a barrier to installing, maintaining, or repairing water systems</li><li><strong>Security Issues:</strong> Insecurity, including theft and vandalism, is a recurring theme</li><li><strong>Environmental Factors:</strong> Dry regions and unreliable water sources exacerbate maintenance challenges</li><li><strong>Infrastructure Gaps:</strong> Even when materials are provided, installation is delayed due to lack of technical expertise</li><li><strong>Community Pressure:</strong> Shared use of water systems with the community increases strain</li></ul></div>
+            </div>
+            <!-- END schp-overall-insights -->
+
+        </div>
+        <!-- END SCHOOLS PRESENTATION SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -12962,6 +13283,14 @@
                 footerTitle: '<strong>Mangrove — Restoration Knowledge & Resource Adequacy</strong>',
                 footerSample: 'Mangrove Pre & Post Test | Resource Adequacy Assessment',
                 renderFn: () => window.renderMangrovePresCharts()
+            },
+            'schools-presentation': {
+                showSection: 'schools-presentation-section',
+                subSelector: 'schools-pres-type-selector',
+                title: 'Schools',
+                footerTitle: '<strong>Schools — Access to Clean Water, Water Infrastructure & 4K Clubs</strong>',
+                footerSample: '65 Schools | Kwale & Kilifi Counties | Baseline to Midline Assessment',
+                renderFn: () => window.renderSchoolsPresCleanWaterCharts()
             }
         };
 
@@ -12974,9 +13303,10 @@
             'report-generation-section', 'analytics-dashboard-section',
             'awp-presentation-section', 'resilience-assets-section', 'forestry-presentation-section',
             'seaweed-presentation-section',
-            'mangrove-presentation-section'
+            'mangrove-presentation-section',
+            'schools-presentation-section'
         ];
-        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector'];
+        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
 
         // Shared helper: hide all content sections
         function hideAllSections() {
@@ -21373,7 +21703,8 @@
             'resilience-assets': 'Resilience Building Assets',
             'forestry-presentation': 'Forestry',
             'seaweed-presentation': 'Seaweed',
-            'mangrove-presentation': 'Mangrove'
+            'mangrove-presentation': 'Mangrove',
+            'schools-presentation': 'Schools'
         };
 
         // Toggle mobile nav drawer
@@ -24506,6 +24837,220 @@
             });
         };
 
+        // ====== SCHOOLS PRESENTATION — CHARTS & TAB SWITCHING ======
+        const schpCleanWaterChartInstances = {};
+        const schpWaterMidlineChartInstances = {};
+        const schp4KChartInstances = {};
+
+        window.showSchoolsPresType = function(evt, typeName) {
+            const allTypes = ['clean-water', 'water-midline', 'four-k-clubs', 'overall-insights'];
+            allTypes.forEach(t => {
+                const el = document.getElementById('schp-' + t);
+                if (el) el.style.display = (t === typeName) ? 'block' : 'none';
+            });
+            const container = document.getElementById('schools-pres-type-selector');
+            if (container) {
+                container.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = '';
+                    btn.style.color = '';
+                });
+                if (evt && evt.currentTarget) {
+                    evt.currentTarget.classList.add('active');
+                    evt.currentTarget.style.background = '#1565C0';
+                    evt.currentTarget.style.color = '#fff';
+                } else {
+                    const typeMap = { 'clean-water': 0, 'water-midline': 1, 'four-k-clubs': 2, 'overall-insights': 3 };
+                    const idx = typeMap[typeName] || 0;
+                    const btns = container.querySelectorAll('.tab-button');
+                    if (btns[idx]) {
+                        btns[idx].classList.add('active');
+                        btns[idx].style.background = '#1565C0';
+                        btns[idx].style.color = '#fff';
+                    }
+                }
+            }
+            const footerLabels = {
+                'clean-water': 'Access to Clean Water',
+                'water-midline': 'Water in Schools — Midline Results',
+                'four-k-clubs': '4K Clubs — Midline Results',
+                'overall-insights': 'Overall Insights'
+            };
+            document.getElementById('footer-title').innerHTML = '<strong>Schools — ' + (footerLabels[typeName] || typeName) + '</strong>';
+            if (typeName === 'clean-water') window.renderSchoolsPresCleanWaterCharts();
+            if (typeName === 'water-midline') window.renderSchoolsPresWaterMidlineCharts();
+            if (typeName === 'four-k-clubs') window.renderSchoolsPres4KCharts();
+        };
+
+        window.renderSchoolsPresCleanWaterCharts = function() {
+            Object.values(schpCleanWaterChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            function schpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                schpCleanWaterChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            schpChart('schp-water-source-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Borehole', 'Rainwater\nHarvesting', 'Water Tanks', 'Piped Water', 'River/Pond'],
+                    datasets: [
+                        { label: 'Baseline', data: [44.2, 13.0, 2.6, 31.2, 15.0], backgroundColor: '#90CAF9' },
+                        { label: 'Midline', data: [52.3, 27.7, 9.2, 35.4, 8.0], backgroundColor: '#1565C0' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 65, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+
+            schpChart('schp-ownership-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Private Ownership', 'Public/Communal'],
+                    datasets: [
+                        { label: 'Baseline', data: [63.6, 36.4], backgroundColor: '#90CAF9' },
+                        { label: 'Midline', data: [81.5, 15.4], backgroundColor: '#1565C0' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+
+            schpChart('schp-indicators-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Year-round\nAvailability', 'Clean/Safe\nDrinking Water', 'Functional\nRainwater Harvesting'],
+                    datasets: [
+                        { label: 'Baseline', data: [49.4, 81.2, 37.7], backgroundColor: '#A5D6A7' },
+                        { label: 'Midline', data: [55.4, 78.5, 53.8], backgroundColor: '#2E7D32' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+
+            schpChart('schp-composite-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Indicator 1310c — Sustainable Clean Water Solutions'],
+                    datasets: [
+                        { label: 'Baseline (23.4%)', data: [23.4], backgroundColor: '#FFCC80', barPercentage: 0.5 },
+                        { label: 'Midline (62.5%)', data: [62.5], backgroundColor: '#1B5E20', barPercentage: 0.5 }
+                    ]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 14, weight: 'bold' }, formatter: v => v + '%' } }, scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: 'Achievement Rate (%)' } } } }
+            });
+        };
+
+        window.renderSchoolsPresWaterMidlineCharts = function() {
+            Object.values(schpWaterMidlineChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            function schpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                schpWaterMidlineChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            schpChart('schp-infra-usage-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Tanks', 'Gutters'],
+                    datasets: [
+                        { label: 'Received', data: [83, 83], backgroundColor: '#4CAF50' },
+                        { label: 'Installed', data: [34, 32], backgroundColor: '#FF9800' },
+                        { label: 'Used', data: [35, 27], backgroundColor: '#F44336' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+
+            schpChart('schp-solvatten-chart', {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Partially Used', 'Not Used'],
+                    datasets: [{ data: [49, 14, 37], backgroundColor: ['#4CAF50', '#FF9800', '#F44336'], borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { display: true, font: { size: 13, weight: 'bold' }, color: '#fff', formatter: v => v + '%' } } }
+            });
+
+            schpChart('schp-sustainability-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Maintenance\nBudget', 'Trained\nStaff', 'Repairs/\nMaintenance', 'Hygiene\nTraining', 'Community\nOversight', 'Income-Gen\nActivities'],
+                    datasets: [{ label: 'Schools Reporting (%)', data: [20, 57, 65, 74, 74, 63], backgroundColor: ['#e65100', '#0277BD', '#00695C', '#2E7D32', '#2E7D32', '#1565C0'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+
+            schpChart('schp-pipeline-chart', {
+                type: 'line',
+                data: {
+                    labels: ['Received', 'Installed', 'Used'],
+                    datasets: [
+                        { label: 'Tanks', data: [83, 34, 35], borderColor: '#1565C0', backgroundColor: 'rgba(21,101,192,0.1)', fill: true, tension: 0.3, pointRadius: 6, pointBackgroundColor: '#1565C0' },
+                        { label: 'Gutters', data: [83, 32, 27], borderColor: '#e65100', backgroundColor: 'rgba(230,81,0,0.1)', fill: true, tension: 0.3, pointRadius: 6, pointBackgroundColor: '#e65100' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Schools Reporting (%)' } } } }
+            });
+        };
+
+        window.renderSchoolsPres4KCharts = function() {
+            Object.values(schp4KChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            function schpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                schp4KChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            schpChart('schp-4k-training-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Adequate\nTraining', 'Patrons\nSupport', 'Materials\nAdequate', 'Members\nCommitted', 'Clubs\nFunctional'],
+                    datasets: [{ label: 'Schools Agreeing (%)', data: [85, 88, 85, 89, 89], backgroundColor: ['#2E7D32', '#388E3C', '#43A047', '#4CAF50', '#66BB6A'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 13, weight: 'bold' }, formatter: v => v + '%' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Agreement Level (%)' } } } }
+            });
+
+            schpChart('schp-4k-gender-chart', {
+                type: 'doughnut',
+                data: {
+                    labels: ['Girls (2,917)', 'Boys (2,148)'],
+                    datasets: [{ data: [2917, 2148], backgroundColor: ['#8B5CF6', '#3B82F6'], borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { display: true, font: { size: 14, weight: 'bold' }, color: '#fff', formatter: (v, ctx) => { const total = ctx.dataset.data.reduce((a,b) => a+b, 0); return Math.round(v/total*100) + '%'; } } } }
+            });
+
+            schpChart('schp-4k-enviro-chart', {
+                type: 'bar',
+                data: {
+                    labels: ['Tree Planting', 'Farming', 'Environmental\nConservation', 'Waste\nManagement', 'Water\nConservation', 'Other'],
+                    datasets: [{ label: 'Number of Schools', data: [38, 32, 9, 4, 3, 6], backgroundColor: ['#2E7D32', '#4CAF50', '#66BB6A', '#81C784', '#A5D6A7', '#C8E6C9'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Schools' } } } }
+            });
+
+            schpChart('schp-4k-curriculum-chart', {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed ~50%', 'Almost Completed', 'Less than Half', 'Other'],
+                    datasets: [{ data: [66, 14, 17, 3], backgroundColor: ['#2E7D32', '#FF9800', '#F44336', '#9E9E9E'], borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { display: true, font: { size: 13, weight: 'bold' }, color: '#fff', formatter: v => v + '%' } } }
+            });
+        };
+
         // ====== RESILIENCE BUILDING ASSETS — CHARTS & TAB SWITCHING ======
         const rbaChartInstances = {};
 
@@ -25936,7 +26481,8 @@
                     'resilience-assets': 'Resilience Building Assets',
                     'forestry-presentation': 'Forestry',
                     'seaweed-presentation': 'Seaweed',
-                    'mangrove-presentation': 'Mangrove'
+                    'mangrove-presentation': 'Mangrove',
+                    'schools-presentation': 'Schools'
                 };
 
                 const sortedTabs = Object.entries(tabCounts)
