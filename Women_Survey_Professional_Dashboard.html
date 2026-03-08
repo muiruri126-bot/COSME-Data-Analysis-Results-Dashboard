@@ -3789,6 +3789,9 @@
                     <button class="sidebar-item" onclick="sidebarNav('resilience-assets', this)" data-key="resilience-assets">
                         <span class="item-label">Resilience Building Assets</span>
                     </button>
+                    <button class="sidebar-item" onclick="sidebarNav('forestry-presentation', this)" data-key="forestry-presentation">
+                        <span class="item-label">Forestry</span>
+                    </button>
                 </div>
             </div>
 
@@ -3899,6 +3902,9 @@
                 <button class="drawer-nav-item" onclick="mobileNavSelect('resilience-assets', this)">
                     💰 Resilience Building Assets
                 </button>
+                <button class="drawer-nav-item" onclick="mobileNavSelect('forestry-presentation', this)">
+                    🌲 Forestry
+                </button>
                 <button class="drawer-nav-item" onclick="mobileNavSelect('report-generation', this)">
                     📄 Report Generation
                 </button>
@@ -3936,6 +3942,7 @@
                 <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
                 <button class="survey-btn" onclick="switchSurvey('awp-presentation')">🎯 GJJ</button>
                 <button class="survey-btn" onclick="switchSurvey('resilience-assets')">💰 Resilience Building Assets</button>
+                <button class="survey-btn" onclick="switchSurvey('forestry-presentation')">🌲 Forestry</button>
                 <button class="survey-btn report-gen-btn" onclick="switchSurvey('report-generation')">📄 Report Generation</button>
                 <button class="survey-btn" onclick="switchSurvey('analytics-dashboard')">📊 Analytics</button>
             </div>
@@ -3987,6 +3994,11 @@
         <div class="tabs-container" id="rba-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
             <button class="tab-button active" onclick="showRBAType(event, 'savings')" style="background: #1B5E20; color: #fff;">A. Savings</button>
             <button class="tab-button" onclick="showRBAType(event, 'solarcooking')">B. Solar Panels & Cooking Stoves</button>
+        </div>
+
+        <!-- FORESTRY PRESENTATION SUB-SELECTOR -->
+        <div class="tabs-container" id="forestry-pres-type-selector" style="display: none; margin-bottom: 20px; margin-top: 15px;">
+            <button class="tab-button active" onclick="showForestryPresType(event, 'knowledge')" style="background: #33691E; color: #fff;">A. Knowledge</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -10382,6 +10394,95 @@
         </div>
         <!-- END RESILIENCE BUILDING ASSETS SECTION -->
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- FORESTRY PRESENTATION SECTION                              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div id="forestry-presentation-section" class="survey-section" style="display:none;">
+
+            <!-- FORESTRY HEADER -->
+            <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #33691E 0%, #558B2F 50%, #7CB342 100%);">
+                <h1>Forestry</h1>
+                <div class="header-subtitle">Forest Management Knowledge & Conservation — Pre & Post Test Results</div>
+            </div>
+
+            <!-- A. KNOWLEDGE -->
+            <div id="fp-knowledge">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #33691E 0%, #558B2F 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">A. Knowledge</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Forest Management Knowledge — Pre-Test vs Post-Test Training Assessment</p>
+                </div>
+
+                <!-- INDICATOR 1130a KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #33691E;">
+                    <h3 style="margin: 0 0 16px 0; color: #33691E; font-size: 1.15em;">Indicator 1130a: Percentage and Number of women and men with adequate practical knowledge in forest management and conservation (disaggregated by sex)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #F1F8E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #33691E;">50.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #F1F8E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #33691E;">68.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #DCEDC8; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #558B2F;">94.7%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #DCEDC8; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #558B2F;">+44.7pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C5E1A5; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.6em; font-weight: 800; color: #33691E;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 1: Forest Ecology & Rights -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <h3 style="color: #33691E; margin: 0 0 4px 0;">Forest Ecology & Rights — Pre-Test vs Post-Test Performance (%)</h3>
+                    <div style="height: 380px;"><canvas id="fp-chart-ecology-rights"></canvas></div>
+                    <div style="background: #F1F8E9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
+                        Forest Ecosystems: 56.6%→91.5% (+34.9pp). Biodiversity: 85.7%→97.6% (+11.9pp). Community Forestry: 86.6%→97.7% (+11.1pp). Forest Rights: 67.4%→95.0% (+27.6pp). Conservation Principles: 67.2%→97.8% (+30.6pp). Tree Species: 82.6%→97.5% (+14.9pp).
+                    </div>
+                </div>
+
+                <!-- CHART 2: Management & Conservation -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <h3 style="color: #33691E; margin: 0 0 4px 0;">Management & Conservation — Pre-Test vs Post-Test Performance (%)</h3>
+                    <div style="height: 380px;"><canvas id="fp-chart-management-conservation"></canvas></div>
+                </div>
+
+                <!-- CHART 3: Policy & Sustainability -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <h3 style="color: #33691E; margin: 0 0 4px 0;">Policy & Sustainability — Pre-Test vs Post-Test Performance (%)</h3>
+                    <div style="height: 380px;"><canvas id="fp-chart-policy-sustainability"></canvas></div>
+                    <div style="background: #F1F8E9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
+                        Forest Policy: 65.6%→95.3% (+29.7pp). Climate Adaptation: 74.7%→96.6% (+21.9pp). Community Governance: 96.9%→99.6% (+2.7pp). Benefit Sharing: 89.6%→98.6% (+9.0pp). Ecosystem Services: 88.5%→99.7% (+11.2pp). Agroforestry: 77.7%→97.9% (+20.2pp). Monitoring & Evaluation: 76.7%→97.4% (+20.7pp).
+                    </div>
+                </div>
+
+                <!-- INSIGHTS PANEL -->
+                <div style="background: linear-gradient(135deg, #F1F8E9 0%, #DCEDC8 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; border-left: 5px solid #33691E;">
+                    <h3 style="color: #33691E; margin: 0 0 12px 0;">💡 Key Insights — Forest Management Knowledge</h3>
+                    <ul style="color: #333; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>Target massively exceeded:</strong> Knowledge levels reached 94.7% against a 68.0% target (+44.7pp from baseline), demonstrating the training programme's exceptional effectiveness in building forest management capacity</li>
+                        <li><strong>Largest gains in foundational topics:</strong> Forest Ecosystems (+34.9pp), Conservation Principles (+30.6pp), and Forest Rights (+27.6pp) saw the biggest improvements — areas where baseline knowledge was lowest, indicating the training successfully addressed critical gaps</li>
+                        <li><strong>Near-universal mastery achieved:</strong> Post-test scores exceeded 95% across 17 of 20 knowledge areas, with Carbon Sequestration (99.2%), Wildlife Corridors (99.2%), Ecosystem Services (99.7%), and Community Governance (99.6%) approaching perfect scores</li>
+                        <li><strong>Policy understanding transformed:</strong> Forest Policy knowledge jumped from 65.6% to 95.3% (+29.7pp) and Climate Adaptation from 74.7% to 96.6% (+21.9pp), equipping participants to engage meaningfully in forest governance and policy advocacy</li>
+                        <li><strong>Practical skills strengthened:</strong> Management Plans (68.9%→83.4%), Sustainable Harvesting (69.6%→95.7%), and Reforestation (67.0%→92.0%) all showed strong gains, translating knowledge into actionable forest management capabilities</li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- END fp-knowledge -->
+
+        </div>
+        <!-- END FORESTRY PRESENTATION SECTION -->
+
     </div>
 
     <!-- FOOTER -->
@@ -11503,6 +11604,14 @@
                 footerTitle: '<strong>Resilience Building Assets — Savings, Loans & VSLA</strong>',
                 footerSample: 'Women Survey Midline | Savings, Loan Access & VSLA Performance',
                 renderFn: () => window.renderRBACharts()
+            },
+            'forestry-presentation': {
+                showSection: 'forestry-presentation-section',
+                subSelector: 'forestry-pres-type-selector',
+                title: 'Forestry',
+                footerTitle: '<strong>Forestry — Forest Management Knowledge & Conservation</strong>',
+                footerSample: 'Forest Pre & Post Test | Knowledge Assessment & Training Impact',
+                renderFn: () => window.renderForestryPresCharts()
             }
         };
 
@@ -11513,9 +11622,9 @@
             'seaweed-section', 'vsla-section', 'mangrove-resources-section',
             'cross-dataset-section', 'automated-insights-section',
             'report-generation-section', 'analytics-dashboard-section',
-            'awp-presentation-section', 'resilience-assets-section'
+            'awp-presentation-section', 'resilience-assets-section', 'forestry-presentation-section'
         ];
-        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector'];
+        const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector'];
 
         // Shared helper: hide all content sections
         function hideAllSections() {
@@ -19525,7 +19634,8 @@
             'cross-dataset': 'Cross-Dataset Synthesis',
             'automated-insights': 'Impact & Evidence',
             'awp-presentation': 'GJJ',
-            'resilience-assets': 'Resilience Building Assets'
+            'resilience-assets': 'Resilience Building Assets',
+            'forestry-presentation': 'Forestry'
         };
 
         // Toggle mobile nav drawer
@@ -21121,6 +21231,104 @@
             [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation].forEach(c => { if (c) c.destroy(); });
         }
 
+        // ====== FORESTRY PRESENTATION — CHARTS & TAB SWITCHING ======
+        const fpChartInstances = {};
+
+        window.showForestryPresType = function(evt, typeName) {
+            const allTypes = ['knowledge'];
+            allTypes.forEach(t => {
+                const el = document.getElementById('fp-' + t);
+                if (el) el.style.display = (t === typeName) ? 'block' : 'none';
+            });
+            const container = document.getElementById('forestry-pres-type-selector');
+            if (container) {
+                container.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = '';
+                    btn.style.color = '';
+                });
+                evt.currentTarget.classList.add('active');
+                evt.currentTarget.style.background = '#33691E';
+                evt.currentTarget.style.color = '#fff';
+            }
+        };
+
+        window.renderForestryPresCharts = function() {
+            Object.values(fpChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+            const FP = { pre: '#6366F1', post: '#A78BFA' };
+
+            function fpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                fpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // 1. Forest Ecology & Rights
+            fpChart('fp-chart-ecology-rights', {
+                type: 'bar',
+                data: {
+                    labels: ['Forest\nEcosystems', 'Biodiversity', 'Community\nForestry', 'Forest\nRights', 'Conservation\nPrinciples', 'Tree\nSpecies'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [56.6, 85.7, 86.6, 67.4, 67.2, 82.6], backgroundColor: FP.pre },
+                        { label: 'Post-Test', data: [91.5, 97.6, 97.7, 95.0, 97.8, 97.5], backgroundColor: FP.post }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% Correct' } } }
+                }
+            });
+
+            // 2. Management & Conservation
+            fpChart('fp-chart-management-conservation', {
+                type: 'bar',
+                data: {
+                    labels: ['Management\nPlans', 'Sustainable\nHarvesting', 'Fire\nPrevention', 'Reforestation', 'Watershed\nProtection', 'Carbon\nSequestration', 'Wildlife\nCorridors'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [68.9, 69.6, 85.2, 67.0, 76.4, 90.8, 88.6], backgroundColor: FP.pre },
+                        { label: 'Post-Test', data: [83.4, 95.7, 97.0, 92.0, 98.2, 99.2, 99.2], backgroundColor: FP.post }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% Correct' } } }
+                }
+            });
+
+            // 3. Policy & Sustainability
+            fpChart('fp-chart-policy-sustainability', {
+                type: 'bar',
+                data: {
+                    labels: ['Forest\nPolicy', 'Climate\nAdaptation', 'Community\nGovernance', 'Benefit\nSharing', 'Ecosystem\nServices', 'Agroforestry', 'Monitoring\n& Eval'],
+                    datasets: [
+                        { label: 'Pre-Test', data: [65.6, 74.7, 96.9, 89.6, 88.5, 77.7, 76.7], backgroundColor: FP.pre },
+                        { label: 'Post-Test', data: [95.3, 96.6, 99.6, 98.6, 99.7, 97.9, 97.4], backgroundColor: FP.post }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: { y: { beginAtZero: true, max: 110, title: { display: true, text: '% Correct' } } }
+                }
+            });
+        };
+
         // ====== RESILIENCE BUILDING ASSETS — CHARTS & TAB SWITCHING ======
         const rbaChartInstances = {};
 
@@ -22548,7 +22756,8 @@
                     'report-generation': 'Reports',
                     'analytics-dashboard': 'Analytics',
                     'awp-presentation': 'GJJ',
-                    'resilience-assets': 'Resilience Building Assets'
+                    'resilience-assets': 'Resilience Building Assets',
+                    'forestry-presentation': 'Forestry'
                 };
 
                 const sortedTabs = Object.entries(tabCounts)
