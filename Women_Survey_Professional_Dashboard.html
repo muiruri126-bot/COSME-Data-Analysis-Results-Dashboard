@@ -3966,6 +3966,7 @@
             <button class="tab-button" onclick="showAWPType(event, 'climate')">C. Climate Change & NbS Knowledge</button>
             <button class="tab-button" onclick="showAWPType(event, 'decisionmaking')">D. Decision Making</button>
             <button class="tab-button" onclick="showAWPType(event, 'accesscontrol')">E. Access & Control</button>
+            <button class="tab-button" onclick="showAWPType(event, 'timepoverty')">F. Time Poverty, Roles & Responsibilities</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -9830,6 +9831,135 @@
 
             </div>
             <!-- END awp-accesscontrol -->
+
+            <!-- F. TIME POVERTY, ROLES & RESPONSIBILITIES -->
+            <div id="awp-timepoverty" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #1565C0 0%, #1E88E5 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">F. Time Poverty, Roles & Responsibilities</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Gender Justice Journey — Women's Time Use, Unpaid Care Work & Household Task Distribution</p>
+                </div>
+
+                <!-- INDICATOR 1200b KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #1565C0;">
+                    <h3 style="margin: 0 0 16px 0; color: #1565C0; font-size: 1.15em;">Indicator 1200b: Average time women spend in unpaid work</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E3F2FD; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1565C0;">9.3 hours</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E3F2FD; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1565C0;">8.3 hours</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">7.7 hours</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">-1.6 hrs</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.4em; font-weight: 800; color: #2E7D32;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 1: Time Investment in Daily Activities -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #90CAF9;">
+                        <span style="font-size: 1.3em;">⏱️</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Time Investment in Daily Activities (Hours)</h3>
+                            <small style="color: #888;">Average hours women spend on different categories of daily work — reduction through programme</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Time Investment in Daily Activities (Hours) — Reduction Through Program</div>
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="awp-chart-time-investment"></canvas>
+                            </div>
+                            <div class="chart-insight">Unpaid care work reduced 1.6 hours (17% decrease). Productive work increased 0.7 hours, positive reallocation. Still challenging — women averaging 12.6 hours of work daily.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 2: Actual Experience - Women Performing Tasks -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #90CAF9;">
+                        <span style="font-size: 1.3em;">🏠</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Actual Experience: Women Performing These Tasks</h3>
+                            <small style="color: #888;">Percentage of women reporting they personally perform key household tasks</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women Personally Performing Household Tasks (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 380px;">
+                                <canvas id="awp-chart-women-tasks"></canvas>
+                            </div>
+                            <div class="chart-insight">Significant progress: Household task distribution improved dramatically from baseline. Baseline showed 83% performing firewood, 85% cleaning, 87% cooking. Midline reduced to 37%, 33%, 29% respectively — indicating successful norm shift toward joint responsibility. Continued engagement needed to sustain gains.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 3: Joint Responsibilities -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #90CAF9;">
+                        <span style="font-size: 1.3em;">🤝</span>
+                        <div>
+                            <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Joint Responsibilities: 'Both Men & Women' in the Household</h3>
+                            <small style="color: #888;">Percentage of women experiencing joint (men and women) responsibility for household tasks</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women Experiencing 'Joint, Both Men and Women' Responsibilities in HH (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 450px;">
+                                <canvas id="awp-chart-joint-responsibilities"></canvas>
+                            </div>
+                            <div class="chart-insight">Joint responsibility increased across all 10 household tasks. The largest gains were in food preparation (+32.2pp), cleaning (+33.5pp), and childcare (+30.8pp) — traditionally female-dominated tasks. Income provision saw the highest absolute joint responsibility at midline (47.2%), up from 18.0%. Even the lowest-gaining task (firewood) showed a +26.8pp increase to 32.5%.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #90CAF9;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <h3 style="margin: 0; color: #1565C0; font-size: 1.1em;">Summary, Highlights & Insights</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #E3F2FD; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #1565C0;">📈 Key Highlights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Target exceeded:</strong> Indicator 1200b dropped from 9.3 to 7.7 hours of unpaid work (target was 8.3 hours), a 17% reduction representing 1.6 fewer hours of daily unpaid labour for women</li>
+                                <li><strong>Dramatic task redistribution:</strong> Women solely performing cooking dropped from 87% to 29% (−58pp), cleaning 85%→33% (−53pp), firewood 83%→37% (−46pp), water fetching 77%→22% (−54pp), and childcare 71%→26% (−45pp)</li>
+                                <li><strong>Joint responsibility surged:</strong> Across all 10 tasks, joint responsibility increased by an average of +29pp, with food preparation (+32pp), cleaning (+34pp), and childcare (+31pp) showing the strongest shifts</li>
+                                <li><strong>Productive work increased:</strong> Time on productive work rose from 4.2 to 4.9 hours (+0.7 hrs), indicating women are redirecting freed-up time toward income-generating activities</li>
+                                <li><strong>New time categories emerged:</strong> Community work (0.4→1.8 hrs) and personal development (0→0.3 hrs) appeared at midline, suggesting women now have time for broader engagement beyond household duties</li>
+                            </ul>
+                        </div>
+                        <div style="background: #E8F5E9; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2E7D32;">🔍 Programme Insights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Gender norm shift is real:</strong> The massive move from women-only to joint household responsibility (average +29pp across 10 tasks) shows that men are increasingly sharing domestic duties — a fundamental gender norms outcome</li>
+                                <li><strong>Unpaid care reduction works:</strong> The 1.6-hour daily reduction in unpaid care translates to ~584 additional free hours per woman per year — time that can be invested in livelihoods, education, and personal growth</li>
+                                <li><strong>Time reallocation is positive:</strong> The shift from unpaid care (−1.6 hrs) to productive work (+0.7 hrs) and community work (+1.4 hrs) shows women leveraging freed time for economic and social empowerment</li>
+                                <li><strong>Still a heavy total burden:</strong> Despite gains, women still average 12.6 hours of total daily work (paid + unpaid), highlighting the ongoing need for labour-saving technologies, infrastructure, and deeper norm change</li>
+                                <li><strong>Income provision most equitable:</strong> Being the main income provider/buying food reached the highest joint responsibility (47.2%), reflecting progress in economic partnership within households — a critical outcome for Women's Economic Empowerment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-timepoverty -->
 
         </div>
         <!-- END AWP PRESENTATION SECTION -->
@@ -20568,7 +20698,7 @@
         const awpChartInstances = {};
 
         window.showAWPType = function(evt, typeName) {
-            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking', 'accesscontrol'];
+            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking', 'accesscontrol', 'timepoverty'];
             allTypes.forEach(t => {
                 const el = document.getElementById('awp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -20590,6 +20720,7 @@
             if (typeName === 'climate') renderAWPClimateCharts();
             if (typeName === 'decisionmaking') renderAWPDecisionMakingCharts();
             if (typeName === 'accesscontrol') renderAWPAccessControlCharts();
+            if (typeName === 'timepoverty') renderAWPTimePovertyCharts();
         };
 
         window.renderAWPCharts = function() {
@@ -21411,6 +21542,105 @@
                     scales: {
                         x: { beginAtZero: true, max: 70, title: { display: true, text: '% Available & Can Use' } },
                         y: { ticks: { font: { size: 11 } } }
+                    }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION F: TIME POVERTY, ROLES & RESPONSIBILITIES ======
+        window.renderAWPTimePovertyCharts = function() {
+            const AWP = {
+                baseline: '#1565C0',
+                midline: '#7E57C2'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Chart 1: Time Investment in Daily Activities
+            awpChart('awp-chart-time-investment', {
+                type: 'bar',
+                data: {
+                    labels: ['Unpaid Care', 'Productive Work', 'Community Work', 'Personal Dev'],
+                    datasets: [
+                        { label: 'Baseline', data: [9.3, 4.2, 0.4, 0], backgroundColor: AWP.baseline, borderRadius: 4 },
+                        { label: 'Midline', data: [7.7, 4.9, 1.8, 0.3], backgroundColor: AWP.midline, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 12, weight: 'bold' }, formatter: v => v }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Hours' } },
+                        x: { ticks: { font: { size: 12 } } }
+                    }
+                }
+            });
+
+            // Chart 2: Women Performing Household Tasks
+            awpChart('awp-chart-women-tasks', {
+                type: 'bar',
+                data: {
+                    labels: ['Cooking', 'Cleaning', 'Water Fetch', 'Firewood', 'Childcare'],
+                    datasets: [
+                        { label: 'Baseline', data: [87.0, 85.3, 76.6, 83.3, 70.7], backgroundColor: AWP.baseline, borderRadius: 4 },
+                        { label: 'Midline', data: [28.8, 32.5, 22.2, 37.2, 25.5], backgroundColor: AWP.midline, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: '% Women Performing Task' } },
+                        x: { ticks: { font: { size: 12 } } }
+                    }
+                }
+            });
+
+            // Chart 3: Joint Responsibilities
+            awpChart('awp-chart-joint-responsibilities', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Main Income Provider/\nBuy Food',
+                        'Care for Children\n(Under 10)',
+                        'Maintain a\nFamily Garden',
+                        'Fetch\nWater',
+                        'Prepare & Cook\nFood',
+                        'Look After Ill/Elderly/\nDisabled Family',
+                        'Clean/Sweep\nthe House',
+                        'Wash\nClothes',
+                        'Fetch\nFirewood',
+                        'Look After\nLivestock'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [18.0, 10.5, 24.6, 7.6, 5.0, 8.2, 4.0, 4.5, 5.7, 10.9], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [47.2, 41.3, 40.3, 39.4, 37.2, 35.3, 37.5, 34.4, 32.5, 30.9], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 10, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 60, title: { display: true, text: '% Reporting Joint Responsibility' } },
+                        y: { ticks: { font: { size: 10 } } }
                     }
                 }
             });
