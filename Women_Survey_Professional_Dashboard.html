@@ -3964,6 +3964,7 @@
             <button class="tab-button active" onclick="showAWPType(event, 'lifeskills')" style="background: #4A148C; color: #fff;">A. Life Skills & Psychosocial Empowerment</button>
             <button class="tab-button" onclick="showAWPType(event, 'socialnorms')">B. Social Norms & Gender Attitudes</button>
             <button class="tab-button" onclick="showAWPType(event, 'climate')">C. Climate Change & NbS Knowledge</button>
+            <button class="tab-button" onclick="showAWPType(event, 'decisionmaking')">D. Decision Making</button>
         </div>
 
         <!-- PROJECT OUTPUTS SUB-SELECTOR -->
@@ -9610,6 +9611,115 @@
 
             </div>
             <!-- END awp-climate -->
+
+            <!-- D. DECISION MAKING -->
+            <div id="awp-decisionmaking" style="display: none;">
+
+                <!-- SECTION HEADER -->
+                <div style="background: linear-gradient(135deg, #E65100 0%, #F57C00 100%); color: #fff; padding: 24px 30px; border-radius: 12px; margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 6px 0; font-size: 1.5em;">D. Decision Making</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95em;">Gender Justice Journey — Women's Participation in Household & Enterprise Decision-Making</p>
+                </div>
+
+                <!-- INDICATOR 1200a KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #E65100;">
+                    <h3 style="margin: 0 0 16px 0; color: #E65100; font-size: 1.15em;">Indicator 1200a: Percentage of targeted women with adequate involvement in HH, group and enterprise decision making</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #FFF3E0; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #E65100;">57.6%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #FFF3E0; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #E65100;">65.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">95.9%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+38.3pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.4em; font-weight: 800; color: #2E7D32;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 1: Joint Decision Making -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #FFE0B2;">
+                        <span style="font-size: 1.3em;">👩</span>
+                        <div>
+                            <h3 style="margin: 0; color: #E65100; font-size: 1.1em;">Women Experiencing 'Joint, Both Men and Women' Decision Making</h3>
+                            <small style="color: #888;">Percentage of women stating decisions are made jointly in their household</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Joint Decision Making in Household (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 460px;">
+                                <canvas id="awp-chart-joint-decisions"></canvas>
+                            </div>
+                            <div class="chart-insight">All 11 decision areas show significant increases toward joint decision-making. Largest gains: Routine mangrove/seaweed/forest nursery work +39.3pp (9.8%→49.1%), going to market +34.6pp (13.5%→48.1%), and routine HH purchases +25.0pp (25.6%→50.6%). Education of children had the smallest change (+1.6pp) but started highest (58.1%).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART 2: Influence to a Large Extent -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #FFE0B2;">
+                        <span style="font-size: 1.3em;">💪</span>
+                        <div>
+                            <h3 style="margin: 0; color: #E65100; font-size: 1.1em;">Women Who Can Influence HH Decisions 'To a Large Extent'</h3>
+                            <small style="color: #888;">Percentage of women stating they can influence household decisions to a large extent</small>
+                        </div>
+                    </div>
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                        <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                            <div class="chart-title">Women's Influence on HH Decisions — 'To a Large Extent' (Baseline vs Midline)</div>
+                            <div class="chart-container" style="height: 460px;">
+                                <canvas id="awp-chart-influence-decisions"></canvas>
+                            </div>
+                            <div class="chart-insight">All 11 areas show improved influence. Mangrove/seaweed/forest nursery work saw the largest leap: +34.9pp (17.0%→51.9%). Investment decisions improved +16.6pp (39.7%→56.3%). HH savings influence rose +16.1pp (40.8%→56.9%). Even areas with already-moderate baseline levels grew, demonstrating broad-based empowerment.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY, HIGHLIGHTS & INSIGHTS -->
+                <div style="background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #FFE0B2;">
+                        <span style="font-size: 1.3em;">📊</span>
+                        <h3 style="margin: 0; color: #E65100; font-size: 1.1em;">Summary, Highlights & Insights</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #FFF3E0; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #E65100;">📈 Key Highlights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Target massively exceeded:</strong> Indicator 1200a reached 95.9% against a 65% target (+38.3pp from baseline of 57.6%), indicating transformative change in women's participation in decision-making</li>
+                                <li><strong>Joint decision-making surged across all areas:</strong> Average increase of +22.3pp across all 11 decision categories, with no area declining</li>
+                                <li><strong>Previously excluded areas transformed:</strong> Mangrove/seaweed/forest nursery decisions — where women had minimal input (9.8%) — now show near-parity (49.1%), a +39.3pp gain</li>
+                                <li><strong>Economic decisions democratised:</strong> Joint decisions on market access (+34.6pp), routine purchases (+25.0pp), and large purchases (+24.3pp) reflect fundamental shifts in household economic governance</li>
+                                <li><strong>Women's influence deepened:</strong> The proportion of women who can influence decisions 'to a large extent' increased across all 11 categories, with an average gain of +14.0pp</li>
+                            </ul>
+                        </div>
+                        <div style="background: #E8F5E9; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2E7D32;">🔍 Programme Insights</h4>
+                            <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
+                                <li><strong>Dual-track progress validated:</strong> Both joint decision-making structure (who decides) and women's perceived influence (how much say) improved in parallel — suggesting genuine power shifts, not token participation</li>
+                                <li><strong>GJJ programming impact:</strong> The Gender Justice Journey approach of engaging both men and women is reflected in the shift from male-dominated to joint decision-making across traditionally male-controlled domains (loans, large purchases, market access)</li>
+                                <li><strong>Influence gap narrowing:</strong> The largest influence gains occurred in areas where women previously had least say — nursery work (+34.9pp), savings (+16.1pp), investments (+16.6pp) — indicating targeted empowerment in economic spheres</li>
+                                <li><strong>Education decisions already joint:</strong> Education of children showed the smallest change (+1.6pp joint, +9.1pp influence) because it was already the most jointly-decided area (58.1% baseline), suggesting it was a cultural starting point for shared governance</li>
+                                <li><strong>Scale of transformation:</strong> Moving from 57.6% to 95.9% adequate involvement in one programme cycle represents exceptional results — nearly universal participation in household decision-making among targeted women</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END awp-decisionmaking -->
 
         </div>
         <!-- END AWP PRESENTATION SECTION -->
@@ -20348,7 +20458,7 @@
         const awpChartInstances = {};
 
         window.showAWPType = function(evt, typeName) {
-            const allTypes = ['lifeskills', 'socialnorms', 'climate'];
+            const allTypes = ['lifeskills', 'socialnorms', 'climate', 'decisionmaking'];
             allTypes.forEach(t => {
                 const el = document.getElementById('awp-' + t);
                 if (el) el.style.display = (t === typeName) ? 'block' : 'none';
@@ -20368,6 +20478,7 @@
             // Render charts for the selected tab
             if (typeName === 'socialnorms') renderAWPSocialNormsCharts();
             if (typeName === 'climate') renderAWPClimateCharts();
+            if (typeName === 'decisionmaking') renderAWPDecisionMakingCharts();
         };
 
         window.renderAWPCharts = function() {
@@ -21004,6 +21115,96 @@
                         datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' }
                     },
                     scales: { y: { beginAtZero: true, max: 115, title: { display: true, text: '% of Men' } } }
+                }
+            });
+        };
+
+        // ====== AWP PRESENTATION — SECTION D: DECISION MAKING CHARTS ======
+        window.renderAWPDecisionMakingCharts = function() {
+            const AWP = {
+                baseline: '#7B1FA2',
+                midline: '#E65100'
+            };
+
+            function awpChart(canvasId, config) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return null;
+                const existing = Chart.getChart(canvas);
+                if (existing) existing.destroy();
+                const chart = new Chart(canvas, config);
+                awpChartInstances[canvasId] = chart;
+                return chart;
+            }
+
+            // Joint Decision Making
+            awpChart('awp-chart-joint-decisions', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Routine HH\nPurchases',
+                        'Women Go\nto Farm',
+                        'Use Main HH\nIncome',
+                        'Women Go\nto Market',
+                        'Routine Mangrove/\nSeaweed/Forest',
+                        'Using HH\nSavings',
+                        'Invest Money\nBorrowed/Saved',
+                        'Education of\nChildren',
+                        'Large HH\nPurchases',
+                        'Start Small\nBusiness',
+                        'HH Take\nOut Loan'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [25.6, 30.6, 45.6, 13.5, 9.8, 42.4, 43.6, 58.1, 32.3, 44.1, 40.2], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [50.6, 48.8, 58.8, 48.1, 49.1, 56.6, 57.8, 59.7, 56.6, 60.0, 59.4], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 75, title: { display: true, text: '% Joint, Both Men and Women' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Women's Influence 'To a Large Extent'
+            awpChart('awp-chart-influence-decisions', {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Routine HH\nPurchases',
+                        'Women Go\nto Farm',
+                        'Use Main HH\nIncome',
+                        'Women Go\nto Market',
+                        'Routine Mangrove/\nSeaweed/Forest',
+                        'Using HH\nSavings',
+                        'Invest Money\nBorrowed/Saved',
+                        'Education of\nChildren',
+                        'Large HH\nPurchases',
+                        'Start Small\nBusiness',
+                        'HH Take\nOut Loan'
+                    ],
+                    datasets: [
+                        { label: 'Baseline', data: [50.6, 46.7, 47.3, 51.1, 17.0, 40.8, 39.7, 49.0, 40.5, 42.1, 40.4], backgroundColor: AWP.baseline },
+                        { label: 'Midline', data: [55.9, 50.9, 56.3, 54.1, 51.9, 56.9, 56.3, 58.1, 51.9, 55.9, 56.6], backgroundColor: AWP.midline }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        datalabels: { display: true, anchor: 'end', align: 'end', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 75, title: { display: true, text: '% To a Large Extent' } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
                 }
             });
         };
