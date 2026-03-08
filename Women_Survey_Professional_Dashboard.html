@@ -3703,6 +3703,13 @@
         </div>
 
         <nav class="sidebar-nav">
+            <!-- Standalone: Project Outputs -->
+            <div style="margin-bottom: 6px;">
+                <button class="sidebar-item active" onclick="sidebarNav('project-outputs', this)" data-key="project-outputs" style="margin: 2px 10px; width: calc(100% - 20px);">
+                    <span class="item-label">Project Outputs</span>
+                </button>
+            </div>
+
             <!-- Group 1: Surveys -->
             <div class="sidebar-group" data-group="surveys">
                 <button class="sidebar-group-header" onclick="toggleSidebarGroup(this)">
@@ -3765,9 +3772,6 @@
                     </button>
                     <button class="sidebar-item" onclick="sidebarNav('cross-dataset', this)" data-key="cross-dataset">
                         <span class="item-label">Cross-Dataset Synthesis</span>
-                    </button>
-                    <button class="sidebar-item active" onclick="sidebarNav('project-outputs', this)" data-key="project-outputs">
-                        <span class="item-label">Project Outputs</span>
                     </button>
                 </div>
             </div>
