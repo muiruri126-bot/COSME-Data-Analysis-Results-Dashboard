@@ -10769,6 +10769,33 @@
                     </div>
                 </div>
 
+                <!-- INDICATOR 1130b KPI CARD -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #1B5E20;">
+                    <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Indicator 1130b: Percentage and Number of community forest conservation groups that are functional</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">53.5%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">70.0%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">85.7%</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Achievement</div>
+                            <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+32.2pp</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #A5D6A7; border-radius: 10px;">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+                            <div style="font-size: 1.6em; font-weight: 800; color: #1B5E20;">✅ EXCEEDED</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- INTERNAL TABS FOR FUNCTIONALITY SUB-SECTIONS -->
                 <div class="tabs-container" id="fp-func-tabs-container" style="margin-bottom: 20px;">
                     <button class="tab-button active" onclick="showFPFunctionalityTab(event, 'fp2tab-overview')">A. Overview & Functionality</button>
@@ -22967,26 +22994,27 @@
 
         // ── INDICATOR DATA ────────────────────────────────────────
         const cosmePmfIndicators = [
-            { code: '1000a', name: 'Resilience Index (RI)', baseline: 37.0, midline: 43.0, target: 45.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
-            { code: '1000b', name: 'Women & Girls Empowerment Index (WGEI)', baseline: 51.2, midline: 68.3, target: 60.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
-            { code: '1110a', name: 'Mangrove knowledge (All)', baseline: 36.9, midline: 81.9, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1110a (F)', name: 'Mangrove knowledge (Female)', baseline: 34.7, midline: 87.4, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1110a (M)', name: 'Mangrove knowledge (Male)', baseline: 38.2, midline: 80.2, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1100a', name: 'Area under rehabilitation (hectares)', baseline: 0, midline: 63, target: 123.8, unit: 'ha', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1100c', name: 'Seaweed groups in production/VA/commercialization', baseline: 0, midline: 39, target: 20, unit: 'groups', theme: 'NbS / Environment', direction: 'increase_good', disagg: { Production: 17, 'Production + VA': 13, Commercialization: 9 } },
-            { code: '1200a', name: 'Women with decision-making power', baseline: 57.6, midline: 95.9, target: 65.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
-            { code: '1200b', name: "Women's unpaid work time (hours/day)", baseline: 9.3, midline: 7.7, target: 8.3, unit: 'hrs', theme: 'Unpaid Care & Time Use', direction: 'decrease_good' },
-            { code: '1200c', name: 'Women with equitable access to resources', baseline: 41.2, midline: 53.8, target: 50.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
-            { code: '1110b', name: 'Sustainable NbS management practices adopted', baseline: 0, midline: 52, target: 70, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1120a', name: 'Seaweed farming knowledge', baseline: 49.3, midline: 29.3, target: 68.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1120b', name: 'Women with adequate resources for seaweed production', baseline: 0, midline: 34, target: 75, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
-            { code: '1210a', name: 'Women with improved gender norms awareness', baseline: 20.7, midline: 80.9, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
-            { code: '1210b', name: 'Women using improved climate-adaptive practices', baseline: 32.7, midline: 46.3, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
-            { code: '1210c', name: 'Gender Equality Perception Score (Women)', baseline: 42.1, midline: 64.7, target: 55.0, unit: '/100', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
-            { code: '1220a', name: 'Women participating in green economic activities', baseline: 28.8, midline: 91.9, target: 70.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
-            { code: '1220b', name: 'Women accessing green technology/tools', baseline: 50.8, midline: 83.1, target: 80.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
-            { code: '1230a', name: 'Male family members supporting gender equality', baseline: 43.57, midline: 89.77, target: 65.00, unit: '%', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' },
-            { code: '1230b', name: 'Male Family Engagement Score', baseline: 41.2, midline: 70.2, target: 55.0, unit: '/100', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' }
+            { code: '1000a', name: 'Resilience Index (RI) average score', baseline: 37.0, midline: 43.0, target: 45.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
+            { code: '1000b', name: "Women and Girl's Empowerment Index (WGEI) average score", baseline: 51.2, midline: 68.3, target: 60.0, unit: '/100', theme: 'Resilience & Empowerment Indices', direction: 'increase_good' },
+            { code: '1100a', name: 'Area (hectares) under rehabilitation using gender responsive nature-based solutions for climate mitigation and adaptation with biodiversity benefits, disaggregated by terrestrial, aquatic and coastal ecosystem', baseline: 0, midline: 63, target: 123.8, unit: 'ha', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1100c', name: 'Number of Seaweed Groups undertaking regenerative and sustainable seaweed production, value addition and commercialization (disaggregated by type of activity)', baseline: 0, midline: 39, target: 20, unit: 'groups', theme: 'NbS / Environment', direction: 'increase_good', disagg: { Production: 17, 'Production + VA': 13, Commercialization: 9 } },
+            { code: '1110a', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — All', baseline: 36.9, midline: 81.9, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1110a (F)', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — Female', baseline: 34.7, midline: 87.4, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1110a (M)', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — Male', baseline: 38.2, midline: 80.2, target: 57.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1110b', name: 'Percentage and Number of women and men with adequate resources to undertake mangrove restoration and conservation (disaggregated by sex)', baseline: 0, midline: 52, target: 70, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1120a', name: 'Percentage and Number of targeted women with adequate practical knowledge on regenerative and sustainable seaweed production, value addition and commercialization (disaggregated by type of activity)', baseline: 49.3, midline: 29.3, target: 68.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1120b', name: 'Percentage and Number of targeted women with adequate resources to undertake regenerative and sustainable seaweed production, value addition and commercialization (disaggregated by type of activity)', baseline: 0, midline: 34, target: 75, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1130b', name: 'Percentage and Number of community forest conservation groups that are functional', baseline: 53.5, midline: 85.7, target: 70.0, unit: '%', theme: 'NbS / Environment', direction: 'increase_good' },
+            { code: '1200a', name: 'Percentage of targeted women with adequate involvement in HH, group and enterprise decision making', baseline: 57.6, midline: 95.9, target: 65.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
+            { code: '1200b', name: 'Average time women spend in unpaid work', baseline: 9.3, midline: 7.7, target: 8.3, unit: 'hrs', theme: 'Unpaid Care & Time Use', direction: 'decrease_good' },
+            { code: '1200c', name: 'Percentage of targeted women with adequate access and control over household and enterprise resources', baseline: 41.2, midline: 53.8, target: 50.0, unit: '%', theme: "Women's Decision-making & Resources", direction: 'increase_good' },
+            { code: '1210a', name: 'Percentage of targeted women with adequate practical knowledge on NbS, Economic Rights and GE&I', baseline: 20.7, midline: 80.9, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1210b', name: 'Percentage of targeted women with adequate personal skills and confidence to assert their rights and express their decisions', baseline: 32.7, midline: 46.3, target: 55.0, unit: '%', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1210c', name: 'Degree/extent to which women are perceived as equal to men by targeted women', baseline: 42.1, midline: 64.7, target: 55.0, unit: '/100', theme: 'Knowledge, Skills & Gender Norms (Women)', direction: 'increase_good' },
+            { code: '1220a', name: 'Percentage of women actively saving in a Savings Group', baseline: 28.8, midline: 91.9, target: 70.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
+            { code: '1220b', name: 'Percentage of women with access to time-saving and environmentally friendly solar panels and cooking stoves', baseline: 50.8, midline: 83.1, target: 80.0, unit: '%', theme: 'Economic Empowerment & Green Tech', direction: 'increase_good' },
+            { code: '1230a', name: 'Percentage of male family members with adequate knowledge and practical skills to promote and support NbS, economic rights of women and GE&I', baseline: 43.57, midline: 89.77, target: 65.00, unit: '%', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' },
+            { code: '1230b', name: 'Degree/extent to which women are perceived as equal to men by male family members', baseline: 41.2, midline: 70.2, target: 55.0, unit: '/100', theme: 'Male Family Engagement & Perceptions', direction: 'increase_good' }
         ];
 
         // ── CALCULATIONS ──────────────────────────────────────────
