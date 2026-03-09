@@ -8747,13 +8747,8 @@
                 </div>
             </div>
 
-            <!-- CHARTS ROW 2: 1100c disaggregation + 1110a gender -->
+            <!-- CHARTS ROW 2: 1110a gender -->
             <div class="charts-grid" style="margin-bottom: 28px;">
-                <div class="chart-wrapper">
-                    <div class="chart-title">1100c — Seaweed Groups by Activity Type (Midline)</div>
-                    <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-1100c"></canvas></div>
-                    <div class="chart-insight">Of 19 seaweed groups: 17 in Production, 13 in Value Addition, 9 in Commercialization. Combined midline = 39 (target 20).</div>
-                </div>
                 <div class="chart-wrapper">
                     <div class="chart-title">1110a — Mangrove Knowledge by Gender</div>
                     <div class="chart-container" style="height: 360px;"><canvas id="pmf-chart-1110a"></canvas></div>
@@ -22997,7 +22992,6 @@
             { code: '1000a', name: 'Resilience Index (RI) average score', baseline: 37.0, midline: 43.0, target: 45.0, unit: '/100', theme: '1000 Improved climate-resilient, equitable economies within communities relying on coastal and marine ecosystems', direction: 'increase_good' },
             { code: '1000b', name: "Women and Girl's Empowerment Index (WGEI) average score", baseline: 51.2, midline: 68.3, target: 60.0, unit: '/100', theme: '1000 Improved climate-resilient, equitable economies within communities relying on coastal and marine ecosystems', direction: 'increase_good' },
             { code: '1100a', name: 'Area (hectares) under rehabilitation using gender responsive nature-based solutions for climate mitigation and adaptation with biodiversity benefits, disaggregated by terrestrial, aquatic and coastal ecosystem', baseline: 0, midline: 63, target: 123.8, unit: 'ha', theme: '1100 Enhanced adoption of gender-responsive and socially inclusive NbS for climate change adaptation', direction: 'increase_good' },
-            { code: '1100c', name: 'Number of Seaweed Groups undertaking regenerative and sustainable seaweed production, value addition and commercialization (disaggregated by type of activity)', baseline: 0, midline: 39, target: 20, unit: 'groups', theme: '1100 Enhanced adoption of gender-responsive and socially inclusive NbS for climate change adaptation', direction: 'increase_good', disagg: { Production: 17, 'Production + VA': 13, Commercialization: 9 } },
             { code: '1110a', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — All', baseline: 36.9, midline: 81.9, target: 57.0, unit: '%', theme: '1110 Increased capacity of communities to undertake gender-responsive mangrove restoration and conservation', direction: 'increase_good' },
             { code: '1110a (F)', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — Female', baseline: 34.7, midline: 87.4, target: 57.0, unit: '%', theme: '1110 Increased capacity of communities to undertake gender-responsive mangrove restoration and conservation', direction: 'increase_good' },
             { code: '1110a (M)', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex) — Male', baseline: 38.2, midline: 80.2, target: 57.0, unit: '%', theme: '1110 Increased capacity of communities to undertake gender-responsive mangrove restoration and conservation', direction: 'increase_good' },
@@ -23097,21 +23091,17 @@
                 '<th style="' + hdrStyle + '">Baseline</th>' +
                 '<th style="' + hdrStyle + '">Midline</th>' +
                 '<th style="' + hdrStyle + '">Target</th>' +
-                '<th style="' + hdrStyle + '">Unit</th>' +
-                '<th style="' + hdrStyle + '">Diff (M–T)</th>' +
-                '<th style="' + hdrStyle + '">% Achievement</th>' +
+                '<th style="' + hdrStyle + '">Change</th>' +
                 '<th style="' + hdrStyle + '">Status</th>' +
                 '</tr></thead><tbody>';
             data.forEach((d, i) => {
                 const bgRow = i % 2 === 0 ? '#f9fbfd' : '#fff';
                 html += '<tr style="background:' + bgRow + ';">' +
                     '<td style="' + cellStyle + 'text-align:left;font-weight:600;">' + d.code + ' — ' + d.name + '</td>' +
-                    '<td style="' + cellStyle + '">' + d.baseline + '</td>' +
-                    '<td style="' + cellStyle + 'font-weight:600;">' + d.midline + '</td>' +
-                    '<td style="' + cellStyle + '">' + d.target + '</td>' +
-                    '<td style="' + cellStyle + '">' + d.unit + '</td>' +
+                    '<td style="' + cellStyle + '">' + d.baseline + (d.unit ? ' ' + d.unit : '') + '</td>' +
+                    '<td style="' + cellStyle + 'font-weight:600;">' + d.midline + (d.unit ? ' ' + d.unit : '') + '</td>' +
+                    '<td style="' + cellStyle + '">' + d.target + (d.unit ? ' ' + d.unit : '') + '</td>' +
                     '<td style="' + cellStyle + 'color:' + (d.diffMT >= 0 ? '#27ae60' : '#e74c3c') + ';font-weight:600;">' + (d.diffMT >= 0 ? '+' : '') + d.diffMT + '</td>' +
-                    '<td style="' + cellStyle + 'font-weight:700;color:' + d.statusColor + ';">' + d.pctAchievement + '%</td>' +
                     '<td style="' + cellStyle + '">' + badge(d.statusColor, d.statusLabel) + '</td>' +
                 '</tr>';
             });
@@ -23188,30 +23178,6 @@
                         datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + ' ha' }
                     },
                     scales: { y: { beginAtZero: true, max: 140, title: { display: true, text: 'Hectares' } } }
-                }
-            });
-        }
-
-        // ── 1100c DISAGGREGATION CHART ────────────────────────────
-        function render1100cChart() {
-            pmfChart('pmf-chart-1100c', {
-                type: 'bar',
-                data: {
-                    labels: ['Production', 'Production + VA', 'Commercialization'],
-                    datasets: [{
-                        label: 'No. of Groups (Midline)',
-                        data: [17, 13, 9],
-                        backgroundColor: ['#0072CE', '#2ecc71', '#f39c12'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' } }
-                    },
-                    scales: { y: { beginAtZero: true, max: 22, title: { display: true, text: 'Number of Groups' } } }
                 }
             });
         }
@@ -23315,7 +23281,6 @@
             renderPMFMainChart(enrichedData);
             renderRadarChart();
             renderHectaresChart();
-            render1100cChart();
             render1110aChart();
             renderTimeUseChart();
             renderAchievementChart(enrichedData);
