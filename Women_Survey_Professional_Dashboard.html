@@ -23014,16 +23014,18 @@
         // ── CALCULATIONS ──────────────────────────────────────────
         function calcIndicator(ind) {
             const { baseline, midline, target, direction } = ind;
-            const diffMT = direction === 'decrease_good' ? target - midline : midline - target;
+            // Change = Midline - Baseline (for increase_good) or Baseline - Midline (for decrease_good)
+            const change = direction === 'decrease_good' ? baseline - midline : midline - baseline;
             const gap = direction === 'decrease_good' ? baseline - target : target - baseline;
-            const progress = direction === 'decrease_good' ? baseline - midline : midline - baseline;
-            const pctAchievement = gap !== 0 ? Math.round((progress / gap) * 1000) / 10 : (progress >= 0 ? 100 : 0);
+            const pctAchievement = gap !== 0 ? Math.round((change / gap) * 1000) / 10 : (change >= 0 ? 100 : 0);
             let status, statusColor, statusLabel;
-            if (pctAchievement >= 100) { status = 'green'; statusColor = '#27ae60'; statusLabel = 'Achieved / Exceeded'; }
-            else if (pctAchievement >= 80) { status = 'amber'; statusColor = '#f39c12'; statusLabel = 'On Track'; }
-            else if (pctAchievement >= 0) { status = 'red'; statusColor = '#e74c3c'; statusLabel = 'Below Target'; }
-            else { status = 'red'; statusColor = '#e74c3c'; statusLabel = 'Regressed'; }
-            return { ...ind, diffMT: Math.round(diffMT * 10) / 10, pctAchievement, status, statusColor, statusLabel };
+            // Status: Achieved/Exceeded if at or above target; On Track if above baseline but below target; Below Target otherwise
+            const aboveBaseline = direction === 'decrease_good' ? midline < baseline : midline > baseline;
+            const metTarget = direction === 'decrease_good' ? midline <= target : midline >= target;
+            if (metTarget) { status = 'green'; statusColor = '#27ae60'; statusLabel = 'Achieved / Exceeded'; }
+            else if (aboveBaseline) { status = 'amber'; statusColor = '#f39c12'; statusLabel = 'On Track'; }
+            else { status = 'red'; statusColor = '#e74c3c'; statusLabel = 'Below Target'; }
+            return { ...ind, diffMT: Math.round(change * 10) / 10, pctAchievement, status, statusColor, statusLabel };
         }
 
         let enrichedData = cosmePmfIndicators.map(calcIndicator);
