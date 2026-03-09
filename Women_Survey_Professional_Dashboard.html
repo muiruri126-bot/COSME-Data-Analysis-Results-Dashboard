@@ -23381,44 +23381,188 @@
  }
 
  // PMF TABLE 
+ // Outcome group definitions for visual grouping
+ const outcomeGroups = [
+ {
+ prefix: '1000',
+ title: 'Overarching Impact',
+ subtitle: 'Improved climate-resilient, equitable economies within coastal communities',
+ color: '#0072CE',
+ gradient: 'linear-gradient(135deg, #0072CE, #005a9e)',
+ icon: '\u2605'
+ },
+ {
+ prefix: '1100',
+ title: 'Outcome 1100 — NbS Adoption',
+ subtitle: 'Enhanced adoption of gender-responsive Nature-based Solutions for climate adaptation',
+ color: '#2e7d32',
+ gradient: 'linear-gradient(135deg, #2e7d32, #1B5E20)',
+ icon: '\uD83C\uDF3F'
+ },
+ {
+ prefix: '1200',
+ title: 'Outcome 1200 — Women\'s Agency',
+ subtitle: 'Increased agency of women to participate in gender-responsive NbS with biodiversity co-benefits',
+ color: '#E91E63',
+ gradient: 'linear-gradient(135deg, #E91E63, #AD1457)',
+ icon: '\u2764'
+ },
+ {
+ prefix: '1300',
+ title: 'Outcome 1300 — Governance',
+ subtitle: 'Strengthened gender-responsive and child/youth-friendly governance for climate adaptation',
+ color: '#303F9F',
+ gradient: 'linear-gradient(135deg, #303F9F, #1A237E)',
+ icon: '\uD83C\uDFDB'
+ }
+ ];
+
+ function getOutcomeGroup(code) {
+ for (var i = outcomeGroups.length - 1; i >= 0; i--) {
+ if (code.startsWith(outcomeGroups[i].prefix.substring(0, 2))) {
+ // Match by first 2 digits for sub-outcome grouping (11xx → 1100, 12xx → 1200, 13xx → 1300)
+ var codeNum = parseInt(code.replace(/[^0-9]/g, '').substring(0, 4));
+ if (codeNum >= 1000 && codeNum < 1100) return outcomeGroups[0];
+ if (codeNum >= 1100 && codeNum < 1200) return outcomeGroups[1];
+ if (codeNum >= 1200 && codeNum < 1300) return outcomeGroups[2];
+ if (codeNum >= 1300 && codeNum < 1400) return outcomeGroups[3];
+ }
+ }
+ return outcomeGroups[0];
+ }
+
  function renderPMFTable(data) {
  const table = document.getElementById('pmf-table');
  if (!table) return;
  const hdrStyle = 'padding:10px 12px;text-align:center;font-weight:600;color:#fff;background:#005a9e;border:1px solid #ddd;font-size:0.88em;';
  const cellStyle = 'padding:8px 12px;text-align:center;border:1px solid #eee;font-size:0.88em;';
- let html = '<thead><tr>' +
- '<th style="' + hdrStyle + 'text-align:left;">Indicator</th>' +
+
+ // Group indicators by outcome
+ var grouped = {};
+ outcomeGroups.forEach(function(g) { grouped[g.prefix] = []; });
+ data.forEach(function(d) {
+ var grp = getOutcomeGroup(d.code);
+ if (!grouped[grp.prefix]) grouped[grp.prefix] = [];
+ grouped[grp.prefix].push(d);
+ });
+
+ var html = '<thead><tr>' +
+ '<th style="' + hdrStyle + 'text-align:left;min-width:280px;">Indicator</th>' +
  '<th style="' + hdrStyle + '">Baseline</th>' +
  '<th style="' + hdrStyle + '">Midline</th>' +
  '<th style="' + hdrStyle + '">Target</th>' +
  '<th style="' + hdrStyle + '">Change</th>' +
+ '<th style="' + hdrStyle + '">Achievement</th>' +
  '<th style="' + hdrStyle + '">Status</th>' +
  '</tr></thead><tbody>';
- data.forEach((d, i) => {
- const bgRow = i % 2 === 0 ? '#f9fbfd' : '#fff';
+
+ outcomeGroups.forEach(function(grp) {
+ var items = grouped[grp.prefix];
+ if (!items || items.length === 0) return;
+
+ // Group summary stats
+ var grpGreen = items.filter(function(d) { return d.status === 'green'; }).length;
+ var grpAmber = items.filter(function(d) { return d.status === 'amber'; }).length;
+ var grpRed = items.filter(function(d) { return d.status === 'red'; }).length;
+ var grpAvgAch = items.length > 0 ? Math.round(items.reduce(function(s, d) { return s + d.pctAchievement; }, 0) / items.length * 10) / 10 : 0;
+
+ // Category header row
+ html += '<tr>' +
+ '<td colspan="7" style="padding:0;border:none;">' +
+ '<div style="background:' + grp.gradient + ';color:#fff;padding:14px 18px;margin-top:8px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+ '<div style="display:flex;align-items:center;gap:10px;">' +
+ '<span style="font-size:1.5em;">' + grp.icon + '</span>' +
+ '<div>' +
+ '<div style="font-weight:700;font-size:1.05em;">' + grp.title + '</div>' +
+ '<div style="font-size:0.8em;opacity:0.85;margin-top:2px;">' + grp.subtitle + '</div>' +
+ '</div>' +
+ '</div>' +
+ '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">' +
+ '<span style="background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px;font-size:0.82em;font-weight:600;">' + items.length + ' indicators</span>' +
+ (grpGreen > 0 ? '<span style="background:rgba(39,174,96,0.3);padding:4px 10px;border-radius:20px;font-size:0.78em;font-weight:600;">' + grpGreen + ' Achieved</span>' : '') +
+ (grpAmber > 0 ? '<span style="background:rgba(243,156,18,0.3);padding:4px 10px;border-radius:20px;font-size:0.78em;font-weight:600;">' + grpAmber + ' On Track</span>' : '') +
+ (grpRed > 0 ? '<span style="background:rgba(231,76,60,0.3);padding:4px 10px;border-radius:20px;font-size:0.78em;font-weight:600;">' + grpRed + ' Below</span>' : '') +
+ '<span style="background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.78em;font-weight:600;">Avg: ' + grpAvgAch + '%</span>' +
+ '</div>' +
+ '</div>' +
+ '</td>' +
+ '</tr>';
+
+ // Sub-header row for this group
+ html += '<tr style="background:' + grp.color + '15;">' +
+ '<th style="padding:7px 12px;text-align:left;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Indicator</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Baseline</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Midline</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Target</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Change</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Achievement</th>' +
+ '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Status</th>' +
+ '</tr>';
+
+ // Indicator rows
+ items.forEach(function(d, i) {
+ var bgRow = i % 2 === 0 ? '#fff' : grp.color + '08';
+ var leftBorder = 'border-left:3px solid ' + grp.color + ';';
+ // Progress bar width for achievement
+ var barWidth = Math.min(Math.max(d.pctAchievement, 0), 150);
+ var barColor = d.statusColor;
+
  html += '<tr style="background:' + bgRow + ';">' +
- '<td style="' + cellStyle + 'text-align:left;font-weight:600;">' + d.code + ' — ' + d.name + '</td>' +
- '<td style="' + cellStyle + '">' + d.baseline + (d.unit ? ' ' + d.unit : '') + '</td>' +
- '<td style="' + cellStyle + 'font-weight:600;">' + d.midline + (d.unit ? ' ' + d.unit : '') + '</td>' +
- '<td style="' + cellStyle + '">' + d.target + (d.unit ? ' ' + d.unit : '') + '</td>' +
- '<td style="' + cellStyle + 'color:' + (d.diffMT >= 0 ? '#27ae60' : '#e74c3c') + ';font-weight:600;">' + (d.diffMT >= 0 ? '+' : '') + d.diffMT + '</td>' +
+ '<td style="' + cellStyle + 'text-align:left;' + leftBorder + '">' +
+ '<span style="color:' + grp.color + ';font-weight:700;font-size:0.85em;margin-right:6px;">' + d.code + '</span>' +
+ '<span style="color:#333;font-size:0.85em;">' + d.name.substring(0, 80) + (d.name.length > 80 ? '...' : '') + '</span>' +
+ '</td>' +
+ '<td style="' + cellStyle + 'color:#666;">' + d.baseline + ' ' + (d.unit || '') + '</td>' +
+ '<td style="' + cellStyle + 'font-weight:700;color:#1a1a1a;">' + d.midline + ' ' + (d.unit || '') + '</td>' +
+ '<td style="' + cellStyle + 'color:#555;">' + d.target + ' ' + (d.unit || '') + '</td>' +
+ '<td style="' + cellStyle + 'font-weight:600;color:' + (d.diffMT >= 0 ? '#27ae60' : '#e74c3c') + ';">' + (d.diffMT >= 0 ? '+' : '') + d.diffMT + '</td>' +
+ '<td style="' + cellStyle + '">' +
+ '<div style="display:flex;align-items:center;gap:6px;justify-content:center;">' +
+ '<div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden;">' +
+ '<div style="width:' + Math.min(barWidth * 0.67, 100) + '%;height:100%;background:' + barColor + ';border-radius:4px;transition:width 0.5s;"></div>' +
+ '</div>' +
+ '<span style="font-size:0.82em;font-weight:600;color:' + barColor + ';">' + d.pctAchievement + '%</span>' +
+ '</div>' +
+ '</td>' +
  '<td style="' + cellStyle + '">' + badge(d.statusColor, d.statusLabel) + '</td>' +
  '</tr>';
  });
+
+ // Group summary footer row
+ html += '<tr style="background:' + grp.color + '12;border-top:2px solid ' + grp.color + ';">' +
+ '<td style="' + cellStyle + 'text-align:left;font-weight:700;color:' + grp.color + ';font-size:0.85em;" colspan="5">' +
+ grp.title.split(' — ')[0] + ' Summary — ' + grpGreen + ' exceeded, ' + grpAmber + ' on track, ' + grpRed + ' below target' +
+ '</td>' +
+ '<td style="' + cellStyle + 'font-weight:700;color:' + grp.color + ';">' + grpAvgAch + '%</td>' +
+ '<td style="' + cellStyle + '">' +
+ (grpRed === 0 && grpAmber === 0 ? badge('#27ae60', 'All Exceeded') :
+ grpRed === 0 ? badge('#f39c12', 'On Track') :
+ badge('#e74c3c', 'Needs Attention')) +
+ '</td>' +
+ '</tr>';
+ });
+
  html += '</tbody>';
  table.innerHTML = html;
  }
 
  // MAIN CLUSTERED BAR CHART 
  function renderPMFMainChart(data) {
+ // Color bars by outcome group
+ var barBg = data.map(function(d) {
+ return getOutcomeGroup(d.code).color + '99';
+ });
+ var barBorder = data.map(function(d) {
+ return getOutcomeGroup(d.code).color;
+ });
  pmfChart('pmf-chart-main', {
  type: 'bar',
  data: {
  labels: data.map(d => d.code),
  datasets: [
- { label: 'Baseline', data: data.map(d => d.baseline), backgroundColor: 'rgba(108,92,231,0.7)', borderColor: '#6c5ce7', borderWidth: 1 },
- { label: 'Midline', data: data.map(d => d.midline), backgroundColor: 'rgba(0,114,206,0.7)', borderColor: '#0072CE', borderWidth: 1 },
- { label: 'Target', data: data.map(d => d.target), backgroundColor: 'rgba(39,174,96,0.5)', borderColor: '#27ae60', borderWidth: 1, borderDash: [5, 5] }
+ { label: 'Baseline', data: data.map(d => d.baseline), backgroundColor: 'rgba(108,92,231,0.6)', borderColor: '#6c5ce7', borderWidth: 1 },
+ { label: 'Midline', data: data.map(d => d.midline), backgroundColor: barBg, borderColor: barBorder, borderWidth: 1 },
+ { label: 'Target', data: data.map(d => d.target), backgroundColor: 'rgba(39,174,96,0.4)', borderColor: '#27ae60', borderWidth: 1, borderDash: [5, 5] }
  ]
  },
  options: {
@@ -23532,15 +23676,23 @@
 
  // ACHIEVEMENT HORIZONTAL BAR 
  function renderAchievementChart(data) {
+ // Color-code bars by outcome group
+ var bgColors = data.map(function(d) {
+ var grp = getOutcomeGroup(d.code);
+ return grp.color + 'cc';
+ });
+ var borderColors = data.map(function(d) {
+ return getOutcomeGroup(d.code).color;
+ });
  pmfChart('pmf-chart-achievement', {
  type: 'bar',
  data: {
- labels: data.map(d => d.code),
+ labels: data.map(d => d.code + ' — ' + d.name.substring(0, 35)),
  datasets: [{
  label: '% Achievement vs Target',
  data: data.map(d => d.pctAchievement),
- backgroundColor: data.map(d => d.statusColor + 'cc'),
- borderColor: data.map(d => d.statusColor),
+ backgroundColor: bgColors,
+ borderColor: borderColors,
  borderWidth: 1
  }]
  },
