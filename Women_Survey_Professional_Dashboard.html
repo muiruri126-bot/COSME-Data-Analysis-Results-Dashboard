@@ -8988,6 +8988,26 @@
  <!-- ANALYTICS DASHBOARD SECTION -->
  <!-- -->
  <div id="analytics-dashboard-section" class="survey-section" style="display:none;">
+
+ <!-- Login Overlay -->
+ <div id="analytics-login-overlay" style="display:flex;position:absolute;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(255,255,255,0.97);align-items:center;justify-content:center;min-height:80vh;">
+ <div style="background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.15);padding:40px 36px;max-width:380px;width:90%;text-align:center;">
+ <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#1a237e,#283593);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+ <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+ </div>
+ <h3 style="font-size:1.3em;font-weight:700;color:#1a237e;margin-bottom:6px;">Analytics Access</h3>
+ <p style="color:#666;font-size:0.9em;margin-bottom:20px;">Enter your credentials to view dashboard analytics.</p>
+ <form id="analytics-login-form" onsubmit="return handleAnalyticsLogin(event)">
+ <input type="text" id="analytics-username" placeholder="Username" autocomplete="username" required style="width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.95em;margin-bottom:12px;box-sizing:border-box;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='#1a237e'" onblur="this.style.borderColor='#e0e0e0'">
+ <input type="password" id="analytics-password" placeholder="Password" autocomplete="current-password" required style="width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.95em;margin-bottom:16px;box-sizing:border-box;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='#1a237e'" onblur="this.style.borderColor='#e0e0e0'">
+ <div id="analytics-login-error" style="display:none;color:#c62828;font-size:0.85em;margin-bottom:12px;padding:8px;background:#ffebee;border-radius:6px;">Invalid credentials</div>
+ <button type="submit" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a237e,#283593);color:#fff;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Sign In</button>
+ </form>
+ <p style="margin-top:16px;font-size:0.78em;color:#999;">Authorized personnel only</p>
+ </div>
+ </div>
+
+ <div id="analytics-content-wrapper" style="display:none;">
  <div style="max-width:1200px;margin:0 auto;padding:20px 0;">
 
  <!-- Hero -->
@@ -9062,9 +9082,19 @@
  </div>
 
  <!-- Charts Row 4: Visitors by Location -->
- <div class="an-card" style="margin-bottom:20px;">
- <h3 class="an-card-title">Visitors by Location</h3>
- <div style="height:300px;position:relative;">
+ <div class="an-card" id="analytics-location-card" style="margin-bottom:20px;">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;">
+ <h3 style="font-size:1.05em;font-weight:700;color:#333;margin:0;">Visitors by Location</h3>
+ <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.82em;color:#666;user-select:none;">
+ <span>Show</span>
+ <div style="position:relative;width:36px;height:20px;" onclick="toggleLocationChart()">
+ <input type="checkbox" id="analytics-location-toggle" checked style="opacity:0;width:0;height:0;position:absolute;">
+ <div id="analytics-loc-track" style="position:absolute;top:0;left:0;right:0;bottom:0;background:#1a237e;border-radius:10px;transition:background 0.3s;cursor:pointer;"></div>
+ <div id="analytics-loc-thumb" style="position:absolute;top:2px;left:18px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+ </div>
+ </label>
+ </div>
+ <div id="analytics-location-content" style="height:300px;position:relative;">
  <canvas id="analytics-chart-location"></canvas>
  </div>
  </div>
@@ -9163,6 +9193,7 @@
  }
  }
  </style>
+ </div>
  </div>
  </div>
  <!-- END ANALYTICS DASHBOARD SECTION -->
@@ -13446,7 +13477,7 @@
  title: 'Dashboard Analytics',
  footerTitle: '<strong>COSME Dashboard — Usage Analytics & Engagement Insights</strong>',
  footerSample: 'Real-time visitor tracking, tab usage, device breakdown & engagement metrics',
- renderFn: () => renderAnalyticsDashboard()
+ renderFn: () => showAnalyticsWithAuth()
  },
  'cosme-pmf': {
  showSection: 'cosme-pmf-section',
@@ -20215,6 +20246,8 @@
  const displayName = getOrCreateDisplayName();
  // sessionId for individual tab session (presence cleanup)
  const sessionId = visitorId + '_' + Math.random().toString(36).substr(2, 5);
+ const todayKey = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+ const dailyVisitId = visitorId + '_' + todayKey;
 
  // Expose visitorId globally for analytics engine
  window.__cosmeVisitorId = visitorId;
@@ -20235,7 +20268,9 @@
  geoData = {
  city: data.city || 'Unknown',
  country: data.country_name || 'Unknown',
- region: data.region || ''
+ region: data.region || '',
+ org: data.org || '',
+ ip: (data.ip || '').replace(/\d+\.\d+$/, 'x.x')
  };
  sessionStorage.setItem('cosme_geo', JSON.stringify(geoData));
  return geoData;
@@ -20353,12 +20388,12 @@
  window.addEventListener('beforeunload', () => {
  presenceRef.remove();
  // Update visit log with duration
- const visitRef = db.ref('visits/' + sessionId);
+ const visitRef = db.ref('visits/' + dailyVisitId);
  visitRef.update({ leftAt: firebase.database.ServerValue.TIMESTAMP });
  });
 
- // === PERSISTENT VISIT LOG ===
- const visitLogRef = db.ref('visits/' + sessionId);
+ // === PERSISTENT VISIT LOG (one entry per visitor per day) ===
+ const visitLogRef = db.ref('visits/' + dailyVisitId);
  const visitData = {
  name: displayName,
  visitorId: visitorId,
@@ -23345,12 +23380,14 @@
  }
  });
 
- // Log enhanced visit data 
- const visitId = 'visit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+ // Log enhanced visit data — one entry per visitorId per day (prevent duplicate counting)
+ const vid = window.__cosmeVisitorId || 'anon';
+ const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+ const visitId = vid + '_' + todayStr;
  const pUA = parseUA(navigator.userAgent);
  const eVisitData = {
  ts: firebase.database.ServerValue.TIMESTAMP,
- visitorId: window.__cosmeVisitorId || null,
+ visitorId: vid,
  device: pUA.device,
  browser: pUA.browser,
  screenW: screen.width,
@@ -23358,6 +23395,7 @@
  referrer: document.referrer || 'direct',
  lang: navigator.language || 'en'
  };
+ // Use set — same visitorId + same day = same key, no duplicates
  db.ref('analytics/visits/' + visitId).set(eVisitData);
 
  // Update enhanced visit with geo location once available
@@ -26916,38 +26954,55 @@
  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
  const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
 
- // KPI calculations 
- let todayCount = 0, weekCount = 0, totalDuration = 0, durationCount = 0;
+ // KPI calculations — deduplicate unique visitors by visitorId
+ let totalDuration = 0, durationCount = 0;
  const uniqueVisitors = new Set();
- const locationMap = {}; // city/country → count
+ const uniqueToday = new Set();
+ const uniqueWeek = new Set();
+ const locationMap = {}; // city/country → unique visitor count
+ const locationVisitorMap = {}; // locKey → Set of visitorIds (dedup locations)
 
  entries.forEach(v => {
- // Deduplicate by persistent visitorId; fall back to name for legacy entries
- if (v.visitorId) uniqueVisitors.add(v.visitorId);
- else if (v.name) uniqueVisitors.add(v.name);
- if (v.visitedAt >= todayStart.getTime()) todayCount++;
- if (v.visitedAt >= weekStart.getTime()) weekCount++;
+ const vid = v.visitorId || v.name || 'anon';
+ uniqueVisitors.add(vid);
+ if (v.visitedAt >= todayStart.getTime()) uniqueToday.add(vid);
+ if (v.visitedAt >= weekStart.getTime()) uniqueWeek.add(vid);
  if (v.leftAt && v.visitedAt) {
  const dur = v.leftAt - v.visitedAt;
  if (dur > 0 && dur < 7200000) { totalDuration += dur; durationCount++; }
  }
- // Collect location data
+ // Collect location data — deduplicate by visitorId per location
+ let locKey = null;
  if (v.city && v.city !== 'Unknown') {
- const locKey = v.city + ', ' + (v.country || '');
- locationMap[locKey] = (locationMap[locKey] || 0) + 1;
+ locKey = v.city + ', ' + (v.country || '');
  } else if (v.country && v.country !== 'Unknown') {
- locationMap[v.country] = (locationMap[v.country] || 0) + 1;
+ locKey = v.country;
+ }
+ if (locKey) {
+ if (!locationVisitorMap[locKey]) locationVisitorMap[locKey] = new Set();
+ locationVisitorMap[locKey].add(vid);
  }
  });
 
- // Also pull location data from analytics/visits
+ // Also pull location data from analytics/visits (deduped)
  Object.values(aVisits).forEach(v => {
+ const vid = v.visitorId || 'anon';
+ uniqueVisitors.add(vid);
+ let locKey = null;
  if (v.city && v.city !== 'Unknown') {
- const locKey = v.city + ', ' + (v.country || '');
- locationMap[locKey] = (locationMap[locKey] || 0) + 1;
+ locKey = v.city + ', ' + (v.country || '');
  } else if (v.country && v.country !== 'Unknown') {
- locationMap[v.country] = (locationMap[v.country] || 0) + 1;
+ locKey = v.country;
  }
+ if (locKey) {
+ if (!locationVisitorMap[locKey]) locationVisitorMap[locKey] = new Set();
+ locationVisitorMap[locKey].add(vid);
+ }
+ });
+
+ // Convert locationVisitorMap to locationMap counts
+ Object.entries(locationVisitorMap).forEach(([key, ids]) => {
+ locationMap[key] = ids.size;
  });
 
  // Deduplicate live viewers by visitorId
@@ -26961,9 +27016,9 @@
 
  // Update KPIs
  const kpiMap = {
- 'an-kpi-total': entries.length,
- 'an-kpi-today': todayCount,
- 'an-kpi-week': weekCount,
+ 'an-kpi-total': uniqueVisitors.size,
+ 'an-kpi-today': uniqueToday.size,
+ 'an-kpi-week': uniqueWeek.size,
  'an-kpi-unique': uniqueVisitors.size,
  'an-kpi-live': liveCount,
  'an-kpi-avg-dur': avgDur + 'm'
@@ -26973,14 +27028,17 @@
  if (el) el.textContent = val;
  });
 
- // Daily visits chart (last 14 days) 
+ // Daily visits chart (last 14 days) — unique visitors per day
  const dayLabels = [];
  const dayCounts = [];
  for (let i = 13; i >= 0; i--) {
  const d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
  const dEnd = new Date(d); dEnd.setDate(dEnd.getDate() + 1);
  dayLabels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
- dayCounts.push(entries.filter(v => v.visitedAt >= d.getTime() && v.visitedAt < dEnd.getTime()).length);
+ const dayVisitors = new Set();
+ entries.filter(v => v.visitedAt >= d.getTime() && v.visitedAt < dEnd.getTime())
+ .forEach(v => dayVisitors.add(v.visitorId || v.name || 'anon'));
+ dayCounts.push(dayVisitors.size);
  }
 
  const dailyCtx = document.getElementById('analytics-chart-daily');
@@ -27065,18 +27123,26 @@
  });
  }
 
- // Device & Browser breakdown 
+ // Device & Browser breakdown — unique visitors only
  const deviceMap = {};
  const browserMap = {};
+ const deviceSeen = new Set();
+ const browserSeen = new Set();
  Object.values(aVisits).forEach(v => {
- if (v.device) deviceMap[v.device] = (deviceMap[v.device] || 0) + 1;
- if (v.browser) browserMap[v.browser] = (browserMap[v.browser] || 0) + 1;
+ const vid = v.visitorId || 'anon_' + Math.random();
+ if (v.device && !deviceSeen.has(vid)) { deviceSeen.add(vid); deviceMap[v.device] = (deviceMap[v.device] || 0) + 1; }
+ if (v.browser && !browserSeen.has(vid)) { browserSeen.add(vid); browserMap[v.browser] = (browserMap[v.browser] || 0) + 1; }
  });
- // Also parse from main visits userAgent
  entries.forEach(v => {
- if (v.userAgent) {
+ const vid = v.visitorId || v.name || 'anon';
+ if (v.userAgent && !deviceSeen.has(vid)) {
+ deviceSeen.add(vid);
  const p = parseUA(v.userAgent);
  deviceMap[p.device] = (deviceMap[p.device] || 0) + 1;
+ }
+ if (v.userAgent && !browserSeen.has(vid)) {
+ browserSeen.add(vid);
+ const p = parseUA(v.userAgent);
  browserMap[p.browser] = (browserMap[p.browser] || 0) + 1;
  }
  });
@@ -27127,14 +27193,15 @@
  });
  }
 
- // Hourly distribution 
- const hourCounts = new Array(24).fill(0);
+ // Hourly distribution — unique visitors per hour
+ const hourSets = Array.from({length: 24}, () => new Set());
  entries.forEach(v => {
  if (v.visitedAt) {
  const h = new Date(v.visitedAt).getHours();
- hourCounts[h]++;
+ hourSets[h].add(v.visitorId || v.name || 'anon');
  }
  });
+ const hourCounts = hourSets.map(s => s.size);
 
  const hourlyCtx = document.getElementById('analytics-chart-hourly');
  if (hourlyCtx) {
@@ -27308,7 +27375,7 @@
  const totalTabs = Object.values(tabCounts).reduce((s, v) => s + v, 0);
  const topTab = sortedTabs.length > 0 ? sortedTabs[0].name : '—';
  const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
- const returnRate = entries.length > 0 ? Math.round((1 - uniqueVisitors.size / entries.length) * 100) : 0;
+ const returnRate = uniqueVisitors.size > 0 ? Math.round(((entries.length - uniqueVisitors.size) / entries.length) * 100) : 0;
  const mobileShare = entries.length > 0 ? Math.round(((deviceMap['Mobile'] || 0) / Object.values(deviceMap).reduce((s,v) => s+v, 0)) * 100) : 0;
  const topLocation = Object.entries(locationMap).sort((a, b) => b[1] - a[1])[0];
  const topLocStr = topLocation ? topLocation[0] : '—';
@@ -27339,6 +27406,96 @@
  });
  };
 
+ })();
+
+ // ====== ANALYTICS LOGIN GATE ======
+ const ANALYTICS_CREDENTIALS = {
+ username: 'admin',
+ // SHA-256 hash of "password" - change by updating hash
+ passwordHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+ };
+
+ async function hashPassword(pw) {
+ const encoder = new TextEncoder();
+ const data = encoder.encode(pw);
+ const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+ const hashArray = Array.from(new Uint8Array(hashBuffer));
+ return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+ }
+
+ function showAnalyticsWithAuth() {
+ const overlay = document.getElementById('analytics-login-overlay');
+ const wrapper = document.getElementById('analytics-content-wrapper');
+ // Check if already authenticated this session
+ if (sessionStorage.getItem('analytics_auth') === 'true') {
+ if (overlay) overlay.style.display = 'none';
+ if (wrapper) wrapper.style.display = 'block';
+ renderAnalyticsDashboard();
+ return;
+ }
+ if (overlay) overlay.style.display = 'flex';
+ if (wrapper) wrapper.style.display = 'none';
+ setTimeout(() => {
+ const uField = document.getElementById('analytics-username');
+ if (uField) uField.focus();
+ }, 200);
+ }
+
+ async function handleAnalyticsLogin(e) {
+ e.preventDefault();
+ const username = document.getElementById('analytics-username').value.trim();
+ const password = document.getElementById('analytics-password').value;
+ const errorEl = document.getElementById('analytics-login-error');
+ const pwHash = await hashPassword(password);
+
+ if (username === ANALYTICS_CREDENTIALS.username && pwHash === ANALYTICS_CREDENTIALS.passwordHash) {
+ sessionStorage.setItem('analytics_auth', 'true');
+ if (errorEl) errorEl.style.display = 'none';
+ document.getElementById('analytics-login-overlay').style.display = 'none';
+ document.getElementById('analytics-content-wrapper').style.display = 'block';
+ renderAnalyticsDashboard();
+ } else {
+ if (errorEl) { errorEl.textContent = 'Invalid username or password'; errorEl.style.display = 'block'; }
+ document.getElementById('analytics-password').value = '';
+ document.getElementById('analytics-password').focus();
+ }
+ return false;
+ }
+
+ // ====== LOCATION CHART TOGGLE ======
+ function toggleLocationChart() {
+ const cb = document.getElementById('analytics-location-toggle');
+ const ct = document.getElementById('analytics-location-content');
+ const track = document.getElementById('analytics-loc-track');
+ const thumb = document.getElementById('analytics-loc-thumb');
+ cb.checked = !cb.checked;
+ if (cb.checked) {
+ ct.style.display = 'block';
+ track.style.background = '#1a237e';
+ thumb.style.left = '18px';
+ } else {
+ ct.style.display = 'none';
+ track.style.background = '#ccc';
+ thumb.style.left = '2px';
+ }
+ }
+
+ // ====== CLEAR ANALYTICS HISTORY ======
+ (function clearAnalyticsOnce() {
+ const CLEAR_KEY = 'analytics_cleared_v2';
+ if (localStorage.getItem(CLEAR_KEY)) return;
+ const db = firebase.database();
+ Promise.all([
+ db.ref('visits').remove(),
+ db.ref('analytics/visits').remove(),
+ db.ref('analytics/tabSwitches').remove(),
+ db.ref('analytics/tabCounts').remove(),
+ db.ref('analytics/downloadCounts').remove(),
+ db.ref('analytics/downloads').remove()
+ ]).then(() => {
+ localStorage.setItem(CLEAR_KEY, Date.now().toString());
+ console.log('Analytics history cleared successfully');
+ }).catch(err => console.error('Failed to clear analytics:', err));
  })();
  </script>
 </body>
