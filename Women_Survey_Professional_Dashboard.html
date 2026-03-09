@@ -22063,17 +22063,31 @@
  section.style.left = '-9999px';
  }
 
- // Also expand any collapsed sub-containers that hold canvases
+ // Expand ALL hidden sub-containers inside the section (sub-tabs, panels)
  var hiddenParents = [];
- section.querySelectorAll('canvas').forEach(function(c) {
- var el = c.parentElement;
- while (el && el !== section) {
+ section.querySelectorAll('div').forEach(function(el) {
  if (getComputedStyle(el).display === 'none') {
  hiddenParents.push({ el: el, origDisplay: el.style.display });
  el.style.display = 'block';
  }
- el = el.parentElement;
- }
+ });
+
+ // --- Initialize lazily-rendered charts for each section ---
+ var sectionRenderers = {
+ 'awp-presentation-section': [
+ 'renderAWPCharts', 'renderAWPSocialNormsCharts', 'renderAWPClimateCharts',
+ 'renderAWPDecisionMakingCharts', 'renderAWPAccessControlCharts',
+ 'renderAWPTimePovertyCharts', 'renderAWPFamilySupportCharts'
+ ],
+ 'resilience-assets-section': ['renderRBACharts', 'renderRBASolarCookingCharts'],
+ 'forestry-presentation-section': ['renderForestryPresCharts', 'renderForestryPresFunctionalityCharts'],
+ 'seaweed-presentation-section': ['renderSeaweedPresCharts', 'renderSeaweedPresAssessmentCharts', 'renderSeaweedPresFarmerDashboard'],
+ 'mangrove-presentation-section': ['renderMangrovePresCharts', 'renderMangrovePresResourceCharts'],
+ 'schools-presentation-section': ['renderSchoolsPresCleanWaterCharts', 'renderSchoolsPresWaterMidlineCharts', 'renderSchoolsPres4KCharts']
+ };
+ var renderers = sectionRenderers[sectionId] || [];
+ renderers.forEach(function(fnName) {
+ try { if (typeof window[fnName] === 'function') window[fnName](); } catch(e) {}
  });
 
  // Force all Chart.js instances in this section to resize & redraw
@@ -22084,10 +22098,8 @@
  } catch(e) {}
  });
 
- // Wait for browser to paint — two animation frames for reliable rendering
- await new Promise(function(resolve) {
- requestAnimationFrame(function() { requestAnimationFrame(resolve); });
- });
+ // Wait for charts to fully render (lazy-init needs more time)
+ await new Promise(function(resolve) { setTimeout(resolve, 500); });
 
  var pptx = new PptxGenJS();
  pptx.defineLayout({ name: 'COSME', width: 13.333, height: 7.5 });
@@ -22194,8 +22206,15 @@
  }
 
  var imgData = canvas.toDataURL('image/png', 1.0);
- // Skip blank images (data URL too short means empty canvas)
+ // Skip blank images — check actual pixel data for content
  if (imgData.length < 200) return;
+ try {
+ var ctx2d = canvas.getContext('2d');
+ var pxData = ctx2d.getImageData(0, 0, canvas.width, canvas.height).data;
+ var hasPixels = false;
+ for (var px = 3; px < pxData.length; px += 64) { if (pxData[px] > 10) { hasPixels = true; break; } }
+ if (!hasPixels) return;
+ } catch(pe) {}
 
  var slide = pptx.addSlide();
 
