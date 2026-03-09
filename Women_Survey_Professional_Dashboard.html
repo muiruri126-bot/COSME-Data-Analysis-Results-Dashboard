@@ -22371,7 +22371,40 @@
  // --- CAPTURE CONTENT TAB-BY-TAB ---
  var tabs = sectionTabs[sectionId];
  if (tabs && tabs.length > 0) {
- // Section has sub-tabs: capture each tab with a divider slide
+ // First capture section-level content outside the tab containers
+ // (e.g., indicator logframe tables, highlight boxes, collapsible sections)
+ var tabIdSet = {};
+ tabs.forEach(function(t) { tabIdSet[t.id] = true; });
+ var hasOverview = false;
+ Array.from(section.children).forEach(function(child) {
+ if (child.id && tabIdSet[child.id]) return; // skip tab containers
+ if (child.classList && child.classList.contains('header')) return; // skip header
+ // Check for tables, highlight boxes, or collapsible content
+ var tables = child.querySelectorAll('table');
+ var highlights = child.querySelectorAll('.highlight-box');
+ if (tables.length > 0 || highlights.length > 0) {
+ if (!hasOverview) { addDividerSlide('Programme Overview'); hasOverview = true; }
+ // Capture highlight boxes as text slides
+ highlights.forEach(function(box) {
+ var h4 = box.querySelector('h4');
+ var title = h4 ? h4.textContent.trim() : 'Overview';
+ var textParts = [];
+ box.querySelectorAll('p, li').forEach(function(el) {
+ var txt = el.textContent.trim();
+ if (txt && txt !== title) textParts.push(el.tagName === 'LI' ? '\u2022 ' + txt : txt);
+ });
+ if (textParts.length > 0) {
+ var slide = pptx.addSlide();
+ slide.addText(title, { x: 0.5, y: 0.3, w: 12.3, h: 0.7, fontSize: 22, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+ slide.addText(textParts.join('\n'), { x: 0.5, y: 1.1, w: 12.3, h: 5.5, fontSize: 13, color: '444444', fontFace: 'Calibri', wrap: true, valign: 'top', lineSpacing: 18 });
+ addPlanFooter(slide);
+ }
+ });
+ captureTables(child);
+ }
+ });
+
+ // Then capture each sub-tab with a divider slide
  tabs.forEach(function(tab) {
  var tabContainer = document.getElementById(tab.id);
  if (!tabContainer) return;
