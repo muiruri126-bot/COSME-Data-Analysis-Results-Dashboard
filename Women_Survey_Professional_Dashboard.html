@@ -23452,7 +23452,6 @@
  '<th style="' + hdrStyle + '">Midline</th>' +
  '<th style="' + hdrStyle + '">Target</th>' +
  '<th style="' + hdrStyle + '">Change</th>' +
- '<th style="' + hdrStyle + '">Achievement</th>' +
  '<th style="' + hdrStyle + '">Status</th>' +
  '</tr></thead><tbody>';
 
@@ -23468,7 +23467,7 @@
 
  // Category header row
  html += '<tr>' +
- '<td colspan="7" style="padding:0;border:none;">' +
+ '<td colspan="6" style="padding:0;border:none;">' +
  '<div style="background:' + grp.gradient + ';color:#fff;padding:14px 18px;margin-top:8px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
  '<div style="display:flex;align-items:center;gap:10px;">' +
  '<div>' +
@@ -23494,7 +23493,6 @@
  '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Midline</th>' +
  '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Target</th>' +
  '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Change</th>' +
- '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Achievement</th>' +
  '<th style="padding:7px 12px;text-align:center;font-weight:600;color:' + grp.color + ';border:1px solid #eee;font-size:0.83em;">Status</th>' +
  '</tr>';
 
@@ -23515,14 +23513,6 @@
  '<td style="' + cellStyle + 'font-weight:700;color:#1a1a1a;">' + d.midline + ' ' + (d.unit || '') + '</td>' +
  '<td style="' + cellStyle + 'color:#555;">' + d.target + ' ' + (d.unit || '') + '</td>' +
  '<td style="' + cellStyle + 'font-weight:600;color:' + (d.diffMT >= 0 ? '#27ae60' : '#e74c3c') + ';">' + (d.diffMT >= 0 ? '+' : '') + d.diffMT + '</td>' +
- '<td style="' + cellStyle + '">' +
- '<div style="display:flex;align-items:center;gap:6px;justify-content:center;">' +
- '<div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden;">' +
- '<div style="width:' + Math.min(barWidth * 0.67, 100) + '%;height:100%;background:' + barColor + ';border-radius:4px;transition:width 0.5s;"></div>' +
- '</div>' +
- '<span style="font-size:0.82em;font-weight:600;color:' + barColor + ';">' + d.pctAchievement + '%</span>' +
- '</div>' +
- '</td>' +
  '<td style="' + cellStyle + '">' + badge(d.statusColor, d.statusLabel) + '</td>' +
  '</tr>';
  });
@@ -23532,7 +23522,6 @@
  '<td style="' + cellStyle + 'text-align:left;font-weight:700;color:' + grp.color + ';font-size:0.85em;" colspan="5">' +
  grp.title.split(' — ')[0] + ' Summary — ' + grpGreen + ' exceeded, ' + grpAmber + ' on track, ' + grpRed + ' below target' +
  '</td>' +
- '<td style="' + cellStyle + 'font-weight:700;color:' + grp.color + ';">' + grpAvgAch + '%</td>' +
  '<td style="' + cellStyle + '">' +
  (grpRed === 0 && grpAmber === 0 ? badge('#27ae60', 'All Exceeded') :
  grpRed === 0 ? badge('#f39c12', 'On Track') :
