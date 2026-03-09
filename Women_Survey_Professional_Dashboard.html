@@ -8,6 +8,8 @@
  <title>COSME Project Surveys Dashboard | Plan International</title>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+ <!-- PptxGenJS for PPTX export -->
+ <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgenjs.bundle.js"></script>
  <!-- Firebase Compat SDKs -->
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -291,6 +293,34 @@
  font-size: 1.1em;
  opacity: 0.95;
  margin-bottom: 20px;
+ }
+
+ .pptx-download-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 10px 22px;
+ background: rgba(255,255,255,0.18);
+ color: #fff;
+ border: 2px solid rgba(255,255,255,0.5);
+ border-radius: 8px;
+ font-size: 0.92em;
+ font-weight: 700;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ backdrop-filter: blur(4px);
+ }
+ .pptx-download-btn:hover {
+ background: rgba(255,255,255,0.35);
+ border-color: #fff;
+ transform: translateY(-1px);
+ }
+ .pptx-download-btn:active {
+ transform: translateY(0);
+ }
+ .pptx-download-btn:disabled {
+ opacity: 0.6;
+ cursor: wait;
  }
 
  .header-meta {
@@ -8562,7 +8592,7 @@
  <table class="cross-table" id="synthesis-table">
  <thead>
  <tr>
- <th>Indicator</th>
+ <th>Result Area</th>
  <th>Domain</th>
  <th>Women Baseline</th>
  <th>Women Midline</th>
@@ -8585,7 +8615,7 @@
  <div class="section-title">Comparative Analysis</div>
  <div class="charts-grid">
  <div class="chart-wrapper">
- <div class="chart-title">Women vs Men: Key Indicator Comparison</div>
+ <div class="chart-title">Women vs Men: Key Result Area Comparison</div>
  <div class="chart-container"><canvas id="synthesis-chart-comparison"></canvas></div>
  <div class="chart-insight" id="synthesis-insight-comparison"></div>
  </div>
@@ -8666,7 +8696,7 @@
  <div id="methodology-notes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
  <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;">
  <strong style="color:#2e7d32;font-size:0.95em;">Theory of Change Framework</strong>
- <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Evidence pathways are structured around COSME's three intermediate outcomes (1100: NbS Adoption, 1200: Women's Agency, 1300: Governance). Each pathway maps Input → Output → Outcome → Impact using baseline-to-midline data across 26 indicators and 5 training measures. Logframe indicator IDs are shown in brackets for traceability.</p>
+ <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Evidence pathways are structured around COSME's three intermediate outcomes (1100: NbS Adoption, 1200: Women's Agency, 1300: Governance). Each pathway maps Input → Output → Outcome → Impact using baseline-to-midline data across 35 result areas and 5 training measures. Logframe indicator IDs are shown in brackets for traceability. PMF composite indices (Resilience Index 1000a, WGEI 1000b) provide overarching outcome measurement.</p>
  </div>
  <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #1976d2;">
  <strong style="color:#1976d2;font-size:0.95em;">Cross-Outcome Validation</strong>
@@ -8678,7 +8708,7 @@
  </div>
  <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #7b1fa2;">
  <strong style="color:#7b1fa2;font-size:0.95em;">Data Sources & Coverage</strong>
- <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from 10 sources: Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments, Seaweed Farming Assessment (3 levels), and VSLA Monitoring (211 assessments, 173 groups). Coverage spans Kilifi & Kwale Counties, Kenya.</p>
+ <p style="font-size:0.85em;color:#555;margin-top:8px;line-height:1.7;">Data is drawn from 12 sources: Women COSME Survey (baseline+midline), Men COSME Survey (baseline+midline), GJJ Women/Men Surveys, Forestry Pre/Post Tests, Schools Assessments (65 schools), Seaweed Farming Assessment (19 groups, 519 farmers), Mangrove Resources Survey (resource adequacy), VSLA Monitoring (211 assessments, 173 groups), and PMF Composite Indices (RI, WGEI). Coverage spans Kilifi & Kwale Counties, Kenya.</p>
  </div>
  <div style="background:#f8f9fa;border-radius:10px;padding:14px;border-left:4px solid #c62828;">
  <strong style="color:#c62828;font-size:0.95em;">Limitations & Caveats</strong>
@@ -8702,6 +8732,7 @@
  <div style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%); color: #fff; padding: 28px 30px; border-radius: 12px; margin-bottom: 24px;">
  <h2 style="margin: 0 0 8px 0; font-size: 1.6em;">COSME PMF – Midline Survey Results</h2>
  <p style="margin: 0; opacity: 0.92; font-size: 0.95em;">This tab presents COSME Project Performance Measurement Framework (PMF) midline results, comparing Baseline, Midline and Target values for key indicators, and highlighting progress with traffic-light status.</p>
+ <button onclick="generatePresentationPPTX('cosme-pmf-section', 'COSME_PMF_Presentation')" class="pptx-download-btn" title="Download as PowerPoint" style="margin-top:12px;">Download PPTX</button>
  </div>
 
  <!-- FILTER BAR -->
@@ -9207,6 +9238,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #4A148C 0%, #7B1FA2 50%, #AB47BC 100%);">
  <h1>GJJ</h1>
  <div class="header-subtitle">Gender Justice Journey — Annual Work Plan Data Presentation</div>
+ <button onclick="generatePresentationPPTX('awp-presentation-section', 'COSME_GJJ_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. LIFE SKILLS & PSYCHOSOCIAL EMPOWERMENT -->
@@ -10433,6 +10465,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);">
  <h1>Resilience Building Assets</h1>
  <div class="header-subtitle">Savings, Loans & VSLA Performance — Women Survey Midline</div>
+ <button onclick="generatePresentationPPTX('resilience-assets-section', 'COSME_Resilience_Assets_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. SAVINGS -->
@@ -10682,6 +10715,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #33691E 0%, #558B2F 50%, #7CB342 100%);">
  <h1>Forestry</h1>
  <div class="header-subtitle">Forest Management Knowledge & Conservation — Pre & Post Test Results</div>
+ <button onclick="generatePresentationPPTX('forestry-presentation-section', 'COSME_Forestry_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -11112,6 +11146,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #004D40 0%, #00695C 50%, #00897B 100%);">
  <h1>Seaweed</h1>
  <div class="header-subtitle">Seaweed Farming Knowledge & Group Assessment — Training Impact & Production Analysis</div>
+ <button onclick="generatePresentationPPTX('seaweed-presentation-section', 'COSME_Seaweed_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -11681,6 +11716,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);">
  <h1>Mangrove</h1>
  <div class="header-subtitle">Mangrove Restoration Knowledge & Resource Adequacy — Training Impact & Conservation Readiness</div>
+ <button onclick="generatePresentationPPTX('mangrove-presentation-section', 'COSME_Mangrove_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -12058,6 +12094,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%);">
  <h1>Schools</h1>
  <div class="header-subtitle">Schools Programme — Access to Clean Water, Water Infrastructure & 4K Clubs</div>
+ <button onclick="generatePresentationPPTX('schools-presentation-section', 'COSME_Schools_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  <div class="header-meta">
  <div class="meta-item">
  <div class="meta-label">Schools Assessed</div>
@@ -20489,9 +20526,9 @@
  (function() {
  'use strict';
 
- // INDICATOR DICTIONARY 
- // Normalized indicators drawn from existing hardcoded surveyData.
- // Each indicator: { id, label, domain, womenBaseline, womenMidline,
+ // RESULT AREA DICTIONARY 
+ // Normalized result areas drawn from existing hardcoded surveyData.
+ // Each result area: { id, label, domain, womenBaseline, womenMidline,
  // menBaseline, menMidline, target, logframeId, unit }
  // Values are percentages unless noted.
 
@@ -20558,7 +20595,31 @@
  { id: 'unpaid-care-women', label: 'Women Unpaid Care Work', domain: 'norms',
  womenBaseline: 9.3, womenMidline: 7.7, menBaseline: null, menMidline: null, target: 8.3, logframeId: '1200b', unit: 'hrs/day', lowerIsBetter: true },
  { id: 'joint-responsibility-belief', label: 'Joint HH Responsibility Belief', domain: 'norms',
- womenBaseline: 12.5, womenMidline: 71.3, menBaseline: 17.7, menMidline: 68.2, target: null, unit: '%' }
+ womenBaseline: 12.5, womenMidline: 71.3, menBaseline: 17.7, menMidline: 68.2, target: null, unit: '%' },
+
+ // === PMF COMPOSITE & RESILIENCE ===
+ { id: 'wgei', label: 'Women & Girls Empowerment Index', domain: 'gender',
+ womenBaseline: 51.2, womenMidline: 68.3, menBaseline: null, menMidline: null, target: 60, logframeId: '1000b', unit: '/100' },
+ { id: 'resilience-index', label: 'Resilience Index (RI)', domain: 'preparedness',
+ womenBaseline: 37.0, womenMidline: 43.0, menBaseline: null, menMidline: null, target: 45, logframeId: '1000a', unit: '/100' },
+
+ // === NBS RESOURCES & KNOWLEDGE ===
+ { id: 'mangrove-resource-adequacy', label: 'Mangrove Resource Adequacy', domain: 'climate',
+ womenBaseline: 0, womenMidline: 52.0, menBaseline: null, menMidline: null, target: 70, logframeId: '1110b', unit: '%' },
+ { id: 'seaweed-knowledge', label: 'Seaweed Knowledge (Adequate)', domain: 'climate',
+ womenBaseline: 49.3, womenMidline: 29.3, menBaseline: null, menMidline: null, target: 68, logframeId: '1120a', unit: '%' },
+ { id: 'seaweed-resource-adequacy', label: 'Seaweed Resource Adequacy', domain: 'climate',
+ womenBaseline: 0, womenMidline: 34.0, menBaseline: null, menMidline: null, target: 75, logframeId: '1120b', unit: '%' },
+
+ // === ADDITIONAL EMPOWERMENT & MALE ENGAGEMENT ===
+ { id: 'personal-skills-confidence', label: 'Personal Skills & Confidence', domain: 'gender',
+ womenBaseline: 32.7, womenMidline: 46.3, menBaseline: null, menMidline: null, target: 55, logframeId: '1210b', unit: '%' },
+ { id: 'solar-cooking-access', label: 'Solar Panels & Cooking Stoves', domain: 'savings',
+ womenBaseline: 50.8, womenMidline: 83.1, menBaseline: null, menMidline: null, target: 80, logframeId: '1220b', unit: '%' },
+ { id: 'male-knowledge-nbs-gei', label: 'Male Knowledge NbS & GEI', domain: 'climate',
+ womenBaseline: null, womenMidline: null, menBaseline: 43.57, menMidline: 89.77, target: 65, logframeId: '1230a', unit: '%' },
+ { id: 'clean-water-access', label: 'Schools Clean Water Access', domain: 'preparedness',
+ womenBaseline: 23.4, womenMidline: 62.5, menBaseline: null, menMidline: null, target: 60, logframeId: '1310c', unit: '%' }
  ];
 
  // Training indicators (separate since they compare pre/post not baseline/midline)
@@ -20649,10 +20710,11 @@
 
  const kpiContainer = document.getElementById('synthesis-kpis');
  kpiContainer.innerHTML = [
- { label: 'Total Indicators', value: totalIndicators, sub: 'Tracked across datasets', cls: '' },
- { label: 'Targets Exceeded', value: exceeded + '/' + totalIndicators, sub: Math.round(exceeded / totalIndicators * 100) + '% of all indicators', cls: 'green' },
- { label: 'Avg. Improvement', value: '+' + avgGain.toFixed(1) + 'pp', sub: 'Mean gain across indicators', cls: 'green' },
- { label: 'Logframe Achievement', value: logframeExceeded + '/' + logframeCount, sub: 'Official M&E indicators exceeded', cls: logframeExceeded === logframeCount ? 'green' : 'orange' },
+ { label: 'Total Result Areas', value: totalIndicators, sub: 'Tracked across datasets', cls: '' },
+ { label: 'Targets Exceeded', value: exceeded + '/' + totalIndicators, sub: Math.round(exceeded / totalIndicators * 100) + '% of all result areas', cls: 'green' },
+ { label: 'Avg. Improvement', value: '+' + avgGain.toFixed(1) + 'pp', sub: 'Mean gain across result areas', cls: 'green' },
+
+ { label: 'Logframe Achievement', value: logframeExceeded + '/' + logframeCount, sub: 'Official M&E result areas exceeded', cls: logframeExceeded === logframeCount ? 'green' : 'orange' },
  { label: 'Domains Covered', value: domains.length, sub: domains.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', '), cls: '' },
  { label: 'Training Effectiveness', value: '+' + ((trainingIndicators.reduce((s, t) => s + (t.post - t.pre), 0)) / trainingIndicators.length).toFixed(1) + 'pp', sub: 'Avg. pre-to-post gain', cls: 'green' }
  ].map(k => `<div class="synthesis-kpi ${k.cls}"><div class="sk-label">${k.label}</div><div class="sk-value">${k.value}</div><div class="sk-sub">${k.sub}</div></div>`).join('');
@@ -20725,7 +20787,7 @@
  }
  }
  });
- document.getElementById('synthesis-insight-comparison').innerHTML = 'Women lead in VSLA participation (98.0% vs 42.7%) and personal savings (93.4% vs 68.2%). Men show higher climate awareness (100% vs 96.3%) and stronger joint decision support (89.8% vs 58.8%). Both genders show dramatic NbS participation improvements.';
+ document.getElementById('synthesis-insight-comparison').innerHTML = 'Women lead in VSLA participation (98.0% vs 42.7%), personal savings (93.4% vs 68.2%), and solar/cooking access (83.1%). Men show higher climate awareness (100% vs 96.3%), stronger NbS knowledge gains (89.8%), and stronger joint decision support (89.8% vs 58.8%). WGEI reached 68.3/100 exceeding the 60.0 target. Both genders show dramatic NbS participation and resilience asset improvements.';
 
  // 2) Gender gap analysis
  const gapInds = compIndicators.slice(0, 10);
@@ -20777,7 +20839,7 @@
  plugins: { datalabels: { display: false } }
  }
  });
- document.getElementById('synthesis-insight-radar').innerHTML = 'Women show strongest gains in Savings & Financial domain (avg +50pp), while men excel in Norms domain (avg +35pp harmful norm reduction). Both genders show balanced Climate & NbS improvements. Preparedness domain shows strong parallel progress.';
+ document.getElementById('synthesis-insight-radar').innerHTML = 'Women show strongest gains in Savings & Financial domain (avg +50pp, including solar/cooking access), while men excel in Norms domain (avg +35pp harmful norm reduction) and NbS knowledge (+46.2pp). Both genders show balanced Climate & NbS improvements. Preparedness domain shows strong parallel progress with Resilience Index improving to 43.0/100.';
 
  // 4) Logframe achievement overview
  const lfIndicators = [
@@ -20811,7 +20873,7 @@
  plugins: { legend: { position: 'top' }, datalabels: { display: false } }
  }
  });
- document.getElementById('synthesis-insight-logframe').innerHTML = 'All logframe indicators have been exceeded or are on track. Strongest over-achievement: 1200a (HH decisions, +38.3pp above target), 1220a (savings groups, +21.9pp above target), and 1110a (mangrove knowledge, +24.9pp above target).';
+ document.getElementById('synthesis-insight-logframe').innerHTML = 'All logframe result areas have been exceeded or are on track. Strongest over-achievement: 1200a (HH decisions, +38.3pp above target), 1220a (savings groups, +21.9pp above target), and 1110a (mangrove knowledge, +24.9pp above target).';
 
  // 5) Waterfall: Top gains & gaps
  const allChanges = indicatorDictionary.map(ind => {
@@ -20842,7 +20904,7 @@
  plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' }, color: '#333', formatter: v => (v > 0 ? '+' : '') + v.toFixed(1) + 'pp' } }
  }
  });
- document.getElementById('synthesis-insight-waterfall').innerHTML = 'Largest gains across all datasets: Joint HH Responsibility Belief (+58.8pp women), NbS Knowledge (+54.7pp), VSLA Participation (+54.4pp women). One notable decline: Business Support for women dropped 20.7pp (84.9% to 64.2%), requiring attention.';
+ document.getElementById('synthesis-insight-waterfall').innerHTML = 'Largest gains across all datasets: Joint HH Responsibility Belief (+58.8pp women), NbS Knowledge (+54.7pp), VSLA Participation (+54.4pp women), Mangrove Resource Adequacy (+52.0pp), Male NbS & GEI Knowledge (+46.2pp men), and Schools Clean Water (+39.1pp). Critical decline: Seaweed knowledge dropped -20.0pp (49.3% to 29.3%), and Business Support for women dropped 20.7pp (84.9% to 64.2%), requiring urgent attention.';
 
  // 6) NbS comparison
  synthCharts['nbs'] = new Chart(document.getElementById('synthesis-chart-nbs'), {
@@ -20862,7 +20924,7 @@
  plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } }
  }
  });
- document.getElementById('synthesis-insight-nbs').innerHTML = 'Both women\'s direct participation and men\'s support for NbS activities show dramatic parallel improvements. Men\'s seaweed support (+68.2pp) now exceeds women\'s direct participation (+54.9pp), indicating strong male allyship in conservation.';
+ document.getElementById('synthesis-insight-nbs').innerHTML = 'Both women\'s direct participation and men\'s support for NbS activities show dramatic parallel improvements. Men\'s seaweed support (+68.2pp) now exceeds women\'s direct participation (+54.9pp), indicating strong male allyship. Male NbS & GEI knowledge surged to 89.8% (target 65% exceeded). However, seaweed knowledge scores declined -20.0pp to 29.3%, suggesting practical skills diverge from theoretical assessment.';
 
  // 7) Training effectiveness
  synthCharts['training'] = new Chart(document.getElementById('synthesis-chart-training'), {
@@ -21636,26 +21698,26 @@
  id: '1100',
  color: '#2e7d32',
  title: 'Enhanced adoption of gender-responsive and socially inclusive Nature-based Solutions (NbS) for climate change adaptation with biodiversity and ecosystem integrity co-benefits',
- summary: '11/12 logframe indicators exceeded. NbS knowledge +54.7pp (women), all 3 ecosystems above 80% participation at midline.',
+ summary: '63 ha under NbS rehabilitation (51% of 123.8 ha target). NbS knowledge +54.7pp (women), male NbS & GEI knowledge 89.8% (target 65% exceeded). Seaweed knowledge declined -20.0pp — critical alert. All 3 ecosystems above 80% participation at midline.',
  pathways: [
  {
  title: 'NbS Knowledge & Ecosystem Restoration',
  color: '#2e7d32',
  steps: [
- { label: 'Input', title: 'NbS Training & Capacity', data: 'Conservation curriculum + forest group institutional support + DRR sessions' },
- { label: 'Output', title: 'Knowledge Transformation', data: 'NbS knowledge <strong>+54.7pp</strong> W / <strong>+47.4pp</strong> M [1210a]; Climate awareness <strong>\u226596%</strong> both genders' },
- { label: 'Outcome', title: 'Multi-Ecosystem Participation', data: 'Mangrove <strong>+49.6pp</strong> [1110a], Seaweed <strong>+54.9pp</strong>, Forest <strong>+31.0pp</strong> [1130a]' },
- { label: 'Impact', title: 'Institutional Sustainability', data: 'All ecosystems <strong>>80%</strong> participation; Forest group functionality <strong>+32.2pp</strong> (85.7%) [1130b]' }
+ { label: 'Input', title: 'NbS Training & Capacity', data: 'Conservation curriculum + forest group institutional support + DRR sessions. Male NbS & GEI knowledge <strong>+46.2pp</strong> (43.6% \u2192 89.8%) [1230a] — exceeds 65% target.' },
+ { label: 'Output', title: 'Knowledge Transformation', data: 'NbS knowledge <strong>+54.7pp</strong> W / <strong>+47.4pp</strong> M [1210a]; Climate awareness <strong>\u226596%</strong> both genders. <strong>63 ha</strong> under NbS rehabilitation (51% of 123.8 ha target) [1100a].' },
+ { label: 'Outcome', title: 'Multi-Ecosystem Participation', data: 'Mangrove <strong>+49.6pp</strong> [1110a], Seaweed <strong>+54.9pp</strong>, Forest <strong>+31.0pp</strong> [1130a]. Mangrove resource adequacy <strong>52%</strong> (target 70%) [1110b].' },
+ { label: 'Impact', title: 'Institutional Sustainability', data: 'All ecosystems <strong>>80%</strong> participation; Forest group functionality <strong>+32.2pp</strong> (85.7%) [1130b]. Resilience Index <strong>37.0 \u2192 43.0</strong>/100 (target 45) [1000a].' }
  ]
  },
  {
  title: 'Seaweed Value Chain Development',
  color: '#00796b',
  steps: [
- { label: 'Input', title: 'Group Formation', data: '19 seaweed groups formed; 335 active farmers trained' },
- { label: 'Output', title: 'Women-Led Production', data: '<strong>610</strong> female members (77.7%); <strong>94.7%</strong> of groups women-led' },
- { label: 'Outcome', title: 'Value Addition', data: '<strong>26.3%</strong> practice value addition; Avg price KES 50/kg' },
- { label: 'Bottleneck', title: 'Commercialization Gap', data: 'Only <strong>47.4%</strong> selling; <strong>0%</strong> exports; <strong>84.2%</strong> report insufficient inputs' }
+ { label: 'Input', title: 'Group Formation', data: '19 seaweed groups assessed; 335 active farmers trained. Total harvest <strong>96,086 kg</strong>; 78.9% report improved yield.' },
+ { label: 'Output', title: 'Women-Led Production', data: '<strong>610</strong> female members (77.7%); <strong>94.7%</strong> of groups women-led. Resource adequacy <strong>34%</strong> (target 75%) [1120b].' },
+ { label: 'Outcome', title: 'Value Addition', data: '<strong>26.3%</strong> practice value addition; Avg price KES 50/kg. Practical skills improved (Q8 <strong>+30.0pp</strong>).' },
+ { label: 'Bottleneck', title: 'Knowledge Decline & Market Gap', data: 'Seaweed knowledge <strong>-20.0pp</strong> (49.3% \u2192 29.3%) [1120a] — critical decline. Only <strong>47.4%</strong> selling; <strong>0%</strong> exports; <strong>84.2%</strong> insufficient inputs.' }
  ]
  },
  {
@@ -21664,8 +21726,8 @@
  steps: [
  { label: 'Input', title: 'DRR Training', data: 'Preparedness knowledge sessions for both genders' },
  { label: 'Output', title: 'Knowledge Uptake', data: 'Preparedness knowledge <strong>+33.1pp</strong> W / <strong>+36.6pp</strong> M' },
- { label: 'Outcome', title: 'Action Readiness', data: 'Preparedness action <strong>+34.5pp</strong> W / <strong>+26.7pp</strong> M [1210b]' },
- { label: 'Impact', title: 'Community Protection', data: 'Early warning access <strong>+36.1pp</strong> W / <strong>+38.4pp</strong> M; VSLA savings buffer shocks' }
+ { label: 'Outcome', title: 'Action Readiness', data: 'Preparedness action <strong>+34.5pp</strong> W / <strong>+26.7pp</strong> M; Clean water access <strong>+39.1pp</strong> (23.4% \u2192 62.5%) [1310c] — target exceeded.' },
+ { label: 'Impact', title: 'Community Protection', data: 'Early warning access <strong>+36.1pp</strong> W / <strong>+38.4pp</strong> M; VSLA savings buffer shocks. Solar/cooking stoves <strong>83.1%</strong> (target 80% exceeded) [1220b].' }
  ]
  }
  ]
@@ -21674,16 +21736,16 @@
  id: '1200',
  color: '#E91E63',
  title: 'Increased agency of women in their diversity to participate in gender-responsive NbS with biodiversity co-benefits to increase adaptive capacity and build household and community resilience',
- summary: 'HH decisions +38.3pp, care burden reduced by 1.6 hrs/day, joint responsibility belief +53.8pp. Resource access lags at +12.6pp.',
+ summary: 'WGEI 51.2 \u2192 68.3/100 (target 60 exceeded) [1000b]. HH decisions +38.3pp, care burden reduced by 1.6 hrs/day, joint responsibility belief +53.8pp. Personal skills 46.3% (on track to 55% target). Resource access lags at +12.6pp.',
  pathways: [
  {
  title: 'Financial Empowerment & Economic Agency',
  color: '#1976d2',
  steps: [
- { label: 'Input', title: 'VSLA Formation', data: '173 savings groups established; Seaweed/Conservation-named VSLAs link savings to NbS' },
+ { label: 'Input', title: 'VSLA Formation', data: '173 savings groups established; Seaweed/Conservation-named VSLAs link savings to NbS. Solar/cooking stoves access <strong>83.1%</strong> (target 80% exceeded) [1220b].' },
  { label: 'Output', title: 'Membership Surge', data: 'Women <strong>+54.4pp</strong> (43.6% \u2192 98.0%) [1220a]; Men <strong>+24.2pp</strong> (18.5% \u2192 42.7%)' },
  { label: 'Outcome', title: 'Savings & Credit Access', data: 'Personal savings <strong>+50.3pp</strong> (93.4%); Loan access <strong>+51.1pp</strong> (79.1%)' },
- { label: 'Impact', title: 'Decision Power', data: 'HH decisions <strong>+38.3pp</strong> (57.6% \u2192 95.9%) [1200a]' },
+ { label: 'Impact', title: 'Decision Power', data: 'HH decisions <strong>+38.3pp</strong> (57.6% \u2192 95.9%) [1200a]. WGEI <strong>+17.1</strong> (51.2 \u2192 68.3/100, target 60 exceeded) [1000b].' },
  { label: 'Gap', title: 'Resource Control Lags', data: 'Resource access only <strong>+12.6pp</strong> (53.8%) [1200c] \u2014 lags decision power by 26pp' }
  ]
  },
@@ -21692,9 +21754,9 @@
  color: '#E91E63',
  steps: [
  { label: 'Input', title: 'GJJ Dialogues for Women', data: 'Gender Justice Journey community sessions' },
- { label: 'Output', title: 'Self-Esteem Growth', data: 'Self-esteem <strong>+19.1pp</strong> (33.5% \u2192 52.6%); Gender equality score <strong>+22.6</strong>/100 [1210c]' },
+ { label: 'Output', title: 'Self-Esteem Growth', data: 'Self-esteem <strong>+19.1pp</strong> (33.5% \u2192 52.6%); Gender equality score <strong>+22.6</strong>/100 [1210c]. Personal skills & confidence <strong>+13.6pp</strong> (32.7% \u2192 46.3%, target 55%) [1210b].' },
  { label: 'Outcome', title: 'Agency in Practice', data: 'Decision conversations <strong>+21.5pp</strong> (81.7%); Care burden <strong>-1.6 hrs</strong> (9.3 \u2192 7.7h) [1200b]' },
- { label: 'Gap', title: 'Empowerment Risk', data: 'Business support <strong>-20.7pp</strong> (84.9% \u2192 64.2%); 30pp perception gap with men' }
+ { label: 'Gap', title: 'Empowerment Risk', data: 'Business support <strong>-20.7pp</strong> (84.9% \u2192 64.2%); 30pp perception gap with men. Personal skills at 46.3% still below 55% target.' }
  ]
  },
  {
@@ -21713,16 +21775,16 @@
  id: '1300',
  color: '#303F9F',
  title: 'Strengthened gender-responsive and child/youth-friendly governance for climate adaptation, resilience, and biodiversity',
- summary: '5,065 students in 4K clubs (57.6% girls), clean water +39.1pp, tree planting in 38 schools, forest group gender equality +32.5pp.',
+ summary: '5,065 students in 4K clubs (57.6% girls), clean water +39.1pp (23.4% \u2192 62.5%, target 60% exceeded) [1310c], tree planting in 38 schools, forest group gender equality +32.5pp. Infrastructure gap: 83% received tanks but only 34% installed.',
  pathways: [
  {
  title: 'Schools & Next Generation Stewardship',
  color: '#303F9F',
  steps: [
- { label: 'Input', title: '4K Club Formation', data: 'School-based environmental clubs established across target schools' },
- { label: 'Output', title: 'Youth Enrollment', data: '<strong>5,065</strong> students enrolled (57.6% girls, 42.4% boys)' },
- { label: 'Outcome', title: 'Environmental Action', data: 'Tree planting in <strong>38</strong> schools; Farming in <strong>32</strong> schools' },
- { label: 'Impact', title: 'WASH & Resilience', data: 'Clean water composite score <strong>+39.1pp</strong>; Youth-led climate adaptation' }
+ { label: 'Input', title: '4K Club Formation', data: 'School-based environmental clubs established across target schools. <strong>97%</strong> of schools have clubs; 81.5% active.' },
+ { label: 'Output', title: 'Youth Enrollment', data: '<strong>5,065</strong> students enrolled (57.6% girls, 42.4% boys). Tree planting in <strong>38</strong> schools; farming in <strong>32</strong> schools.' },
+ { label: 'Outcome', title: 'WASH & Clean Water', data: 'Clean water composite <strong>+39.1pp</strong> (23.4% \u2192 62.5%) [1310c] — target <strong>60% exceeded</strong>. Kwale: 19.6% \u2192 68.6%.' },
+ { label: 'Gap', title: 'Infrastructure & Sustainability', data: '<strong>83%</strong> received tanks but only <strong>34%</strong> installed, <strong>35%</strong> using. Solvatten kits: 49% using, 37% unused. Only <strong>20%</strong> have maintenance budgets.' }
  ]
  },
  {
@@ -21810,6 +21872,24 @@
  color: '#f57c00',
  detail: 'Men report joint decision-making at <strong>89.8%</strong> vs women\u2019s <strong>58.8%</strong> \u2014 a 31pp perception gap suggesting men overestimate their inclusiveness or women undervalue their own participation.',
  tags: ['1200 Women\u2019s Agency', '1200 Male Allyship']
+ },
+ {
+ title: 'NbS Knowledge Retention Crisis',
+ color: '#c62828',
+ detail: 'Seaweed knowledge <strong>declined -20.0pp</strong> (49.3% \u2192 29.3%) [1120a] while mangrove knowledge surged <strong>+45.0pp</strong>. Practical seaweed skills improved (Q8 +30.0pp) but theoretical scores dropped (Q2 -47.6pp). Training methodology differs between ecosystems \u2014 refresher programs urgently needed.',
+ tags: ['1100 NbS Adoption', '1100 Seaweed Value Chain']
+ },
+ {
+ title: 'NbS Resource Adequacy Bottleneck',
+ color: '#e65100',
+ detail: 'Both mangrove (<strong>52%</strong>, target 70%) and seaweed (<strong>34%</strong>, target 75%) resource adequacy scores fall well short of targets. Seedling availability: only <strong>19.4%</strong> always available (F). Knowledge sufficiency: \u201cFully sufficient\u201d only <strong>10.1%</strong> (F). This systemic resource gap threatens NbS sustainability.',
+ tags: ['1100 NbS Adoption', '1200 Financial Empowerment']
+ },
+ {
+ title: 'Schools Infrastructure Pipeline Gap',
+ color: '#f57c00',
+ detail: '<strong>83%</strong> of schools received water tanks but only <strong>34%</strong> installed and <strong>35%</strong> using. Solvatten kits: <strong>49%</strong> using, <strong>37%</strong> unused. Only <strong>20%</strong> of schools have maintenance budgets and <strong>57%</strong> have trained staff. Equipment delivery without installation support creates a hollow infrastructure pipeline.',
+ tags: ['1300 Schools', '1300 Governance']
  }
  ];
 
@@ -21948,6 +22028,187 @@
  `;
  }
 
+ })();
+ </script>
+
+ <!-- PPTX GENERATION ENGINE -->
+ <script>
+ (function() {
+ 'use strict';
+
+ window.generatePresentationPPTX = function(sectionId, filename) {
+ var btn = event.target;
+ btn.disabled = true;
+ btn.textContent = 'Generating...';
+
+ try {
+ var pptx = new PptxGenJS();
+ pptx.defineLayout({ name: 'COSME', width: 13.333, height: 7.5 });
+ pptx.layout = 'COSME';
+
+ var section = document.getElementById(sectionId);
+ if (!section) { btn.disabled = false; btn.textContent = 'Download PPTX'; return; }
+
+ // Extract presentation title from header
+ var headerEl = section.querySelector('.header h1, .header h2, [style*="linear-gradient"] h2');
+ var subtitleEl = section.querySelector('.header-subtitle, .header p');
+ var presTitle = headerEl ? headerEl.textContent.trim() : 'COSME Presentation';
+ var presSubtitle = subtitleEl ? subtitleEl.textContent.trim() : '';
+
+ // Get the header gradient colors
+ var headerDiv = section.querySelector('.header, [style*="linear-gradient"]');
+ var bgStyle = headerDiv ? headerDiv.getAttribute('style') || '' : '';
+ var colorMatch = bgStyle.match(/#([0-9a-fA-F]{6})/);
+ var themeColor = colorMatch ? colorMatch[0] : '#0072CE';
+
+ // --- SLIDE 1: Title slide ---
+ var slide1 = pptx.addSlide();
+ slide1.background = { color: themeColor };
+ slide1.addText('COSME Project', { x: 0.8, y: 0.5, w: 11.5, h: 0.6, fontSize: 16, color: 'FFFFFF', fontFace: 'Calibri', bold: false, align: 'left', valign: 'top', italic: true, transparency: 30 });
+ slide1.addText(presTitle, { x: 0.8, y: 2.0, w: 11.5, h: 1.5, fontSize: 44, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'left', valign: 'middle' });
+ if (presSubtitle) {
+ slide1.addText(presSubtitle, { x: 0.8, y: 3.5, w: 11.5, h: 0.8, fontSize: 18, color: 'FFFFFF', fontFace: 'Calibri', bold: false, align: 'left', valign: 'top', transparency: 15 });
+ }
+ slide1.addText('Plan International | Kilifi & Kwale Counties, Kenya', { x: 0.8, y: 6.2, w: 8, h: 0.4, fontSize: 13, color: 'FFFFFF', fontFace: 'Calibri', transparency: 30 });
+ slide1.addText(new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }), { x: 0.8, y: 6.6, w: 8, h: 0.4, fontSize: 12, color: 'FFFFFF', fontFace: 'Calibri', transparency: 40 });
+
+ // --- COLLECT KPI CARDS ---
+ var kpiCards = section.querySelectorAll('[style*="grid-template-columns"][style*="minmax(140px"]');
+ kpiCards.forEach(function(kpiGrid, kIdx) {
+ var parentCard = kpiGrid.closest('[style*="border-left"]');
+ var kpiTitle = '';
+ if (parentCard) {
+ var h3 = parentCard.querySelector('h3');
+ if (h3) kpiTitle = h3.textContent.trim();
+ }
+ var items = kpiGrid.querySelectorAll('[style*="text-align: center"]');
+ if (items.length === 0) return;
+
+ var slide = pptx.addSlide();
+ slide.addText(kpiTitle || 'Key Performance Indicators', { x: 0.5, y: 0.3, w: 12.3, h: 0.7, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+
+ var kpiW = Math.min(2.2, 12 / items.length);
+ var startX = (13.333 - items.length * kpiW - (items.length - 1) * 0.15) / 2;
+ items.forEach(function(item, i) {
+ var label = item.querySelector('[style*="text-transform: uppercase"]');
+ var value = item.querySelector('[style*="font-size: 2em"], [style*="font-weight: 800"]');
+ var lbl = label ? label.textContent.trim() : '';
+ var val = value ? value.textContent.trim() : '';
+ var xPos = startX + i * (kpiW + 0.15);
+ slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: xPos, y: 1.5, w: kpiW, h: 2.2, fill: { color: 'F5F5F5' }, rectRadius: 0.15, line: { color: themeColor.replace('#', ''), width: 1.5 } });
+ slide.addText(lbl, { x: xPos, y: 1.6, w: kpiW, h: 0.6, fontSize: 10, color: '666666', fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
+ slide.addText(val, { x: xPos, y: 2.2, w: kpiW, h: 1.2, fontSize: 28, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
+ });
+ });
+
+ // --- COLLECT ALL CHARTS ---
+ var canvases = section.querySelectorAll('canvas');
+ canvases.forEach(function(canvas, idx) {
+ try {
+ var chartTitle = '';
+ var chartInsight = '';
+ var wrapper = canvas.closest('.chart-wrapper') || canvas.closest('[style*="border-radius: 12px"]');
+ if (wrapper) {
+ var titleEl = wrapper.querySelector('.chart-title, h3');
+ var insightEl = wrapper.querySelector('.chart-insight');
+ if (titleEl) chartTitle = titleEl.textContent.trim();
+ if (insightEl) chartInsight = insightEl.textContent.trim();
+ }
+
+ var imgData = canvas.toDataURL('image/png', 1.0);
+ var slide = pptx.addSlide();
+
+ if (chartTitle) {
+ slide.addText(chartTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
+ }
+
+ // Calculate chart dimensions to fit nicely
+ var chartY = chartTitle ? 0.9 : 0.3;
+ var chartH = chartInsight ? 4.8 : 6.0;
+
+ slide.addImage({ data: imgData, x: 0.8, y: chartY, w: 11.6, h: chartH, sizing: { type: 'contain', w: 11.6, h: chartH } });
+
+ if (chartInsight) {
+ slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: 5.9, w: 12.3, h: 1.2, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
+ slide.addText(chartInsight, { x: 0.7, y: 5.95, w: 11.9, h: 1.1, fontSize: 11, color: '555555', fontFace: 'Calibri', align: 'left', valign: 'top', wrap: true });
+ }
+ } catch (e) {
+ // Skip canvases that can't be exported
+ }
+ });
+
+ // --- COLLECT KEY DATA TABLES ---
+ var tables = section.querySelectorAll('table');
+ tables.forEach(function(table, tIdx) {
+ try {
+ var rows = table.querySelectorAll('tr');
+ if (rows.length < 2) return;
+
+ var tableTitle = '';
+ var parentDiv = table.closest('[style*="border-radius: 12px"]');
+ if (parentDiv) {
+ var h3 = parentDiv.querySelector('h3');
+ if (h3) tableTitle = h3.textContent.trim();
+ }
+
+ // Collect header row
+ var headerCells = rows[0].querySelectorAll('th');
+ if (headerCells.length === 0) return;
+
+ var slide = pptx.addSlide();
+ if (tableTitle) {
+ slide.addText(tableTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
+ }
+
+ // Build table data for PptxGenJS
+ var pptxRows = [];
+ var headerRow = [];
+ headerCells.forEach(function(cell) {
+ headerRow.push({ text: cell.textContent.trim(), options: { fontSize: 9, bold: true, color: 'FFFFFF', fill: { color: themeColor.replace('#', '') }, align: 'center', valign: 'middle' } });
+ });
+ pptxRows.push(headerRow);
+
+ // Data rows (limit to 20 for readability)
+ var maxRows = Math.min(rows.length, 21);
+ for (var r = 1; r < maxRows; r++) {
+ var cells = rows[r].querySelectorAll('td');
+ var dataRow = [];
+ cells.forEach(function(cell) {
+ dataRow.push({ text: cell.textContent.trim(), options: { fontSize: 8, color: '333333', align: 'center', valign: 'middle' } });
+ });
+ if (dataRow.length > 0) pptxRows.push(dataRow);
+ }
+
+ if (pptxRows.length > 1) {
+ var colW = Math.min(2.5, 12 / headerCells.length);
+ var colWidths = Array.from({ length: headerCells.length }, function() { return colW; });
+ slide.addTable(pptxRows, { x: 0.4, y: tableTitle ? 0.9 : 0.3, w: 12.5, colW: colWidths, border: { type: 'solid', pt: 0.5, color: 'CCCCCC' }, autoPage: true, autoPageRepeatHeader: true, rowH: 0.35 });
+ }
+ } catch (e) {
+ // Skip tables that fail
+ }
+ });
+
+ // --- CLOSING SLIDE ---
+ var lastSlide = pptx.addSlide();
+ lastSlide.background = { color: themeColor };
+ lastSlide.addText('Thank You', { x: 0, y: 2.0, w: 13.333, h: 1.5, fontSize: 48, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
+ lastSlide.addText('COSME Project | Plan International\nKilifi & Kwale Counties, Kenya', { x: 0, y: 4.0, w: 13.333, h: 1.2, fontSize: 18, color: 'FFFFFF', fontFace: 'Calibri', align: 'center', valign: 'top', transparency: 20 });
+ lastSlide.addText('Generated on ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }), { x: 0, y: 6.2, w: 13.333, h: 0.5, fontSize: 12, color: 'FFFFFF', fontFace: 'Calibri', align: 'center', transparency: 40 });
+
+ // --- SAVE ---
+ pptx.writeFile({ fileName: (filename || 'COSME_Presentation') + '.pptx' }).then(function() {
+ btn.disabled = false;
+ btn.textContent = 'Download PPTX';
+ }).catch(function() {
+ btn.disabled = false;
+ btn.textContent = 'Download PPTX';
+ });
+ } catch (err) {
+ btn.disabled = false;
+ btn.textContent = 'Download PPTX';
+ }
+ };
  })();
  </script>
 
