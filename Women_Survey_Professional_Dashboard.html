@@ -22300,32 +22300,116 @@
  }
 
  function captureInsights(container) {
- // Capture insight panels (.insight-panel) and insight cards (.insight-card)
  var panels = container.querySelectorAll('.insight-panel, .insight-card');
  if (panels.length === 0) return;
- // Group insights into slides of up to 3 per slide
+
+ // Color map: CSS class → { accent, bg, titleColor }
+ var colorMap = {
+ green: { accent: '2E7D32', bg: 'E8F5E9', title: '1B5E20' },
+ blue: { accent: '1565C0', bg: 'E3F2FD', title: '0D47A1' },
+ teal: { accent: '00695C', bg: 'E0F2F1', title: '004D40' },
+ amber: { accent: 'E65100', bg: 'FFF3E0', title: 'E65100' },
+ red: { accent: 'C62828', bg: 'FFEBEE', title: 'B71C1C' },
+ orange: { accent: 'E65100', bg: 'FFF3E0', title: 'D84315' },
+ brown: { accent: '795548', bg: 'EFEBE9', title: '5D4037' },
+ darkblue: { accent: '0277BD', bg: 'E1F5FE', title: '01579B' }
+ };
+ var defaultColors = { accent: themeColor.replace('#', ''), bg: 'F5F5F5', title: themeColor.replace('#', '') };
+
+ // Extract insight data with color info
  var batch = [];
  panels.forEach(function(panel) {
- var h4 = panel.querySelector('h4, h3');
- var title = h4 ? h4.textContent.trim() : '';
- var bodyParts = [];
- panel.querySelectorAll('li').forEach(function(li) { bodyParts.push('\u2022 ' + li.textContent.trim()); });
- if (bodyParts.length === 0) {
- var p = panel.querySelector('p');
- if (p) bodyParts.push(p.textContent.trim());
- }
- if (title || bodyParts.length > 0) batch.push({ title: title, body: bodyParts.join('\n') });
+ var heading = panel.querySelector('h4, h3');
+ var title = heading ? heading.textContent.trim() : '';
+ // Detect color class
+ var colors = defaultColors;
+ var classList = panel.className || '';
+ ['green','blue','teal','amber','red','orange','brown','darkblue'].forEach(function(c) {
+ if (classList.indexOf(c) !== -1 && colorMap[c]) colors = colorMap[c];
  });
- for (var i = 0; i < batch.length; i += 3) {
+ // Collect body: paragraphs and list items
+ var bodyParts = [];
+ var children = panel.querySelectorAll('p, li, h4');
+ children.forEach(function(el) {
+ var txt = el.textContent.trim();
+ if (!txt || txt === title) return;
+ if (el.tagName === 'H4' && el !== heading) {
+ bodyParts.push({ text: '\n' + txt, opts: { bold: true, fontSize: 10.5, color: colors.title } });
+ } else if (el.tagName === 'LI') {
+ bodyParts.push({ text: '  \u2022  ' + txt, opts: { fontSize: 10, color: '444444' } });
+ } else {
+ bodyParts.push({ text: txt, opts: { fontSize: 10, color: '444444' } });
+ }
+ });
+ if (title || bodyParts.length > 0) batch.push({ title: title, body: bodyParts, colors: colors });
+ });
+
+ // Layout: 2 cards per slide side by side, fall back to 1 if only 1 remains
+ for (var i = 0; i < batch.length; i += 2) {
  var slide = pptx.addSlide();
- var group = batch.slice(i, i + 3);
- slide.addText('Insights & Recommendations', { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
- var boxH = Math.min(2.0, 5.5 / group.length);
+ slide.addText('Insights & Recommendations', { x: 0.5, y: 0.15, w: 12.3, h: 0.5, fontSize: 18, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+ // Thin accent line under title
+ slide.addShape(pptx.shapes.RECTANGLE, { x: 0.5, y: 0.62, w: 3, h: 0.03, fill: { color: themeColor.replace('#', '') } });
+
+ var group = batch.slice(i, i + 2);
+ var cardW = group.length === 1 ? 12.3 : 6.0;
  group.forEach(function(item, j) {
- var yPos = 1.0 + j * (boxH + 0.15);
- slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: yPos, w: 12.3, h: boxH, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
- if (item.title) slide.addText(item.title, { x: 0.7, y: yPos + 0.05, w: 11.9, h: 0.35, fontSize: 13, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
- if (item.body) slide.addText(item.body, { x: 0.7, y: yPos + (item.title ? 0.4 : 0.05), w: 11.9, h: boxH - (item.title ? 0.5 : 0.1), fontSize: 10, color: '444444', fontFace: 'Calibri', wrap: true, valign: 'top' });
+ var xPos = group.length === 1 ? 0.5 : (j === 0 ? 0.5 : 6.8);
+ var yCard = 0.9;
+ var cardH = 5.8;
+
+ // Card background
+ slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
+ x: xPos, y: yCard, w: cardW, h: cardH,
+ fill: { color: item.colors.bg }, rectRadius: 0.12,
+ shadow: { type: 'outer', blur: 6, offset: 2, color: '000000', opacity: 0.08 }
+ });
+
+ // Left accent bar
+ slide.addShape(pptx.shapes.RECTANGLE, {
+ x: xPos, y: yCard, w: 0.08, h: cardH,
+ fill: { color: item.colors.accent }, rectRadius: 0
+ });
+
+ // Title with colored icon dot
+ if (item.title) {
+ slide.addShape(pptx.shapes.OVAL, {
+ x: xPos + 0.25, y: yCard + 0.2, w: 0.18, h: 0.18,
+ fill: { color: item.colors.accent }
+ });
+ slide.addText(item.title, {
+ x: xPos + 0.52, y: yCard + 0.12, w: cardW - 0.7, h: 0.35,
+ fontSize: 13, color: item.colors.title, fontFace: 'Calibri', bold: true, valign: 'middle'
+ });
+ // Divider line under title
+ slide.addShape(pptx.shapes.RECTANGLE, {
+ x: xPos + 0.25, y: yCard + 0.52, w: cardW - 0.5, h: 0.015,
+ fill: { color: item.colors.accent }, transparency: 60
+ });
+ }
+
+ // Body text with rich formatting
+ if (item.body.length > 0) {
+ var bodyY = yCard + (item.title ? 0.62 : 0.15);
+ var bodyH = cardH - (item.title ? 0.8 : 0.3);
+ var textRuns = [];
+ item.body.forEach(function(part) {
+ textRuns.push({
+ text: part.text + '\n',
+ options: {
+ fontSize: part.opts.fontSize || 10,
+ color: part.opts.color || '444444',
+ fontFace: 'Calibri',
+ bold: part.opts.bold || false,
+ lineSpacing: 15
+ }
+ });
+ });
+ slide.addText(textRuns, {
+ x: xPos + 0.25, y: bodyY, w: cardW - 0.5, h: bodyH,
+ valign: 'top', wrap: true, shrinkText: true
+ });
+ }
  });
  addPlanFooter(slide);
  }
