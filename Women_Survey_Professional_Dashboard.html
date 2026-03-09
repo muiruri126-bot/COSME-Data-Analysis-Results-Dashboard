@@ -22093,6 +22093,32 @@
  pptx.defineLayout({ name: 'COSME', width: 13.333, height: 7.5 });
  pptx.layout = 'COSME';
 
+ // --- Plan International Branding: load logo as PNG for PPTX ---
+ var planLogoPng = await (function() {
+ return new Promise(function(resolve) {
+ var img = new Image();
+ img.crossOrigin = 'anonymous';
+ img.onload = function() {
+ var c = document.createElement('canvas');
+ c.width = 595; c.height = 320;
+ var ctx = c.getContext('2d');
+ ctx.drawImage(img, 0, 0, 595, 320);
+ resolve(c.toDataURL('image/png'));
+ };
+ img.onerror = function() { resolve(null); };
+ img.src = 'plan-logo.svg';
+ });
+ })();
+
+ // Helper: add branded footer to content slides
+ function addPlanFooter(slide) {
+ slide.addShape(pptx.shapes.RECTANGLE, { x: 0, y: 7.05, w: 13.333, h: 0.45, fill: { color: themeColor.replace('#', '') } });
+ slide.addText('Plan International | COSME Project | Kilifi & Kwale Counties, Kenya', { x: 0.4, y: 7.1, w: 10, h: 0.35, fontSize: 9, color: 'FFFFFF', fontFace: 'Calibri', align: 'left', valign: 'middle' });
+ if (planLogoPng) {
+ slide.addImage({ data: planLogoPng, x: 11.3, y: 7.08, w: 1.8, h: 0.38, sizing: { type: 'contain', w: 1.8, h: 0.38 } });
+ }
+ }
+
  // Extract presentation title from header
  var headerEl = section.querySelector('.header h1, .header h2, [style*="linear-gradient"] h2');
  var subtitleEl = section.querySelector('.header-subtitle, .header p');
@@ -22108,7 +22134,11 @@
  // --- SLIDE 1: Title slide ---
  var slide1 = pptx.addSlide();
  slide1.background = { color: themeColor };
- slide1.addText('COSME Project', { x: 0.8, y: 0.5, w: 11.5, h: 0.6, fontSize: 16, color: 'FFFFFF', fontFace: 'Calibri', bold: false, align: 'left', valign: 'top', italic: true, transparency: 30 });
+ if (planLogoPng) {
+ slide1.addImage({ data: planLogoPng, x: 10.5, y: 0.4, w: 2.4, h: 1.29, sizing: { type: 'contain', w: 2.4, h: 1.29 } });
+ }
+ slide1.addShape(pptx.shapes.RECTANGLE, { x: 0.8, y: 1.7, w: 4, h: 0.05, fill: { color: 'FFFFFF' }, transparency: 40 });
+ slide1.addText('COSME Project', { x: 0.8, y: 0.5, w: 9.5, h: 0.6, fontSize: 16, color: 'FFFFFF', fontFace: 'Calibri', bold: false, align: 'left', valign: 'top', italic: true, transparency: 30 });
  slide1.addText(presTitle, { x: 0.8, y: 2.0, w: 11.5, h: 1.5, fontSize: 44, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'left', valign: 'middle' });
  if (presSubtitle) {
  slide1.addText(presSubtitle, { x: 0.8, y: 3.5, w: 11.5, h: 0.8, fontSize: 18, color: 'FFFFFF', fontFace: 'Calibri', bold: false, align: 'left', valign: 'top', transparency: 15 });
@@ -22143,6 +22173,7 @@
  slide.addText(lbl, { x: xPos, y: 1.6, w: kpiW, h: 0.6, fontSize: 10, color: '666666', fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
  slide.addText(val, { x: xPos, y: 2.2, w: kpiW, h: 1.2, fontSize: 28, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
  });
+ addPlanFooter(slide);
  });
 
  // --- COLLECT ALL CHARTS ---
@@ -22174,14 +22205,15 @@
 
  // Calculate chart dimensions to fit nicely
  var chartY = chartTitle ? 0.9 : 0.3;
- var chartH = chartInsight ? 4.8 : 6.0;
+ var chartH = chartInsight ? 4.3 : 5.8;
 
  slide.addImage({ data: imgData, x: 0.8, y: chartY, w: 11.6, h: chartH, sizing: { type: 'contain', w: 11.6, h: chartH } });
 
  if (chartInsight) {
- slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: 5.9, w: 12.3, h: 1.2, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
- slide.addText(chartInsight, { x: 0.7, y: 5.95, w: 11.9, h: 1.1, fontSize: 11, color: '555555', fontFace: 'Calibri', align: 'left', valign: 'top', wrap: true });
+ slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: 5.5, w: 12.3, h: 1.1, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
+ slide.addText(chartInsight, { x: 0.7, y: 5.55, w: 11.9, h: 1.0, fontSize: 11, color: '555555', fontFace: 'Calibri', align: 'left', valign: 'top', wrap: true });
  }
+ addPlanFooter(slide);
  } catch (e) {
  // Skip canvases that can't be exported
  }
@@ -22234,6 +22266,7 @@
  var colWidths = Array.from({ length: headerCells.length }, function() { return colW; });
  slide.addTable(pptxRows, { x: 0.4, y: tableTitle ? 0.9 : 0.3, w: 12.5, colW: colWidths, border: { type: 'solid', pt: 0.5, color: 'CCCCCC' }, autoPage: true, autoPageRepeatHeader: true, rowH: 0.35 });
  }
+ addPlanFooter(slide);
  } catch (e) {
  // Skip tables that fail
  }
@@ -22251,8 +22284,11 @@
  // --- CLOSING SLIDE ---
  var lastSlide = pptx.addSlide();
  lastSlide.background = { color: themeColor };
- lastSlide.addText('Thank You', { x: 0, y: 2.0, w: 13.333, h: 1.5, fontSize: 48, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
- lastSlide.addText('COSME Project | Plan International\nKilifi & Kwale Counties, Kenya', { x: 0, y: 4.0, w: 13.333, h: 1.2, fontSize: 18, color: 'FFFFFF', fontFace: 'Calibri', align: 'center', valign: 'top', transparency: 20 });
+ if (planLogoPng) {
+ lastSlide.addImage({ data: planLogoPng, x: 5.15, y: 0.8, w: 3.0, h: 1.61, sizing: { type: 'contain', w: 3.0, h: 1.61 } });
+ }
+ lastSlide.addText('Thank You', { x: 0, y: 2.8, w: 13.333, h: 1.5, fontSize: 48, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'center', valign: 'middle' });
+ lastSlide.addText('COSME Project | Plan International\nKilifi & Kwale Counties, Kenya', { x: 0, y: 4.5, w: 13.333, h: 1.2, fontSize: 18, color: 'FFFFFF', fontFace: 'Calibri', align: 'center', valign: 'top', transparency: 20 });
  lastSlide.addText('Generated on ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }), { x: 0, y: 6.2, w: 13.333, h: 0.5, fontSize: 12, color: 'FFFFFF', fontFace: 'Calibri', align: 'center', transparency: 40 });
 
  // --- SAVE ---
