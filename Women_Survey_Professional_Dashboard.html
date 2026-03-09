@@ -23053,15 +23053,17 @@
             renderPMFTable(data);
             renderPMFMainChart(data);
             renderAchievementChart(data);
+            renderSummaryKPIs(data);
         };
 
         // ── SUMMARY KPIs ─────────────────────────────────────────
-        function renderSummaryKPIs() {
-            const total = enrichedData.length;
-            const green = enrichedData.filter(d => d.status === 'green').length;
-            const amber = enrichedData.filter(d => d.status === 'amber').length;
-            const red = enrichedData.filter(d => d.status === 'red').length;
-            const avgAchievement = Math.round(enrichedData.reduce((s, d) => s + d.pctAchievement, 0) / total * 10) / 10;
+        function renderSummaryKPIs(data) {
+            data = data || enrichedData;
+            const total = data.length;
+            const green = data.filter(d => d.status === 'green').length;
+            const amber = data.filter(d => d.status === 'amber').length;
+            const red = data.filter(d => d.status === 'red').length;
+            const avgAchievement = total > 0 ? Math.round(data.reduce((s, d) => s + d.pctAchievement, 0) / total * 10) / 10 : 0;
             const container = document.getElementById('pmf-summary-kpis');
             if (!container) return;
             const kpis = [
