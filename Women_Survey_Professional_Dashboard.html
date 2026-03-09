@@ -22082,13 +22082,49 @@
  'resilience-assets-section': ['renderRBACharts', 'renderRBASolarCookingCharts'],
  'forestry-presentation-section': ['renderForestryPresCharts', 'renderForestryPresFunctionalityCharts'],
  'seaweed-presentation-section': ['renderSeaweedPresCharts', 'renderSeaweedPresAssessmentCharts', 'renderSeaweedPresFarmerDashboard'],
- 'mangrove-presentation-section': ['renderMangrovePresCharts', 'renderMangrovePresResourceCharts'],
+ 'mangrove-presentation-section': ['renderMangrovePresCharts', 'renderMangrovePresResourceCharts', 'renderMangroveResourcesCharts'],
  'schools-presentation-section': ['renderSchoolsPresCleanWaterCharts', 'renderSchoolsPresWaterMidlineCharts', 'renderSchoolsPres4KCharts']
  };
  var renderers = sectionRenderers[sectionId] || [];
  renderers.forEach(function(fnName) {
  try { if (typeof window[fnName] === 'function') window[fnName](); } catch(e) {}
  });
+
+ // --- Sub-tab definitions for structured capture ---
+ var sectionTabs = {
+ 'awp-presentation-section': [
+ { id: 'awp-lifeskills', label: 'A. Life Skills & Psychosocial Empowerment' },
+ { id: 'awp-socialnorms', label: 'B. Social Norms & Gender Attitudes' },
+ { id: 'awp-climate', label: 'C. Climate Change & NbS Knowledge' },
+ { id: 'awp-decisionmaking', label: 'D. Decision Making' },
+ { id: 'awp-accesscontrol', label: 'E. Access & Control' },
+ { id: 'awp-timepoverty', label: 'F. Time Poverty, Roles & Responsibilities' },
+ { id: 'awp-familysupport', label: 'G. Family Support' }
+ ],
+ 'resilience-assets-section': [
+ { id: 'rba-savings', label: 'A. Savings' },
+ { id: 'rba-solarcooking', label: 'B. Solar Panels & Cooking Stoves' }
+ ],
+ 'forestry-presentation-section': [
+ { id: 'fp-knowledge', label: 'A. Knowledge' },
+ { id: 'fp-functionality', label: 'B. Functionality' }
+ ],
+ 'seaweed-presentation-section': [
+ { id: 'sp-knowledge', label: 'A. Knowledge' },
+ { id: 'sp-assessment', label: 'B. Assessment' },
+ { id: 'sp-farmer-dashboard', label: 'C. Farmer Dashboard' }
+ ],
+ 'mangrove-presentation-section': [
+ { id: 'mp-knowledge', label: 'A. Knowledge' },
+ { id: 'mp-resources', label: 'B. Resources' }
+ ],
+ 'schools-presentation-section': [
+ { id: 'schp-clean-water', label: 'A. Access to Clean Water' },
+ { id: 'schp-water-midline', label: 'B. Water in Schools' },
+ { id: 'schp-four-k-clubs', label: 'C. 4K Clubs' },
+ { id: 'schp-overall-insights', label: 'Overall Insights' }
+ ]
+ };
 
  // Force all Chart.js instances in this section to resize & redraw
  section.querySelectorAll('canvas').forEach(function(c) {
@@ -22169,21 +22205,17 @@
  slide1.addText('Plan International | Kilifi & Kwale Counties, Kenya', { x: 0.8, y: 6.2, w: 8, h: 0.4, fontSize: 13, color: 'FFFFFF', fontFace: 'Calibri', transparency: 30 });
  slide1.addText(new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }), { x: 0.8, y: 6.6, w: 8, h: 0.4, fontSize: 12, color: 'FFFFFF', fontFace: 'Calibri', transparency: 40 });
 
- // --- COLLECT KPI CARDS ---
- var kpiCards = section.querySelectorAll('[style*="grid-template-columns"][style*="minmax(140px"]');
- kpiCards.forEach(function(kpiGrid, kIdx) {
+ // --- HELPERS: capture KPIs, charts, tables from a container ---
+ function captureKPIs(container) {
+ var kpiCards = container.querySelectorAll('[style*="grid-template-columns"][style*="minmax(140px"]');
+ kpiCards.forEach(function(kpiGrid) {
  var parentCard = kpiGrid.closest('[style*="border-left"]');
  var kpiTitle = '';
- if (parentCard) {
- var h3 = parentCard.querySelector('h3');
- if (h3) kpiTitle = h3.textContent.trim();
- }
+ if (parentCard) { var h3 = parentCard.querySelector('h3'); if (h3) kpiTitle = h3.textContent.trim(); }
  var items = kpiGrid.querySelectorAll('[style*="text-align: center"]');
  if (items.length === 0) return;
-
  var slide = pptx.addSlide();
  slide.addText(kpiTitle || 'Key Performance Indicators', { x: 0.5, y: 0.3, w: 12.3, h: 0.7, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
-
  var kpiW = Math.min(2.2, 12 / items.length);
  var startX = (13.333 - items.length * kpiW - (items.length - 1) * 0.15) / 2;
  items.forEach(function(item, i) {
@@ -22198,18 +22230,14 @@
  });
  addPlanFooter(slide);
  });
-
- // --- COLLECT ALL CHARTS ---
- var canvases = section.querySelectorAll('canvas');
- canvases.forEach(function(canvas, idx) {
- try {
- // Skip only canvases with zero dimensions AND no Chart.js instance
- if (canvas.width === 0 || canvas.height === 0) {
- if (!Chart.getChart(canvas)) return;
  }
 
- var chartTitle = '';
- var chartInsight = '';
+ function captureCharts(container) {
+ var canvases = container.querySelectorAll('canvas');
+ canvases.forEach(function(canvas) {
+ try {
+ if (canvas.width === 0 || canvas.height === 0) { if (!Chart.getChart(canvas)) return; }
+ var chartTitle = '', chartInsight = '';
  var wrapper = canvas.closest('.chart-wrapper') || canvas.closest('[style*="border-radius: 12px"]');
  if (wrapper) {
  var titleEl = wrapper.querySelector('.chart-title, h3');
@@ -22217,65 +22245,41 @@
  if (titleEl) chartTitle = titleEl.textContent.trim();
  if (insightEl) chartInsight = insightEl.textContent.trim();
  }
-
  var imgData = canvas.toDataURL('image/png', 1.0);
-
  var slide = pptx.addSlide();
-
- if (chartTitle) {
- slide.addText(chartTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
- }
-
- // Calculate chart dimensions to fit nicely
+ if (chartTitle) slide.addText(chartTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
  var chartY = chartTitle ? 0.9 : 0.3;
  var chartH = chartInsight ? 4.3 : 5.8;
-
  slide.addImage({ data: imgData, x: 0.8, y: chartY, w: 11.6, h: chartH, sizing: { type: 'contain', w: 11.6, h: chartH } });
-
  if (chartInsight) {
  slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: 5.5, w: 12.3, h: 1.1, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
  slide.addText(chartInsight, { x: 0.7, y: 5.55, w: 11.9, h: 1.0, fontSize: 11, color: '555555', fontFace: 'Calibri', align: 'left', valign: 'top', wrap: true });
  }
  addPlanFooter(slide);
- } catch (e) {
- // Skip canvases that can't be exported
- }
+ } catch (e) {}
  });
+ }
 
- // --- COLLECT KEY DATA TABLES ---
- var tables = section.querySelectorAll('table');
- tables.forEach(function(table, tIdx) {
+ function captureTables(container) {
+ var tables = container.querySelectorAll('table');
+ tables.forEach(function(table) {
  try {
  var rows = table.querySelectorAll('tr');
  if (rows.length < 2) return;
-
  var tableTitle = '';
  var parentDiv = table.closest('[style*="border-radius: 12px"]');
- if (parentDiv) {
- var h3 = parentDiv.querySelector('h3');
- if (h3) tableTitle = h3.textContent.trim();
- }
-
- // Collect header row
+ if (parentDiv) { var h3 = parentDiv.querySelector('h3'); if (h3) tableTitle = h3.textContent.trim(); }
  var headerCells = rows[0].querySelectorAll('th');
  if (headerCells.length === 0) return;
-
  var slide = pptx.addSlide();
- if (tableTitle) {
- slide.addText(tableTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
- }
-
- // Build table data for PptxGenJS
+ if (tableTitle) slide.addText(tableTitle, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: '333333', fontFace: 'Calibri', bold: true });
  var pptxRows = [];
  var headerRow = [];
  headerCells.forEach(function(cell) {
  headerRow.push({ text: cell.textContent.trim(), options: { fontSize: 9, bold: true, color: 'FFFFFF', fill: { color: themeColor.replace('#', '') }, align: 'center', valign: 'middle' } });
  });
  pptxRows.push(headerRow);
-
- // Data rows (limit to 20 for readability)
- var maxRows = Math.min(rows.length, 21);
- for (var r = 1; r < maxRows; r++) {
+ for (var r = 1; r < rows.length; r++) {
  var cells = rows[r].querySelectorAll('td');
  var dataRow = [];
  cells.forEach(function(cell) {
@@ -22283,17 +22287,45 @@
  });
  if (dataRow.length > 0) pptxRows.push(dataRow);
  }
-
  if (pptxRows.length > 1) {
  var colW = Math.min(2.5, 12 / headerCells.length);
  var colWidths = Array.from({ length: headerCells.length }, function() { return colW; });
  slide.addTable(pptxRows, { x: 0.4, y: tableTitle ? 0.9 : 0.3, w: 12.5, colW: colWidths, border: { type: 'solid', pt: 0.5, color: 'CCCCCC' }, autoPage: true, autoPageRepeatHeader: true, rowH: 0.35 });
  }
  addPlanFooter(slide);
- } catch (e) {
- // Skip tables that fail
- }
+ } catch (e) {}
  });
+ }
+
+ function addDividerSlide(tabLabel) {
+ var slide = pptx.addSlide();
+ slide.background = { color: themeColor };
+ slide.addText(tabLabel, { x: 1, y: 2.5, w: 11.333, h: 2, fontSize: 36, color: 'FFFFFF', fontFace: 'Calibri', bold: true, align: 'left', valign: 'middle' });
+ slide.addShape(pptx.shapes.RECTANGLE, { x: 1, y: 4.6, w: 3, h: 0.05, fill: { color: 'FFFFFF' }, transparency: 40 });
+ slide.addText(presTitle, { x: 1, y: 5.0, w: 11.333, h: 0.6, fontSize: 14, color: 'FFFFFF', fontFace: 'Calibri', italic: true, transparency: 30 });
+ if (planLogoPng) {
+ slide.addImage({ data: planLogoPng, x: 10.5, y: 0.4, w: 2.4, h: 1.29, sizing: { type: 'contain', w: 2.4, h: 1.29 } });
+ }
+ }
+
+ // --- CAPTURE CONTENT TAB-BY-TAB ---
+ var tabs = sectionTabs[sectionId];
+ if (tabs && tabs.length > 0) {
+ // Section has sub-tabs: capture each tab with a divider slide
+ tabs.forEach(function(tab) {
+ var tabContainer = document.getElementById(tab.id);
+ if (!tabContainer) return;
+ addDividerSlide(tab.label);
+ captureKPIs(tabContainer);
+ captureCharts(tabContainer);
+ captureTables(tabContainer);
+ });
+ } else {
+ // No sub-tabs (e.g., PMF): capture entire section
+ captureKPIs(section);
+ captureCharts(section);
+ captureTables(section);
+ }
 
  // --- Restore hidden state ---
  if (wasHidden) {
