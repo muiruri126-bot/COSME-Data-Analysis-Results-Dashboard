@@ -8732,7 +8732,7 @@
  <div style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%); color: #fff; padding: 28px 30px; border-radius: 12px; margin-bottom: 24px;">
  <h2 style="margin: 0 0 8px 0; font-size: 1.6em;">COSME PMF – Midline Survey Results</h2>
  <p style="margin: 0; opacity: 0.92; font-size: 0.95em;">This tab presents COSME Project Performance Measurement Framework (PMF) midline results, comparing Baseline, Midline and Target values for key indicators, and highlighting progress with traffic-light status.</p>
- <button onclick="generatePresentationPPTX('cosme-pmf-section', 'COSME_PMF_Presentation')" class="pptx-download-btn" title="Download as PowerPoint" style="margin-top:12px;">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('cosme-pmf-section', 'COSME_PMF_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint" style="margin-top:12px;">Download PPTX</button>
  </div>
 
  <!-- FILTER BAR -->
@@ -9238,7 +9238,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #4A148C 0%, #7B1FA2 50%, #AB47BC 100%);">
  <h1>GJJ</h1>
  <div class="header-subtitle">Gender Justice Journey — Annual Work Plan Data Presentation</div>
- <button onclick="generatePresentationPPTX('awp-presentation-section', 'COSME_GJJ_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('awp-presentation-section', 'COSME_GJJ_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. LIFE SKILLS & PSYCHOSOCIAL EMPOWERMENT -->
@@ -10465,7 +10465,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);">
  <h1>Resilience Building Assets</h1>
  <div class="header-subtitle">Savings, Loans & VSLA Performance — Women Survey Midline</div>
- <button onclick="generatePresentationPPTX('resilience-assets-section', 'COSME_Resilience_Assets_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('resilience-assets-section', 'COSME_Resilience_Assets_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. SAVINGS -->
@@ -10715,7 +10715,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #33691E 0%, #558B2F 50%, #7CB342 100%);">
  <h1>Forestry</h1>
  <div class="header-subtitle">Forest Management Knowledge & Conservation — Pre & Post Test Results</div>
- <button onclick="generatePresentationPPTX('forestry-presentation-section', 'COSME_Forestry_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('forestry-presentation-section', 'COSME_Forestry_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -11146,7 +11146,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #004D40 0%, #00695C 50%, #00897B 100%);">
  <h1>Seaweed</h1>
  <div class="header-subtitle">Seaweed Farming Knowledge & Group Assessment — Training Impact & Production Analysis</div>
- <button onclick="generatePresentationPPTX('seaweed-presentation-section', 'COSME_Seaweed_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('seaweed-presentation-section', 'COSME_Seaweed_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -11716,7 +11716,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);">
  <h1>Mangrove</h1>
  <div class="header-subtitle">Mangrove Restoration Knowledge & Resource Adequacy — Training Impact & Conservation Readiness</div>
- <button onclick="generatePresentationPPTX('mangrove-presentation-section', 'COSME_Mangrove_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('mangrove-presentation-section', 'COSME_Mangrove_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  </div>
 
  <!-- A. KNOWLEDGE -->
@@ -12094,7 +12094,7 @@
  <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1976D2 100%);">
  <h1>Schools</h1>
  <div class="header-subtitle">Schools Programme — Access to Clean Water, Water Infrastructure & 4K Clubs</div>
- <button onclick="generatePresentationPPTX('schools-presentation-section', 'COSME_Schools_Presentation')" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
+ <button onclick="generatePresentationPPTX('schools-presentation-section', 'COSME_Schools_Presentation', this)" class="pptx-download-btn" title="Download as PowerPoint">Download PPTX</button>
  <div class="header-meta">
  <div class="meta-item">
  <div class="meta-label">Schools Assessed</div>
@@ -22036,10 +22036,15 @@
  (function() {
  'use strict';
 
- window.generatePresentationPPTX = function(sectionId, filename) {
- var btn = event.target;
- btn.disabled = true;
- btn.textContent = 'Generating...';
+ window.generatePresentationPPTX = function(sectionId, filename, btnEl) {
+ var btn = btnEl || (typeof event !== 'undefined' && event ? event.target : null);
+ if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+
+ if (typeof PptxGenJS === 'undefined') {
+ alert('PPTX library not loaded. Please check your internet connection and reload the page.');
+ if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
+ return;
+ }
 
  try {
  var pptx = new PptxGenJS();
@@ -22198,15 +22203,14 @@
 
  // --- SAVE ---
  pptx.writeFile({ fileName: (filename || 'COSME_Presentation') + '.pptx' }).then(function() {
- btn.disabled = false;
- btn.textContent = 'Download PPTX';
- }).catch(function() {
- btn.disabled = false;
- btn.textContent = 'Download PPTX';
+ if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
+ }).catch(function(e) {
+ alert('PPTX generation failed: ' + (e.message || e));
+ if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
  });
  } catch (err) {
- btn.disabled = false;
- btn.textContent = 'Download PPTX';
+ alert('PPTX generation error: ' + (err.message || err));
+ if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
  }
  };
  })();
