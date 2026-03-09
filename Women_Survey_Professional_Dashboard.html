@@ -22036,7 +22036,7 @@
  (function() {
  'use strict';
 
- window.generatePresentationPPTX = function(sectionId, filename, btnEl) {
+ window.generatePresentationPPTX = async function(sectionId, filename, btnEl) {
  var btn = btnEl || (typeof event !== 'undefined' && event ? event.target : null);
  if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
 
@@ -22047,12 +22047,51 @@
  }
 
  try {
+ var section = document.getElementById(sectionId);
+ if (!section) { if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; } return; }
+
+ // --- Force section visible so Chart.js can render at real dimensions ---
+ var origDisplay = section.style.display;
+ var origVisibility = section.style.visibility;
+ var origPosition = section.style.position;
+ var origLeft = section.style.left;
+ var wasHidden = (getComputedStyle(section).display === 'none');
+ if (wasHidden) {
+ section.style.display = 'block';
+ section.style.visibility = 'visible';
+ section.style.position = 'absolute';
+ section.style.left = '-9999px';
+ }
+
+ // Also expand any collapsed sub-containers that hold canvases
+ var hiddenParents = [];
+ section.querySelectorAll('canvas').forEach(function(c) {
+ var el = c.parentElement;
+ while (el && el !== section) {
+ if (getComputedStyle(el).display === 'none') {
+ hiddenParents.push({ el: el, origDisplay: el.style.display });
+ el.style.display = 'block';
+ }
+ el = el.parentElement;
+ }
+ });
+
+ // Force all Chart.js instances in this section to resize & redraw
+ section.querySelectorAll('canvas').forEach(function(c) {
+ try {
+ var chartInst = Chart.getChart(c);
+ if (chartInst) { chartInst.resize(); chartInst.update('none'); }
+ } catch(e) {}
+ });
+
+ // Wait for browser to paint — two animation frames for reliable rendering
+ await new Promise(function(resolve) {
+ requestAnimationFrame(function() { requestAnimationFrame(resolve); });
+ });
+
  var pptx = new PptxGenJS();
  pptx.defineLayout({ name: 'COSME', width: 13.333, height: 7.5 });
  pptx.layout = 'COSME';
-
- var section = document.getElementById(sectionId);
- if (!section) { btn.disabled = false; btn.textContent = 'Download PPTX'; return; }
 
  // Extract presentation title from header
  var headerEl = section.querySelector('.header h1, .header h2, [style*="linear-gradient"] h2');
@@ -22110,6 +22149,9 @@
  var canvases = section.querySelectorAll('canvas');
  canvases.forEach(function(canvas, idx) {
  try {
+ // Skip canvases with zero dimensions (not rendered)
+ if (canvas.width === 0 || canvas.height === 0) return;
+
  var chartTitle = '';
  var chartInsight = '';
  var wrapper = canvas.closest('.chart-wrapper') || canvas.closest('[style*="border-radius: 12px"]');
@@ -22121,6 +22163,9 @@
  }
 
  var imgData = canvas.toDataURL('image/png', 1.0);
+ // Skip blank images (data URL too short means empty canvas)
+ if (imgData.length < 200) return;
+
  var slide = pptx.addSlide();
 
  if (chartTitle) {
@@ -22194,6 +22239,15 @@
  }
  });
 
+ // --- Restore hidden state ---
+ if (wasHidden) {
+ section.style.display = origDisplay;
+ section.style.visibility = origVisibility;
+ section.style.position = origPosition;
+ section.style.left = origLeft;
+ }
+ hiddenParents.forEach(function(hp) { hp.el.style.display = hp.origDisplay; });
+
  // --- CLOSING SLIDE ---
  var lastSlide = pptx.addSlide();
  lastSlide.background = { color: themeColor };
@@ -22209,6 +22263,11 @@
  if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
  });
  } catch (err) {
+ // Restore on error too
+ try {
+ var sec = document.getElementById(sectionId);
+ if (sec) { sec.style.display = ''; sec.style.visibility = ''; sec.style.position = ''; sec.style.left = ''; }
+ } catch(e2) {}
  alert('PPTX generation error: ' + (err.message || err));
  if (btn) { btn.disabled = false; btn.textContent = 'Download PPTX'; }
  }
