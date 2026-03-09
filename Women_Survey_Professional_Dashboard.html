@@ -24736,7 +24736,7 @@
  });
  };
 
- function renderForestryPresFunctionalityCharts() {
+ window.renderForestryPresFunctionalityCharts = function() {
  Object.values(fp2ChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
 
  const fColors = { baseline: colors.baseline, midline: colors.midline };
@@ -25202,7 +25202,7 @@
  },
  options: { ...fDefaults, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Groups' } } } }
  });
- }
+ };
 
  // ====== SEAWEED PRESENTATION — CHARTS & TAB SWITCHING ======
  const spChartInstances = {};
@@ -25403,7 +25403,7 @@
  });
  };
 
- function renderSeaweedPresAssessmentCharts() {
+ window.renderSeaweedPresAssessmentCharts = function() {
  Object.values(sp2ChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
 
  const spC = {
@@ -25596,7 +25596,7 @@
  data: { labels: ['Formal Agreement', 'No Agreement'], datasets: [{ data: [1, 18], backgroundColor: [spC.teal, spC.red], borderWidth: 2 }] },
  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { display: true, font: { size: 15, weight: 'bold' }, color: '#fff', formatter: (v, ctx) => [5.3, 94.7][ctx.dataIndex] + '%' } } }
  });
- }
+ };
 
  // ====== MANGROVE PRESENTATION — CHARTS & TAB SWITCHING ======
  const mpChartInstances = {};
@@ -26495,7 +26495,7 @@
  // Section B charts rendered via renderRBASolarCookingCharts() 
  };
 
- function renderRBASolarCookingCharts() {
+ window.renderRBASolarCookingCharts = function() {
  function rbaChart(canvasId, config) {
  const canvas = document.getElementById(canvasId);
  if (!canvas) return null;
@@ -26566,7 +26566,7 @@
  scales: { y: { beginAtZero: true, max: 85, title: { display: true, text: '% of Women' } } }
  }
  });
- }
+ };
 
  // ====== AWP PRESENTATION — CHARTS & TAB SWITCHING ======
  const awpChartInstances = {};
