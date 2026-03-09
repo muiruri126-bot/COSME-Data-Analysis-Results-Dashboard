@@ -22207,20 +22207,22 @@
 
  // --- HELPERS: capture KPIs, charts, tables from a container ---
  function captureKPIs(container) {
- var kpiCards = container.querySelectorAll('[style*="grid-template-columns"][style*="minmax(140px"]');
- kpiCards.forEach(function(kpiGrid) {
+ // Match both AWP-style (minmax(140px)) and Schools-style (.kpi-grid with minmax(200px))
+ var kpiGrids = container.querySelectorAll('[style*="grid-template-columns"][style*="minmax(140px"], [style*="grid-template-columns"][style*="minmax(160px"], .kpi-grid');
+ kpiGrids.forEach(function(kpiGrid) {
  var parentCard = kpiGrid.closest('[style*="border-left"]');
  var kpiTitle = '';
  if (parentCard) { var h3 = parentCard.querySelector('h3'); if (h3) kpiTitle = h3.textContent.trim(); }
- var items = kpiGrid.querySelectorAll('[style*="text-align: center"]');
+ // Match both inline-styled items and class-based .kpi-card items
+ var items = kpiGrid.querySelectorAll('[style*="text-align: center"], .kpi-card');
  if (items.length === 0) return;
  var slide = pptx.addSlide();
  slide.addText(kpiTitle || 'Key Performance Indicators', { x: 0.5, y: 0.3, w: 12.3, h: 0.7, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
  var kpiW = Math.min(2.2, 12 / items.length);
  var startX = (13.333 - items.length * kpiW - (items.length - 1) * 0.15) / 2;
  items.forEach(function(item, i) {
- var label = item.querySelector('[style*="text-transform: uppercase"]');
- var value = item.querySelector('[style*="font-size: 2em"], [style*="font-weight: 800"]');
+ var label = item.querySelector('[style*="text-transform: uppercase"], .kpi-label');
+ var value = item.querySelector('[style*="font-size: 2em"], [style*="font-weight: 800"], .kpi-value');
  var lbl = label ? label.textContent.trim() : '';
  var val = value ? value.textContent.trim() : '';
  var xPos = startX + i * (kpiW + 0.15);
@@ -22297,6 +22299,64 @@
  });
  }
 
+ function captureInsights(container) {
+ // Capture insight panels (.insight-panel) and insight cards (.insight-card)
+ var panels = container.querySelectorAll('.insight-panel, .insight-card');
+ if (panels.length === 0) return;
+ // Group insights into slides of up to 3 per slide
+ var batch = [];
+ panels.forEach(function(panel) {
+ var h4 = panel.querySelector('h4, h3');
+ var title = h4 ? h4.textContent.trim() : '';
+ var bodyParts = [];
+ panel.querySelectorAll('li').forEach(function(li) { bodyParts.push('\u2022 ' + li.textContent.trim()); });
+ if (bodyParts.length === 0) {
+ var p = panel.querySelector('p');
+ if (p) bodyParts.push(p.textContent.trim());
+ }
+ if (title || bodyParts.length > 0) batch.push({ title: title, body: bodyParts.join('\n') });
+ });
+ for (var i = 0; i < batch.length; i += 3) {
+ var slide = pptx.addSlide();
+ var group = batch.slice(i, i + 3);
+ slide.addText('Insights & Recommendations', { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+ var boxH = Math.min(2.0, 5.5 / group.length);
+ group.forEach(function(item, j) {
+ var yPos = 1.0 + j * (boxH + 0.15);
+ slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, { x: 0.5, y: yPos, w: 12.3, h: boxH, fill: { color: 'F8F9FA' }, rectRadius: 0.1, line: { color: 'E0E0E0', width: 0.5 } });
+ if (item.title) slide.addText(item.title, { x: 0.7, y: yPos + 0.05, w: 11.9, h: 0.35, fontSize: 13, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+ if (item.body) slide.addText(item.body, { x: 0.7, y: yPos + (item.title ? 0.4 : 0.05), w: 11.9, h: boxH - (item.title ? 0.5 : 0.1), fontSize: 10, color: '444444', fontFace: 'Calibri', wrap: true, valign: 'top' });
+ });
+ addPlanFooter(slide);
+ }
+ }
+
+ function captureNarratives(container) {
+ // Capture narrative summary blocks (white cards with h3 + text/lists)
+ var narratives = container.querySelectorAll('div[style*="border-radius: 12px"][style*="box-shadow"]');
+ narratives.forEach(function(block) {
+ // Skip chart wrappers and KPI grids
+ if (block.querySelector('canvas') || block.classList.contains('kpi-grid') || block.querySelector('.kpi-grid')) return;
+ var h3 = block.querySelector('h3');
+ if (!h3) return;
+ var title = h3.textContent.trim();
+ // Collect text content
+ var textParts = [];
+ block.querySelectorAll('p, li').forEach(function(el) {
+ var txt = el.textContent.trim();
+ if (txt && txt !== title) {
+ textParts.push(el.tagName === 'LI' ? '\u2022 ' + txt : txt);
+ }
+ });
+ if (textParts.length === 0) return;
+ var bodyText = textParts.join('\n');
+ var slide = pptx.addSlide();
+ slide.addText(title, { x: 0.5, y: 0.2, w: 12.3, h: 0.6, fontSize: 20, color: themeColor.replace('#', ''), fontFace: 'Calibri', bold: true });
+ slide.addText(bodyText, { x: 0.5, y: 0.9, w: 12.3, h: 5.8, fontSize: 11, color: '444444', fontFace: 'Calibri', wrap: true, valign: 'top', lineSpacing: 16 });
+ addPlanFooter(slide);
+ });
+ }
+
  function addDividerSlide(tabLabel) {
  var slide = pptx.addSlide();
  slide.background = { color: themeColor };
@@ -22317,14 +22377,18 @@
  if (!tabContainer) return;
  addDividerSlide(tab.label);
  captureKPIs(tabContainer);
+ captureNarratives(tabContainer);
  captureCharts(tabContainer);
  captureTables(tabContainer);
+ captureInsights(tabContainer);
  });
  } else {
  // No sub-tabs (e.g., PMF): capture entire section
  captureKPIs(section);
+ captureNarratives(section);
  captureCharts(section);
  captureTables(section);
+ captureInsights(section);
  }
 
  // --- Restore hidden state ---
