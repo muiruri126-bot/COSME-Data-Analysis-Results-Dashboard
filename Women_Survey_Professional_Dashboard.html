@@ -22098,8 +22098,19 @@
  } catch(e) {}
  });
 
- // Wait for charts to fully render (lazy-init needs more time)
- await new Promise(function(resolve) { setTimeout(resolve, 500); });
+ // Wait for lazy-init charts to fully render
+ await new Promise(function(resolve) { setTimeout(resolve, 600); });
+
+ // Second resize pass — catches charts created by lazy render functions
+ section.querySelectorAll('canvas').forEach(function(c) {
+ try {
+ var chartInst = Chart.getChart(c);
+ if (chartInst) { chartInst.resize(); chartInst.update('none'); }
+ } catch(e) {}
+ });
+
+ // Final paint wait
+ await new Promise(function(resolve) { setTimeout(resolve, 400); });
 
  var pptx = new PptxGenJS();
  pptx.defineLayout({ name: 'COSME', width: 13.333, height: 7.5 });
@@ -22192,8 +22203,10 @@
  var canvases = section.querySelectorAll('canvas');
  canvases.forEach(function(canvas, idx) {
  try {
- // Skip canvases with zero dimensions (not rendered)
- if (canvas.width === 0 || canvas.height === 0) return;
+ // Skip only canvases with zero dimensions AND no Chart.js instance
+ if (canvas.width === 0 || canvas.height === 0) {
+ if (!Chart.getChart(canvas)) return;
+ }
 
  var chartTitle = '';
  var chartInsight = '';
@@ -22206,15 +22219,6 @@
  }
 
  var imgData = canvas.toDataURL('image/png', 1.0);
- // Skip blank images — check actual pixel data for content
- if (imgData.length < 200) return;
- try {
- var ctx2d = canvas.getContext('2d');
- var pxData = ctx2d.getImageData(0, 0, canvas.width, canvas.height).data;
- var hasPixels = false;
- for (var px = 3; px < pxData.length; px += 64) { if (pxData[px] > 10) { hasPixels = true; break; } }
- if (!hasPixels) return;
- } catch(pe) {}
 
  var slide = pptx.addSlide();
 
