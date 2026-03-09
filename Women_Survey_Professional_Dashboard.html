@@ -22273,6 +22273,7 @@
  if (parentDiv) { var h3 = parentDiv.querySelector('h3'); if (h3) tableTitle = h3.textContent.trim(); }
  var headerCells = rows[0].querySelectorAll('th');
  if (headerCells.length === 0) return;
+ var numCols = headerCells.length;
  var slide = pptx.addSlide();
  if (tableTitle) slide.addText(tableTitle, { x: 0.5, y: 0.15, w: 12.3, h: 0.7, fontSize: 24, color: '333333', fontFace: 'Calibri', bold: true });
  var pptxRows = [];
@@ -22283,15 +22284,21 @@
  pptxRows.push(headerRow);
  for (var r = 1; r < rows.length; r++) {
  var cells = rows[r].querySelectorAll('td');
+ if (cells.length === 0) continue;
  var dataRow = [];
  cells.forEach(function(cell) {
  dataRow.push({ text: cell.textContent.trim(), options: { fontSize: 11, color: '333333', align: 'center', valign: 'middle' } });
  });
- if (dataRow.length > 0) pptxRows.push(dataRow);
+ // Normalize row to match header column count (handles colspan/irregular rows)
+ while (dataRow.length < numCols) {
+ dataRow.push({ text: '', options: { fontSize: 11, color: '333333', align: 'center', valign: 'middle' } });
+ }
+ if (dataRow.length > numCols) dataRow = dataRow.slice(0, numCols);
+ pptxRows.push(dataRow);
  }
  if (pptxRows.length > 1) {
- var colW = Math.min(2.5, 12 / headerCells.length);
- var colWidths = Array.from({ length: headerCells.length }, function() { return colW; });
+ var colW = Math.min(2.5, 12 / numCols);
+ var colWidths = Array.from({ length: numCols }, function() { return colW; });
  slide.addTable(pptxRows, { x: 0.4, y: tableTitle ? 0.9 : 0.3, w: 12.5, colW: colWidths, border: { type: 'solid', pt: 0.5, color: 'CCCCCC' }, autoPage: true, autoPageRepeatHeader: true, rowH: 0.4 });
  }
  addPlanFooter(slide);
