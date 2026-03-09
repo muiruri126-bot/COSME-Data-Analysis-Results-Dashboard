@@ -23871,20 +23871,13 @@
 
  // MAIN CLUSTERED BAR CHART 
  function renderPMFMainChart(data) {
- // Color bars by outcome group
- var barBg = data.map(function(d) {
- return getOutcomeGroup(d.code).color + '99';
- });
- var barBorder = data.map(function(d) {
- return getOutcomeGroup(d.code).color;
- });
  pmfChart('pmf-chart-main', {
  type: 'bar',
  data: {
  labels: data.map(d => d.code),
  datasets: [
  { label: 'Baseline', data: data.map(d => d.baseline), backgroundColor: 'rgba(108,92,231,0.6)', borderColor: '#6c5ce7', borderWidth: 1 },
- { label: 'Midline', data: data.map(d => d.midline), backgroundColor: barBg, borderColor: barBorder, borderWidth: 1 },
+ { label: 'Midline', data: data.map(d => d.midline), backgroundColor: 'rgba(0,114,206,0.6)', borderColor: '#0072CE', borderWidth: 1 },
  { label: 'Target', data: data.map(d => d.target), backgroundColor: 'rgba(39,174,96,0.4)', borderColor: '#27ae60', borderWidth: 1, borderDash: [5, 5] }
  ]
  },
