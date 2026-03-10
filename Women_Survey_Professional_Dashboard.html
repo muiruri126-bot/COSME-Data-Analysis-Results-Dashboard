@@ -691,44 +691,35 @@
  .positive-change { color: #2e7d32; font-weight: 600; }
  .negative-change { color: #c62828; font-weight: 600; }
 
- /* PROJECT OUTPUT STYLES — aligned with survey section format */
+ /* PROJECT OUTPUT STYLES */
  .output-header {
+ background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
  color: white;
- padding: 20px 28px;
- border-radius: 10px 10px 0 0;
- margin-bottom: 0;
- position: sticky;
- top: 120px;
- z-index: 998;
- transition: top 0.3s ease;
+ padding: 25px 30px;
+ border-radius: 12px;
+ margin-bottom: 25px;
  }
  .output-header h2 {
  margin: 0 0 5px 0;
- font-size: 1.4em;
- font-weight: 700;
+ font-size: 1.5em;
  }
  .output-header p {
  margin: 0;
- opacity: 0.88;
- font-size: 0.9em;
- line-height: 1.5;
+ opacity: 0.85;
+ font-size: 0.95em;
  }
  .output-card {
  background: white;
- border-radius: 0 0 10px 10px;
- padding: 30px;
- margin-bottom: 30px;
+ border-radius: 12px;
+ padding: 25px;
+ margin-bottom: 25px;
  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
  }
- .output-card:first-of-type {
- border-radius: 0;
- }
  .output-card h3 {
- color: #333;
+ color: #1a237e;
  margin: 0 0 15px 0;
- font-size: 1.15em;
- font-weight: 600;
- border-bottom: 2px solid #0072CE;
+ font-size: 1.2em;
+ border-bottom: 2px solid #e8eaf6;
  padding-bottom: 10px;
  }
  .output-table {
@@ -738,7 +729,7 @@
  font-size: 0.92em;
  }
  .output-table th {
- background: linear-gradient(135deg, #0072CE, #005a9e);
+ background: #283593;
  color: white;
  padding: 10px 14px;
  text-align: center;
@@ -757,11 +748,11 @@
  background: #e8eaf6;
  }
  .output-table .total-row {
- background: #e3f2fd !important;
+ background: #e8eaf6 !important;
  font-weight: 700;
  }
  .output-table .total-row td {
- border-top: 2px solid #0072CE;
+ border-top: 2px solid #283593;
  }
  /* Editable table cells */
  .output-table td.rf-editable {
@@ -802,11 +793,11 @@
  margin-bottom: 20px;
  }
  .output-kpi {
- background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%);
+ background: linear-gradient(135deg, #e8eaf6 0%, #f5f5f5 100%);
  padding: 20px 14px;
  border-radius: 10px;
  text-align: center;
- border-left: 4px solid #0072CE;
+ border-left: 4px solid #283593;
  display: flex !important;
  flex-direction: column !important;
  align-items: center;
@@ -833,7 +824,7 @@
  .output-kpi .kpi-value {
  font-size: 1.5em;
  font-weight: 700;
- color: #0072CE;
+ color: #1a237e;
  line-height: 1;
  flex-shrink: 0;
  width: 100%;
@@ -856,7 +847,26 @@
  .output-kpi.green .kpi-value { color: #2e7d32; }
  .output-kpi.orange { border-left-color: #e65100; }
  .output-kpi.orange .kpi-value { color: #e65100; }
- /* output-charts-row and output-chart-box replaced by charts-grid and chart-wrapper */
+ .output-charts-row {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+ gap: 25px;
+ margin-top: 20px;
+ }
+ .output-chart-box {
+ background: white;
+ border-radius: 12px;
+ padding: 20px;
+ box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+ }
+ .output-chart-box h4 {
+ color: #283593;
+ margin: 0 0 15px 0;
+ font-size: 1em;
+ }
+ .output-chart-box canvas {
+ max-height: 320px;
+ }
  .output-placeholder {
  background: linear-gradient(135deg, #f5f5f5 0%, #e8eaf6 100%);
  padding: 60px 30px;
@@ -1354,7 +1364,9 @@
  grid-template-columns: 1fr;
  }
 
- /* output-charts-row now uses charts-grid */
+ .output-charts-row {
+ grid-template-columns: 1fr;
+ }
 
  .header h1 {
  font-size: 1.8em;
@@ -1589,7 +1601,10 @@
  margin-top: 6px;
  }
 
- /* output-charts-row now uses charts-grid */
+ .output-charts-row {
+ grid-template-columns: 1fr;
+ gap: 15px;
+ }
 
  /* Tables - horizontal scroll */
  .comparison-table,
@@ -1938,7 +1953,22 @@
  margin-top: 5px;
  }
 
- /* output chart responsive rules now handled by charts-grid and chart-wrapper */
+ .output-charts-row {
+ grid-template-columns: 1fr;
+ gap: 10px;
+ }
+
+ .output-chart-box {
+ padding: 14px;
+ }
+
+ .output-chart-box h4 {
+ font-size: 0.9em;
+ }
+
+ .output-chart-box canvas {
+ max-height: 240px;
+ }
 
  /* Tables */
  .comparison-table {
@@ -2501,7 +2531,7 @@
  grid-template-columns: repeat(3, 1fr) !important;
  }
 
- .charts-grid {
+ .output-charts-row {
  grid-template-columns: 1fr 1fr !important;
  }
 
@@ -4127,7 +4157,7 @@
 
  <!-- PROJECT OUTPUTS SUB-SELECTOR -->
  <div class="tabs-container" id="output-type-selector" style="display: flex; margin-bottom: 20px; margin-top: 15px;">
- <button class="tab-button active" onclick="showOutputType(event, 'mangrove')" style="background: #0072CE; color: #fff;">Mangrove</button>
+ <button class="tab-button active" onclick="showOutputType(event, 'mangrove')" style="background: #283593; color: #fff;">Mangrove</button>
  <button class="tab-button" onclick="showOutputType(event, 'forestry')">Forestry</button>
  <button class="tab-button" onclick="showOutputType(event, 'seaweed')">Seaweed</button>
  <button class="tab-button" onclick="showOutputType(event, 'gjj')">GJJ</button>
@@ -4141,7 +4171,7 @@
 
  <!-- MANGROVE OUTPUT -->
  <div id="output-mangrove">
- <div class="output-header" style="background: linear-gradient(135deg, #0072CE 0%, #005a9e 100%);">
+ <div class="output-header">
  <h2>Output 1112: Mangrove Restoration Training & Coaching</h2>
  <p>Members of mangrove groups trained and coached in mangrove restoration and conservation</p>
  </div>
@@ -4254,24 +4284,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Module Completion by Gender</div>
- <div class="chart-container"><canvas id="output-mangrove-gender"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Module Completion by Gender</h4>
+ <div style="height: 320px;"><canvas id="output-mangrove-gender"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Completion Rate vs Target (%)</div>
- <div class="chart-container"><canvas id="output-mangrove-target"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Completion Rate vs Target (%)</h4>
+ <div style="height: 320px;"><canvas id="output-mangrove-target"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Registration vs Completion (All)</div>
- <div class="chart-container"><canvas id="output-mangrove-regcomp"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Registration vs Completion (All)</h4>
+ <div style="height: 320px;"><canvas id="output-mangrove-regcomp"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split</div>
- <div class="chart-container"><canvas id="output-mangrove-split"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-mangrove-split"></canvas></div>
  </div>
  </div>
  </div>
@@ -4437,24 +4467,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Module Completion by Gender (Soft Threshold)</div>
- <div class="chart-container"><canvas id="output-forestry-gender"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Module Completion by Gender (Soft Threshold)</h4>
+ <div style="height: 320px;"><canvas id="output-forestry-gender"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Completion Rate vs Target (%)</div>
- <div class="chart-container"><canvas id="output-forestry-target"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Completion Rate vs Target (%)</h4>
+ <div style="height: 320px;"><canvas id="output-forestry-target"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Registration vs Completion (All)</div>
- <div class="chart-container"><canvas id="output-forestry-regcomp"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Registration vs Completion (All)</h4>
+ <div style="height: 320px;"><canvas id="output-forestry-regcomp"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split</div>
- <div class="chart-container"><canvas id="output-forestry-split"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-forestry-split"></canvas></div>
  </div>
  </div>
  </div>
@@ -4574,24 +4604,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Module Completion by Gender</div>
- <div class="chart-container"><canvas id="output-seaweed-gender"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Module Completion by Gender</h4>
+ <div style="height: 320px;"><canvas id="output-seaweed-gender"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Completion Rate vs Target (%)</div>
- <div class="chart-container"><canvas id="output-seaweed-target"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Completion Rate vs Target (%)</h4>
+ <div style="height: 320px;"><canvas id="output-seaweed-target"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Target vs Completion (All)</div>
- <div class="chart-container"><canvas id="output-seaweed-regcomp"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Target vs Completion (All)</h4>
+ <div style="height: 320px;"><canvas id="output-seaweed-regcomp"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split</div>
- <div class="chart-container"><canvas id="output-seaweed-split"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-seaweed-split"></canvas></div>
  </div>
  </div>
  </div>
@@ -4711,24 +4741,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Module Completion by Gender</div>
- <div class="chart-container"><canvas id="output-gjj-gender"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Module Completion by Gender</h4>
+ <div style="height: 320px;"><canvas id="output-gjj-gender"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Completion Rate vs Target (%)</div>
- <div class="chart-container"><canvas id="output-gjj-target"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Completion Rate vs Target (%)</h4>
+ <div style="height: 320px;"><canvas id="output-gjj-target"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Target vs Completion (All)</div>
- <div class="chart-container"><canvas id="output-gjj-regcomp"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Target vs Completion (All)</h4>
+ <div style="height: 320px;"><canvas id="output-gjj-regcomp"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split</div>
- <div class="chart-container"><canvas id="output-gjj-split"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-gjj-split"></canvas></div>
  </div>
  </div>
  </div>
@@ -4887,24 +4917,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Module Completion - Female Participants</div>
- <div class="chart-container"><canvas id="output-vsla-gender"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Module Completion - Female Participants</h4>
+ <div style="height: 380px;"><canvas id="output-vsla-gender"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Completion Rate vs Target (%)</div>
- <div class="chart-container"><canvas id="output-vsla-target"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Completion Rate vs Target (%)</h4>
+ <div style="height: 380px;"><canvas id="output-vsla-target"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Target vs Completion (All)</div>
- <div class="chart-container"><canvas id="output-vsla-regcomp"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Target vs Completion (All)</h4>
+ <div style="height: 380px;"><canvas id="output-vsla-regcomp"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split</div>
- <div class="chart-container"><canvas id="output-vsla-split"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-vsla-split"></canvas></div>
  </div>
  </div>
  </div>
@@ -4990,24 +5020,24 @@
  </div>
 
  <!-- Charts -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Student Enrollment by County & Gender</div>
- <div class="chart-container"><canvas id="output-schools-county"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Student Enrollment by County & Gender</h4>
+ <div style="height: 320px;"><canvas id="output-schools-county"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">4K Club Gender Split</div>
- <div class="chart-container"><canvas id="output-schools-4ksplit"></canvas></div>
+ <div class="output-chart-box">
+ <h4>4K Club Gender Split</h4>
+ <div style="height: 320px;"><canvas id="output-schools-4ksplit"></canvas></div>
  </div>
  </div>
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">County Comparison - Total Students</div>
- <div class="chart-container"><canvas id="output-schools-comparison"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>County Comparison - Total Students</h4>
+ <div style="height: 320px;"><canvas id="output-schools-comparison"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Gender Split (All Students)</div>
- <div class="chart-container"><canvas id="output-schools-gendersplit"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Gender Split (All Students)</h4>
+ <div style="height: 320px;"><canvas id="output-schools-gendersplit"></canvas></div>
  </div>
  </div>
  </div>
@@ -5068,14 +5098,14 @@
  </div>
 
  <!-- OVERVIEW CHARTS ROW -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Progress by Immediate Outcome (%)</div>
- <div class="chart-container"><canvas id="rf-outcome-progress"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Progress by Immediate Outcome (%)</h4>
+ <div style="height: 380px;"><canvas id="rf-outcome-progress"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Output Status Distribution</div>
- <div class="chart-container"><canvas id="rf-status-distribution"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Output Status Distribution</h4>
+ <div style="height: 380px;"><canvas id="rf-status-distribution"></canvas></div>
  </div>
  </div>
 
@@ -5224,14 +5254,14 @@
  </div>
 
  <!-- CHARTS: Environmental Outcomes (1110, 1120, 1130) -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Mangrove 1110 — Target vs Cumulative</div>
- <div class="chart-container"><canvas id="rf-mangrove-progress"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Mangrove 1110 — Target vs Cumulative</h4>
+ <div style="height: 320px;"><canvas id="rf-mangrove-progress"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Seaweed 1120 — Target vs Cumulative</div>
- <div class="chart-container"><canvas id="rf-seaweed-progress"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Seaweed 1120 — Target vs Cumulative</h4>
+ <div style="height: 320px;"><canvas id="rf-seaweed-progress"></canvas></div>
  </div>
  </div>
 
@@ -5380,14 +5410,14 @@
  </div>
 
  <!-- CHARTS: Social Outcomes (1210, 1220, 1230) -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Resilience Building 1220 — Target vs Cumulative</div>
- <div class="chart-container"><canvas id="rf-resilience-progress"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Resilience Building 1220 — Target vs Cumulative</h4>
+ <div style="height: 320px;"><canvas id="rf-resilience-progress"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Community Capacity 1230 — Target vs Cumulative</div>
- <div class="chart-container"><canvas id="rf-community-progress"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Community Capacity 1230 — Target vs Cumulative</h4>
+ <div style="height: 320px;"><canvas id="rf-community-progress"></canvas></div>
  </div>
  </div>
 
@@ -5535,28 +5565,28 @@
  </div>
 
  <!-- CHARTS: Institutional Outcomes (1310, 1320, 1330) -->
- <div class="charts-grid">
- <div class="chart-wrapper">
- <div class="chart-title">Schools 1310 — Target vs Cumulative</div>
- <div class="chart-container"><canvas id="rf-schools-progress"></canvas></div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Schools 1310 — Target vs Cumulative</h4>
+ <div style="height: 320px;"><canvas id="rf-schools-progress"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">4K/R&S Club Members — Gender Breakdown</div>
- <div class="chart-container"><canvas id="rf-schools-gender"></canvas></div>
+ <div class="output-chart-box">
+ <h4>4K/R&S Club Members — Gender Breakdown</h4>
+ <div style="height: 320px;"><canvas id="rf-schools-gender"></canvas></div>
  </div>
  </div>
 
  <!-- GENDER DISAGGREGATION SUMMARY -->
  <div class="output-card">
  <h3>Gender Disaggregation Summary — Key Outputs</h3>
- <div class="charts-grid" style="margin-top: 10px;">
- <div class="chart-wrapper">
- <div class="chart-title">Female vs Male — Training Outputs</div>
- <div class="chart-container"><canvas id="rf-gender-training"></canvas></div>
+ <div class="output-charts-row" style="margin-top: 10px;">
+ <div class="output-chart-box">
+ <h4>Female vs Male — Training Outputs</h4>
+ <div style="height: 380px;"><canvas id="rf-gender-training"></canvas></div>
  </div>
- <div class="chart-wrapper">
- <div class="chart-title">Overall Outcome Progress Radar</div>
- <div class="chart-container"><canvas id="rf-radar-progress"></canvas></div>
+ <div class="output-chart-box">
+ <h4>Overall Outcome Progress Radar</h4>
+ <div style="height: 380px;"><canvas id="rf-radar-progress"></canvas></div>
  </div>
  </div>
  </div>
@@ -6967,19 +6997,19 @@
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Water Source: Baseline vs Midline (%)</div>
- <div class="chart-container"><canvas id="sd-water-source-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-water-source-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure Ownership: Baseline vs Midline (%)</div>
- <div class="chart-container"><canvas id="sd-ownership-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-ownership-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Key Indicators: Baseline vs Midline (%)</div>
- <div class="chart-container"><canvas id="sd-indicators-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-indicators-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Indicator 1310c — Sustainable Clean Water Solutions (%)</div>
- <div class="chart-container"><canvas id="sd-composite-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-composite-chart"></canvas></div>
  </div>
  </div>
 
@@ -7076,19 +7106,19 @@
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure: Received vs Installed vs Used (%)</div>
- <div class="chart-container"><canvas id="sd-infra-usage-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-infra-usage-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Solvatten Kit Usage (%)</div>
- <div class="chart-container"><canvas id="sd-solvatten-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-solvatten-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Sustainability Measures (%)</div>
- <div class="chart-container"><canvas id="sd-sustainability-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-sustainability-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Tank & Gutter Pipeline: Received → Installed → Used (%)</div>
- <div class="chart-container"><canvas id="sd-pipeline-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-pipeline-chart"></canvas></div>
  </div>
  </div>
 
@@ -7194,19 +7224,19 @@
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Training & Support Agreement (%)</div>
- <div class="chart-container"><canvas id="sd-4k-training-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-4k-training-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">4K Club Members: Gender Split</div>
- <div class="chart-container"><canvas id="sd-4k-gender-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-4k-gender-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Environmental Initiatives by Type</div>
- <div class="chart-container"><canvas id="sd-4k-enviro-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-4k-enviro-chart"></canvas></div>
  </div>
  <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
  <div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Curriculum Delivery Progress</div>
- <div class="chart-container"><canvas id="sd-4k-curriculum-chart"></canvas></div>
+ <div style="height: 320px;"><canvas id="sd-4k-curriculum-chart"></canvas></div>
  </div>
  </div>
 
@@ -10766,11 +10796,11 @@
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Women Personally Saving</h3>
- <div class="chart-container"><canvas id="rba-chart-saving-yesno"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-saving-yesno"></canvas></div>
  </div>
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Saving Mechanisms Used</h3>
- <div class="chart-container"><canvas id="rba-chart-saving-mechanisms"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-saving-mechanisms"></canvas></div>
  </div>
  </div>
 
@@ -10778,11 +10808,11 @@
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Intended Use of Savings</h3>
- <div class="chart-container"><canvas id="rba-chart-intended-use"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-intended-use"></canvas></div>
  </div>
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Women Taking Loans</h3>
- <div class="chart-container"><canvas id="rba-chart-taking-loans"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-taking-loans"></canvas></div>
  </div>
  </div>
 
@@ -10932,18 +10962,18 @@
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Solar Panels — Ownership Pattern</h3>
- <div class="chart-container"><canvas id="rba-chart-solar-panels"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-solar-panels"></canvas></div>
  </div>
  <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Fuel-Efficient Cooking Stoves — Ownership Pattern</h3>
- <div class="chart-container"><canvas id="rba-chart-cooking-stoves"></canvas></div>
+ <div style="height: 320px;"><canvas id="rba-chart-cooking-stoves"></canvas></div>
  </div>
  </div>
 
  <!-- COMBINED COMPARISON CHART -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #1B5E20; margin: 0 0 16px 0;">Baseline vs Midline — Combined Asset Access Comparison</h3>
- <div class="chart-container"><canvas id="rba-chart-combined-assets"></canvas></div>
+ <div style="height: 360px;"><canvas id="rba-chart-combined-assets"></canvas></div>
  </div>
 
  <!-- INSIGHTS PANEL -->
@@ -11015,7 +11045,7 @@
  <!-- CHART 1: Forest Ecology & Rights -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #33691E; margin: 0 0 4px 0;">Forest Ecology & Rights — Pre-Test vs Post-Test Performance (%)</h3>
- <div class="chart-container"><canvas id="fp-chart-ecology-rights"></canvas></div>
+ <div style="height: 380px;"><canvas id="fp-chart-ecology-rights"></canvas></div>
  <div style="background: #F1F8E9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Forest Ecosystems: 56.6%→91.5% (+34.9pp). Biodiversity: 85.7%→97.6% (+11.9pp). Community Forestry: 86.6%→97.7% (+11.1pp). Forest Rights: 67.4%→95.0% (+27.6pp). Conservation Principles: 67.2%→97.8% (+30.6pp). Tree Species: 82.6%→97.5% (+14.9pp).
  </div>
@@ -11024,13 +11054,13 @@
  <!-- CHART 2: Management & Conservation -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #33691E; margin: 0 0 4px 0;">Management & Conservation — Pre-Test vs Post-Test Performance (%)</h3>
- <div class="chart-container"><canvas id="fp-chart-management-conservation"></canvas></div>
+ <div style="height: 380px;"><canvas id="fp-chart-management-conservation"></canvas></div>
  </div>
 
  <!-- CHART 3: Policy & Sustainability -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #33691E; margin: 0 0 4px 0;">Policy & Sustainability — Pre-Test vs Post-Test Performance (%)</h3>
- <div class="chart-container"><canvas id="fp-chart-policy-sustainability"></canvas></div>
+ <div style="height: 380px;"><canvas id="fp-chart-policy-sustainability"></canvas></div>
  <div style="background: #F1F8E9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Forest Policy: 65.6%→95.3% (+29.7pp). Climate Adaptation: 74.7%→96.6% (+21.9pp). Community Governance: 96.9%→99.6% (+2.7pp). Benefit Sharing: 89.6%→98.6% (+9.0pp). Ecosystem Services: 88.5%→99.7% (+11.2pp). Agroforestry: 77.7%→97.9% (+20.2pp). Monitoring & Evaluation: 76.7%→97.4% (+20.7pp).
  </div>
@@ -11475,7 +11505,7 @@
  <!-- CHART 1: Adequate Knowledge by Threshold -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Adequate Knowledge by Threshold — Baseline vs Endline (%)</h3>
- <div class="chart-container"><canvas id="sp-chart-threshold"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-threshold"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  ≥70 threshold: 67.4%→29.3% (−38.1pp). ≥60 threshold: 85.1%→66.5% (−18.6pp). Both thresholds show significant decline.
  </div>
@@ -11484,7 +11514,7 @@
  <!-- CHART 2: Adequate Knowledge (≥70) by Gender -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Adequate Knowledge (≥70) by Gender — Baseline vs Endline (%)</h3>
- <div class="chart-container"><canvas id="sp-chart-gender70"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-gender70"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Female: 67.4%→28.8% (−38.6pp). Male: 67.6%→32.4% (−35.2pp). Both genders declined significantly.
  </div>
@@ -11493,7 +11523,7 @@
  <!-- CHART 3: Average Standardized Scores by Gender -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Average Standardized Score by Gender — Baseline vs Endline</h3>
- <div class="chart-container"><canvas id="sp-chart-scores"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-scores"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Female: 72.8→64.6 (−8.2). Male: 72.6→65.2 (−7.4). Overall: 72.7→64.7 (−8.0). Males slightly higher at endline.
  </div>
@@ -11502,7 +11532,7 @@
  <!-- CHART 4: Adequate Knowledge (≥60) by Gender -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Adequate Knowledge (≥60) by Gender — Baseline vs Endline (%)</h3>
- <div class="chart-container"><canvas id="sp-chart-gender60"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-gender60"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Female: 85.5%→65.1% (−20.4pp). Male: 83.8%→76.5% (−7.3pp). Males retained more knowledge at ≥60 threshold.
  </div>
@@ -11552,7 +11582,7 @@
  <!-- CHART 5: Top Gains -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Top Gains — Questions with Largest Improvement</h3>
- <div class="chart-container"><canvas id="sp-chart-gains"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-gains"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Q8 Healthy seaweed characteristics (+30.0pp) was the standout improvement. Q14 Methods to control (+5.8pp) and Q22 Biofertilizer (+5.2pp) also improved.
  </div>
@@ -11561,7 +11591,7 @@
  <!-- CHART 6: Largest Declines -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">Largest Declines — Questions with Biggest Drop</h3>
- <div class="chart-container"><canvas id="sp-chart-declines"></canvas></div>
+ <div style="height: 380px;"><canvas id="sp-chart-declines"></canvas></div>
  <div style="background: #FFEBEE; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Q2 Seaweed grown in Kenya (−47.6pp) had the steepest decline. Q20 Ocean acidification (−34.0pp) and Q5 Farm plots (−27.5pp) also dropped sharply.
  </div>
@@ -11570,7 +11600,7 @@
  <!-- CHART 7: All 22 Questions -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="color: #004D40; margin: 0 0 4px 0;">All 22 Questions — Baseline vs Endline (% Correct)</h3>
- <div class="chart-container"><canvas id="sp-chart-allq"></canvas></div>
+ <div style="height: 450px;"><canvas id="sp-chart-allq"></canvas></div>
  <div style="background: #E0F2F1; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.88em; color: #555;">
  Visual comparison across all 22 knowledge questions. Green bars above baseline indicate improvement; red bars below indicate decline.
  </div>
@@ -11644,10 +11674,10 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">A. GROUP PROFILE</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">94.7% of groups are women-led with formal leadership. Most meet weekly (73.7%). Active female members total 610 across 19 groups (avg. 32.1 per group).</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Groups by Year of Establishment</h4><div class="chart-container"><canvas id="sp2-chart-establishment"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Women-Led Groups</h4><div class="chart-container"><canvas id="sp2-chart-women-led"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Meeting Frequency</h4><div class="chart-container"><canvas id="sp2-chart-meetings"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Active Members — Female vs Male</h4><div class="chart-container"><canvas id="sp2-chart-members"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Groups by Year of Establishment</h4><div style="height: 300px;"><canvas id="sp2-chart-establishment"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Women-Led Groups</h4><div style="height: 300px;"><canvas id="sp2-chart-women-led"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Meeting Frequency</h4><div style="height: 300px;"><canvas id="sp2-chart-meetings"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Active Members — Female vs Male</h4><div style="height: 300px;"><canvas id="sp2-chart-members"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -11658,10 +11688,10 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">B. INVOLVEMENT IN SEAWEED ACTIVITIES</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">89.5% actively involved. Production (89.5%) and drying (63.2%) most common. 63.2% began from 2023 onwards. Market opportunity (47.4%) is the top motivator.</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Activity Types Undertaken</h4><div class="chart-container"><canvas id="sp2-chart-activity-types"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Year Started Seaweed Activities</h4><div class="chart-container"><canvas id="sp2-chart-start-year"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Motivation to Engage</h4><div class="chart-container"><canvas id="sp2-chart-motivation"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Number of Ropes Owned</h4><div class="chart-container"><canvas id="sp2-chart-ropes"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Activity Types Undertaken</h4><div style="height: 300px;"><canvas id="sp2-chart-activity-types"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Year Started Seaweed Activities</h4><div style="height: 300px;"><canvas id="sp2-chart-start-year"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Motivation to Engage</h4><div style="height: 300px;"><canvas id="sp2-chart-motivation"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Number of Ropes Owned</h4><div style="height: 300px;"><canvas id="sp2-chart-ropes"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -11672,12 +11702,12 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">C. SEAWEED PRODUCTION & SUSTAINABILITY</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">89.5% apply regenerative practices. Off-bottom method dominates (78.9%). 78.9% report improved yield. Total harvest: 96,086 kg across groups.</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Production Methods Used</h4><div class="chart-container"><canvas id="sp2-chart-methods"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Sustainable Practices Adoption</h4><div class="chart-container"><canvas id="sp2-chart-sustainable"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Challenges in Sustainable Practices</h4><div class="chart-container"><canvas id="sp2-chart-challenges"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Yield/Quality Changes</h4><div class="chart-container"><canvas id="sp2-chart-yield"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Seaweed Produced in Last Harvest (kg)</h4><div class="chart-container"><canvas id="sp2-chart-harvest"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Production Records Keeping</h4><div class="chart-container"><canvas id="sp2-chart-records"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Production Methods Used</h4><div style="height: 300px;"><canvas id="sp2-chart-methods"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Sustainable Practices Adoption</h4><div style="height: 300px;"><canvas id="sp2-chart-sustainable"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Challenges in Sustainable Practices</h4><div style="height: 300px;"><canvas id="sp2-chart-challenges"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Yield/Quality Changes</h4><div style="height: 300px;"><canvas id="sp2-chart-yield"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Seaweed Produced in Last Harvest (kg)</h4><div style="height: 300px;"><canvas id="sp2-chart-harvest"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Production Records Keeping</h4><div style="height: 300px;"><canvas id="sp2-chart-records"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -11688,10 +11718,10 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">D. ACCESS TO INPUTS AND TECHNICAL SUPPORT</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">All groups received ropes and safety kits (100%). 89.5% received seedlings. Only 15.8% found inputs sufficient. All received seaweed farming training.</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Inputs Received (by Type)</h4><div class="chart-container"><canvas id="sp2-chart-inputs"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Input Adequacy Assessment</h4><div class="chart-container"><canvas id="sp2-chart-adequacy"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Technical Training Received</h4><div class="chart-container"><canvas id="sp2-chart-training"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Additional Support Needs</h4><div class="chart-container"><canvas id="sp2-chart-support-needs"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Inputs Received (by Type)</h4><div style="height: 300px;"><canvas id="sp2-chart-inputs"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Input Adequacy Assessment</h4><div style="height: 300px;"><canvas id="sp2-chart-adequacy"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Technical Training Received</h4><div style="height: 300px;"><canvas id="sp2-chart-training"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Additional Support Needs</h4><div style="height: 300px;"><canvas id="sp2-chart-support-needs"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -11702,12 +11732,12 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">E. COMMERCIALIZATION AND MARKET ACCESS</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">47.4% selling seaweed products. Dried seaweed (100% of sellers) and soap (55.6%) most common. Average price: KES 81.1/kg. Only 10% have branding strategies.</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Groups Selling Seaweed Products</h4><div class="chart-container"><canvas id="sp2-chart-selling"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Products Sold by Type</h4><div class="chart-container"><canvas id="sp2-chart-products"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Market Types Used</h4><div class="chart-container"><canvas id="sp2-chart-markets"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Commercialization Challenges</h4><div class="chart-container"><canvas id="sp2-chart-comm-challenges"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Seaweed Price Distribution (KES/kg)</h4><div class="chart-container"><canvas id="sp2-chart-price"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Impact on Group Income</h4><div class="chart-container"><canvas id="sp2-chart-income-impact"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Groups Selling Seaweed Products</h4><div style="height: 300px;"><canvas id="sp2-chart-selling"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Products Sold by Type</h4><div style="height: 300px;"><canvas id="sp2-chart-products"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Market Types Used</h4><div style="height: 300px;"><canvas id="sp2-chart-markets"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Commercialization Challenges</h4><div style="height: 300px;"><canvas id="sp2-chart-comm-challenges"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Seaweed Price Distribution (KES/kg)</h4><div style="height: 300px;"><canvas id="sp2-chart-price"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Impact on Group Income</h4><div style="height: 300px;"><canvas id="sp2-chart-income-impact"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -11718,10 +11748,10 @@
  <h3 style="color: #004D40; margin: 0 0 8px 0;">F. PARTNERSHIPS, SUSTAINABILITY & FUTURE PLANS</h3>
  <p style="color: #555; margin: 0 0 20px 0; font-size: 0.92em;">NGOs and government are key partners (63.2% each). Only one group has formal agreement with buyers (5.3%). Future plans focus on value addition and commercial expansion.</p>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Partners Involved</h4><div class="chart-container"><canvas id="sp2-chart-partners"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Future Plans</h4><div class="chart-container"><canvas id="sp2-chart-future"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Critical Needs to Scale</h4><div class="chart-container"><canvas id="sp2-chart-critical-needs"></canvas></div></div>
- <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Formal Agreements with Buyers</h4><div class="chart-container"><canvas id="sp2-chart-agreements"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Partners Involved</h4><div style="height: 300px;"><canvas id="sp2-chart-partners"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Future Plans</h4><div style="height: 300px;"><canvas id="sp2-chart-future"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Critical Needs to Scale</h4><div style="height: 300px;"><canvas id="sp2-chart-critical-needs"></canvas></div></div>
+ <div><h4 style="color: #00695C; margin: 0 0 4px 0;">Formal Agreements with Buyers</h4><div style="height: 300px;"><canvas id="sp2-chart-agreements"></canvas></div></div>
  </div>
  </div>
  </div>
@@ -12449,10 +12479,10 @@
  </div>
 
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Water Source: Baseline vs Midline (%)</div><div class="chart-container"><canvas id="schp-water-source-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure Ownership: Baseline vs Midline (%)</div><div class="chart-container"><canvas id="schp-ownership-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Key Indicators: Baseline vs Midline (%)</div><div class="chart-container"><canvas id="schp-indicators-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Indicator 1310c — Sustainable Clean Water Solutions (%)</div><div class="chart-container"><canvas id="schp-composite-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Water Source: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-water-source-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure Ownership: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-ownership-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Key Indicators: Baseline vs Midline (%)</div><div style="height: 320px;"><canvas id="schp-indicators-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Indicator 1310c — Sustainable Clean Water Solutions (%)</div><div style="height: 320px;"><canvas id="schp-composite-chart"></canvas></div></div>
  </div>
 
  <div class="insights-grid">
@@ -12521,10 +12551,10 @@
  </div>
 
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure: Received vs Installed vs Used (%)</div><div class="chart-container"><canvas id="schp-infra-usage-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Solvatten Kit Usage (%)</div><div class="chart-container"><canvas id="schp-solvatten-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Sustainability Measures (%)</div><div class="chart-container"><canvas id="schp-sustainability-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Tank & Gutter Pipeline: Received → Installed → Used (%)</div><div class="chart-container"><canvas id="schp-pipeline-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Infrastructure: Received vs Installed vs Used (%)</div><div style="height: 320px;"><canvas id="schp-infra-usage-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Solvatten Kit Usage (%)</div><div style="height: 320px;"><canvas id="schp-solvatten-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Sustainability Measures (%)</div><div style="height: 320px;"><canvas id="schp-sustainability-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Tank & Gutter Pipeline: Received → Installed → Used (%)</div><div style="height: 320px;"><canvas id="schp-pipeline-chart"></canvas></div></div>
  </div>
 
  <div class="insights-grid">
@@ -12601,10 +12631,10 @@
  </div>
 
  <div class="charts-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px;">
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Training & Support Agreement (%)</div><div class="chart-container"><canvas id="schp-4k-training-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">4K Club Members: Gender Split</div><div class="chart-container"><canvas id="schp-4k-gender-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Environmental Initiatives by Type</div><div class="chart-container"><canvas id="schp-4k-enviro-chart"></canvas></div></div>
- <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Curriculum Delivery Progress</div><div class="chart-container"><canvas id="schp-4k-curriculum-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Training & Support Agreement (%)</div><div style="height: 320px;"><canvas id="schp-4k-training-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">4K Club Members: Gender Split</div><div style="height: 320px;"><canvas id="schp-4k-gender-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Environmental Initiatives by Type</div><div style="height: 320px;"><canvas id="schp-4k-enviro-chart"></canvas></div></div>
+ <div class="chart-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);"><div class="chart-title" style="font-weight: 600; margin-bottom: 10px; color: #333;">Curriculum Delivery Progress</div><div style="height: 320px;"><canvas id="schp-4k-curriculum-chart"></canvas></div></div>
  </div>
 
  <div class="insights-grid">
@@ -16133,7 +16163,7 @@
  btn.style.color = '';
  });
  event.currentTarget.classList.add('active');
- event.currentTarget.style.background = '#0072CE';
+ event.currentTarget.style.background = '#283593';
  event.currentTarget.style.color = '#fff';
 
  // Hide all output sub-types
@@ -16158,9 +16188,6 @@
  if (typeName === 'vsla') renderVSLAOutputCharts();
  if (typeName === 'schools') renderSchoolsOutputCharts();
  if (typeName === 'results-framework') renderResultsFrameworkCharts();
-
- // Inject expand buttons for output charts (same as surveys)
- setTimeout(() => { if (typeof injectExpandButtons === 'function') injectExpandButtons(); }, 200);
  }
 
  // OUTPUT CHARTS — stored references so we can destroy/recreate
@@ -23281,6 +23308,7 @@
  // Selectors for elements that should animate on scroll
  const ANIMATE_SELECTORS = [
  '.chart-wrapper',
+ '.output-chart-box',
  '.insight-panel',
  '.insight-card',
  '.highlight-box',
@@ -23685,9 +23713,9 @@
  threshold: 0
  });
 
- // Observe all chart wrappers and chart containers
+ // Observe all chart wrappers and output chart boxes
  function observeChartContainers() {
- document.querySelectorAll('.chart-wrapper, .chart-container').forEach(function(el) {
+ document.querySelectorAll('.chart-wrapper, .output-chart-box, .chart-container').forEach(function(el) {
  if (!el.dataset.lazyLoaded) {
  lazyObserver.observe(el);
  }
@@ -24040,58 +24068,6 @@
  { n: 3, title: 'Achievement Analysis', detail: 'Target vs actual comparison' },
  { n: 4, title: 'Recommendations', detail: 'Strategic M&E recommendations' }
  ]
- },
- {
- id: 'grapp',
- title: 'GRAPP Climate Resilience',
- icon: '',
- iconBg: 'linear-gradient(135deg,#1565c0,#0d47a1)',
- category: 'environment',
- badge: 'Climate',
- badgeColor: '#1565c0',
- desc: 'Gender-Responsive Adaptation Policy & Planning deliverables — county adaptation plans, risk preparedness plans, ward-level adaptation strategies, and policy briefs across Kilifi and Kwale.',
- pdf: 'COSME_GRAPP_Report.pdf',
- dataFiles: [],
- stats: [
- { icon: '', text: '<strong>14</strong> deliverables completed' },
- { icon: '', text: '<strong>2</strong> counties covered' },
- { icon: '', text: '<strong>6</strong> wards with adaptation plans' },
- { icon: '', text: 'Policy briefs & risk plans' }
- ],
- sections: [
- { n: 1, title: 'County Policy Briefs', detail: 'Kilifi & Kwale GRAPP policy briefs' },
- { n: 2, title: 'Adaptation Action Plans', detail: 'County-level climate adaptation' },
- { n: 3, title: 'Risk Preparedness Plans', detail: 'Community risk preparedness 2025-2030' },
- { n: 4, title: 'Ward Adaptation Plans', detail: '6 ward-level adaptation strategies' },
- { n: 5, title: 'Community Risk Assessments', detail: 'Ward risk & vulnerability analysis' }
- ]
- },
- {
- id: 'pre-post',
- title: 'Pre/Post Training Analysis',
- icon: '',
- iconBg: 'linear-gradient(135deg,#00695c,#00897b)',
- category: 'all',
- badge: 'Training',
- badgeColor: '#00695c',
- desc: 'Pre- and post-training assessment analysis across all programme areas — mangrove, forestry, seaweed, and GJJ training effectiveness and knowledge gain.',
- pdf: 'COSME_PrePost_Report.pdf',
- dataFiles: [
- { name: 'Mangrove Training Pre/Post', file: 'Mangrove Training Pre_post results.xlsx' },
- { name: 'Forest Training Pre/Post', file: 'Forest Training Pre_post results.xlsx' }
- ],
- stats: [
- { icon: '', text: 'Pre vs Post knowledge scores' },
- { icon: '', text: 'Training effectiveness analysis' },
- { icon: '', text: 'Knowledge gain by module' },
- { icon: '', text: 'Cross-programme comparison' }
- ],
- sections: [
- { n: 1, title: 'Mangrove Training', detail: 'Pre/post test results' },
- { n: 2, title: 'Forestry Training', detail: 'Pre/post test results' },
- { n: 3, title: 'Knowledge Gain Analysis', detail: 'Score improvements by area' },
- { n: 4, title: 'Training Effectiveness', detail: 'Overall programme effectiveness' }
- ]
  }
  ];
 
@@ -24152,17 +24128,16 @@
  grid.innerHTML = filtered.map(r => `
  <div class="rpt-card${selectedReportId === r.id ? ' selected' : ''}" onclick="selectReport('${r.id}')">
  <div class="rpt-card-header">
- <div class="rpt-card-icon" style="background:${r.iconBg};">${r.icon}</div>
  <div>
  <h4 style="margin:0;font-size:1em;color:#333;">${r.title}</h4>
  <span class="rpt-card-badge" style="background:${r.badgeColor}15;color:${r.badgeColor};">${r.badge}</span>
  </div>
  </div>
  <div class="rpt-card-body">
- <p>${r.desc.substring(0, 120)}${r.desc.length > 120 ? '…' : ''}</p>
+ <p>${r.desc.substring(0, 100)}${r.desc.length > 100 ? '…' : ''}</p>
  </div>
  <div class="rpt-card-footer">
- <span style="color:#888;">${r.stats.length} key stats &middot; ${r.sections.length} sections</span>
+ <span style="color:#888;"> ${r.sections.length} sections</span>
  <span style="color:#0072CE;font-weight:600;">View Details →</span>
  </div>
  </div>
@@ -24183,8 +24158,7 @@
  panel.style.display = 'block';
 
  // Title
- document.getElementById('reportDetailTitle').innerHTML = `${r.icon} ${r.title}`;
- document.getElementById('reportDetailTitle').style.background = r.iconBg;
+ document.getElementById('reportDetailTitle').innerHTML = `${r.title}`;
 
  // Description
  document.getElementById('reportDetailDesc').textContent = r.desc;
