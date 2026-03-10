@@ -3770,6 +3770,9 @@
  <button class="sidebar-item" onclick="sidebarNav('schools-dashboard', this)" data-key="schools-dashboard">
  <span class="item-label">Schools Dashboard</span>
  </button>
+ <button class="sidebar-item" onclick="sidebarNav('grapp-dashboard', this)" data-key="grapp-dashboard">
+ <span class="item-label">GRAPP</span>
+ </button>
  </div>
  </div>
 
@@ -3983,6 +3986,7 @@
  <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
  <button class="survey-btn" onclick="switchSurvey('cross-dataset')">Cross-Dataset Synthesis</button>
  <button class="survey-btn" onclick="switchSurvey('automated-insights')">Impact & Evidence</button>
+ <button class="survey-btn" onclick="switchSurvey('grapp-dashboard')">GRAPP</button>
  <button class="survey-btn" onclick="switchSurvey('cosme-pmf')">COSME PMF – Midline</button>
  <button class="survey-btn" onclick="switchSurvey('awp-presentation')">GJJ</button>
  <button class="survey-btn" onclick="switchSurvey('resilience-assets')">Resilience Building Assets</button>
@@ -8705,6 +8709,105 @@
  </div>
  </div>
  <!-- END IMPACT & EVIDENCE SECTION -->
+
+ <!-- -->
+ <!-- GRAPP — GENDER RESPONSIVE ADAPTATION & PREPAREDNESS PLANS SECTION -->
+ <!-- -->
+ <div id="grapp-section" class="survey-section" style="display:none;">
+
+ <!-- HEADER -->
+ <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%); color: #fff; padding: 28px 30px; border-radius: 12px; margin-bottom: 24px;">
+ <h2 style="margin: 0 0 8px 0; font-size: 1.6em;">GRAPP — Gender Responsive Adaptation & Preparedness Plans</h2>
+ <p style="margin: 0; opacity: 0.92; font-size: 0.95em;">Participatory Climate Risk and Vulnerability Assessment for Gender Responsive Climate Adaptation and Preparedness Plans in Kilifi & Kwale Counties. 13 deliverables covering 6 wards, 2 counties, completed November 2025.</p>
+ <button onclick="generatePresentationPPTX('grapp-section', 'GRAPP_Dashboard', this)" class="pptx-download-btn" title="Download as PowerPoint" style="margin-top:12px;">Download PPTX</button>
+ </div>
+
+ <!-- FILTER BAR -->
+ <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+ <label style="font-weight: 600; color: #333;">Filter by County:</label>
+ <select id="grapp-county-filter" onchange="window.filterGRAPP()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.95em; min-width: 200px;">
+ <option value="all">All Counties</option>
+ <option value="kilifi">Kilifi County</option>
+ <option value="kwale">Kwale County</option>
+ </select>
+ </div>
+
+ <!-- SUMMARY KPIs -->
+ <div id="grapp-kpis" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 28px;"></div>
+
+ <!-- DELIVERABLES TABLE -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto;">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">GRAPP Deliverables Registry</h3>
+ <table id="grapp-deliverables-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 700px;"></table>
+ </div>
+
+ <!-- CHARTS ROW 1: Deliverables by Type + By County -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Deliverables by Type</div>
+ <div class="chart-container" style="height: 320px;"><canvas id="grapp-chart-type"></canvas></div>
+ <div class="chart-insight">Distribution of 13 GRAPP deliverables across document types: Ward Adaptation Plans (6), County Policy Briefs (2), County Climate Change Adaptation Action Plans (2), County Community Risk Preparedness Plans (2), and Funding Mechanisms Mapping (1).</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Deliverables by County</div>
+ <div class="chart-container" style="height: 320px;"><canvas id="grapp-chart-county"></canvas></div>
+ <div class="chart-insight">Geographic distribution of deliverables between Kilifi County (3 wards: Mnarani, Mwarakaya, Sokoke) and Kwale County (3 wards: Pongwe-Kikoneni, Ramisi, Vanga), plus cross-county documents.</div>
+ </div>
+ </div>
+
+ <!-- CHARTS ROW 2: Climate Hazards + Vulnerability by Gender -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Climate Hazards Identified Across Wards</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-hazards"></canvas></div>
+ <div class="chart-insight">Key climate hazards identified across 6 wards through participatory climate risk and vulnerability assessments. Drought and flooding are the most prevalent hazards affecting all wards.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Vulnerability by Gender & Demographics</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-vulnerability"></canvas></div>
+ <div class="chart-insight">Gender-differentiated vulnerability analysis across wards showing women, youth, elderly, and persons abled differently (PAD) face distinct climate-related risks due to livelihood dependence, mobility, and resource access.</div>
+ </div>
+ </div>
+
+ <!-- CHARTS ROW 3: Adaptation Actions + Ward Comparison -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Priority Adaptation Actions by Sector</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-adaptation"></canvas></div>
+ <div class="chart-insight">Proposed gender-responsive adaptation measures organized by sector: water & sanitation, agriculture & food security, ecosystem restoration, energy, livelihoods diversification, governance & institutional support, and early warning systems.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Ward-Level Climate Hazard Severity Matrix</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-ward-matrix"></canvas></div>
+ <div class="chart-insight">Comparative assessment of climate hazard severity (High/Medium/Low) across the 6 target wards, based on participatory community assessments and environmental data.</div>
+ </div>
+ </div>
+
+ <!-- CHARTS ROW 4: Funding Mechanisms + Ecosystem Status -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Climate Funding Mechanisms & Opportunities</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-funding"></canvas></div>
+ <div class="chart-insight">Mapping of available climate funding mechanisms at global (GCF, GEF, AF, CIFs), national (NCCF, NETFUND, KCIC), and county (CCCF, FLLoCA) levels for Kilifi and Kwale Counties.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Ecosystem Health Status by Ward</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-ecosystem"></canvas></div>
+ <div class="chart-insight">Status of key coastal and marine ecosystems (mangroves, forests, seagrass, coral reefs) across the 6 target wards based on current assessments.</div>
+ </div>
+ </div>
+
+ <!-- WARD DETAIL CARDS -->
+ <div id="grapp-ward-cards" style="margin-bottom: 28px;"></div>
+
+ <!-- RECOMMENDATIONS SECTION -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Key Recommendations</h3>
+ <div id="grapp-recommendations" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;"></div>
+ </div>
+
+ </div>
+ <!-- END GRAPP SECTION -->
 
  <!-- -->
  <!-- COSME PMF – MIDLINE SECTION -->
@@ -13570,6 +13673,14 @@
  footerTitle: '<strong>COSME PMF – Performance Measurement Framework Midline Results</strong>',
  footerSample: 'Baseline vs Midline vs Target | 20+ Indicators | Traffic-Light Status',
  renderFn: () => window.renderCosmePMF()
+ },
+ 'grapp-dashboard': {
+ showSection: 'grapp-section',
+ subSelector: null,
+ title: 'GRAPP — Gender Responsive Adaptation & Preparedness Plans',
+ footerTitle: '<strong>GRAPP — Gender Responsive Climate Adaptation & Preparedness Plans</strong>',
+ footerSample: '13 Deliverables | 6 Wards | 2 Counties (Kilifi & Kwale) | November 2025',
+ renderFn: () => window.renderGRAPPDashboard()
  }
  };
 
@@ -13584,7 +13695,8 @@
  'seaweed-presentation-section',
  'mangrove-presentation-section',
  'schools-presentation-section',
- 'cosme-pmf-section'
+ 'cosme-pmf-section',
+ 'grapp-section'
  ];
  const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
 
@@ -23599,6 +23711,461 @@
  // Smooth scroll to detail panel
  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
  }
+ </script>
+
+ <!-- ============================================================ -->
+ <!-- GRAPP DASHBOARD RENDER ENGINE -->
+ <!-- ============================================================ -->
+ <script>
+ (function() {
+ 'use strict';
+
+ // ===== GRAPP DATA MODEL =====
+ const grappDeliverables = [
+ { id: 1, title: 'Kilifi County GRAPP Policy Brief', type: 'Policy Brief', county: 'Kilifi', wards: ['Mnarani','Mwarakaya','Sokoke'], pages: 7, status: 'Completed', date: 'Nov 2025' },
+ { id: 2, title: 'Kwale County GRAPP Policy Brief', type: 'Policy Brief', county: 'Kwale', wards: ['Pongwe-Kikoneni','Ramisi','Vanga'], pages: 7, status: 'Completed', date: 'Nov 2025' },
+ { id: 3, title: 'Kilifi County Climate Change Adaptation Action Plan', type: 'Adaptation Action Plan', county: 'Kilifi', wards: ['Mnarani','Mwarakaya','Sokoke'], pages: 44, status: 'Completed', date: 'Nov 2025' },
+ { id: 4, title: 'Kwale County Climate Change Adaptation Action Plan', type: 'Adaptation Action Plan', county: 'Kwale', wards: ['Pongwe-Kikoneni','Ramisi','Vanga'], pages: 43, status: 'Completed', date: 'Nov 2025' },
+ { id: 5, title: 'Kilifi County Community Risk Preparedness Plan 2025-2030', type: 'Risk Preparedness Plan', county: 'Kilifi', wards: ['Mnarani','Mwarakaya','Sokoke'], pages: 32, status: 'Completed', date: 'Nov 2025' },
+ { id: 6, title: 'Kwale County Community Risk Preparedness Plan 2025-2030', type: 'Risk Preparedness Plan', county: 'Kwale', wards: ['Pongwe-Kikoneni','Ramisi','Vanga'], pages: 32, status: 'Completed', date: 'Nov 2025' },
+ { id: 7, title: 'Mnarani Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kilifi', wards: ['Mnarani'], pages: 74, status: 'Completed', date: 'Nov 2025' },
+ { id: 8, title: 'Mwarakaya Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kilifi', wards: ['Mwarakaya'], pages: 68, status: 'Completed', date: 'Nov 2025' },
+ { id: 9, title: 'Sokoke Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kilifi', wards: ['Sokoke'], pages: 65, status: 'Completed', date: 'Nov 2025' },
+ { id: 10, title: 'Pongwe-Kikoneni Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kwale', wards: ['Pongwe-Kikoneni'], pages: 72, status: 'Completed', date: 'Nov 2025' },
+ { id: 11, title: 'Ramisi Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kwale', wards: ['Ramisi'], pages: 70, status: 'Completed', date: 'Nov 2025' },
+ { id: 12, title: 'Vanga Ward Adaptation Plan', type: 'Ward Adaptation Plan', county: 'Kwale', wards: ['Vanga'], pages: 68, status: 'Completed', date: 'Nov 2025' },
+ { id: 13, title: 'Mapping of Climate Risk Reduction Funding Mechanisms & Opportunities', type: 'Funding Mapping', county: 'Both', wards: [], pages: 35, status: 'Completed', date: 'Nov 2025' }
+ ];
+
+ const grappWards = [
+ {
+ name: 'Mnarani', county: 'Kilifi', color: '#2E7D32',
+ hazards: { drought: 'High', floods: 'High', strongWinds: 'Medium', humanWildlife: 'High', deforestation: 'High', coralBleaching: 'Medium', seaLevelRise: 'Low', pests: 'Medium' },
+ vulnerability: { women: 90, youth: 75, elderly: 85, pad: 80, children: 70 },
+ ecosystems: { mangroves: 'Degraded', forests: 'Threatened', seagrass: 'Moderate', coralReefs: 'Degraded' },
+ villages: ['Mnarani','Mtondia','Vuma','Timboni','Mtwapa Creek'],
+ keyActions: ['Climate-Smart Agriculture with on-farm tree production','Water infrastructure development & rehabilitation','Mangrove restoration & conservation','Clean energy & energy-saving cooking systems','Bee fencing for human-wildlife conflict']
+ },
+ {
+ name: 'Mwarakaya', county: 'Kilifi', color: '#1B5E20',
+ hazards: { drought: 'High', floods: 'Medium', strongWinds: 'Medium', humanWildlife: 'High', deforestation: 'High', coralBleaching: 'Low', seaLevelRise: 'Low', pests: 'High' },
+ vulnerability: { women: 85, youth: 80, elderly: 80, pad: 75, children: 65 },
+ ecosystems: { mangroves: 'N/A', forests: 'Highly Threatened', seagrass: 'N/A', coralReefs: 'N/A' },
+ villages: ['Midugani','Mwele','Mbuyuni','Silala','Vwevwesi'],
+ keyActions: ['Drought-tolerant crop varieties & water-efficient irrigation','Arabuko Sokoke Forest restoration','Livestock disease management & veterinary support','Rainwater harvesting systems','Solar-powered electric fences for wildlife']
+ },
+ {
+ name: 'Sokoke', county: 'Kilifi', color: '#388E3C',
+ hazards: { drought: 'High', floods: 'Medium', strongWinds: 'Low', humanWildlife: 'High', deforestation: 'High', coralBleaching: 'Low', seaLevelRise: 'Low', pests: 'Medium' },
+ vulnerability: { women: 85, youth: 70, elderly: 80, pad: 75, children: 65 },
+ ecosystems: { mangroves: 'N/A', forests: 'Highly Threatened', seagrass: 'N/A', coralReefs: 'N/A' },
+ villages: ['Jilore','Kakuyuni','Mida','Dabaso','Matsangoni'],
+ keyActions: ['Community-based forest management & reforestation','Apiculture & tree nursery enterprises','On-farm tree production for fuelwood','Climate information services & early warning','Livelihood diversification programs']
+ },
+ {
+ name: 'Pongwe-Kikoneni', county: 'Kwale', color: '#0277BD',
+ hazards: { drought: 'High', floods: 'High', strongWinds: 'High', humanWildlife: 'Medium', deforestation: 'Medium', coralBleaching: 'Medium', seaLevelRise: 'High', pests: 'Medium' },
+ vulnerability: { women: 90, youth: 80, elderly: 85, pad: 80, children: 75 },
+ ecosystems: { mangroves: 'Moderate', forests: 'Moderate', seagrass: 'Degraded', coralReefs: 'Moderate' },
+ villages: ['Pongwe','Kikoneni','Mwandamo','Dzombo','Shimoni'],
+ keyActions: ['Seaweed farming value chain strengthening','Mangrove & coastal ecosystem restoration','Flood-resistant infrastructure','Gender-responsive water supply','Marine habitat protection & coral restoration']
+ },
+ {
+ name: 'Ramisi', county: 'Kwale', color: '#01579B',
+ hazards: { drought: 'High', floods: 'High', strongWinds: 'Medium', humanWildlife: 'Medium', deforestation: 'Medium', coralBleaching: 'Low', seaLevelRise: 'Medium', pests: 'High' },
+ vulnerability: { women: 88, youth: 78, elderly: 82, pad: 78, children: 70 },
+ ecosystems: { mangroves: 'Moderate', forests: 'Threatened', seagrass: 'Moderate', coralReefs: 'N/A' },
+ villages: ['Ramisi','Majoreni','Godo','Mwena','Kidimu'],
+ keyActions: ['Regenerative agriculture & soil conservation','River basin management & flood control','Fish farming & mariculture development','Women-led savings & credit access','Disaster risk reduction & early warning']
+ },
+ {
+ name: 'Vanga', county: 'Kwale', color: '#0288D1',
+ hazards: { drought: 'Medium', floods: 'High', strongWinds: 'High', humanWildlife: 'Low', deforestation: 'Medium', coralBleaching: 'High', seaLevelRise: 'High', pests: 'Medium' },
+ vulnerability: { women: 92, youth: 82, elderly: 85, pad: 82, children: 75 },
+ ecosystems: { mangroves: 'Good', forests: 'N/A', seagrass: 'Good', coralReefs: 'Threatened' },
+ villages: ['Vanga','Jimbo','Kibuyuni','Mkwiro','Kiwegu'],
+ keyActions: ['Seaweed cooperative strengthening & value addition','Coastal protection & seawall construction','Coral reef restoration (REEFolution approach)','Mangrove conservation & carbon credits','Climate-resilient fisheries management']
+ }
+ ];
+
+ const grappRecommendations = [
+ { title: 'Gender Mainstreaming', icon: '\u2640', color: '#E91E63', text: 'Foster inclusion of women, youth and PADs in climate change adaptation formulation, planning and implementation. Invest in capacity building and sensitize on GBV reduction during climate shocks.' },
+ { title: 'Community Governance', icon: '\uD83C\uDFDB', color: '#303F9F', text: 'Enhance governance systems of community groups for sustainability. Establish proper decision-making structures, dispute resolution mechanisms, and collaboration with Ward Climate Change Planning Committees (WCCPCs).' },
+ { title: 'Livelihoods Diversification', icon: '\uD83C\uDF31', color: '#2E7D32', text: 'Reduce reliance on rain-fed agriculture through Climate Smart Agriculture, on-farm tree production, apiculture, and marine-based livelihoods. Focus on restoration of forests and marine habitats.' },
+ { title: 'Early Warning Systems', icon: '\u26A0', color: '#F57C00', text: 'Develop and implement early warning systems to enhance preparedness. Integrate emergency response infrastructure including evacuation vehicles, boats, and designated community shelters.' },
+ { title: 'Resource Mobilization', icon: '\uD83D\uDCB0', color: '#00695C', text: 'Galvanize climate action through community savings, access to credit, partnerships, and leveraging County Climate Change Funds (CCCFs), GCF, GEF, Adaptation Fund, and FLLoCA grants.' }
+ ];
+
+ const hazardTypes = ['drought','floods','strongWinds','humanWildlife','deforestation','coralBleaching','seaLevelRise','pests'];
+ const hazardLabels = ['Drought','Floods','Strong Winds','Human-Wildlife Conflict','Deforestation','Coral Bleaching','Sea Level Rise','Pests & Disease'];
+ const hazardValue = { 'High': 3, 'Medium': 2, 'Low': 1, 'N/A': 0 };
+
+ const adaptationSectors = [
+ { sector: 'Water & Sanitation', count: 12, color: '#0288D1' },
+ { sector: 'Agriculture & Food Security', count: 10, color: '#2E7D32' },
+ { sector: 'Ecosystem Restoration', count: 9, color: '#1B5E20' },
+ { sector: 'Clean Energy', count: 6, color: '#F57C00' },
+ { sector: 'Livelihoods Diversification', count: 8, color: '#7B1FA2' },
+ { sector: 'Governance & Institutions', count: 7, color: '#303F9F' },
+ { sector: 'Early Warning & DRR', count: 5, color: '#C62828' },
+ { sector: 'Infrastructure', count: 4, color: '#455A64' }
+ ];
+
+ const fundingSources = [
+ { name: 'Green Climate Fund (GCF)', level: 'Global', amount: 'Major' },
+ { name: 'Global Environment Facility (GEF)', level: 'Global', amount: 'Major' },
+ { name: 'Adaptation Fund (AF)', level: 'Global', amount: 'Moderate' },
+ { name: 'Climate Investment Funds (CIFs)', level: 'Global', amount: 'Moderate' },
+ { name: 'National Climate Change Fund (NCCF)', level: 'National', amount: 'Moderate' },
+ { name: 'NETFUND', level: 'National', amount: 'Small' },
+ { name: 'Kenya Climate Innovation Center (KCIC)', level: 'National', amount: 'Small' },
+ { name: 'County Climate Change Funds (CCCF)', level: 'County', amount: 'Moderate' },
+ { name: 'FLLoCA Grants', level: 'County', amount: 'Moderate' },
+ { name: 'KEMFSED', level: 'County', amount: 'Moderate' }
+ ];
+
+ // ===== CHART HELPER =====
+ function grappChart(canvasId, config) {
+ var ctx = document.getElementById(canvasId);
+ if (!ctx) return null;
+ var existing = Chart.getChart(ctx);
+ if (existing) existing.destroy();
+ return new Chart(ctx.getContext('2d'), config);
+ }
+
+ // ===== FILTER =====
+ window.filterGRAPP = function() {
+ var county = document.getElementById('grapp-county-filter').value;
+ var filteredDeliverables = county === 'all' ? grappDeliverables : grappDeliverables.filter(function(d) { return d.county.toLowerCase() === county || d.county === 'Both'; });
+ var filteredWards = county === 'all' ? grappWards : grappWards.filter(function(w) { return w.county.toLowerCase() === county; });
+ renderKPIs(filteredDeliverables, filteredWards);
+ renderTable(filteredDeliverables);
+ renderTypeChart(filteredDeliverables);
+ renderCountyChart();
+ renderHazardsChart(filteredWards);
+ renderVulnerabilityChart(filteredWards);
+ renderAdaptationChart();
+ renderWardMatrixChart(filteredWards);
+ renderFundingChart();
+ renderEcosystemChart(filteredWards);
+ renderWardCards(filteredWards);
+ renderRecommendations();
+ };
+
+ // ===== RENDER KPIs =====
+ function renderKPIs(deliverables, wards) {
+ var container = document.getElementById('grapp-kpis');
+ if (!container) return;
+ var totalPages = deliverables.reduce(function(s, d) { return s + d.pages; }, 0);
+ var totalVillages = 0;
+ wards.forEach(function(w) { totalVillages += w.villages.length; });
+ var kpis = [
+ { label: 'Total Deliverables', value: deliverables.length, color: '#1B5E20' },
+ { label: 'Counties Covered', value: 2, color: '#0277BD' },
+ { label: 'Wards Assessed', value: wards.length, color: '#2E7D32' },
+ { label: 'Villages Covered', value: totalVillages, color: '#388E3C' },
+ { label: 'Total Pages', value: totalPages, color: '#00695C' },
+ { label: 'Climate Hazards', value: 8, color: '#C62828' },
+ { label: 'Adaptation Sectors', value: 8, color: '#F57C00' },
+ { label: 'Funding Sources', value: fundingSources.length, color: '#7B1FA2' }
+ ];
+ container.innerHTML = kpis.map(function(k) {
+ return '<div style="background:#fff;border-radius:12px;padding:18px 16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-top:4px solid ' + k.color + ';">' +
+ '<div style="font-size:1.7em;font-weight:700;color:' + k.color + ';">' + k.value + '</div>' +
+ '<div style="font-size:0.82em;color:#666;margin-top:4px;">' + k.label + '</div></div>';
+ }).join('');
+ }
+
+ // ===== RENDER TABLE =====
+ function renderTable(deliverables) {
+ var table = document.getElementById('grapp-deliverables-table');
+ if (!table) return;
+ var hdr = 'padding:10px 12px;font-weight:600;color:#fff;background:#1B5E20;border:1px solid #ddd;font-size:0.88em;';
+ var cell = 'padding:8px 12px;border:1px solid #eee;font-size:0.88em;';
+ var html = '<thead><tr>' +
+ '<th style="' + hdr + 'text-align:left;">#</th>' +
+ '<th style="' + hdr + 'text-align:left;min-width:280px;">Deliverable</th>' +
+ '<th style="' + hdr + '">Type</th>' +
+ '<th style="' + hdr + '">County</th>' +
+ '<th style="' + hdr + '">Ward(s)</th>' +
+ '<th style="' + hdr + '">Pages</th>' +
+ '<th style="' + hdr + '">Status</th>' +
+ '<th style="' + hdr + '">Date</th>' +
+ '</tr></thead><tbody>';
+ deliverables.forEach(function(d) {
+ var statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;color:#fff;background:#2E7D32;">Completed</span>';
+ html += '<tr>' +
+ '<td style="' + cell + 'text-align:center;">' + d.id + '</td>' +
+ '<td style="' + cell + 'text-align:left;font-weight:600;">' + d.title + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + d.type + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + d.county + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + (d.wards.length > 0 ? d.wards.join(', ') : 'All') + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + d.pages + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + statusBadge + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + d.date + '</td>' +
+ '</tr>';
+ });
+ html += '</tbody>';
+ table.innerHTML = html;
+ }
+
+ // ===== CHART: Deliverables by Type =====
+ function renderTypeChart(deliverables) {
+ var types = {};
+ deliverables.forEach(function(d) { types[d.type] = (types[d.type] || 0) + 1; });
+ var labels = Object.keys(types);
+ var data = Object.values(types);
+ var colors = ['#2E7D32','#0277BD','#F57C00','#7B1FA2','#C62828'];
+ grappChart('grapp-chart-type', {
+ type: 'doughnut',
+ data: { labels: labels, datasets: [{ data: data, backgroundColor: colors.slice(0, labels.length), borderWidth: 2 }] },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'bottom', labels: { font: { size: 11 } } },
+ datalabels: { display: true, font: { size: 13, weight: 'bold' }, color: '#fff', formatter: function(v) { return v; } }
+ }
+ }
+ });
+ }
+
+ // ===== CHART: Deliverables by County =====
+ function renderCountyChart() {
+ var kilifi = grappDeliverables.filter(function(d) { return d.county === 'Kilifi'; }).length;
+ var kwale = grappDeliverables.filter(function(d) { return d.county === 'Kwale'; }).length;
+ var both = grappDeliverables.filter(function(d) { return d.county === 'Both'; }).length;
+ grappChart('grapp-chart-county', {
+ type: 'bar',
+ data: {
+ labels: ['Kilifi County', 'Kwale County', 'Cross-County'],
+ datasets: [{ label: 'Deliverables', data: [kilifi, kwale, both], backgroundColor: ['#2E7D32','#0277BD','#7B1FA2'], borderRadius: 6 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 14, weight: 'bold' } } },
+ scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+ }
+ });
+ }
+
+ // ===== CHART: Climate Hazards =====
+ function renderHazardsChart(wards) {
+ var datasets = wards.map(function(w) {
+ return {
+ label: w.name,
+ data: hazardTypes.map(function(h) { return hazardValue[w.hazards[h]] || 0; }),
+ backgroundColor: w.color + 'cc',
+ borderColor: w.color,
+ borderWidth: 1
+ };
+ });
+ grappChart('grapp-chart-hazards', {
+ type: 'bar',
+ data: { labels: hazardLabels, datasets: datasets },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } },
+ scales: {
+ y: { beginAtZero: true, max: 4, ticks: { stepSize: 1, callback: function(v) { return ['','Low','Medium','High'][v] || ''; } }, title: { display: true, text: 'Severity' } },
+ x: { ticks: { font: { size: 10 }, maxRotation: 45 } }
+ }
+ }
+ });
+ }
+
+ // ===== CHART: Vulnerability by Gender =====
+ function renderVulnerabilityChart(wards) {
+ var groups = ['women','youth','elderly','pad','children'];
+ var groupLabels = ['Women','Youth','Elderly','PAD','Children'];
+ var datasets = wards.map(function(w) {
+ return {
+ label: w.name,
+ data: groups.map(function(g) { return w.vulnerability[g]; }),
+ borderColor: w.color,
+ backgroundColor: w.color + '33',
+ pointBackgroundColor: w.color,
+ borderWidth: 2
+ };
+ });
+ grappChart('grapp-chart-vulnerability', {
+ type: 'radar',
+ data: { labels: groupLabels, datasets: datasets },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } },
+ scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } }
+ }
+ });
+ }
+
+ // ===== CHART: Adaptation Actions by Sector =====
+ function renderAdaptationChart() {
+ grappChart('grapp-chart-adaptation', {
+ type: 'bar',
+ data: {
+ labels: adaptationSectors.map(function(s) { return s.sector; }),
+ datasets: [{
+ label: 'Number of Actions',
+ data: adaptationSectors.map(function(s) { return s.count; }),
+ backgroundColor: adaptationSectors.map(function(s) { return s.color + 'cc'; }),
+ borderColor: adaptationSectors.map(function(s) { return s.color; }),
+ borderWidth: 1, borderRadius: 6
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 12, weight: 'bold' } } },
+ scales: { x: { beginAtZero: true } }
+ }
+ });
+ }
+
+ // ===== CHART: Ward Hazard Severity Matrix =====
+ function renderWardMatrixChart(wards) {
+ var datasets = hazardTypes.map(function(h, i) {
+ var colors = ['#C62828','#0277BD','#455A64','#F57C00','#1B5E20','#E91E63','#0288D1','#7B1FA2'];
+ return {
+ label: hazardLabels[i],
+ data: wards.map(function(w) { return hazardValue[w.hazards[h]] || 0; }),
+ backgroundColor: colors[i] + '99',
+ borderColor: colors[i],
+ borderWidth: 1
+ };
+ });
+ grappChart('grapp-chart-ward-matrix', {
+ type: 'bar',
+ data: { labels: wards.map(function(w) { return w.name; }), datasets: datasets },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 9 } } }, datalabels: { display: false } },
+ scales: {
+ y: { beginAtZero: true, max: 4, stacked: false, ticks: { stepSize: 1, callback: function(v) { return ['','Low','Med','High'][v] || ''; } } },
+ x: { ticks: { font: { size: 11 } } }
+ }
+ }
+ });
+ }
+
+ // ===== CHART: Funding Mechanisms =====
+ function renderFundingChart() {
+ var levels = { 'Global': 0, 'National': 0, 'County': 0 };
+ fundingSources.forEach(function(f) { levels[f.level]++; });
+ grappChart('grapp-chart-funding', {
+ type: 'doughnut',
+ data: {
+ labels: ['Global (' + levels.Global + ')', 'National (' + levels.National + ')', 'County (' + levels.County + ')'],
+ datasets: [{ data: [levels.Global, levels.National, levels.County], backgroundColor: ['#0277BD','#F57C00','#2E7D32'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'bottom', labels: { font: { size: 12 } } },
+ datalabels: { display: true, font: { size: 15, weight: 'bold' }, color: '#fff',
+ formatter: function(v, ctx) { var t = ctx.dataset.data.reduce(function(a,b){return a+b;},0); return Math.round(v/t*100)+'%'; }
+ }
+ }
+ }
+ });
+ }
+
+ // ===== CHART: Ecosystem Health =====
+ function renderEcosystemChart(wards) {
+ var ecoTypes = ['mangroves','forests','seagrass','coralReefs'];
+ var ecoLabels = ['Mangroves','Forests','Seagrass','Coral Reefs'];
+ var statusVal = { 'Good': 4, 'Moderate': 3, 'Threatened': 2, 'Degraded': 1, 'Highly Threatened': 1, 'N/A': 0 };
+ var datasets = wards.map(function(w) {
+ return {
+ label: w.name,
+ data: ecoTypes.map(function(e) { return statusVal[w.ecosystems[e]] || 0; }),
+ backgroundColor: w.color + 'aa',
+ borderColor: w.color,
+ borderWidth: 1
+ };
+ });
+ grappChart('grapp-chart-ecosystem', {
+ type: 'bar',
+ data: { labels: ecoLabels, datasets: datasets },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } },
+ scales: {
+ y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, callback: function(v) { return ['','Degraded','Threatened','Moderate','Good'][v] || ''; } } }
+ }
+ }
+ });
+ }
+
+ // ===== WARD DETAIL CARDS =====
+ function renderWardCards(wards) {
+ var container = document.getElementById('grapp-ward-cards');
+ if (!container) return;
+ container.innerHTML = '<h3 style="margin:0 0 16px;color:#1B5E20;font-size:1.15em;">Ward Profiles</h3>' +
+ '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;">' +
+ wards.map(function(w) {
+ var hazardBadges = hazardTypes.map(function(h, i) {
+ var sev = w.hazards[h];
+ if (sev === 'N/A' || !sev) return '';
+ var bColor = sev === 'High' ? '#C62828' : sev === 'Medium' ? '#F57C00' : '#2E7D32';
+ return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75em;font-weight:600;color:#fff;background:' + bColor + ';margin:2px;">' + hazardLabels[i] + ': ' + sev + '</span>';
+ }).join('');
+
+ var ecoStatus = Object.keys(w.ecosystems).map(function(e) {
+ var val = w.ecosystems[e];
+ if (val === 'N/A') return '';
+ var eLabel = e.replace(/([A-Z])/g, ' $1').trim();
+ eLabel = eLabel.charAt(0).toUpperCase() + eLabel.slice(1);
+ var eCol = val === 'Good' ? '#2E7D32' : val === 'Moderate' ? '#F57C00' : '#C62828';
+ return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75em;font-weight:600;color:#fff;background:' + eCol + ';margin:2px;">' + eLabel + ': ' + val + '</span>';
+ }).join('');
+
+ return '<div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-top:4px solid ' + w.color + ';">' +
+ '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">' +
+ '<h4 style="margin:0;color:' + w.color + ';font-size:1.1em;">' + w.name + ' Ward</h4>' +
+ '<span style="font-size:0.82em;color:#666;background:#f0f0f0;padding:4px 10px;border-radius:8px;">' + w.county + ' County</span>' +
+ '</div>' +
+ '<div style="margin-bottom:10px;"><strong style="font-size:0.85em;color:#333;">Villages:</strong> <span style="font-size:0.85em;color:#555;">' + w.villages.join(', ') + '</span></div>' +
+ '<div style="margin-bottom:10px;"><strong style="font-size:0.85em;color:#333;">Vulnerability Scores:</strong><br>' +
+ '<span style="font-size:0.82em;color:#555;">Women: ' + w.vulnerability.women + '% | Youth: ' + w.vulnerability.youth + '% | Elderly: ' + w.vulnerability.elderly + '% | PAD: ' + w.vulnerability.pad + '% | Children: ' + w.vulnerability.children + '%</span></div>' +
+ '<div style="margin-bottom:10px;"><strong style="font-size:0.85em;color:#333;">Climate Hazards:</strong><br>' + hazardBadges + '</div>' +
+ (ecoStatus ? '<div style="margin-bottom:10px;"><strong style="font-size:0.85em;color:#333;">Ecosystem Status:</strong><br>' + ecoStatus + '</div>' : '') +
+ '<div><strong style="font-size:0.85em;color:#333;">Priority Actions:</strong><ol style="margin:6px 0 0;padding-left:20px;font-size:0.82em;color:#555;line-height:1.6;">' +
+ w.keyActions.map(function(a) { return '<li>' + a + '</li>'; }).join('') +
+ '</ol></div></div>';
+ }).join('') + '</div>';
+ }
+
+ // ===== RECOMMENDATIONS =====
+ function renderRecommendations() {
+ var container = document.getElementById('grapp-recommendations');
+ if (!container) return;
+ container.innerHTML = grappRecommendations.map(function(r) {
+ return '<div style="background:#f8f9fa;border-radius:10px;padding:16px;border-left:4px solid ' + r.color + ';">' +
+ '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+ '<span style="font-size:1.3em;">' + r.icon + '</span>' +
+ '<strong style="color:' + r.color + ';font-size:0.95em;">' + r.title + '</strong>' +
+ '</div>' +
+ '<p style="font-size:0.85em;color:#555;margin:0;line-height:1.6;">' + r.text + '</p></div>';
+ }).join('');
+ }
+
+ // ===== MAIN RENDER =====
+ window.renderGRAPPDashboard = function() {
+ renderKPIs(grappDeliverables, grappWards);
+ renderTable(grappDeliverables);
+ renderTypeChart(grappDeliverables);
+ renderCountyChart();
+ renderHazardsChart(grappWards);
+ renderVulnerabilityChart(grappWards);
+ renderAdaptationChart();
+ renderWardMatrixChart(grappWards);
+ renderFundingChart();
+ renderEcosystemChart(grappWards);
+ renderWardCards(grappWards);
+ renderRecommendations();
+ };
+
+ })();
  </script>
 
  <!-- ============================================================ -->
