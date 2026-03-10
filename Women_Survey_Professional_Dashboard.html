@@ -754,38 +754,7 @@
  .output-table .total-row td {
  border-top: 2px solid #283593;
  }
- /* Editable table cells */
- .output-table td.rf-editable {
- cursor: pointer;
- position: relative;
- transition: background 0.15s, box-shadow 0.15s;
- }
- .output-table td.rf-editable:hover {
- background: #E3F2FD !important;
- box-shadow: inset 0 0 0 2px #90CAF9;
- }
- .output-table td.rf-editable:focus {
- background: #fff !important;
- box-shadow: inset 0 0 0 2px #1565C0;
- outline: none;
- }
- .rf-edit-toolbar {
- display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
- }
- .rf-edit-btn {
- padding: 8px 18px; border-radius: 8px; font-size: 0.88em;
- font-weight: 600; cursor: pointer; border: none; transition: all 0.2s;
- }
- .rf-edit-btn:hover { filter: brightness(0.92); }
- .rf-edit-btn-primary { background: #1565C0; color: #fff; }
- .rf-edit-btn-success { background: #2E7D32; color: #fff; }
- .rf-edit-btn-outline { background: transparent; color: #555; border: 1.5px solid #bbb; }
- .rf-edit-badge {
- display: inline-flex; align-items: center; gap: 5px;
- padding: 5px 14px; border-radius: 20px; font-size: 0.82em; font-weight: 600;
- }
- .rf-edit-badge.active { background: #E3F2FD; color: #1565C0; }
- .rf-edit-badge.inactive { background: #f5f5f5; color: #999; }
+
  .output-kpi-grid {
  display: grid;
  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -3532,76 +3501,7 @@
  }
  }
 
- /* ======================================== */
- /* DASHBOARD ZOOM CONTROLS */
- /* ======================================== */
- .zoom-controls {
- position: fixed;
- bottom: 24px;
- right: 24px;
- z-index: 9999;
- display: flex;
- align-items: center;
- gap: 4px;
- background: rgba(255, 255, 255, 0.97);
- border: 1px solid #d0d0d0;
- border-radius: 10px;
- box-shadow: 0 4px 16px rgba(0,0,0,0.15);
- padding: 6px 10px;
- backdrop-filter: blur(8px);
- }
- .zoom-btn {
- width: 34px;
- height: 34px;
- border: none;
- background: transparent;
- border-radius: 8px;
- cursor: pointer;
- display: flex;
- align-items: center;
- justify-content: center;
- font-size: 18px;
- font-weight: 700;
- color: #333;
- transition: all 0.15s ease;
- }
- .zoom-btn:hover {
- background: rgba(0, 114, 206, 0.1);
- color: #0072CE;
- }
- .zoom-btn:active {
- transform: scale(0.92);
- }
- .zoom-level {
- font-size: 12px;
- font-weight: 600;
- color: #555;
- min-width: 42px;
- text-align: center;
- user-select: none;
- cursor: pointer;
- padding: 4px 6px;
- border-radius: 6px;
- }
- .zoom-level:hover {
- background: #f0f0f0;
- }
- .zoom-divider {
- width: 1px;
- height: 20px;
- background: #ddd;
- margin: 0 2px;
- }
 
- .main-content {
- transform-origin: top left;
- transition: transform 0.15s ease;
- }
-
- @media print {
- .zoom-controls { display: none !important; }
- .main-content { transform: none !important; width: 100% !important; }
- }
 
  /* ======================================== */
  /* CHART FULLSCREEN EXPAND */
@@ -3922,14 +3822,7 @@
  <!-- MAIN CONTENT AREA -->
  <div class="main-content" id="mainContent">
 
- <!-- ZOOM CONTROLS -->
- <div class="zoom-controls" id="zoomControls">
- <button class="zoom-btn" onclick="zoomDashboard(-10)" title="Zoom Out">−</button>
- <div class="zoom-divider"></div>
- <span class="zoom-level" id="zoomLevel" onclick="zoomDashboard(0)" title="Reset to 100%">100%</span>
- <div class="zoom-divider"></div>
- <button class="zoom-btn" onclick="zoomDashboard(10)" title="Zoom In">+</button>
- </div>
+
 
  <div class="container">
  <!-- LIVE VIEWERS BADGE -->
@@ -5053,22 +4946,7 @@
  <p>Complete Project Outputs & Deliverables Tracker across all Immediate Outcomes</p>
  </div>
 
- <!-- EDIT TOOLBAR -->
- <div style="background: #fff; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
- <div class="rf-edit-toolbar">
- <button class="rf-edit-btn rf-edit-btn-primary" id="rf-toggle-edit" onclick="toggleRFEditMode()">
- Enable Editing
- </button>
- <button class="rf-edit-btn rf-edit-btn-success" id="rf-save-btn" onclick="saveRFChanges()" style="display:none;">
- Save Changes
- </button>
- <button class="rf-edit-btn rf-edit-btn-outline" id="rf-reset-btn" onclick="resetRFChanges()" style="display:none;">
- ↩ Reset
- </button>
- <span class="rf-edit-badge inactive" id="rf-edit-status">View Only</span>
- </div>
- <div id="rf-save-feedback" style="font-size: 0.85em; color: #2E7D32; font-weight: 600; display: none;"></div>
- </div>
+
 
  <!-- OVERALL PROGRESS SUMMARY KPIs -->
  <div class="output-card">
@@ -12704,30 +12582,7 @@
  <script>
  Chart.register(ChartDataLabels);
 
- // 
- // DASHBOARD ZOOM CONTROLS
- // 
- let currentZoom = 100;
- function zoomDashboard(delta) {
- if (delta === 0) {
- currentZoom = 100;
- } else {
- currentZoom = Math.max(50, Math.min(200, currentZoom + delta));
- }
- const mc = document.getElementById('mainContent');
- const scale = currentZoom / 100;
- mc.style.transform = scale === 1 ? '' : 'scale(' + scale + ')';
- mc.style.width = scale === 1 ? '' : (100 / scale) + '%';
- document.getElementById('zoomLevel').textContent = currentZoom + '%';
- }
 
- // Ctrl+scroll zoom
- document.addEventListener('wheel', function(e) {
- if (e.ctrlKey) {
- e.preventDefault();
- zoomDashboard(e.deltaY < 0 ? 5 : -5);
- }
- }, { passive: false });
 
  // 
  // CHART FULLSCREEN EXPAND LOGIC
@@ -16714,153 +16569,7 @@
  }
  }
 
- // ====== OUTPUTS PROGRESS — INLINE EDITING ======
- let rfEditMode = false;
- let rfOriginalData = null;
 
- window.toggleRFEditMode = function() {
- rfEditMode = !rfEditMode;
- const container = document.getElementById('output-results-framework');
- if (!container) return;
- const tables = container.querySelectorAll('.output-table');
- const toggleBtn = document.getElementById('rf-toggle-edit');
- const saveBtn = document.getElementById('rf-save-btn');
- const resetBtn = document.getElementById('rf-reset-btn');
- const badge = document.getElementById('rf-edit-status');
- const feedback = document.getElementById('rf-save-feedback');
-
- if (rfEditMode) {
- // Save original state for reset
- rfOriginalData = {};
- tables.forEach((table, ti) => {
- rfOriginalData[ti] = [];
- table.querySelectorAll('tbody tr').forEach((row, ri) => {
- rfOriginalData[ti][ri] = [];
- const cells = row.querySelectorAll('td');
- cells.forEach((cell, ci) => {
- rfOriginalData[ti][ri][ci] = cell.innerHTML;
- // Make cols 2-7 editable (Annual Target through Status)
- if (ci >= 2) {
- cell.contentEditable = 'true';
- cell.classList.add('rf-editable');
- }
- });
- });
- });
- toggleBtn.innerHTML = 'Disable Editing';
- toggleBtn.classList.remove('rf-edit-btn-primary');
- toggleBtn.classList.add('rf-edit-btn-outline');
- saveBtn.style.display = '';
- resetBtn.style.display = '';
- badge.className = 'rf-edit-badge active';
- badge.innerHTML = 'Edit Mode';
- if (feedback) feedback.style.display = 'none';
- } else {
- tables.forEach(table => {
- table.querySelectorAll('tbody td').forEach(cell => {
- cell.contentEditable = 'false';
- cell.classList.remove('rf-editable');
- });
- });
- toggleBtn.innerHTML = 'Enable Editing';
- toggleBtn.classList.add('rf-edit-btn-primary');
- toggleBtn.classList.remove('rf-edit-btn-outline');
- saveBtn.style.display = 'none';
- resetBtn.style.display = 'none';
- badge.className = 'rf-edit-badge inactive';
- badge.innerHTML = 'View Only';
- }
- };
-
- window.saveRFChanges = function() {
- const feedback = document.getElementById('rf-save-feedback');
- const container = document.getElementById('output-results-framework');
- if (!container) return;
-
- // Capture current data
- const snapshot = {};
- container.querySelectorAll('.output-table').forEach((table, ti) => {
- snapshot[ti] = [];
- table.querySelectorAll('tbody tr').forEach((row, ri) => {
- const cells = row.querySelectorAll('td');
- const rowData = {};
- const headers = ['Output', 'Indicator', 'AnnualTarget', 'Actual', 'Cumulative', 'EndTarget', 'Progress', 'Status'];
- cells.forEach((cell, ci) => {
- rowData[headers[ci] || 'col' + ci] = cell.textContent.trim();
- });
- snapshot[ti].push(rowData);
- });
- });
-
- // Save to localStorage
- try {
- localStorage.setItem('rf-output-progress-data', JSON.stringify(snapshot));
- localStorage.setItem('rf-output-progress-saved-at', new Date().toLocaleString());
- } catch(e) { /* ignore */ }
-
- // Also update the original data to current state
- rfOriginalData = {};
- container.querySelectorAll('.output-table').forEach((table, ti) => {
- rfOriginalData[ti] = [];
- table.querySelectorAll('tbody tr').forEach((row, ri) => {
- rfOriginalData[ti][ri] = [];
- row.querySelectorAll('td').forEach((cell, ci) => {
- rfOriginalData[ti][ri][ci] = cell.innerHTML;
- });
- });
- });
-
- // Download as CSV
- let csv = 'Output,Indicator,Annual Target,Actual (Period),Cumulative,End Target,Progress,Status\n';
- Object.values(snapshot).forEach(rows => {
- rows.forEach(r => {
- const vals = ['Output','Indicator','AnnualTarget','Actual','Cumulative','EndTarget','Progress','Status']
- .map(k => '"' + (r[k] || '').replace(/"/g, '""') + '"');
- csv += vals.join(',') + '\n';
- });
- });
- const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
- const url = URL.createObjectURL(blob);
- const a = document.createElement('a');
- a.href = url;
- a.download = 'COSME_Outputs_Progress_' + new Date().toISOString().slice(0,10) + '.csv';
- a.click();
- URL.revokeObjectURL(url);
-
- if (feedback) {
- feedback.textContent = 'Saved & downloaded at ' + new Date().toLocaleTimeString();
- feedback.style.display = '';
- setTimeout(() => { feedback.style.display = 'none'; }, 5000);
- }
- };
-
- window.resetRFChanges = function() {
- if (!rfOriginalData) return;
- const container = document.getElementById('output-results-framework');
- if (!container) return;
- container.querySelectorAll('.output-table').forEach((table, ti) => {
- if (!rfOriginalData[ti]) return;
- table.querySelectorAll('tbody tr').forEach((row, ri) => {
- if (!rfOriginalData[ti][ri]) return;
- row.querySelectorAll('td').forEach((cell, ci) => {
- if (rfOriginalData[ti][ri][ci] !== undefined) {
- cell.innerHTML = rfOriginalData[ti][ri][ci];
- }
- if (ci >= 2) {
- cell.contentEditable = 'true';
- cell.classList.add('rf-editable');
- }
- });
- });
- });
- const feedback = document.getElementById('rf-save-feedback');
- if (feedback) {
- feedback.textContent = '↩ Reset to last saved state';
- feedback.style.color = '#EF6C00';
- feedback.style.display = '';
- setTimeout(() => { feedback.style.display = 'none'; feedback.style.color = '#2E7D32'; }, 3000);
- }
- };
 
  // ====== OUTPUTS PROGRESS CHARTS ======
  const rfChartInstances = {};
