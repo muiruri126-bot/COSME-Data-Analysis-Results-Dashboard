@@ -24068,6 +24068,58 @@
  { n: 3, title: 'Achievement Analysis', detail: 'Target vs actual comparison' },
  { n: 4, title: 'Recommendations', detail: 'Strategic M&E recommendations' }
  ]
+ },
+ {
+ id: 'grapp',
+ title: 'GRAPP Climate Resilience',
+ icon: '',
+ iconBg: 'linear-gradient(135deg,#1565c0,#0d47a1)',
+ category: 'environment',
+ badge: 'Climate',
+ badgeColor: '#1565c0',
+ desc: 'Gender-Responsive Adaptation Policy & Planning deliverables — county adaptation plans, risk preparedness plans, ward-level adaptation strategies, and policy briefs across Kilifi and Kwale.',
+ pdf: 'COSME_GRAPP_Report.pdf',
+ dataFiles: [],
+ stats: [
+ { icon: '', text: '<strong>14</strong> deliverables completed' },
+ { icon: '', text: '<strong>2</strong> counties covered' },
+ { icon: '', text: '<strong>6</strong> wards with adaptation plans' },
+ { icon: '', text: 'Policy briefs & risk plans' }
+ ],
+ sections: [
+ { n: 1, title: 'County Policy Briefs', detail: 'Kilifi & Kwale GRAPP policy briefs' },
+ { n: 2, title: 'Adaptation Action Plans', detail: 'County-level climate adaptation' },
+ { n: 3, title: 'Risk Preparedness Plans', detail: 'Community risk preparedness 2025-2030' },
+ { n: 4, title: 'Ward Adaptation Plans', detail: '6 ward-level adaptation strategies' },
+ { n: 5, title: 'Community Risk Assessments', detail: 'Ward risk & vulnerability analysis' }
+ ]
+ },
+ {
+ id: 'pre-post',
+ title: 'Pre/Post Training Analysis',
+ icon: '',
+ iconBg: 'linear-gradient(135deg,#00695c,#00897b)',
+ category: 'all',
+ badge: 'Training',
+ badgeColor: '#00695c',
+ desc: 'Pre- and post-training assessment analysis across all programme areas — mangrove, forestry, seaweed, and GJJ training effectiveness and knowledge gain.',
+ pdf: 'COSME_PrePost_Report.pdf',
+ dataFiles: [
+ { name: 'Mangrove Training Pre/Post', file: 'Mangrove Training Pre_post results.xlsx' },
+ { name: 'Forest Training Pre/Post', file: 'Forest Training Pre_post results.xlsx' }
+ ],
+ stats: [
+ { icon: '', text: 'Pre vs Post knowledge scores' },
+ { icon: '', text: 'Training effectiveness analysis' },
+ { icon: '', text: 'Knowledge gain by module' },
+ { icon: '', text: 'Cross-programme comparison' }
+ ],
+ sections: [
+ { n: 1, title: 'Mangrove Training', detail: 'Pre/post test results' },
+ { n: 2, title: 'Forestry Training', detail: 'Pre/post test results' },
+ { n: 3, title: 'Knowledge Gain Analysis', detail: 'Score improvements by area' },
+ { n: 4, title: 'Training Effectiveness', detail: 'Overall programme effectiveness' }
+ ]
  }
  ];
 
@@ -24128,16 +24180,17 @@
  grid.innerHTML = filtered.map(r => `
  <div class="rpt-card${selectedReportId === r.id ? ' selected' : ''}" onclick="selectReport('${r.id}')">
  <div class="rpt-card-header">
+ <div class="rpt-card-icon" style="background:${r.iconBg};">${r.icon}</div>
  <div>
  <h4 style="margin:0;font-size:1em;color:#333;">${r.title}</h4>
  <span class="rpt-card-badge" style="background:${r.badgeColor}15;color:${r.badgeColor};">${r.badge}</span>
  </div>
  </div>
  <div class="rpt-card-body">
- <p>${r.desc.substring(0, 100)}${r.desc.length > 100 ? '…' : ''}</p>
+ <p>${r.desc.substring(0, 120)}${r.desc.length > 120 ? '…' : ''}</p>
  </div>
  <div class="rpt-card-footer">
- <span style="color:#888;"> ${r.sections.length} sections</span>
+ <span style="color:#888;">${r.stats.length} key stats &middot; ${r.sections.length} sections</span>
  <span style="color:#0072CE;font-weight:600;">View Details →</span>
  </div>
  </div>
@@ -24158,7 +24211,8 @@
  panel.style.display = 'block';
 
  // Title
- document.getElementById('reportDetailTitle').innerHTML = `${r.title}`;
+ document.getElementById('reportDetailTitle').innerHTML = `${r.icon} ${r.title}`;
+ document.getElementById('reportDetailTitle').style.background = r.iconBg;
 
  // Description
  document.getElementById('reportDetailDesc').textContent = r.desc;
