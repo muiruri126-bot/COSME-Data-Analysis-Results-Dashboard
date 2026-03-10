@@ -3533,6 +3533,77 @@
  }
 
  /* ======================================== */
+ /* DASHBOARD ZOOM CONTROLS */
+ /* ======================================== */
+ .zoom-controls {
+ position: fixed;
+ bottom: 24px;
+ right: 24px;
+ z-index: 9999;
+ display: flex;
+ align-items: center;
+ gap: 4px;
+ background: rgba(255, 255, 255, 0.97);
+ border: 1px solid #d0d0d0;
+ border-radius: 10px;
+ box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+ padding: 6px 10px;
+ backdrop-filter: blur(8px);
+ }
+ .zoom-btn {
+ width: 34px;
+ height: 34px;
+ border: none;
+ background: transparent;
+ border-radius: 8px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 18px;
+ font-weight: 700;
+ color: #333;
+ transition: all 0.15s ease;
+ }
+ .zoom-btn:hover {
+ background: rgba(0, 114, 206, 0.1);
+ color: #0072CE;
+ }
+ .zoom-btn:active {
+ transform: scale(0.92);
+ }
+ .zoom-level {
+ font-size: 12px;
+ font-weight: 600;
+ color: #555;
+ min-width: 42px;
+ text-align: center;
+ user-select: none;
+ cursor: pointer;
+ padding: 4px 6px;
+ border-radius: 6px;
+ }
+ .zoom-level:hover {
+ background: #f0f0f0;
+ }
+ .zoom-divider {
+ width: 1px;
+ height: 20px;
+ background: #ddd;
+ margin: 0 2px;
+ }
+
+ .main-content {
+ transform-origin: top left;
+ transition: transform 0.15s ease;
+ }
+
+ @media print {
+ .zoom-controls { display: none !important; }
+ .main-content { transform: none !important; width: 100% !important; }
+ }
+
+ /* ======================================== */
  /* CHART FULLSCREEN EXPAND */
  /* ======================================== */
  .chart-wrapper {
@@ -3850,6 +3921,16 @@
 
  <!-- MAIN CONTENT AREA -->
  <div class="main-content" id="mainContent">
+
+ <!-- ZOOM CONTROLS -->
+ <div class="zoom-controls" id="zoomControls">
+ <button class="zoom-btn" onclick="zoomDashboard(-10)" title="Zoom Out">−</button>
+ <div class="zoom-divider"></div>
+ <span class="zoom-level" id="zoomLevel" onclick="zoomDashboard(0)" title="Reset to 100%">100%</span>
+ <div class="zoom-divider"></div>
+ <button class="zoom-btn" onclick="zoomDashboard(10)" title="Zoom In">+</button>
+ </div>
+
  <div class="container">
  <!-- LIVE VIEWERS BADGE -->
  <div id="live-viewers-badge" onclick="document.getElementById('viewer-panel').classList.toggle('open')">
@@ -8050,23 +8131,23 @@
 
  <!-- Charts Row -->
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
- <div class="chart-container" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
- <h4 style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Farmers by Category</h4>
+ <div class="chart-wrapper" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
+ <div class="chart-title" style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Farmers by Category</div>
  <canvas id="sfd-chart-prof-dist"></canvas>
  </div>
- <div class="chart-container" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
- <h4 style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Ropes Required by Category</h4>
+ <div class="chart-wrapper" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
+ <div class="chart-title" style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Ropes Required by Category</div>
  <canvas id="sfd-chart-prof-ropes"></canvas>
  </div>
  </div>
 
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
- <div class="chart-container" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
- <h4 style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Category Distribution (%)</h4>
+ <div class="chart-wrapper" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
+ <div class="chart-title" style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Category Distribution (%)</div>
  <canvas id="sfd-chart-prof-pie"></canvas>
  </div>
- <div class="chart-container" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
- <h4 style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Avg Production (KG) by Category</h4>
+ <div class="chart-wrapper" style="background: #fff; padding: 16px; border-radius: 10px; border: 1px solid #e0e0e0; height: 340px;">
+ <div class="chart-title" style="color: #004D40; margin-bottom: 10px; font-size: 0.95em;">Avg Production (KG) by Category</div>
  <canvas id="sfd-chart-prof-production"></canvas>
  </div>
  </div>
@@ -8143,37 +8224,37 @@
 
  <!-- Row 1: Daily Trends & Time-of-Day -->
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Daily Average Temperature by Location</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-daily-trends"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Daily Average Temperature by Location</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-daily-trends"></canvas></div>
  </div>
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Temperature by Time of Day</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-time-of-day"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Temperature by Time of Day</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-time-of-day"></canvas></div>
  </div>
  </div>
 
  <!-- Row 2: Bay Comparison & Weather Impact -->
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Average Temperature by Bay</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-bay-comparison"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Average Temperature by Bay</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-bay-comparison"></canvas></div>
  </div>
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Weather Impact on Temperature</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-weather-impact"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Weather Impact on Temperature</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-weather-impact"></canvas></div>
  </div>
  </div>
 
  <!-- Row 3: Configuration Impact & Roller Position -->
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Back Configuration Impact</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-config-impact"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Back Configuration Impact</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-config-impact"></canvas></div>
  </div>
- <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
- <h4 style="margin: 0 0 12px; color: #BF360C;">Roller Position Impact</h4>
- <div style="height: 320px; position: relative;"><canvas id="tl-chart-roller-impact"></canvas></div>
+ <div class="chart-wrapper" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px;">
+ <div class="chart-title" style="margin: 0 0 12px; color: #BF360C; font-weight: bold;">Roller Position Impact</div>
+ <div class="chart-container" style="height: 320px; position: relative;"><canvas id="tl-chart-roller-impact"></canvas></div>
  </div>
  </div>
 
@@ -12624,8 +12705,46 @@
  Chart.register(ChartDataLabels);
 
  // 
+ // DASHBOARD ZOOM CONTROLS
+ // 
+ let currentZoom = 100;
+ function zoomDashboard(delta) {
+ if (delta === 0) {
+ currentZoom = 100;
+ } else {
+ currentZoom = Math.max(50, Math.min(200, currentZoom + delta));
+ }
+ const mc = document.getElementById('mainContent');
+ const scale = currentZoom / 100;
+ mc.style.transform = scale === 1 ? '' : 'scale(' + scale + ')';
+ mc.style.width = scale === 1 ? '' : (100 / scale) + '%';
+ document.getElementById('zoomLevel').textContent = currentZoom + '%';
+ }
+
+ // Ctrl+scroll zoom
+ document.addEventListener('wheel', function(e) {
+ if (e.ctrlKey) {
+ e.preventDefault();
+ zoomDashboard(e.deltaY < 0 ? 5 : -5);
+ }
+ }, { passive: false });
+
+ // 
  // CHART FULLSCREEN EXPAND LOGIC
  // 
+
+ // Inject expand buttons into chart-wrappers that don't already have one
+ function injectExpandButtons() {
+ document.querySelectorAll('.chart-wrapper').forEach(function(wrapper) {
+ if (wrapper.querySelector('.chart-expand-btn')) return;
+ var btn = document.createElement('button');
+ btn.className = 'chart-expand-btn';
+ btn.title = 'Expand chart';
+ btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
+ btn.onclick = function() { expandChart(wrapper); };
+ wrapper.appendChild(btn);
+ });
+ }
 
  // Create the fullscreen overlay container (once)
  (function initChartFullscreen() {
@@ -12657,14 +12776,7 @@
  });
 
  // Inject expand buttons into every .chart-wrapper
- document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
- const btn = document.createElement('button');
- btn.className = 'chart-expand-btn';
- btn.title = 'Expand chart';
- btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
- btn.onclick = function() { expandChart(wrapper); };
- wrapper.appendChild(btn);
- });
+ injectExpandButtons();
  })();
 
  // Active fullscreen chart instance
@@ -19129,9 +19241,10 @@
  sfdFilteredData = [...seaweedFarmerData];
  document.getElementById('sfd-farmer-count').textContent = sfdFilteredData.length + ' of ' + seaweedFarmerData.length + ' farmers';
  renderFarmerDashboard();
+ requestAnimationFrame(injectExpandButtons);
  }
  if (tabName === 'swtab-temp-log') {
- requestAnimationFrame(() => renderTempLogCharts());
+ requestAnimationFrame(() => { renderTempLogCharts(); injectExpandButtons(); });
  }
  };
 
