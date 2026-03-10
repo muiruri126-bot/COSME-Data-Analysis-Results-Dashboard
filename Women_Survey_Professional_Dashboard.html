@@ -23832,7 +23832,7 @@
  html += '<tr style="background:' + bgRow + ';">' +
  '<td style="' + cellStyle + 'text-align:left;' + leftBorder + '">' +
  '<span style="color:' + grp.color + ';font-weight:700;font-size:0.85em;margin-right:6px;">' + d.code + '</span>' +
- '<span style="color:#333;font-size:0.85em;">' + d.name.substring(0, 80) + (d.name.length > 80 ? '...' : '') + '</span>' +
+ '<span style="color:#333;font-size:0.85em;">' + d.name + '</span>' +
  '</td>' +
  '<td style="' + cellStyle + 'color:#666;">' + d.baseline + ' ' + (d.unit || '') + '</td>' +
  '<td style="' + cellStyle + 'font-weight:700;color:#1a1a1a;">' + d.midline + ' ' + (d.unit || '') + '</td>' +
@@ -23993,7 +23993,7 @@
  pmfChart('pmf-chart-achievement', {
  type: 'bar',
  data: {
- labels: data.map(d => d.code + ' — ' + d.name.substring(0, 35)),
+ labels: data.map(d => d.code + ' — ' + d.name),
  datasets: [{
  label: '% Achievement vs Target',
  data: data.map(d => d.pctAchievement),
