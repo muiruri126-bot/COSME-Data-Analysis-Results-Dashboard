@@ -7369,6 +7369,7 @@
  <button class="tab-button" onclick="showSeaweedTab(event, 'swtab-commercial')">E. Commercialization</button>
  <button class="tab-button" onclick="showSeaweedTab(event, 'swtab-partnership')">F. Partnerships & Future</button>
  <button class="tab-button" onclick="showSeaweedTab(event, 'swtab-insights')">Summary & Insights</button>
+ <button class="tab-button" onclick="showSeaweedTab(event, 'swtab-baseline-current')">Baseline vs Current</button>
  <button class="tab-button" onclick="showSeaweedTab(event, 'swtab-farmer-dashboard')">Farmer Dashboard</button>
  </div>
 
@@ -7681,6 +7682,323 @@
  </div>
  </div>
  </div>
+ </div>
+
+ <!-- ====== BASELINE VS CURRENT TAB ====== -->
+ <div id="swtab-baseline-current" class="seaweed-tab-content" style="display: none;">
+
+ <!-- Header -->
+ <div class="output-header" style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 24px;">
+ <h2 style="margin: 0; font-size: 1.5em;">Baseline vs Current Progress — Seaweed Groups</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Triangulating January 2024 baseline KII data &amp; November 2024 rope counts with December 2025 monitoring data for 4 baseline groups (+2 rope-count groups)</p>
+ </div>
+
+ <!-- Methodology Box -->
+ <div class="highlight-box" style="background: #E8F5E9; border-left: 5px solid #2E7D32; margin-bottom: 24px;">
+ <h4 style="color: #1B5E20; margin-top: 0;">Triangulation Methodology</h4>
+ <p style="font-size: 0.92em; line-height: 1.7;">
+ <strong>Baseline sources:</strong> (1) KII with 4 groups (Bati, Tumbe, Furaha, Mtimbwani) — Jan 2024 covering production history, challenges &amp; needs; (2) Rope count baseline for Mkwiro &amp; Mtimbwani — Nov 2024.<br>
+ <strong>Current source:</strong> Farmer-level monitoring data (Dec 2025) covering 335 farmers across 7 groups — ropes in ocean/at home, dried &amp; wet production, and challenge flags.<br>
+ <strong>Matching:</strong> Bati Seaweed Group ↔ Bati seaweed group | Tumbe Seaweed Farmers ↔ Tumbe seaweed group | Furaha Seaweed Group ↔ Furaha Women Group | Mtimbwani Seaweed ↔ Mtimbwani seaweed | Mkwiro Seaweed Development Group ↔ Mkwiro Seaweed Development Grou
+ </p>
+ </div>
+
+ <!-- Section 1: Production Comparison -->
+ <div class="section" style="margin-bottom: 30px;">
+ <div class="section-title" style="color: #1B5E20;">1. PRODUCTION TRAJECTORY — BASELINE TO CURRENT</div>
+ <div class="charts-grid">
+ <div class="chart-wrapper" style="flex: 1 1 55%;">
+ <div class="chart-title">Baseline Historical vs Current Production (kg)</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="bc-chart-production-trajectory"></canvas></div>
+ <div class="chart-insight">Compares each group's baseline-reported annual production (2020–2023) with current total production (Dec 2025 monitoring). Allows assessment of growth or decline trajectories.</div>
+ </div>
+ <div class="chart-wrapper" style="flex: 1 1 40%;">
+ <div class="chart-title">Baseline (2023) vs Current Total Production (kg)</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="bc-chart-baseline-vs-current-prod"></canvas></div>
+ <div class="chart-insight">Side-by-side comparison of the last baseline year (2023) against accumulated current monitoring production for groups with baseline production data.</div>
+ </div>
+ </div>
+
+ <!-- Production Comparison Table -->
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #1B5E20; color: #fff;">
+ <th style="padding: 10px 14px; text-align: left;">Group</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline 2020 (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline 2021 (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline 2022 (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline 2023 (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Current Total (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Current Members</th>
+ <th style="padding: 10px 14px; text-align: center;">Avg/Member (kg)</th>
+ <th style="padding: 10px 14px; text-align: center;">Trend</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Bati Seaweed Group</td>
+ <td style="padding: 8px 14px; text-align: center;">5,700</td>
+ <td style="padding: 8px 14px; text-align: center;">27,000</td>
+ <td style="padding: 8px 14px; text-align: center;">22,000</td>
+ <td style="padding: 8px 14px; text-align: center;">13,000</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #1B5E20;">3,257</td>
+ <td style="padding: 8px 14px; text-align: center;">53</td>
+ <td style="padding: 8px 14px; text-align: center;">61.5</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">&#9660; Declining</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Tumbe Seaweed Farmers</td>
+ <td style="padding: 8px 14px; text-align: center;">139,000</td>
+ <td style="padding: 8px 14px; text-align: center;">25,000</td>
+ <td style="padding: 8px 14px; text-align: center;">680</td>
+ <td style="padding: 8px 14px; text-align: center;">6,000</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #1B5E20;">3,814</td>
+ <td style="padding: 8px 14px; text-align: center;">39</td>
+ <td style="padding: 8px 14px; text-align: center;">97.8</td>
+ <td style="padding: 8px 14px; text-align: center; color: #EF6C00;">&#9650; Recovering</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Furaha Seaweed Group</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ <td style="padding: 8px 14px; text-align: center;">960</td>
+ <td style="padding: 8px 14px; text-align: center;">1,250</td>
+ <td style="padding: 8px 14px; text-align: center;">1,300</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #1B5E20;">350</td>
+ <td style="padding: 8px 14px; text-align: center;">36</td>
+ <td style="padding: 8px 14px; text-align: center;">9.7</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">&#9660; Declining</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Mtimbwani Seaweed</td>
+ <td style="padding: 8px 14px; text-align: center;">0</td>
+ <td style="padding: 8px 14px; text-align: center;">0</td>
+ <td style="padding: 8px 14px; text-align: center;">588</td>
+ <td style="padding: 8px 14px; text-align: center;">980</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #1B5E20;">1,249</td>
+ <td style="padding: 8px 14px; text-align: center;">35</td>
+ <td style="padding: 8px 14px; text-align: center;">35.7</td>
+ <td style="padding: 8px 14px; text-align: center; color: #2E7D32;">&#9650; Growing</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Mkwiro Seaweed Dev. Group</td>
+ <td colspan="4" style="padding: 8px 14px; text-align: center; font-style: italic; color: #888;">No production baseline (rope count only)</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #1B5E20;">9,863</td>
+ <td style="padding: 8px 14px; text-align: center;">76</td>
+ <td style="padding: 8px 14px; text-align: center;">129.8</td>
+ <td style="padding: 8px 14px; text-align: center; color: #2E7D32;">Highest Producer</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- Section 2: Rope Infrastructure Comparison -->
+ <div class="section" style="margin-bottom: 30px;">
+ <div class="section-title" style="color: #1B5E20;">2. ROPE INFRASTRUCTURE — BASELINE TO CURRENT</div>
+ <div class="charts-grid">
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Baseline vs Current Rope Counts</div>
+ <div class="chart-container" style="height: 320px;"><canvas id="bc-chart-rope-comparison"></canvas></div>
+ <div class="chart-insight">For Mkwiro and Mtimbwani, baseline rope counts (Nov 2024) are compared against current totals (Dec 2025). Mkwiro grew from 206 counted ropes (21 members) to 12,454 total ropes (76 members) — a massive expansion.</div>
+ </div>
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Current Rope Gap Analysis by Group</div>
+ <div class="chart-container" style="height: 320px;"><canvas id="bc-chart-rope-gap"></canvas></div>
+ <div class="chart-insight">Shows current ropes deployed vs target ropes for each group. Gap represents expansion opportunity. Mtimbwani has the largest proportional gap (76% unfilled), while Mkwiro operates at 52% of target capacity.</div>
+ </div>
+ </div>
+
+ <!-- Rope Comparison Table -->
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #00695C; color: #fff;">
+ <th style="padding: 10px 14px; text-align: left;">Group</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline Ropes (Nov 2024)</th>
+ <th style="padding: 10px 14px; text-align: center;">Baseline Members</th>
+ <th style="padding: 10px 14px; text-align: center;">Current Total Ropes</th>
+ <th style="padding: 10px 14px; text-align: center;">Current Members</th>
+ <th style="padding: 10px 14px; text-align: center;">Target Ropes</th>
+ <th style="padding: 10px 14px; text-align: center;">Gap</th>
+ <th style="padding: 10px 14px; text-align: center;">Growth Factor</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Mkwiro Seaweed Dev. Group</td>
+ <td style="padding: 8px 14px; text-align: center;">206 (counted)</td>
+ <td style="padding: 8px 14px; text-align: center;">21</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #00695C;">12,454</td>
+ <td style="padding: 8px 14px; text-align: center;">76</td>
+ <td style="padding: 8px 14px; text-align: center;">24,050</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">11,596</td>
+ <td style="padding: 8px 14px; text-align: center; color: #2E7D32; font-weight: 700;">60.5x</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Mtimbwani Seaweed</td>
+ <td style="padding: 8px 14px; text-align: center;">359 (counted)</td>
+ <td style="padding: 8px 14px; text-align: center;">2*</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #00695C;">4,565</td>
+ <td style="padding: 8px 14px; text-align: center;">35</td>
+ <td style="padding: 8px 14px; text-align: center;">18,900</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">14,335</td>
+ <td style="padding: 8px 14px; text-align: center; color: #2E7D32; font-weight: 700;">12.7x</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Bati Seaweed Group</td>
+ <td style="padding: 8px 14px; text-align: center; font-style: italic; color: #888;">No rope baseline</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #00695C;">10,663</td>
+ <td style="padding: 8px 14px; text-align: center;">53</td>
+ <td style="padding: 8px 14px; text-align: center;">21,820</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">11,157</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Tumbe Seaweed Farmers</td>
+ <td style="padding: 8px 14px; text-align: center; font-style: italic; color: #888;">No rope baseline</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #00695C;">5,492</td>
+ <td style="padding: 8px 14px; text-align: center;">39</td>
+ <td style="padding: 8px 14px; text-align: center;">18,130</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">12,638</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Furaha Seaweed Group</td>
+ <td style="padding: 8px 14px; text-align: center; font-style: italic; color: #888;">No rope baseline</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ <td style="padding: 8px 14px; text-align: center; font-weight: 700; color: #00695C;">970</td>
+ <td style="padding: 8px 14px; text-align: center;">36</td>
+ <td style="padding: 8px 14px; text-align: center;">11,440</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828;">10,470</td>
+ <td style="padding: 8px 14px; text-align: center;">—</td>
+ </tr>
+ </tbody>
+ </table>
+ <p style="font-size: 0.82em; color: #888; margin-top: 8px;">* Mtimbwani baseline had 2 respondents but one reported 323 counted ropes for the whole group ("All" members).</p>
+ </div>
+ </div>
+
+ <!-- Section 3: Challenges Comparison -->
+ <div class="section" style="margin-bottom: 30px;">
+ <div class="section-title" style="color: #1B5E20;">3. CHALLENGES — BASELINE NEEDS vs CURRENT REALITY</div>
+ <div class="charts-grid">
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Baseline Challenges vs Current Challenge Flags (Matched Groups)</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="bc-chart-challenges-comparison"></canvas></div>
+ <div class="chart-insight">Baseline KII identified transport, equipment, storage and market as top challenges. Current monitoring flags confirm transport (83 farmers), equipment (64), market (28), and storage (17) remain persistent issues — validating baseline findings.</div>
+ </div>
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Challenge Persistence by Group</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="bc-chart-challenges-by-group"></canvas></div>
+ <div class="chart-insight">Transport remains the dominant challenge across groups, particularly for Tushirikiane (69%) and Tumbe (56%). Equipment issues are concentrated in Mkwiro (36%) and Mtimbwani (71%), aligning with baseline needs for tools &amp; boats.</div>
+ </div>
+ </div>
+
+ <!-- Challenges Triangulation Table -->
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #E65100; color: #fff;">
+ <th style="padding: 10px 14px; text-align: left;">Group</th>
+ <th style="padding: 10px 14px; text-align: left;">Baseline Challenges (Jan 2024)</th>
+ <th style="padding: 10px 14px; text-align: left;">Current Challenge Flags (Dec 2025)</th>
+ <th style="padding: 10px 14px; text-align: center;">Resolution Status</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Bati Seaweed Group</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport, inadequate ropes/sacks, drying spaces, safety gear, market access, no value-addition training</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport (3), Market (7), Equipment (2), Labour (12)</td>
+ <td style="padding: 8px 14px; text-align: center; color: #EF6C00; font-weight: 600;">Partially Addressed</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Tumbe Seaweed Farmers</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport, drying shelters, safety equipment, theft, need boats/drying racks/stores/gumboots/value-addition training</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport (22), Disease (1), Equipment (1), Labour (3)</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828; font-weight: 600;">Transport Still Critical</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Furaha Seaweed Group</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">No major challenges reported at baseline</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport (3), Market (2), Disease (3), Equipment (1), Storage (1), Sand/Tide (4)</td>
+ <td style="padding: 8px 14px; text-align: center; color: #EF6C00; font-weight: 600;">New Challenges Emerged</td>
+ </tr>
+ <tr style="background: #f9f9f9;">
+ <td style="padding: 8px 14px; font-weight: 600;">Mtimbwani Seaweed</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport, no store, no drying shade, need boats/gumboots/mallets</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport (2), Disease (2), Equipment (25), Storage (9), Sand/Tide (7)</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828; font-weight: 600;">Storage &amp; Equipment Still Critical</td>
+ </tr>
+ <tr>
+ <td style="padding: 8px 14px; font-weight: 600;">Mkwiro Seaweed Dev. Group</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Inputs (ropes/seeds), ice-ice disease, water temperature changes, fish eating seaweed</td>
+ <td style="padding: 8px 14px; font-size: 0.9em;">Transport (15), Market (19), Disease (8), Equipment (27), Storage (7)</td>
+ <td style="padding: 8px 14px; text-align: center; color: #C62828; font-weight: 600;">Expanded — Multiple New Issues</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- Section 4: Input Support Comparison -->
+ <div class="section" style="margin-bottom: 30px;">
+ <div class="section-title" style="color: #1B5E20;">4. INPUT SUPPORT &amp; CAPACITY — BASELINE TO CURRENT</div>
+ <div class="charts-grid">
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Baseline Input Reception (Nov 2024 — 2 Groups)</div>
+ <div class="chart-container" style="height: 280px;"><canvas id="bc-chart-input-baseline"></canvas></div>
+ <div class="chart-insight">At baseline (Nov 2024), only 1 out of 23 respondents across Mkwiro and Mtimbwani had received inputs from Plan. 22 out of 23 (96%) reported not receiving any inputs, indicating the program was in its early stages.</div>
+ </div>
+ <div class="chart-wrapper" style="flex: 1 1 48%;">
+ <div class="chart-title">Current Membership Growth vs Baseline</div>
+ <div class="chart-container" style="height: 280px;"><canvas id="bc-chart-membership-growth"></canvas></div>
+ <div class="chart-insight">All baseline groups show significant membership expansion. Mkwiro grew from 21 to 76 surveyed members (3.6x), while Mtimbwani expanded from 2 baseline respondents to 35 monitored farmers. This confirms successful mobilization.</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Section 5: Triangulation Key Findings -->
+ <div class="section" style="margin-bottom: 30px;">
+ <div class="section-title" style="color: #1B5E20;">5. TRIANGULATION KEY FINDINGS</div>
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+
+ <div style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 12px; padding: 20px; border-left: 5px solid #2E7D32;">
+ <h4 style="margin: 0 0 10px; color: #1B5E20; font-size: 1.05em;">&#9989; Validated — Infrastructure Expansion</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">Mkwiro grew from 206 baseline ropes to 12,454 current ropes (<strong>60.5x increase</strong>). Mtimbwani expanded from 359 to 4,565 ropes (<strong>12.7x</strong>). Both groups show massive infrastructure scale-up confirming project support effectiveness.</p>
+ </div>
+
+ <div style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-radius: 12px; padding: 20px; border-left: 5px solid #E65100;">
+ <h4 style="margin: 0 0 10px; color: #E65100; font-size: 1.05em;">&#9888;&#65039; Concern — Production Declines</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">Bati and Tumbe both show declining production from historical peaks. Bati: 27,000 kg (2021) → 3,257 kg (current). Tumbe: 139,000 kg (2020) → 3,814 kg (current). While current data is a snapshot, it suggests production has not recovered to baseline levels despite increased membership.</p>
+ </div>
+
+ <div style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-radius: 12px; padding: 20px; border-left: 5px solid #2E7D32;">
+ <h4 style="margin: 0 0 10px; color: #1B5E20; font-size: 1.05em;">&#9989; Validated — Membership Mobilization</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">All groups show substantial membership growth. Total monitored farmers across baseline groups: <strong>239</strong> (vs. small KII samples at baseline). Program has successfully scaled farmer engagement from qualitative KIIs to quantitative monitoring.</p>
+ </div>
+
+ <div style="background: linear-gradient(135deg, #FFEBEE, #FFCDD2); border-radius: 12px; padding: 20px; border-left: 5px solid #C62828;">
+ <h4 style="margin: 0 0 10px; color: #C62828; font-size: 1.05em;">&#10071; Persistent — Challenge Patterns</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">Transport was the #1 baseline challenge and remains #1 currently (83 farmer flags). Equipment/tools needs were universally reported at baseline and persist strongly (64 flags). Storage issues reported at baseline for Mtimbwani remain active (9 flags). Baseline challenges have <strong>not been fully resolved</strong>.</p>
+ </div>
+
+ <div style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB); border-radius: 12px; padding: 20px; border-left: 5px solid #1565C0;">
+ <h4 style="margin: 0 0 10px; color: #1565C0; font-size: 1.05em;">&#128200; Emerging — Mtimbwani Growth Story</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">Mtimbwani is the only group showing a clear upward production trajectory: 0 kg (2020–2021) → 588 kg (2022) → 980 kg (2023 baseline) → 1,249 kg (current). Combined with 12.7x rope expansion, this group demonstrates the strongest baseline-to-current improvement.</p>
+ </div>
+
+ <div style="background: linear-gradient(135deg, #F3E5F5, #E1BEE7); border-radius: 12px; padding: 20px; border-left: 5px solid #7B1FA2;">
+ <h4 style="margin: 0 0 10px; color: #7B1FA2; font-size: 1.05em;">&#128269; Gap — Baseline Input Deficiency</h4>
+ <p style="font-size: 0.9em; line-height: 1.6; margin: 0;">At the Nov 2024 baseline, 96% of Mkwiro/Mtimbwani farmers had NOT received inputs from Plan. All cited "inputs" as their primary challenge. Current monitoring shows these groups now have substantial rope infrastructure, suggesting input distribution occurred post-baseline.</p>
+ </div>
+
+ </div>
+ </div>
+
  </div>
 
  <!-- ====== FARMER DASHBOARD (5 pages) ====== -->
@@ -17207,6 +17525,11 @@
  }
  evt.currentTarget.classList.add('active');
 
+ // Render baseline vs current charts on tab activation
+ if (tabName === 'swtab-baseline-current') {
+ requestAnimationFrame(() => renderBaselineCurrentCharts());
+ }
+
  // Resize charts in newly visible tab
  requestAnimationFrame(() => {
  if (target) {
@@ -18169,6 +18492,195 @@
  }
  if (cats.length === 0 && lower.trim() !== '') cats.push('Other');
  return cats;
+ }
+
+ // ========== BASELINE VS CURRENT — CHART RENDERING ================
+ const bcChartInstances = {};
+ function renderBaselineCurrentCharts() {
+ Object.values(bcChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+ for (const k in bcChartInstances) delete bcChartInstances[k];
+
+ const bcColors = {
+ green: '#2E7D32', greenLight: '#66BB6A', greenPale: '#A5D6A7',
+ teal: '#00695C', tealLight: '#4DB6AC',
+ orange: '#EF6C00', orangeLight: '#FFB74D',
+ red: '#C62828', blue: '#1565C0', blueLight: '#42A5F5',
+ purple: '#7B1FA2', amber: '#FF8F00', grey: '#9E9E9E'
+ };
+
+ // --- Chart 1: Production Trajectory ---
+ const ctxTraj = document.getElementById('bc-chart-production-trajectory');
+ if (ctxTraj) {
+ bcChartInstances['traj'] = new Chart(ctxTraj.getContext('2d'), {
+ type: 'line',
+ data: {
+ labels: ['2020', '2021', '2022', '2023 (Baseline)', 'Current (Dec 2025)'],
+ datasets: [
+ { label: 'Bati', data: [5700, 27000, 22000, 13000, 3257], borderColor: bcColors.green, backgroundColor: bcColors.green + '22', tension: 0.3, fill: false, pointRadius: 5 },
+ { label: 'Tumbe', data: [139000, 25000, 680, 6000, 3814], borderColor: bcColors.orange, backgroundColor: bcColors.orange + '22', tension: 0.3, fill: false, pointRadius: 5 },
+ { label: 'Furaha', data: [null, 960, 1250, 1300, 350], borderColor: bcColors.blue, backgroundColor: bcColors.blue + '22', tension: 0.3, fill: false, pointRadius: 5 },
+ { label: 'Mtimbwani', data: [0, 0, 588, 980, 1249], borderColor: bcColors.purple, backgroundColor: bcColors.purple + '22', tension: 0.3, fill: false, pointRadius: 5 },
+ { label: 'Mkwiro', data: [null, null, null, null, 9863], borderColor: bcColors.teal, backgroundColor: bcColors.teal + '22', tension: 0.3, fill: false, pointRadius: 8, pointStyle: 'star' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+ scales: { y: { beginAtZero: true, title: { display: true, text: 'Production (kg)' } } }
+ }
+ });
+ }
+
+ // --- Chart 2: Baseline 2023 vs Current Production (bar) ---
+ const ctxBvC = document.getElementById('bc-chart-baseline-vs-current-prod');
+ if (ctxBvC) {
+ bcChartInstances['bvc'] = new Chart(ctxBvC.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Bati', 'Tumbe', 'Furaha', 'Mtimbwani'],
+ datasets: [
+ { label: 'Baseline 2023 (kg)', data: [13000, 6000, 1300, 980], backgroundColor: bcColors.orangeLight, borderColor: bcColors.orange, borderWidth: 1 },
+ { label: 'Current Total (kg)', data: [3257, 3814, 350, 1249], backgroundColor: bcColors.greenLight, borderColor: bcColors.green, borderWidth: 1 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom' } },
+ scales: { y: { beginAtZero: true, title: { display: true, text: 'kg' } } }
+ }
+ });
+ }
+
+ // --- Chart 3: Rope Comparison (Baseline vs Current) ---
+ const ctxRope = document.getElementById('bc-chart-rope-comparison');
+ if (ctxRope) {
+ bcChartInstances['rope'] = new Chart(ctxRope.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Mkwiro Seaweed Dev.', 'Mtimbwani Seaweed'],
+ datasets: [
+ { label: 'Baseline Counted (Nov 2024)', data: [206, 359], backgroundColor: bcColors.orangeLight, borderColor: bcColors.orange, borderWidth: 1 },
+ { label: 'Current Total (Dec 2025)', data: [12454, 4565], backgroundColor: bcColors.greenLight, borderColor: bcColors.green, borderWidth: 1 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ indexAxis: 'y',
+ plugins: { legend: { position: 'bottom' } },
+ scales: { x: { beginAtZero: true, title: { display: true, text: 'Number of Ropes' } } }
+ }
+ });
+ }
+
+ // --- Chart 4: Rope Gap Analysis ---
+ const ctxGap = document.getElementById('bc-chart-rope-gap');
+ if (ctxGap) {
+ bcChartInstances['gap'] = new Chart(ctxGap.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Mkwiro', 'Bati', 'Tumbe', 'Mtimbwani', 'Furaha'],
+ datasets: [
+ { label: 'Current Ropes', data: [12454, 10663, 5492, 4565, 970], backgroundColor: bcColors.tealLight, borderColor: bcColors.teal, borderWidth: 1 },
+ { label: 'Gap to Target', data: [11596, 11157, 12638, 14335, 10470], backgroundColor: bcColors.red + '44', borderColor: bcColors.red, borderWidth: 1 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom' }, tooltip: {
+ callbacks: { afterBody: function(ctx) {
+ const targets = [24050, 21820, 18130, 18900, 11440];
+ const pct = ((ctx[0].raw / targets[ctx[0].dataIndex]) * 100).toFixed(0);
+ return 'Target: ' + targets[ctx[0].dataIndex].toLocaleString() + ' ropes';
+ }}
+ }},
+ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Ropes' } } }
+ }
+ });
+ }
+
+ // --- Chart 5: Challenges Comparison (Radar) ---
+ const ctxChal = document.getElementById('bc-chart-challenges-comparison');
+ if (ctxChal) {
+ bcChartInstances['chal'] = new Chart(ctxChal.getContext('2d'), {
+ type: 'radar',
+ data: {
+ labels: ['Transport', 'Market', 'Equipment', 'Storage', 'Disease', 'Labour', 'Sand/Tide'],
+ datasets: [
+ { label: 'Baseline Mentions (4 groups, qualitative)', data: [4, 2, 4, 3, 1, 0, 0], borderColor: bcColors.orange, backgroundColor: bcColors.orange + '33', pointRadius: 4 },
+ { label: 'Current Flags (farmer count)', data: [83, 28, 64, 17, 14, 55, 12], borderColor: bcColors.green, backgroundColor: bcColors.green + '22', pointRadius: 4 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom' } },
+ scales: { r: { beginAtZero: true, ticks: { display: false } } }
+ }
+ });
+ }
+
+ // --- Chart 6: Challenge Flags by Group (Stacked Bar) ---
+ const ctxChalGrp = document.getElementById('bc-chart-challenges-by-group');
+ if (ctxChalGrp) {
+ bcChartInstances['chalgrp'] = new Chart(ctxChalGrp.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Bati', 'Tumbe', 'Furaha', 'Mtimbwani', 'Mkwiro'],
+ datasets: [
+ { label: 'Transport', data: [3, 22, 3, 2, 15], backgroundColor: '#EF6C00' },
+ { label: 'Market', data: [7, 0, 2, 0, 19], backgroundColor: '#1565C0' },
+ { label: 'Equipment', data: [2, 1, 1, 25, 27], backgroundColor: '#C62828' },
+ { label: 'Storage', data: [0, 0, 1, 9, 7], backgroundColor: '#7B1FA2' },
+ { label: 'Disease', data: [0, 1, 3, 2, 8], backgroundColor: '#00695C' },
+ { label: 'Labour', data: [12, 3, 0, 0, 1], backgroundColor: '#FF8F00' },
+ { label: 'Sand/Tide', data: [0, 1, 4, 7, 0], backgroundColor: '#9E9E9E' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
+ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Farmer Flags' } } }
+ }
+ });
+ }
+
+ // --- Chart 7: Input Reception at Baseline ---
+ const ctxInput = document.getElementById('bc-chart-input-baseline');
+ if (ctxInput) {
+ bcChartInstances['input'] = new Chart(ctxInput.getContext('2d'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Not Received Inputs', 'Received Inputs'],
+ datasets: [{ data: [22, 1], backgroundColor: [bcColors.red + 'AA', bcColors.green], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'bottom' },
+ title: { display: true, text: 'Mkwiro & Mtimbwani — Baseline (Nov 2024)', font: { size: 13 } }
+ }
+ }
+ });
+ }
+
+ // --- Chart 8: Membership Growth ---
+ const ctxMemb = document.getElementById('bc-chart-membership-growth');
+ if (ctxMemb) {
+ bcChartInstances['memb'] = new Chart(ctxMemb.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Mkwiro', 'Mtimbwani', 'Bati', 'Tumbe', 'Furaha'],
+ datasets: [
+ { label: 'Baseline Respondents', data: [21, 2, 3, 3, 3], backgroundColor: bcColors.orangeLight, borderColor: bcColors.orange, borderWidth: 1 },
+ { label: 'Current Monitored Members', data: [76, 35, 53, 39, 36], backgroundColor: bcColors.greenLight, borderColor: bcColors.green, borderWidth: 1 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'bottom' } },
+ scales: { y: { beginAtZero: true, title: { display: true, text: 'Members' } } }
+ }
+ });
+ }
  }
 
  // --- Farmer Dashboard State ---
