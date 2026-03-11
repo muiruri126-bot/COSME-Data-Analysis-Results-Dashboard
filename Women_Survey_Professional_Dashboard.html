@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
+ <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+ <meta http-equiv="Pragma" content="no-cache">
+ <meta http-equiv="Expires" content="0">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <meta name="description" content="COSME Project Professional Survey Dashboard - Comprehensive analysis of Women, Men, Forestry, Schools, Seaweed, and VSLA monitoring data across Kilifi & Kwale counties.">
  <meta name="theme-color" content="#0072CE">
@@ -4959,13 +4962,13 @@
  </div>
  <div class="output-kpi green">
  <div class="kpi-label">Completed / On Track</div>
- <div class="kpi-value">15</div>
- <div class="kpi-sub">43% of all outputs</div>
+ <div class="kpi-value">20</div>
+ <div class="kpi-sub">57% of all outputs</div>
  </div>
  <div class="output-kpi orange">
  <div class="kpi-label">Ongoing</div>
- <div class="kpi-value">18</div>
- <div class="kpi-sub">51% of all outputs</div>
+ <div class="kpi-value">13</div>
+ <div class="kpi-sub">37% of all outputs</div>
  </div>
  <div class="output-kpi" style="border-left: 4px solid #C62828;">
  <div class="kpi-label">Not Started / Behind</div>
@@ -16649,8 +16652,8 @@
  data: {
  labels: ['Biodiversity\nAssessments', 'Groups\nEstablished', 'Members\nTrained', 'Groups\nEquipped'],
  datasets: [
- { label: 'End Target', data: [1, 40, 1200, 6], backgroundColor: '#C8E6C9', borderRadius: 4 },
- { label: 'Cumulative', data: [1, 42, 843, 10], backgroundColor: C.green, borderRadius: 4 }
+ { label: 'End Target', data: [2, 40, 1200, 10], backgroundColor: '#C8E6C9', borderRadius: 4 },
+ { label: 'Cumulative', data: [1, 42, 864, 7], backgroundColor: C.green, borderRadius: 4 }
  ]
  },
  options: {
@@ -16671,8 +16674,8 @@
  data: {
  labels: ['Assessments', 'Groups\nEstablished', 'Group\nMembers', 'Groups\nEquipped', 'Women in\nValue Add.'],
  datasets: [
- { label: 'End Target', data: [2, 20, 600, 20, 60], backgroundColor: '#B2DFDB', borderRadius: 4 },
- { label: 'Cumulative', data: [2, 19, 462, 19, 20], backgroundColor: C.teal, borderRadius: 4 }
+ { label: 'End Target', data: [3, 20, 600, 20, 60], backgroundColor: '#B2DFDB', borderRadius: 4 },
+ { label: 'Cumulative', data: [1, 19, 462, 19, 20], backgroundColor: C.teal, borderRadius: 4 }
  ]
  },
  options: {
@@ -16692,7 +16695,7 @@
  labels: ['Savings\nGroups', 'SG\nMembers', 'Regen Ag\nTrained', 'Demo\nPlots', 'Solar/Tech\nSolutions'],
  datasets: [
  { label: 'End Target', data: [130, 3000, 750, 14, 3000], backgroundColor: '#FFE0B2', borderRadius: 4 },
- { label: 'Cumulative', data: [140, 2333, 525, 0, 3668], backgroundColor: C.orange, borderRadius: 4 }
+ { label: 'Cumulative', data: [140, 2333, 0, 0, 3668], backgroundColor: C.orange, borderRadius: 4 }
  ]
  },
  options: {
@@ -16735,8 +16738,8 @@
  data: {
  labels: ['4K/R&S Clubs\nEstablished', 'Club Members\nTrained', 'Clubs Implementing\nConservation', 'Schools with\nClean Water'],
  datasets: [
- { label: 'End Target', data: [110, 6150, 110, 65], backgroundColor: '#FFF9C4', borderRadius: 4 },
- { label: 'Cumulative', data: [111, 12175, 98, 65], backgroundColor: C.amber, borderRadius: 4 }
+ { label: 'End Target', data: [65, 3900, 65, 65], backgroundColor: '#FFF9C4', borderRadius: 4 },
+ { label: 'Cumulative', data: [65, 0, 65, 65], backgroundColor: C.amber, borderRadius: 4 }
  ]
  },
  options: {
@@ -16755,10 +16758,10 @@
  rfChart('rf-schools-gender', {
  type: 'bar',
  data: {
- labels: ['Kenya', 'Tanzania', 'Total'],
+ labels: ['Kenya'],
  datasets: [
- { label: 'Female', data: [5965, 6810, 6581], backgroundColor: '#E91E63', borderRadius: 4 },
- { label: 'Male', data: [3217, 3464, 5494], backgroundColor: '#1565C0', borderRadius: 4 }
+ { label: 'Female', data: [2311], backgroundColor: '#E91E63', borderRadius: 4 },
+ { label: 'Male', data: [1589], backgroundColor: '#1565C0', borderRadius: 4 }
  ]
  },
  options: {
@@ -16779,8 +16782,8 @@
  data: {
  labels: ['Mangrove\nTraining', 'Forest Mgmt\n(Kenya)', 'Women\nNbS Training', 'Regen Ag\nTraining', 'Change\nAgents', 'WRO/YLO\nTraining'],
  datasets: [
- { label: 'Female', data: [849, 1215, 2370, 525, 13, 150], backgroundColor: '#E91E63', borderRadius: 4 },
- { label: 'Male', data: [194, 585, 0, 225, 11, 50], backgroundColor: '#1565C0', borderRadius: 4 }
+ { label: 'Female', data: [665, 637, 2370, 0, 13, 0], backgroundColor: '#E91E63', borderRadius: 4 },
+ { label: 'Male', data: [199, 313, 0, 0, 11, 0], backgroundColor: '#1565C0', borderRadius: 4 }
  ]
  },
  options: {
