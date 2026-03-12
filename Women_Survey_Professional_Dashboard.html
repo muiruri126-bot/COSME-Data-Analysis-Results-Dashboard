@@ -24316,13 +24316,13 @@
  renderFundingChart();
  renderEcosystemChart(filteredWards);
  renderBudgetChart(filteredWards);
- renderBudgetSectorChart();
+ renderBudgetSectorChart(filteredWards);
  renderTimelineChart();
  renderDemographicsChart(filteredWards);
  renderPhysicalTargets();
  renderStakeholderChart(filteredWards);
  renderGenderImpactChart();
- renderPolicyFindings();
+ renderPolicyFindings(county);
  renderStakeholderTable(filteredWards);
  renderWardCards(filteredWards);
  renderRecommendations();
@@ -24335,12 +24335,16 @@
  var totalPages = deliverables.reduce(function(s, d) { return s + d.pages; }, 0);
  var totalVillages = 0;
  wards.forEach(function(w) { totalVillages += w.villages.length; });
- var totalBudget = grappBudgets.reduce(function(s, b) { return s + b.budget; }, 0);
  var wardNames = wards.map(function(w) { return w.name; });
+ var filteredBudgets = grappBudgets.filter(function(b) { return wardNames.indexOf(b.ward) >= 0; });
+ var totalBudget = filteredBudgets.reduce(function(s, b) { return s + b.budget; }, 0);
  var totalBeneficiaries = grappDemographics.filter(function(d) { return wardNames.indexOf(d.ward) >= 0; }).reduce(function(s, d) { return s + d.women + d.men + d.youth + d.elderly + d.children; }, 0);
+ var countiesSet = {};
+ wards.forEach(function(w) { countiesSet[w.county] = true; });
+ var countiesCovered = Object.keys(countiesSet).length;
  var kpis = [
  { label: 'Total Deliverables', value: deliverables.length, color: '#1B5E20' },
- { label: 'Counties Covered', value: 2, color: '#0277BD' },
+ { label: 'Counties Covered', value: countiesCovered, color: '#0277BD' },
  { label: 'Wards Assessed', value: wards.length, color: '#2E7D32' },
  { label: 'Villages Covered', value: totalVillages, color: '#388E3C' },
  { label: 'Total Pages', value: totalPages, color: '#00695C' },
@@ -24657,9 +24661,11 @@
  }
 
  // ===== CHART: Budget by Sector =====
- function renderBudgetSectorChart() {
+ function renderBudgetSectorChart(wards) {
+ var wardNames = wards.map(function(w) { return w.name; });
+ var filteredBudgets = grappBudgets.filter(function(b) { return wardNames.indexOf(b.ward) >= 0; });
  var sectorTotals = { water: 0, agriculture: 0, ecosystem: 0, energy: 0, livelihoods: 0, governance: 0, drr: 0, infrastructure: 0 };
- grappBudgets.forEach(function(b) {
+ filteredBudgets.forEach(function(b) {
  Object.keys(b.sectors).forEach(function(s) { sectorTotals[s] += b.sectors[s]; });
  });
  var sectorLabels = ['Water & Sanitation','Agriculture','Ecosystem Restoration','Clean Energy','Livelihoods','Governance','DRR & EWS','Infrastructure'];
@@ -24819,10 +24825,11 @@
  }
 
  // ===== POLICY BRIEF FINDINGS =====
- function renderPolicyFindings() {
+ function renderPolicyFindings(county) {
  var container = document.getElementById('grapp-policy-findings');
  if (!container) return;
- container.innerHTML = grappPolicyFindings.map(function(pf) {
+ var filtered = county === 'all' ? grappPolicyFindings : grappPolicyFindings.filter(function(pf) { return pf.county.toLowerCase() === county; });
+ container.innerHTML = filtered.map(function(pf) {
  return '<div style="background:#f8f9fa;border-radius:12px;padding:20px;border-left:5px solid ' + pf.color + ';">' +
  '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">' +
  '<span style="font-size:1.5em;">' + pf.icon + '</span>' +
@@ -24875,13 +24882,13 @@
  renderFundingChart();
  renderEcosystemChart(grappWards);
  renderBudgetChart(grappWards);
- renderBudgetSectorChart();
+ renderBudgetSectorChart(grappWards);
  renderTimelineChart();
  renderDemographicsChart(grappWards);
  renderPhysicalTargets();
  renderStakeholderChart(grappWards);
  renderGenderImpactChart();
- renderPolicyFindings();
+ renderPolicyFindings('all');
  renderStakeholderTable(grappWards);
  renderWardCards(grappWards);
  renderRecommendations();
