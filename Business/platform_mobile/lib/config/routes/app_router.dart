@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:platform_mobile/features/auth/screens/phone_entry_screen.dart';
@@ -22,39 +20,12 @@ import 'package:platform_mobile/features/profile/screens/public_profile_screen.d
 import 'package:platform_mobile/features/profile/screens/setup_profile_screen.dart';
 import 'package:platform_mobile/features/notifications/screens/notifications_screen.dart';
 
-/// Converts a BLoC stream into a Listenable for GoRouter's refreshListenable.
-/// Only notifies on navigation-relevant states and defers to post-frame to avoid
-/// tearing the widget tree during a build.
-class GoRouterRefreshStream extends ChangeNotifier {
-  late final StreamSubscription<dynamic> _subscription;
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    _subscription = stream.asBroadcastStream().listen((state) {
-      // Only trigger router refresh on settled auth states that affect navigation
-      if (state is AuthAuthenticated ||
-          state is AuthUnauthenticated ||
-          state is AuthNeedsProfile) {
-        // Defer notification to after the current frame to avoid
-        // "check that it really is our descendant" assertion
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          notifyListeners();
-        });
-      }
-    });
-  }
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-}
-
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter buildRouter(AuthBloc authBloc) => GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
-  refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
     final authState = authBloc.state;
     final isAuthRoute = state.matchedLocation == '/login' ||
