@@ -1,0 +1,465 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ──────────────────────────────────────────────────────────────────
+
+enum UserStatus {
+  active
+  suspended
+  deactivated
+  pending_profile
+}
+
+enum Gender {
+  male
+  female
+  other
+  prefer_not_to_say
+}
+
+enum RoleType {
+  client
+  provider
+  admin
+  super_admin
+}
+
+enum Proficiency {
+  beginner
+  intermediate
+  expert
+}
+
+enum ListingType {
+  job
+  rental
+  service_request
+  space
+  offer
+}
+
+enum ListingStatus {
+  draft
+  pending_review
+  active
+  paused
+  filled
+  expired
+  removed
+}
+
+enum BudgetPeriod {
+  hourly
+  daily
+  weekly
+  monthly
+  fixed
+  negotiable
+}
+
+enum EngagementType {
+  full_time
+  part_time
+  one_time
+  short_term
+  long_term
+}
+
+enum ApplicationStatus {
+  pending
+  shortlisted
+  accepted
+  rejected
+  withdrawn
+}
+
+enum VerificationType {
+  phone
+  email
+  national_id
+  certificate
+  reference
+  background_check
+}
+
+enum VerificationStatus {
+  pending
+  verified
+  rejected
+  expired
+}
+
+enum ConversationStatus {
+  active
+  archived
+  blocked
+}
+
+enum MessageType {
+  text
+  image
+  system
+}
+
+enum ReportReason {
+  harassment
+  fraud
+  spam
+  inappropriate_content
+  fake_profile
+  other
+}
+
+enum ReportStatus {
+  pending
+  investigating
+  resolved
+  dismissed
+}
+
+enum NotificationType {
+  sms
+  push
+  email
+  whatsapp
+  in_app
+}
+
+// ─── MODELS ─────────────────────────────────────────────────────────────────
+
+model User {
+  id            String     @id @default(uuid()) @db.Uuid
+  phone         String     @unique @db.VarChar(20)
+  email         String?    @unique @db.VarChar(255)
+  passwordHash  String?    @map("password_hash") @db.VarChar(255)
+  status        UserStatus @default(pending_profile)
+  isVerified    Boolean    @default(false) @map("is_verified")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  lastLoginAt   DateTime?  @map("last_login_at")
+
+  // Relations
+  profile                Profile?
+  roles                  UserRole[]
+  skills                 UserSkill[]
+  listings               Listing[]
+  applications           Application[]
+  reviewsGiven           Review[]               @relation("ReviewerRelation")
+  reviewsReceived        Review[]               @relation("RevieweeRelation")
+  conversationParticipants ConversationParticipant[]
+  messagesSent           Message[]
+  verifications          Verification[]
+  reportsFiled           Report[]               @relation("ReporterRelation")
+  reportsReceived        Report[]               @relation("ReportedUserRelation")
+  notifications          Notification[]
+  verificationsProcessed Verification[]         @relation("VerifiedByRelation")
+  reportsResolved        Report[]               @relation("ResolvedByRelation")
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String   @id @default(uuid()) @db.Uuid
+  userId             String   @unique @map("user_id") @db.Uuid
+  firstName          String   @map("first_name") @db.VarChar(100)
+  lastName           String   @map("last_name") @db.VarChar(100)
+  displayName        String?  @map("display_name") @db.VarChar(100)
+  bio                String?  @db.Text
+  avatarUrl          String?  @map("avatar_url") @db.VarChar(500)
+  dateOfBirth        DateTime? @map("date_of_birth") @db.Date
+  gender             Gender?
+  primaryLocationId  String?  @map("primary_location_id") @db.Uuid
+  averageRating      Decimal  @default(0) @map("average_rating") @db.Decimal(2, 1)
+  totalReviews       Int      @default(0) @map("total_reviews")
+  totalCompletedJobs Int      @default(0) @map("total_completed_jobs")
+  isAvailable        Boolean  @default(true) @map("is_available")
+  availabilityNote   String?  @map("availability_note") @db.VarChar(500)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location? @relation(fields: [primaryLocationId], references: [id])
+
+  @@map("profiles")
+}
+
+model ServiceCategory {
+  id              String   @id @default(uuid()) @db.Uuid
+  parentId        String?  @map("parent_id") @db.Uuid
+  name            String   @db.VarChar(100)
+  slug            String   @unique @db.VarChar(100)
+  description     String?  @db.Text
+  iconUrl         String?  @map("icon_url") @db.VarChar(500)
+  listingType     ListingType @map("listing_type")
+  attributeSchema Json?    @map("attribute_schema") @db.JsonB
+  isActive        Boolean  @default(true) @map("is_active")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  parent   ServiceCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children ServiceCategory[] @relation("CategoryHierarchy")
+  roles    UserRole[]
+  skills   Skill[]
+  listings Listing[]
+
+  @@map("service_categories")
+}
+
+model UserRole {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  categoryId String?  @map("category_id") @db.Uuid
+  roleType   RoleType @map("role_type")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category ServiceCategory? @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId, roleType])
+  @@map("user_roles")
+}
+
+model Skill {
+  id         String  @id @default(uuid()) @db.Uuid
+  categoryId String  @map("category_id") @db.Uuid
+  name       String  @db.VarChar(100)
+  slug       String  @db.VarChar(100)
+  isActive   Boolean @default(true) @map("is_active")
+
+  // Relations
+  category  ServiceCategory @relation(fields: [categoryId], references: [id])
+  userSkills UserSkill[]
+
+  @@unique([categoryId, slug])
+  @@map("skills")
+}
+
+model UserSkill {
+  id              String       @id @default(uuid()) @db.Uuid
+  userId          String       @map("user_id") @db.Uuid
+  skillId         String       @map("skill_id") @db.Uuid
+  yearsExperience Int?         @map("years_experience")
+  proficiency     Proficiency?
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id])
+
+  @@unique([userId, skillId])
+  @@map("user_skills")
+}
+
+model Location {
+  id          String  @id @default(uuid()) @db.Uuid
+  country     String  @default("Kenya") @db.VarChar(100)
+  county      String  @db.VarChar(100)
+  subCounty   String? @map("sub_county") @db.VarChar(100)
+  town        String? @db.VarChar(100)
+  estateArea  String? @map("estate_area") @db.VarChar(200)
+  fullAddress String? @map("full_address") @db.Text
+  latitude    Decimal @db.Decimal(10, 8)
+  longitude   Decimal @db.Decimal(11, 8)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  profiles Profile[]
+  listings Listing[]
+
+  @@map("locations")
+}
+
+model Listing {
+  id                String         @id @default(uuid()) @db.Uuid
+  userId            String         @map("user_id") @db.Uuid
+  categoryId        String         @map("category_id") @db.Uuid
+  title             String         @db.VarChar(200)
+  description       String         @db.Text
+  listingType       ListingType    @map("listing_type")
+  status            ListingStatus  @default(active)
+  locationId        String?        @map("location_id") @db.Uuid
+  attributes        Json?          @db.JsonB
+  budgetMin         Decimal?       @map("budget_min") @db.Decimal(12, 2)
+  budgetMax         Decimal?       @map("budget_max") @db.Decimal(12, 2)
+  budgetPeriod      BudgetPeriod?  @map("budget_period")
+  currency          String         @default("KES") @db.VarChar(3)
+  availabilityStart DateTime?      @map("availability_start") @db.Date
+  availabilityEnd   DateTime?      @map("availability_end") @db.Date
+  engagementType    EngagementType? @map("engagement_type")
+  images            Json?          @db.JsonB
+  isFeatured        Boolean        @default(false) @map("is_featured")
+  viewCount         Int            @default(0) @map("view_count")
+  applicationCount  Int            @default(0) @map("application_count")
+  expiresAt         DateTime?      @map("expires_at")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category      ServiceCategory @relation(fields: [categoryId], references: [id])
+  location      Location?       @relation(fields: [locationId], references: [id])
+  applications  Application[]
+  reviews       Review[]
+  conversations Conversation[]
+
+  @@index([categoryId, status, createdAt(sort: Desc)])
+  @@index([userId])
+  @@index([status])
+  @@map("listings")
+}
+
+model Application {
+  id           String            @id @default(uuid()) @db.Uuid
+  listingId    String            @map("listing_id") @db.Uuid
+  applicantId  String            @map("applicant_id") @db.Uuid
+  status       ApplicationStatus @default(pending)
+  coverMessage String?           @map("cover_message") @db.Text
+  proposedRate Decimal?          @map("proposed_rate") @db.Decimal(12, 2)
+  ratePeriod   BudgetPeriod?     @map("rate_period")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  applicant User    @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, applicantId])
+  @@map("applications")
+}
+
+model Review {
+  id         String  @id @default(uuid()) @db.Uuid
+  listingId  String  @map("listing_id") @db.Uuid
+  reviewerId String  @map("reviewer_id") @db.Uuid
+  revieweeId String  @map("reviewee_id") @db.Uuid
+  rating     Int     @db.SmallInt
+  comment    String? @db.Text
+  isVisible  Boolean @default(true) @map("is_visible")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  listing  Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  reviewer User    @relation("ReviewerRelation", fields: [reviewerId], references: [id])
+  reviewee User    @relation("RevieweeRelation", fields: [revieweeId], references: [id])
+
+  @@unique([listingId, reviewerId, revieweeId])
+  @@map("reviews")
+}
+
+model Conversation {
+  id        String             @id @default(uuid()) @db.Uuid
+  listingId String?            @map("listing_id") @db.Uuid
+  status    ConversationStatus @default(active)
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  listing      Listing?                 @relation(fields: [listingId], references: [id])
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @map("conversation_id") @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  joinedAt       DateTime @default(now()) @map("joined_at")
+  lastReadAt     DateTime? @map("last_read_at")
+  isMuted        Boolean  @default(false) @map("is_muted")
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String      @id @default(uuid()) @db.Uuid
+  conversationId String      @map("conversation_id") @db.Uuid
+  senderId       String      @map("sender_id") @db.Uuid
+  content        String      @db.Text
+  messageType    MessageType @default(text) @map("message_type")
+  attachmentUrl  String?     @map("attachment_url") @db.VarChar(500)
+  isRead         Boolean     @default(false) @map("is_read")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+model Verification {
+  id          String             @id @default(uuid()) @db.Uuid
+  userId      String             @map("user_id") @db.Uuid
+  type        VerificationType
+  status      VerificationStatus @default(pending)
+  documentUrl String?            @map("document_url") @db.VarChar(500)
+  verifiedBy  String?            @map("verified_by") @db.Uuid
+  notes       String?            @db.Text
+  verifiedAt  DateTime?          @map("verified_at")
+  expiresAt   DateTime?          @map("expires_at")
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verifier   User? @relation("VerifiedByRelation", fields: [verifiedBy], references: [id])
+
+  @@map("verifications")
+}
+
+model Report {
+  id               String       @id @default(uuid()) @db.Uuid
+  reporterId       String       @map("reporter_id") @db.Uuid
+  reportedUserId   String?      @map("reported_user_id") @db.Uuid
+  reportedListingId String?     @map("reported_listing_id") @db.Uuid
+  reason           ReportReason
+  description      String       @db.Text
+  status           ReportStatus @default(pending)
+  resolvedBy       String?      @map("resolved_by") @db.Uuid
+  resolutionNotes  String?      @map("resolution_notes") @db.Text
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  reporter     User  @relation("ReporterRelation", fields: [reporterId], references: [id])
+  reportedUser User? @relation("ReportedUserRelation", fields: [reportedUserId], references: [id])
+  resolver     User? @relation("ResolvedByRelation", fields: [resolvedBy], references: [id])
+
+  @@map("reports")
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      NotificationType
+  title     String           @db.VarChar(200)
+  body      String           @db.Text
+  data      Json?            @db.JsonB
+  isRead    Boolean          @default(false) @map("is_read")
+  sentAt    DateTime?        @map("sent_at")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}

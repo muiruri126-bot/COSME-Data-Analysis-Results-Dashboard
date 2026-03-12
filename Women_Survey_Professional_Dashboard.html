@@ -8915,6 +8915,19 @@
  </div>
  </div>
 
+ <!-- FUNDING REGISTRY: Detailed Listing of Mapped Funding Mechanisms -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+ <h3 style="margin: 0 0 6px 0; color: #1B5E20; font-size: 1.15em;">Funding Mechanisms Registry</h3>
+ <p style="margin: 0 0 16px 0; color: #666; font-size: 0.88em;">Detailed mapping of climate risk reduction funding mechanisms and opportunities identified for Kilifi & Kwale Counties. Includes global, national, and county-level sources with eligibility, focus areas, and relevance to GRAPP adaptation plans.</p>
+ <div id="grapp-funding-registry"></div>
+ </div>
+
+ <!-- FUNDING SUMMARY TABLE -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto;">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Funding Sources Summary Table</h3>
+ <table id="grapp-funding-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 900px;"></table>
+ </div>
+
  <!-- CHARTS ROW 5: Budget Allocation + Implementation Timeline -->
  <div class="charts-grid" style="margin-bottom: 28px;">
  <div class="chart-wrapper">
@@ -24197,16 +24210,19 @@
  ];
 
  const fundingSources = [
- { name: 'Green Climate Fund (GCF)', level: 'Global', amount: 'Major' },
- { name: 'Global Environment Facility (GEF)', level: 'Global', amount: 'Major' },
- { name: 'Adaptation Fund (AF)', level: 'Global', amount: 'Moderate' },
- { name: 'Climate Investment Funds (CIFs)', level: 'Global', amount: 'Moderate' },
- { name: 'National Climate Change Fund (NCCF)', level: 'National', amount: 'Moderate' },
- { name: 'NETFUND', level: 'National', amount: 'Small' },
- { name: 'Kenya Climate Innovation Center (KCIC)', level: 'National', amount: 'Small' },
- { name: 'County Climate Change Funds (CCCF)', level: 'County', amount: 'Moderate' },
- { name: 'FLLoCA Grants', level: 'County', amount: 'Moderate' },
- { name: 'KEMFSED', level: 'County', amount: 'Moderate' }
+ { name: 'Green Climate Fund (GCF)', level: 'Global', amount: 'Major', fundingRange: 'USD 10M–250M+', focus: ['Adaptation','Mitigation','Cross-cutting'], description: 'The world\'s largest dedicated climate fund, supporting developing countries in adaptation and mitigation. Provides grants, loans, equity and guarantees through accredited entities.', eligibility: 'Accredited entities (national/international); requires National Designated Authority endorsement', relevance: 'Highly relevant for large-scale NbS, ecosystem restoration, and community resilience projects in Kilifi & Kwale coastal ecosystems', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Global Environment Facility (GEF)', level: 'Global', amount: 'Major', fundingRange: 'USD 2M–50M', focus: ['Biodiversity','Climate Change','Land Degradation','International Waters'], description: 'International partnership financing environmental projects since 1992. Funds through GEF Agencies (UNDP, UNEP, World Bank, etc.) for global environmental benefits.', eligibility: 'GEF-eligible countries through accredited GEF Agencies; requires GEF Focal Point endorsement', relevance: 'Relevant for biodiversity conservation in Arabuko Sokoke Forest, marine ecosystem protection, and land degradation neutrality in Kilifi & Kwale', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Adaptation Fund (AF)', level: 'Global', amount: 'Moderate', fundingRange: 'USD 1M–14M', focus: ['Climate Adaptation','Resilience','Community-based Adaptation'], description: 'Finances adaptation projects in developing countries that are parties to the Kyoto Protocol. Prioritizes vulnerable communities with direct access modality for national entities.', eligibility: 'National Implementing Entities (NIEs) or Multilateral/Regional Implementing Entities; Kenya\'s NIE is NEMA', relevance: 'Suitable for community-based coastal adaptation, water security, and gender-responsive climate resilience in Kilifi & Kwale wards', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Climate Investment Funds (CIFs)', level: 'Global', amount: 'Moderate', fundingRange: 'USD 5M–100M', focus: ['Clean Technology','Forest Investment','Scaling Up Renewable Energy','Pilot Program for Climate Resilience'], description: 'Multilateral climate funds channelled through MDBs (World Bank, AfDB, ADB, IDB, EBRD). Includes PPCR for climate resilience in vulnerable countries.', eligibility: 'Through Multilateral Development Banks; country-driven investment plans required', relevance: 'Relevant through PPCR and FIP windows for coastal forest resilience, mangrove restoration, and climate-resilient infrastructure in the Coast region', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'National Climate Change Fund (NCCF)', level: 'National', amount: 'Moderate', fundingRange: 'KES 100M–500M', focus: ['Climate Adaptation','Mitigation','Research','Capacity Building'], description: 'Established under Kenya\'s Climate Change Act 2016, provides financing for priority climate change actions at national and county levels. Administered by the National Treasury.', eligibility: 'National and county government agencies, registered community organizations through competitive call for proposals', relevance: 'Directly applicable for financing ward-level adaptation plans, community resilience activities, and NbS initiatives in Kilifi & Kwale counties', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'NETFUND', level: 'National', amount: 'Small', fundingRange: 'KES 1M–10M', focus: ['Environmental Conservation','Youth & Women Enterprises','Green Innovation'], description: 'National Environment Trust Fund — government agency supporting environmental conservation through grants, capacity building and innovation financing for youth and women-led enterprises.', eligibility: 'Registered community groups, youth/women enterprises, environmental CBOs; competitive grants with thematic focus', relevance: 'Suitable for small-scale community-based environmental projects, women\'s green enterprises, and youth-led conservation in Kilifi & Kwale', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Kenya Climate Innovation Center (KCIC)', level: 'National', amount: 'Small', fundingRange: 'KES 2M–20M', focus: ['Clean Energy','Water Management','Agribusiness','Waste Management'], description: 'infoDev/World Bank-supported innovation hub incubating and financing Kenyan climate technology ventures. Provides business development, mentorship and seed funding.', eligibility: 'Kenyan climate-tech startups and SMEs with viable business models; competitive application process', relevance: 'Relevant for clean energy enterprises, water management innovations, and climate-smart aquaculture/agriculture SMEs serving coastal communities', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'County Climate Change Funds (CCCF)', level: 'County', amount: 'Moderate', fundingRange: 'KES 50M–200M per county', focus: ['Local Adaptation','Community Resilience','Ward-level Climate Actions'], description: 'Devolved climate finance mechanism established under county legislation. Enables ward-level investment in climate adaptation with community participation in planning and oversight.', eligibility: 'Ward-level proposals through Ward Climate Change Planning Committees; community-driven selection of priorities', relevance: 'Most directly relevant — designed specifically for funding ward adaptation plans like GRAPPs in Kilifi & Kwale. Kilifi County CCCF legislation enacted in 2021', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'FLLoCA Grants', level: 'County', amount: 'Moderate', fundingRange: 'KES 30M–150M per county', focus: ['Local Climate Adaptation','County Planning','Community Infrastructure'], description: 'Financing Locally-Led Climate Action — World Bank programme channelling climate finance through Kenya\'s intergovernmental fiscal transfer system to county and community levels.', eligibility: 'Counties meeting minimum conditions; performance-based allocation through county governments', relevance: 'Directly supports county-level climate planning and community adaptation infrastructure. Both Kilifi and Kwale counties are FLLoCA beneficiaries', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'KEMFSED', level: 'County', amount: 'Moderate', fundingRange: 'KES 50M–300M', focus: ['Marine Fisheries','Coastal Livelihoods','Blue Economy','Socio-Economic Development'], description: 'Kenya Marine Fisheries & Socio-Economic Development Project — World Bank-financed programme strengthening governance of marine fisheries and coastal livelihoods.', eligibility: 'Coastal county governments, Beach Management Units (BMUs), community groups in marine fisheries sector', relevance: 'Highly relevant for Kwale\'s coastal wards (Vanga, Pongwe-Kikoneni) and Kilifi\'s Mnarani — supports seaweed farming, fisheries governance, and marine NbS', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Bilateral Development Partners', level: 'Global', amount: 'Major', fundingRange: 'USD 5M–50M+', focus: ['Climate Resilience','Gender Equality','Governance','Livelihoods'], description: 'Bilateral aid agencies (DANIDA, GIZ, USAID, DFID/FCDO, SIDA, JICA) funding climate adaptation, governance, and livelihoods projects. Key partners include Denmark (COSME funder) and Germany (NCCAP support).', eligibility: 'Through country programme frameworks; competitive call for proposals or direct partnerships', relevance: 'Directly applicable — COSME is DANIDA-funded. Bilateral partners support NbS, gender mainstreaming, and community resilience across Kilifi & Kwale', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'Kenya Red Cross / IFRC', level: 'National', amount: 'Small', fundingRange: 'KES 5M–50M', focus: ['Disaster Risk Reduction','Emergency Preparedness','Community Resilience'], description: 'Kenya Red Cross Society and International Federation of Red Cross and Red Crescent Societies support disaster preparedness, early warning systems, and community resilience programming.', eligibility: 'Community-based DRR programmes, early warning partnerships, climate-related emergency preparedness proposals', relevance: 'Relevant for early warning systems in flood-prone areas of Kwale (Vanga, Ramisi) and drought preparedness in Kilifi\'s inland wards', counties: ['Kilifi','Kwale'], status: 'Active' },
+ { name: 'National Government CDF/NGAAF', level: 'National', amount: 'Small', fundingRange: 'KES 5M–30M per constituency', focus: ['Community Development','Infrastructure','Women Empowerment','Environmental Conservation'], description: 'Constituency Development Fund and National Government Affirmative Action Fund support community-level development including environmental projects, water infrastructure, and women\'s group activities.', eligibility: 'Registered community groups through constituency-level proposals; women\'s groups eligible for NGAAF', relevance: 'Complementary funding for water infrastructure, tree nurseries, women\'s savings groups, and small-scale community environmental projects', counties: ['Kilifi','Kwale'], status: 'Active' }
  ];
 
  // ===== BUDGET DATA (KES Millions, estimated from Ward Adaptation Plans) =====
@@ -24314,6 +24330,8 @@
  renderAdaptationChart();
  renderWardMatrixChart(filteredWards);
  renderFundingChart();
+ renderFundingRegistry(county);
+ renderFundingTable(county);
  renderEcosystemChart(filteredWards);
  renderBudgetChart(filteredWards);
  renderBudgetSectorChart(filteredWards);
@@ -24554,6 +24572,90 @@
  }
  }
  });
+ }
+
+ // ===== FUNDING REGISTRY: Detailed Cards =====
+ function renderFundingRegistry(county) {
+ var container = document.getElementById('grapp-funding-registry');
+ if (!container) return;
+ var filtered = county === 'all' ? fundingSources : fundingSources.filter(function(f) {
+ return f.counties && (f.counties.indexOf(county.charAt(0).toUpperCase() + county.slice(1)) >= 0);
+ });
+ var levelColors = { 'Global': '#0277BD', 'National': '#F57C00', 'County': '#2E7D32' };
+ var amountIcons = { 'Major': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>', 'Moderate': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>', 'Small': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>' };
+ var groups = { 'Global': [], 'National': [], 'County': [] };
+ filtered.forEach(function(f) { if (groups[f.level]) groups[f.level].push(f); });
+ var html = '';
+ ['Global', 'National', 'County'].forEach(function(level) {
+ if (groups[level].length === 0) return;
+ html += '<div style="margin-bottom: 24px;">';
+ html += '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 3px solid ' + levelColors[level] + ';">';
+ html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + levelColors[level] + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (level === 'Global' ? '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>' : level === 'National' ? '<path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h1M9 13h1M9 17h1"/>' : '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>') + '</svg>';
+ html += '<h4 style="margin: 0; color: ' + levelColors[level] + '; font-size: 1.05em;">' + level + '-Level Funding Mechanisms (' + groups[level].length + ')</h4>';
+ html += '</div>';
+ html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px;">';
+ groups[level].forEach(function(f) {
+ var amountColor = f.amount === 'Major' ? '#1B5E20' : f.amount === 'Moderate' ? '#E65100' : '#455A64';
+ html += '<div style="background: #f8f9fa; border-radius: 10px; padding: 18px; border-left: 4px solid ' + levelColors[level] + '; transition: box-shadow 0.2s;">';
+ html += '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">';
+ html += '<h5 style="margin: 0; color: #333; font-size: 0.95em; line-height: 1.4; flex: 1;">' + f.name + '</h5>';
+ html += '<span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; color: #fff; background: ' + amountColor + '; white-space: nowrap; margin-left: 8px;">' + amountIcons[f.amount] + ' ' + f.amount + '</span>';
+ html += '</div>';
+ html += '<p style="margin: 0 0 10px 0; color: #555; font-size: 0.84em; line-height: 1.6;">' + f.description + '</p>';
+ html += '<div style="margin-bottom: 8px;"><span style="font-size: 0.78em; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Funding Range:</span> <span style="font-size: 0.85em; color: #333; font-weight: 600;">' + f.fundingRange + '</span></div>';
+ html += '<div style="margin-bottom: 8px;"><span style="font-size: 0.78em; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Focus Areas:</span> <span style="font-size: 0.83em; color: #555;">' + f.focus.join(', ') + '</span></div>';
+ html += '<div style="margin-bottom: 8px;"><span style="font-size: 0.78em; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Eligibility:</span> <span style="font-size: 0.83em; color: #555;">' + f.eligibility + '</span></div>';
+ html += '<div style="background: ' + levelColors[level] + '11; border-radius: 6px; padding: 8px 12px; margin-top: 10px;">';
+ html += '<span style="font-size: 0.78em; font-weight: 600; color: ' + levelColors[level] + '; text-transform: uppercase; letter-spacing: 0.5px;">Relevance to Kilifi & Kwale:</span>';
+ html += '<p style="margin: 4px 0 0 0; font-size: 0.83em; color: #444; line-height: 1.5;">' + f.relevance + '</p>';
+ html += '</div>';
+ html += '<div style="display: flex; align-items: center; gap: 6px; margin-top: 10px;">';
+ html += '<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2E7D32;"></span>';
+ html += '<span style="font-size: 0.78em; color: #2E7D32; font-weight: 600;">' + f.status + '</span>';
+ html += '</div>';
+ html += '</div>';
+ });
+ html += '</div></div>';
+ });
+ container.innerHTML = html;
+ }
+
+ // ===== FUNDING TABLE =====
+ function renderFundingTable(county) {
+ var table = document.getElementById('grapp-funding-table');
+ if (!table) return;
+ var filtered = county === 'all' ? fundingSources : fundingSources.filter(function(f) {
+ return f.counties && (f.counties.indexOf(county.charAt(0).toUpperCase() + county.slice(1)) >= 0);
+ });
+ var hdr = 'padding:10px 12px;font-weight:600;color:#fff;background:#1B5E20;border:1px solid #ddd;font-size:0.85em;';
+ var cell = 'padding:8px 12px;border:1px solid #eee;font-size:0.85em;';
+ var levelColors = { 'Global': '#0277BD', 'National': '#F57C00', 'County': '#2E7D32' };
+ var amountColors = { 'Major': '#1B5E20', 'Moderate': '#E65100', 'Small': '#455A64' };
+ var html = '<thead><tr>' +
+ '<th style="' + hdr + 'text-align:left;">#</th>' +
+ '<th style="' + hdr + 'text-align:left;min-width:180px;">Funding Source</th>' +
+ '<th style="' + hdr + '">Level</th>' +
+ '<th style="' + hdr + '">Scale</th>' +
+ '<th style="' + hdr + 'min-width:120px;">Funding Range</th>' +
+ '<th style="' + hdr + 'min-width:180px;">Focus Areas</th>' +
+ '<th style="' + hdr + '">Status</th>' +
+ '</tr></thead><tbody>';
+ filtered.forEach(function(f, i) {
+ var levelBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;color:#fff;background:' + levelColors[f.level] + ';">' + f.level + '</span>';
+ var amountBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;color:#fff;background:' + amountColors[f.amount] + ';">' + f.amount + '</span>';
+ var bg = i % 2 === 0 ? '#fff' : '#f9fafb';
+ html += '<tr style="background:' + bg + ';">' +
+ '<td style="' + cell + 'text-align:center;font-weight:600;">' + (i + 1) + '</td>' +
+ '<td style="' + cell + 'text-align:left;font-weight:600;">' + f.name + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + levelBadge + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + amountBadge + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + f.fundingRange + '</td>' +
+ '<td style="' + cell + 'text-align:left;">' + f.focus.join(', ') + '</td>' +
+ '<td style="' + cell + 'text-align:center;"><span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2E7D32;"></span><span style="font-size:0.85em;color:#2E7D32;font-weight:600;">' + f.status + '</span></span></td>' +
+ '</tr>';
+ });
+ html += '</tbody>';
+ table.innerHTML = html;
  }
 
  // ===== CHART: Ecosystem Health =====
@@ -24880,6 +24982,8 @@
  renderAdaptationChart();
  renderWardMatrixChart(grappWards);
  renderFundingChart();
+ renderFundingRegistry('all');
+ renderFundingTable('all');
  renderEcosystemChart(grappWards);
  renderBudgetChart(grappWards);
  renderBudgetSectorChart(grappWards);
