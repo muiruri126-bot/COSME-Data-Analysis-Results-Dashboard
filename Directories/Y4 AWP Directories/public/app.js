@@ -1,428 +1,342 @@
-// ─── Y4 AWP Directory Dashboard – Frontend App ─────────────
-const API = '';
-
-// ─── State ───────────────────────────────────────────────────
-let allRecords = [];
+// ─── COSME Y4 AWP Directory – Frontend ─────────────────────
+const $ = (sel) => document.querySelector(sel);
+let allActivities = [];
 let currentFilters = {};
 
-// ─── DOM Elements ────────────────────────────────────────────
-const $ = (sel) => document.querySelector(sel);
-const tableBody = $('#tableBody');
-const modalOverlay = $('#modalOverlay');
-const historyOverlay = $('#historyOverlay');
-const recordForm = $('#recordForm');
-
-// ─── Initialize ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    loadDashboard();
-    loadRecords();
-    loadFilterOptions();
-    setupEventListeners();
+    loadStats();
+    loadActivities();
+    setupListeners();
 });
 
 // ─── Event Listeners ─────────────────────────────────────────
-function setupEventListeners() {
-    // Add new record
+function setupListeners() {
     $('#btnAddNew').addEventListener('click', () => openModal());
+    $('#btnReload').addEventListener('click', reloadFromExcel);
+    $('#btnExport').addEventListener('click', exportCSV);
 
-    // Sync from SharePoint
-    $('#btnSync').addEventListener('click', syncFromSharePoint);
-
-    // Search
-    let searchTimer;
+    let timer;
     $('#searchInput').addEventListener('input', (e) => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            currentFilters.search = e.target.value;
-            loadRecords();
-        }, 300);
+        clearTimeout(timer);
+        timer = setTimeout(() => { currentFilters.search = e.target.value; loadActivities(); }, 300);
     });
+    $('#filterStrategy').addEventListener('change', (e) => { currentFilters.strategy_code = e.target.value; loadActivities(); });
+    $('#filterStatus').addEventListener('change', (e) => { currentFilters.status = e.target.value; loadActivities(); });
 
-    // Filters
-    $('#filterDepartment').addEventListener('change', (e) => {
-        currentFilters.department = e.target.value;
-        loadRecords();
-    });
-    $('#filterStatus').addEventListener('change', (e) => {
-        currentFilters.status = e.target.value;
-        loadRecords();
-    });
-    $('#filterStation').addEventListener('change', (e) => {
-        currentFilters.duty_station = e.target.value;
-        loadRecords();
-    });
-
-    // Export CSV
-    $('#btnExport').addEventListener('click', exportToCSV);
-
-    // Modal controls
     $('#modalClose').addEventListener('click', closeModal);
     $('#btnCancel').addEventListener('click', closeModal);
-    $('#historyClose').addEventListener('click', () => historyOverlay.classList.remove('active'));
-    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
-    historyOverlay.addEventListener('click', (e) => { if (e.target === historyOverlay) historyOverlay.classList.remove('active'); });
-
-    // Form submit
-    recordForm.addEventListener('submit', handleFormSubmit);
-
-    // Auto-calculate balance
-    const budgetFields = ['annual_budget', 'spent_to_date'];
-    budgetFields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', calculateBalance);
-    });
+    $('#modalOverlay').addEventListener('click', (e) => { if (e.target === $('#modalOverlay')) closeModal(); });
+    $('#historyClose').addEventListener('click', () => $('#historyOverlay').classList.remove('active'));
+    $('#historyOverlay').addEventListener('click', (e) => { if (e.target === $('#historyOverlay')) $('#historyOverlay').classList.remove('active'); });
+    $('#activityForm').addEventListener('submit', handleSubmit);
 }
 
-// ─── API Functions ───────────────────────────────────────────
-async function apiGet(endpoint) {
-    const res = await fetch(`${API}${endpoint}`);
-    if (!res.ok) throw new Error(`API error: ${res.statusText}`);
-    return res.json();
-}
-
-async function apiPost(endpoint, data) {
-    const res = await fetch(`${API}${endpoint}`, {
-        method: 'POST',
+// ─── API Helpers ─────────────────────────────────────────────
+async function api(endpoint, opts = {}) {
+    const res = await fetch(endpoint, {
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        ...opts,
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
     });
-    if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || res.statusText);
-    }
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || res.statusText); }
     return res.json();
 }
 
-async function apiPut(endpoint, data) {
-    const res = await fetch(`${API}${endpoint}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || res.statusText);
-    }
-    return res.json();
-}
-
-async function apiDelete(endpoint) {
-    const res = await fetch(`${API}${endpoint}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error(`API error: ${res.statusText}`);
-    return res.json();
-}
-
-// ─── Dashboard Stats ────────────────────────────────────────
-async function loadDashboard() {
+// ─── Load Stats ──────────────────────────────────────────────
+async function loadStats() {
     try {
-        const stats = await apiGet('/api/stats');
-        $('#statTotal').textContent = stats.totalRecords;
-        $('#statActive').textContent = stats.activeRecords;
-        $('#statBudget').textContent = formatCurrency(stats.totalBudget);
-        $('#statSpent').textContent = formatCurrency(stats.totalSpent);
-        $('#statDepts').textContent = stats.departments;
-        $('#statLastSync').textContent = stats.lastSync
-            ? new Date(stats.lastSync.sync_time).toLocaleString()
-            : 'Never';
-    } catch (error) {
-        console.error('Failed to load stats:', error);
-    }
+        const s = await api('/api/stats');
+        $('#statTotal').textContent = s.totalActivities;
+        const statusCount = (name) => (s.byStatus.find(x => x.status === name) || {}).count || 0;
+        $('#statNotStarted').textContent = statusCount('Not Started');
+        $('#statInProgress').textContent = statusCount('In Progress');
+        $('#statCompleted').textContent = statusCount('Completed');
+
+        // Build theme tabs
+        const tabs = $('#themeTabs');
+        tabs.innerHTML = '<button class="tab active" data-theme="">All Areas</button>';
+        s.byThematicArea.forEach(t => {
+            tabs.innerHTML += `<button class="tab" data-theme="${esc(t.thematic_area)}">${esc(t.thematic_area)} <small>(${t.count})</small></button>`;
+        });
+        tabs.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilters.thematic_area = tab.dataset.theme;
+                loadActivities();
+            });
+        });
+    } catch (e) { console.error(e); }
 }
 
-// ─── Load Records ────────────────────────────────────────────
-async function loadRecords() {
+// ─── Load Activities ─────────────────────────────────────────
+async function loadActivities() {
     try {
         const params = new URLSearchParams();
-        Object.entries(currentFilters).forEach(([k, v]) => {
-            if (v) params.set(k, v);
-        });
-        const url = `/api/records${params.toString() ? '?' + params : ''}`;
-        allRecords = await apiGet(url);
-        renderTable(allRecords);
-    } catch (error) {
-        console.error('Failed to load records:', error);
-        tableBody.innerHTML = `<tr><td colspan="12" class="loading-row" style="color:var(--danger)">
-            <i class="fas fa-exclamation-triangle"></i> Failed to load records</td></tr>`;
+        Object.entries(currentFilters).forEach(([k, v]) => { if (v) params.set(k, v); });
+        allActivities = await api(`/api/activities?${params}`);
+        renderContent(allActivities);
+    } catch (e) {
+        $('#contentArea').innerHTML = `<div class="loading-msg" style="color:var(--danger)">Failed to load</div>`;
     }
 }
 
-// ─── Render Table ────────────────────────────────────────────
-function renderTable(records) {
-    if (records.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="12" class="loading-row">
-            <i class="fas fa-inbox"></i> No records found. Click "New Record" to add one, or "Sync Now" to pull from SharePoint.</td></tr>`;
+// ─── Render Grouped Content ─────────────────────────────────
+function renderContent(activities) {
+    const area = $('#contentArea');
+    if (activities.length === 0) {
+        area.innerHTML = '<div class="loading-msg">No activities found</div>';
         return;
     }
 
-    tableBody.innerHTML = records.map((r, i) => `
-        <tr>
-            <td>${i + 1}</td>
-            <td><strong>${escapeHtml(r.staff_name)}</strong></td>
-            <td>${escapeHtml(r.designation)}</td>
-            <td>${escapeHtml(r.department)}</td>
-            <td>${escapeHtml(r.duty_station)}</td>
-            <td>${escapeHtml(r.project_code)}</td>
-            <td title="${escapeHtml(r.activity_description)}">${truncate(r.activity_description, 30)}</td>
-            <td>${formatCurrency(r.annual_budget)}</td>
-            <td>${formatCurrency(r.spent_to_date)}</td>
-            <td>${formatCurrency(r.balance)}</td>
-            <td>${statusBadge(r.status)}</td>
-            <td>
-                <div class="action-group">
-                    <button class="btn btn-sm btn-outline btn-icon" onclick="editRecord(${r.id})" title="Edit">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline btn-icon" onclick="viewHistory(${r.id})" title="History">
-                        <i class="fas fa-history"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteRecord(${r.id})" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// ─── Filter Options ──────────────────────────────────────────
-async function loadFilterOptions() {
-    try {
-        const [departments, stations] = await Promise.all([
-            apiGet('/api/filters/department'),
-            apiGet('/api/filters/duty_station'),
-        ]);
-        populateSelect('#filterDepartment', departments, 'All Departments');
-        populateSelect('#filterStation', stations, 'All Duty Stations');
-    } catch (error) {
-        console.error('Failed to load filters:', error);
-    }
-}
-
-function populateSelect(selector, values, defaultText) {
-    const sel = $(selector);
-    sel.innerHTML = `<option value="">${defaultText}</option>`;
-    values.forEach(v => {
-        sel.innerHTML += `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`;
-    });
-}
-
-// ─── Modal Operations ────────────────────────────────────────
-function openModal(record = null) {
-    recordForm.reset();
-    $('#recordId').value = '';
-
-    if (record) {
-        $('#modalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Record';
-        $('#recordId').value = record.id;
-        // Populate form fields
-        const fields = [
-            'staff_name', 'designation', 'department', 'duty_station', 'phone', 'email',
-            'project_code', 'activity_code', 'activity_description', 'budget_line',
-            'annual_budget', 'q1_budget', 'q2_budget', 'q3_budget', 'q4_budget',
-            'spent_to_date', 'balance', 'status', 'partner_organization',
-            'implementation_area', 'target_beneficiaries', 'achieved_beneficiaries', 'remarks'
-        ];
-        fields.forEach(f => {
-            const el = document.getElementById(f);
-            if (el && record[f] !== undefined) el.value = record[f];
-        });
-    } else {
-        $('#modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Record';
-    }
-
-    modalOverlay.classList.add('active');
-    document.getElementById('staff_name').focus();
-}
-
-function closeModal() {
-    modalOverlay.classList.remove('active');
-}
-
-async function editRecord(id) {
-    try {
-        const record = await apiGet(`/api/records/${id}`);
-        openModal(record);
-    } catch (error) {
-        showToast('Failed to load record', 'error');
-    }
-}
-
-async function handleFormSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(recordForm);
-    const data = Object.fromEntries(formData.entries());
-    const id = $('#recordId').value;
-
-    // Convert numeric fields
-    ['annual_budget', 'q1_budget', 'q2_budget', 'q3_budget', 'q4_budget',
-     'spent_to_date', 'balance', 'target_beneficiaries', 'achieved_beneficiaries'
-    ].forEach(f => {
-        if (data[f]) data[f] = parseFloat(data[f]);
-    });
-
-    try {
-        if (id) {
-            await apiPut(`/api/records/${id}`, data);
-            showToast('Record updated successfully', 'success');
-        } else {
-            await apiPost('/api/records', data);
-            showToast('Record created successfully', 'success');
+    // Group: thematic_area → sub_theme → strategy_code
+    const groups = {};
+    activities.forEach(a => {
+        const theme = a.thematic_area;
+        const sub = a.sub_theme || '';
+        const strat = a.strategy_code;
+        const key = `${theme}||${sub}||${strat}`;
+        if (!groups[key]) {
+            groups[key] = {
+                thematic_area: theme,
+                sub_theme: sub,
+                strategy_code: strat,
+                strategy_description: a.strategy_description,
+                strategic_issues: a.strategic_issues,
+                activities: []
+            };
         }
-        closeModal();
-        loadRecords();
-        loadDashboard();
-        loadFilterOptions();
-    } catch (error) {
-        showToast(error.message, 'error');
-    }
+        groups[key].activities.push(a);
+    });
+
+    let html = '';
+    let lastTheme = '';
+    let lastSub = '';
+
+    Object.values(groups).forEach(g => {
+        // Show thematic area header when it changes
+        if (g.thematic_area !== lastTheme) {
+            if (lastTheme) html += '<div style="height:20px"></div>';
+            html += `<h2 style="font-size:1rem;color:var(--primary);padding:8px 0;border-bottom:2px solid var(--primary);margin-bottom:8px;">
+                ${esc(g.thematic_area)}</h2>`;
+            lastTheme = g.thematic_area;
+            lastSub = '';
+
+            // Show strategic issues
+            try {
+                const issues = JSON.parse(g.strategic_issues);
+                if (issues.length > 0) {
+                    html += `<div class="issues-panel"><h4>Strategic Issues Identified</h4><ol>`;
+                    issues.forEach(i => { html += `<li>${esc(i.issue)}</li>`; });
+                    html += `</ol></div>`;
+                }
+            } catch (e) {}
+        }
+
+        // Sub-theme divider
+        if (g.sub_theme && g.sub_theme !== lastSub) {
+            html += `<div class="sub-theme-divider">${esc(g.sub_theme)}</div>`;
+            lastSub = g.sub_theme;
+        }
+
+        // Strategy group card
+        html += `<div class="strategy-group">
+            <div class="strategy-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                <div class="strategy-code">${esc(g.strategy_code)}</div>
+                <div class="strategy-title">
+                    <strong>Strategy ${esc(g.strategy_code)}: ${esc(g.strategy_description || 'Implementation Strategy')}</strong>
+                    <div class="theme-label">${esc(g.thematic_area)}${g.sub_theme ? ' / ' + esc(g.sub_theme) : ''}</div>
+                </div>
+                <span class="strategy-count">${g.activities.length} activities</span>
+                <span class="strategy-chevron">&#9660;</span>
+            </div>
+            <div class="activity-list">`;
+
+        g.activities.forEach(a => {
+            html += `<div class="activity-row">
+                <div class="activity-num">${a.activity_number}</div>
+                <div class="activity-desc">
+                    ${esc(a.activity_description)}
+                    ${a.resources_required ? `<div class="resources">${esc(a.resources_required)}</div>` : ''}
+                    ${a.technical_notes ? `<div class="tech-notes">${esc(a.technical_notes)}</div>` : ''}
+                </div>
+                <div>${a.responsible_person ? esc(a.responsible_person) : '<span style="color:var(--text-light);font-size:0.75rem">Unassigned</span>'}</div>
+                <div>${statusBadge(a.status)}</div>
+                <div class="activity-actions">
+                    <button class="btn btn-sm btn-outline btn-icon" onclick="editActivity(${a.id})" title="Track/Update">Edit</button>
+                    <button class="btn btn-sm btn-outline btn-icon" onclick="viewHistory(${a.id})" title="History">History</button>
+                </div>
+            </div>`;
+        });
+
+        html += `</div></div>`;
+    });
+
+    area.innerHTML = html;
 }
 
-// ─── Delete ──────────────────────────────────────────────────
-async function deleteRecord(id) {
-    if (!confirm('Are you sure you want to delete this record?')) return;
+// ─── Modal ───────────────────────────────────────────────────
+function openModal(activity = null) {
+    const form = $('#activityForm');
+    form.reset();
+    $('#frmId').value = '';
+
+    if (activity) {
+        // Edit mode: show readonly context, hide new-activity fields
+        $('#modalTitle').textContent = 'Track Activity Progress';
+        $('#frmId').value = activity.id;
+        $('#newActivityFields').style.display = 'none';
+        $('#readonlyBlock').style.display = 'block';
+        $('#readonlyBlock').innerHTML = `
+            <div class="rb-row"><span class="rb-label">Thematic Area:</span><span class="rb-value">${esc(activity.thematic_area)}${activity.sub_theme ? ' / ' + esc(activity.sub_theme) : ''}</span></div>
+            <div class="rb-row"><span class="rb-label">Strategy ${esc(activity.strategy_code)}:</span><span class="rb-value">${esc(activity.strategy_description)}</span></div>
+            <div class="rb-row"><span class="rb-label">Activity #${activity.activity_number}:</span><span class="rb-value">${esc(activity.activity_description)}</span></div>
+            ${activity.resources_required ? `<div class="rb-row"><span class="rb-label">Resources:</span><span class="rb-value">${esc(activity.resources_required)}</span></div>` : ''}
+            ${activity.technical_notes ? `<div class="rb-row"><span class="rb-label">Technical Notes:</span><span class="rb-value">${esc(activity.technical_notes)}</span></div>` : ''}
+        `;
+        // Fill tracking fields
+        $('#frmStatus').value = activity.status || 'Not Started';
+        $('#frmResponsible').value = activity.responsible_person || '';
+        $('#frmTargetDate').value = activity.target_date || '';
+        $('#frmCompletionDate').value = activity.completion_date || '';
+        $('#frmProgressNotes').value = activity.progress_notes || '';
+    } else {
+        // New mode: show new-activity fields, hide readonly
+        $('#modalTitle').textContent = 'Add New Activity';
+        $('#newActivityFields').style.display = 'block';
+        $('#readonlyBlock').style.display = 'none';
+    }
+
+    $('#modalOverlay').classList.add('active');
+}
+
+function closeModal() { $('#modalOverlay').classList.remove('active'); }
+
+async function editActivity(id) {
     try {
-        await apiDelete(`/api/records/${id}`);
-        showToast('Record deleted', 'success');
-        loadRecords();
-        loadDashboard();
-    } catch (error) {
-        showToast('Failed to delete record', 'error');
+        const a = await api(`/api/activities/${id}`);
+        openModal(a);
+    } catch (e) { toast('Failed to load activity', 'error'); }
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    const id = $('#frmId').value;
+
+    if (id) {
+        // Update tracking fields only
+        const data = {
+            status: $('#frmStatus').value,
+            responsible_person: $('#frmResponsible').value,
+            target_date: $('#frmTargetDate').value,
+            completion_date: $('#frmCompletionDate').value,
+            progress_notes: $('#frmProgressNotes').value,
+        };
+        try {
+            await api(`/api/activities/${id}`, { method: 'PUT', body: data });
+            toast('Activity updated', 'success');
+            closeModal(); loadActivities(); loadStats();
+        } catch (e) { toast(e.message, 'error'); }
+    } else {
+        // Create new
+        const data = {
+            thematic_area: $('#frmThematic').value,
+            sub_theme: $('#frmSubTheme').value,
+            strategy_code: $('#frmStrategyCode').value,
+            strategy_description: $('#frmStrategyDesc').value,
+            activity_description: $('#frmActivityDesc').value,
+            resources_required: $('#frmResources').value,
+            technical_notes: $('#frmTechNotes').value,
+            status: $('#frmStatus').value,
+            responsible_person: $('#frmResponsible').value,
+            target_date: $('#frmTargetDate').value,
+            completion_date: $('#frmCompletionDate').value,
+            progress_notes: $('#frmProgressNotes').value,
+        };
+        if (!data.activity_description) { toast('Activity description is required', 'error'); return; }
+        try {
+            await api('/api/activities', { method: 'POST', body: data });
+            toast('Activity created', 'success');
+            closeModal(); loadActivities(); loadStats();
+        } catch (e) { toast(e.message, 'error'); }
     }
 }
 
 // ─── History ─────────────────────────────────────────────────
 async function viewHistory(id) {
     try {
-        const history = await apiGet(`/api/records/${id}/history`);
+        const history = await api(`/api/activities/${id}/history`);
         const body = $('#historyBody');
-
         if (history.length === 0) {
-            body.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">No update history yet</p>';
+            body.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:20px">No updates recorded yet</p>';
         } else {
             body.innerHTML = `<ul class="history-list">${history.map(h => `
                 <li class="history-item">
-                    <span class="history-field">${escapeHtml(h.field_changed)}</span>:
-                    <span class="history-old">${escapeHtml(h.old_value)}</span> →
-                    <span class="history-new">${escapeHtml(h.new_value)}</span>
-                    <span class="history-time">${new Date(h.changed_at).toLocaleString()} by ${escapeHtml(h.changed_by)}</span>
-                </li>
-            `).join('')}</ul>`;
+                    <span class="history-field">${esc(h.field_changed)}</span>:
+                    <span class="history-old">${esc(h.old_value)}</span> &rarr;
+                    <span class="history-new">${esc(h.new_value)}</span>
+                    <span class="history-time">${new Date(h.changed_at).toLocaleString()}</span>
+                </li>`).join('')}</ul>`;
         }
-
-        historyOverlay.classList.add('active');
-    } catch (error) {
-        showToast('Failed to load history', 'error');
-    }
+        $('#historyOverlay').classList.add('active');
+    } catch (e) { toast('Failed to load history', 'error'); }
 }
 
-// ─── SharePoint Sync ─────────────────────────────────────────
-async function syncFromSharePoint() {
-    const btn = $('#btnSync');
-    const syncStatus = $('#syncStatus');
-    const syncText = $('#syncText');
-
+// ─── Reload from Excel ───────────────────────────────────────
+async function reloadFromExcel() {
+    const btn = $('#btnReload');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
-    syncStatus.className = 'sync-status syncing';
-    syncText.textContent = 'Syncing...';
-
+    btn.innerHTML = 'Reloading...';
     try {
-        const result = await apiPost('/api/sync', {});
-        showToast(result.message, 'success');
-        syncStatus.className = 'sync-status synced';
-        syncText.textContent = 'Synced';
-        loadRecords();
-        loadDashboard();
-        loadFilterOptions();
-    } catch (error) {
-        syncStatus.className = 'sync-status error';
-        syncText.textContent = 'Sync failed';
-        showToast('SharePoint sync failed. Check Azure AD configuration in .env file.', 'error');
-    } finally {
+        const r = await api('/api/reload', { method: 'POST' });
+        toast(r.message, 'success');
+        loadActivities();
+        loadStats();
+    } catch (e) { toast('Reload failed: ' + e.message, 'error'); }
+    finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Now';
+        btn.innerHTML = 'Reload Excel';
     }
 }
 
 // ─── CSV Export ──────────────────────────────────────────────
-function exportToCSV() {
-    if (allRecords.length === 0) {
-        showToast('No records to export', 'error');
-        return;
-    }
-
-    const headers = [
-        'Staff Name', 'Designation', 'Department', 'Duty Station', 'Phone', 'Email',
-        'Project Code', 'Activity Code', 'Activity Description', 'Budget Line',
-        'Annual Budget', 'Q1 Budget', 'Q2 Budget', 'Q3 Budget', 'Q4 Budget',
-        'Spent to Date', 'Balance', 'Status', 'Partner Organization',
-        'Implementation Area', 'Target Beneficiaries', 'Achieved Beneficiaries', 'Remarks'
-    ];
-
-    const keys = [
-        'staff_name', 'designation', 'department', 'duty_station', 'phone', 'email',
-        'project_code', 'activity_code', 'activity_description', 'budget_line',
-        'annual_budget', 'q1_budget', 'q2_budget', 'q3_budget', 'q4_budget',
-        'spent_to_date', 'balance', 'status', 'partner_organization',
-        'implementation_area', 'target_beneficiaries', 'achieved_beneficiaries', 'remarks'
-    ];
-
+function exportCSV() {
+    if (!allActivities.length) { toast('No data to export', 'error'); return; }
+    const headers = ['Thematic Area', 'Sub-theme', 'Strategy', 'Strategy Description', '#',
+        'Activity', 'Resources Required', 'Technical Notes', 'Status', 'Responsible', 'Target Date',
+        'Completion Date', 'Progress Notes'];
+    const keys = ['thematic_area', 'sub_theme', 'strategy_code', 'strategy_description', 'activity_number',
+        'activity_description', 'resources_required', 'technical_notes', 'status', 'responsible_person',
+        'target_date', 'completion_date', 'progress_notes'];
     let csv = headers.join(',') + '\n';
-    allRecords.forEach(r => {
+    allActivities.forEach(r => {
         csv += keys.map(k => `"${String(r[k] || '').replace(/"/g, '""')}"`).join(',') + '\n';
     });
-
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `Y4_AWP_Directory_${new Date().toISOString().split('T')[0]}.csv`;
+    a.href = URL.createObjectURL(blob);
+    a.download = `COSME_Y4_Activities_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exported successfully', 'success');
-}
-
-// ─── Calculate Balance ───────────────────────────────────────
-function calculateBalance() {
-    const budget = parseFloat(document.getElementById('annual_budget').value) || 0;
-    const spent = parseFloat(document.getElementById('spent_to_date').value) || 0;
-    document.getElementById('balance').value = (budget - spent).toFixed(2);
+    toast('CSV exported', 'success');
 }
 
 // ─── Utilities ───────────────────────────────────────────────
-function formatCurrency(val) {
-    const num = parseFloat(val) || 0;
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toLocaleString();
-}
-
 function statusBadge(status) {
-    const classes = {
-        'Active': 'badge-active',
-        'Completed': 'badge-completed',
-        'On Hold': 'badge-hold',
-        'Cancelled': 'badge-cancelled',
-    };
-    return `<span class="badge ${classes[status] || 'badge-active'}">${escapeHtml(status)}</span>`;
+    const cls = { 'Not Started': 'badge-not-started', 'In Progress': 'badge-in-progress',
+        'Completed': 'badge-completed', 'On Hold': 'badge-on-hold' };
+    return `<span class="badge ${cls[status] || 'badge-not-started'}">${esc(status)}</span>`;
 }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = String(str);
-    return div.innerHTML;
+function esc(s) {
+    if (!s) return '';
+    const d = document.createElement('div');
+    d.textContent = String(s);
+    return d.innerHTML;
 }
 
-function truncate(str, len) {
-    if (!str) return '';
-    str = String(str);
-    return str.length > len ? escapeHtml(str.substring(0, len)) + '...' : escapeHtml(str);
-}
-
-function showToast(message, type = '') {
-    const toast = $('#toast');
-    toast.textContent = message;
-    toast.className = `toast show ${type}`;
-    setTimeout(() => { toast.className = 'toast'; }, 4000);
+function toast(msg, type = '') {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.className = `toast show ${type}`;
+    setTimeout(() => { t.className = 'toast'; }, 4000);
 }

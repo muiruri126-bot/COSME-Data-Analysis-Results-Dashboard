@@ -3,266 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y4 AWP Directory Dashboard</title>
+    <title>COSME Y4 AWP – Detailed Activities Directory</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-left">
             <div class="logo">
-                <i class="fas fa-folder-tree"></i>
                 <div>
-                    <h1>Y4 AWP Directory</h1>
-                    <span class="subtitle">COSME – Annual Work Plan Tracker</span>
+                    <h1>COSME Y4 Detailed Activities</h1>
+                    <span class="subtitle">Annual Work Plan Directory & Tracker</span>
                 </div>
             </div>
         </div>
         <div class="header-right">
-            <span class="sync-status" id="syncStatus">
-                <i class="fas fa-circle"></i> <span id="syncText">Ready</span>
-            </span>
-            <button class="btn btn-sync" id="btnSync" title="Sync from SharePoint">
-                <i class="fas fa-sync-alt"></i> Sync Now
+            <button class="btn btn-sync" id="btnReload" title="Reload from Excel">
+                Reload Excel
             </button>
             <button class="btn btn-primary" id="btnAddNew">
-                <i class="fas fa-plus"></i> New Record
+                Add Activity
             </button>
         </div>
     </header>
 
+    <!-- Navigation Tabs (Thematic Areas) -->
+    <nav class="theme-tabs" id="themeTabs">
+        <button class="tab active" data-theme="">All Areas</button>
+    </nav>
+
     <!-- Dashboard Stats -->
     <section class="stats-grid" id="statsGrid">
         <div class="stat-card">
-            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="stat-icon blue"></div>
             <div class="stat-info">
                 <span class="stat-value" id="statTotal">0</span>
-                <span class="stat-label">Total Records</span>
+                <span class="stat-label">Total Activities</span>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-icon grey"></div>
             <div class="stat-info">
-                <span class="stat-value" id="statActive">0</span>
-                <span class="stat-label">Active</span>
+                <span class="stat-value" id="statNotStarted">0</span>
+                <span class="stat-label">Not Started</span>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon orange"><i class="fas fa-wallet"></i></div>
+            <div class="stat-icon orange"></div>
             <div class="stat-info">
-                <span class="stat-value" id="statBudget">0</span>
-                <span class="stat-label">Total Budget</span>
+                <span class="stat-value" id="statInProgress">0</span>
+                <span class="stat-label">In Progress</span>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon red"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="stat-icon green"></div>
             <div class="stat-info">
-                <span class="stat-value" id="statSpent">0</span>
-                <span class="stat-label">Spent to Date</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon purple"><i class="fas fa-building"></i></div>
-            <div class="stat-info">
-                <span class="stat-value" id="statDepts">0</span>
-                <span class="stat-label">Departments</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon teal"><i class="fas fa-clock"></i></div>
-            <div class="stat-info">
-                <span class="stat-value" id="statLastSync">Never</span>
-                <span class="stat-label">Last Sync</span>
+                <span class="stat-value" id="statCompleted">0</span>
+                <span class="stat-label">Completed</span>
             </div>
         </div>
     </section>
 
-    <!-- Filters & Search -->
+    <!-- Filters -->
     <section class="filters-bar">
         <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search by name, department, activity...">
+            <input type="text" id="searchInput" placeholder="Search activities, strategies, resources...">
         </div>
-        <select id="filterDepartment" class="filter-select">
-            <option value="">All Departments</option>
+        <select id="filterStrategy" class="filter-select">
+            <option value="">All Strategies</option>
+            <option value="A">Strategy A</option>
+            <option value="B">Strategy B</option>
+            <option value="C">Strategy C</option>
+            <option value="D">Strategy D</option>
+            <option value="E">Strategy E</option>
         </select>
         <select id="filterStatus" class="filter-select">
             <option value="">All Statuses</option>
-            <option value="Active">Active</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
             <option value="Completed">Completed</option>
             <option value="On Hold">On Hold</option>
-            <option value="Cancelled">Cancelled</option>
-        </select>
-        <select id="filterStation" class="filter-select">
-            <option value="">All Duty Stations</option>
         </select>
         <button class="btn btn-outline" id="btnExport">
-            <i class="fas fa-download"></i> Export CSV
+            Export CSV
         </button>
     </section>
 
-    <!-- Data Table -->
-    <section class="table-container">
-        <table class="data-table" id="directoryTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Staff Name</th>
-                    <th>Designation</th>
-                    <th>Department</th>
-                    <th>Duty Station</th>
-                    <th>Project Code</th>
-                    <th>Activity</th>
-                    <th>Annual Budget</th>
-                    <th>Spent</th>
-                    <th>Balance</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <tr><td colspan="12" class="loading-row"><i class="fas fa-spinner fa-spin"></i> Loading records...</td></tr>
-            </tbody>
-        </table>
+    <!-- Activities grouped by Strategy -->
+    <section class="content-area" id="contentArea">
+        <div class="loading-msg">Loading activities...</div>
     </section>
 
-    <!-- Record Form Modal -->
+    <!-- Activity Form Modal -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="recordModal">
+        <div class="modal" id="activityModal">
             <div class="modal-header">
-                <h2 id="modalTitle"><i class="fas fa-edit"></i> Add New Record</h2>
+                <h2 id="modalTitle">Track Activity</h2>
                 <button class="modal-close" id="modalClose">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="recordForm">
-                    <input type="hidden" id="recordId">
+                <form id="activityForm">
+                    <input type="hidden" id="frmId">
 
+                    <!-- Read-only context from Excel -->
                     <div class="form-section">
-                        <h3><i class="fas fa-user"></i> Staff Details</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="staff_name">Staff Name <span class="required">*</span></label>
-                                <input type="text" id="staff_name" name="staff_name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="designation">Designation</label>
-                                <input type="text" id="designation" name="designation">
-                            </div>
-                            <div class="form-group">
-                                <label for="department">Department</label>
-                                <input type="text" id="department" name="department">
-                            </div>
-                            <div class="form-group">
-                                <label for="duty_station">Duty Station</label>
-                                <input type="text" id="duty_station" name="duty_station">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input type="tel" id="phone" name="phone">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email">
-                            </div>
-                        </div>
+                        <h3>Activity Details (from AWP)</h3>
+                        <div class="readonly-block" id="readonlyBlock"></div>
                     </div>
 
+                    <!-- Editable tracking fields -->
                     <div class="form-section">
-                        <h3><i class="fas fa-project-diagram"></i> Activity Details</h3>
+                        <h3>Tracking & Updates</h3>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="project_code">Project Code</label>
-                                <input type="text" id="project_code" name="project_code">
-                            </div>
-                            <div class="form-group">
-                                <label for="activity_code">Activity Code</label>
-                                <input type="text" id="activity_code" name="activity_code">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="activity_description">Activity Description</label>
-                                <textarea id="activity_description" name="activity_description" rows="2"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="budget_line">Budget Line</label>
-                                <input type="text" id="budget_line" name="budget_line">
-                            </div>
-                            <div class="form-group">
-                                <label for="partner_organization">Partner Organization</label>
-                                <input type="text" id="partner_organization" name="partner_organization">
-                            </div>
-                            <div class="form-group">
-                                <label for="implementation_area">Implementation Area</label>
-                                <input type="text" id="implementation_area" name="implementation_area">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3><i class="fas fa-coins"></i> Budget & Expenditure</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="annual_budget">Annual Budget</label>
-                                <input type="number" id="annual_budget" name="annual_budget" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="q1_budget">Q1 Budget</label>
-                                <input type="number" id="q1_budget" name="q1_budget" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="q2_budget">Q2 Budget</label>
-                                <input type="number" id="q2_budget" name="q2_budget" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="q3_budget">Q3 Budget</label>
-                                <input type="number" id="q3_budget" name="q3_budget" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="q4_budget">Q4 Budget</label>
-                                <input type="number" id="q4_budget" name="q4_budget" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="spent_to_date">Spent to Date</label>
-                                <input type="number" id="spent_to_date" name="spent_to_date" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="balance">Balance</label>
-                                <input type="number" id="balance" name="balance" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3><i class="fas fa-chart-bar"></i> Tracking</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select id="status" name="status">
-                                    <option value="Active">Active</option>
+                                <label for="frmStatus">Status</label>
+                                <select id="frmStatus" name="status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
                                     <option value="Completed">Completed</option>
                                     <option value="On Hold">On Hold</option>
-                                    <option value="Cancelled">Cancelled</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="target_beneficiaries">Target Beneficiaries</label>
-                                <input type="number" id="target_beneficiaries" name="target_beneficiaries" min="0">
+                                <label for="frmResponsible">Responsible Person</label>
+                                <input type="text" id="frmResponsible" name="responsible_person" placeholder="e.g., Benard Muiruri">
                             </div>
                             <div class="form-group">
-                                <label for="achieved_beneficiaries">Achieved Beneficiaries</label>
-                                <input type="number" id="achieved_beneficiaries" name="achieved_beneficiaries" min="0">
+                                <label for="frmTargetDate">Target Date</label>
+                                <input type="date" id="frmTargetDate" name="target_date">
+                            </div>
+                            <div class="form-group">
+                                <label for="frmCompletionDate">Completion Date</label>
+                                <input type="date" id="frmCompletionDate" name="completion_date">
                             </div>
                             <div class="form-group full-width">
-                                <label for="remarks">Remarks</label>
-                                <textarea id="remarks" name="remarks" rows="3"></textarea>
+                                <label for="frmProgressNotes">Progress Notes</label>
+                                <textarea id="frmProgressNotes" name="progress_notes" rows="4" placeholder="Update progress, issues encountered, next steps..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For new activities: editable core fields -->
+                    <div class="form-section" id="newActivityFields" style="display:none">
+                        <h3>Activity Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="frmThematic">Thematic Area <span class="required">*</span></label>
+                                <select id="frmThematic" name="thematic_area">
+                                    <option value="Seaweed">Seaweed</option>
+                                    <option value="Forestry-Mangrove">Forestry-Mangrove</option>
+                                    <option value="Forestry-Terretrial">Forestry-Terrestrial</option>
+                                    <option value="EBA + GJJ">EBA + GJJ</option>
+                                    <option value="VSLA-REGAG - Schools">VSLA-REGAG - Schools</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="frmSubTheme">Sub-theme</label>
+                                <input type="text" id="frmSubTheme" name="sub_theme" placeholder="e.g., GRAPP, HHAP, VSLA">
+                            </div>
+                            <div class="form-group">
+                                <label for="frmStrategyCode">Strategy Code <span class="required">*</span></label>
+                                <select id="frmStrategyCode" name="strategy_code">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="frmStrategyDesc">Strategy Description</label>
+                                <input type="text" id="frmStrategyDesc" name="strategy_description" placeholder="e.g., Training/capacity gaps">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="frmActivityDesc">Activity Description <span class="required">*</span></label>
+                                <textarea id="frmActivityDesc" name="activity_description" rows="3" placeholder="Describe the activity..."></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="frmResources">Resources Required</label>
+                                <textarea id="frmResources" name="resources_required" rows="2"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="frmTechNotes">Technical Notes</label>
+                                <textarea id="frmTechNotes" name="technical_notes" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-actions">
                         <button type="button" class="btn btn-outline" id="btnCancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="btnSubmit">
-                            <i class="fas fa-save"></i> Save Record
+                        <button type="submit" class="btn btn-primary">
+                            Save
                         </button>
                     </div>
                 </form>
@@ -270,22 +201,18 @@
         </div>
     </div>
 
-    <!-- View/History Modal -->
+    <!-- History Modal -->
     <div class="modal-overlay" id="historyOverlay">
         <div class="modal modal-sm" id="historyModal">
             <div class="modal-header">
-                <h2><i class="fas fa-history"></i> Update History</h2>
+                <h2>Update History</h2>
                 <button class="modal-close" id="historyClose">&times;</button>
             </div>
-            <div class="modal-body" id="historyBody">
-                <p>Loading...</p>
-            </div>
+            <div class="modal-body" id="historyBody"></div>
         </div>
     </div>
 
-    <!-- Toast notification -->
     <div class="toast" id="toast"></div>
-
     <script src="app.js"></script>
 </body>
 </html>

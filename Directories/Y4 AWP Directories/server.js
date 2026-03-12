@@ -4,183 +4,141 @@ const path = require('path');
 require('dotenv').config();
 
 const DirectoryDB = require('./database');
-const SharePointService = require('./sharepoint-service');
+const { parseExcel } = require('./excel-parser');
 
 const app = express();
 const db = new DirectoryDB();
-const sharepoint = new SharePointService();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ─── Load Excel data on startup ──────────────────────────────
+function loadExcelData() {
+    try {
+        const records = parseExcel();
+        const count = db.bulkInsert(records);
+        console.log(`[Data] Loaded ${count} activities from COSME Y4 Detailed Activities.xlsx`);
+        return count;
+    } catch (error) {
+        console.error('[Data] Failed to load Excel:', error.message);
+        return 0;
+    }
+}
+
+loadExcelData();
+
 // ─── API Routes ──────────────────────────────────────────────
 
-// Get dashboard stats
+// Dashboard stats
 app.get('/api/stats', (req, res) => {
     try {
-        const stats = db.getDashboardStats();
-        res.json(stats);
+        res.json(db.getDashboardStats());
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Get all records with optional filters
-app.get('/api/records', (req, res) => {
+// Get all activities (with optional filters)
+app.get('/api/activities', (req, res) => {
     try {
         const filters = {
             search: req.query.search,
-            department: req.query.department,
+            thematic_area: req.query.thematic_area,
+            sub_theme: req.query.sub_theme,
+            strategy_code: req.query.strategy_code,
             status: req.query.status,
-            duty_station: req.query.duty_station,
         };
-        const records = db.getAllRecords(filters);
-        res.json(records);
+        res.json(db.getAllActivities(filters));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Get a single record
-app.get('/api/records/:id', (req, res) => {
+// Get single activity
+app.get('/api/activities/:id', (req, res) => {
     try {
-        const record = db.getRecordById(parseInt(req.params.id, 10));
-        if (!record) return res.status(404).json({ error: 'Record not found' });
+        const record = db.getActivityById(parseInt(req.params.id, 10));
+        if (!record) return res.status(404).json({ error: 'Activity not found' });
         res.json(record);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Create a new record
-app.post('/api/records', (req, res) => {
+// Create new activity
+app.post('/api/activities', (req, res) => {
     try {
-        if (!req.body.staff_name) {
-            return res.status(400).json({ error: 'Staff name is required' });
+        if (!req.body.activity_description || !req.body.thematic_area) {
+            return res.status(400).json({ error: 'Activity description and thematic area are required' });
         }
-        const record = db.createRecord(req.body);
-        res.status(201).json(record);
+        res.status(201).json(db.createActivity(req.body));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Update a record
-app.put('/api/records/:id', (req, res) => {
+// Update activity
+app.put('/api/activities/:id', (req, res) => {
     try {
-        const updated = db.updateRecord(parseInt(req.params.id, 10), req.body);
-        if (!updated) return res.status(404).json({ error: 'Record not found' });
+        const updated = db.updateActivity(parseInt(req.params.id, 10), req.body);
+        if (!updated) return res.status(404).json({ error: 'Activity not found' });
         res.json(updated);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Delete a record
-app.delete('/api/records/:id', (req, res) => {
+// Delete activity
+app.delete('/api/activities/:id', (req, res) => {
     try {
-        db.deleteRecord(parseInt(req.params.id, 10));
-        res.json({ message: 'Record deleted' });
+        db.deleteActivity(parseInt(req.params.id, 10));
+        res.json({ message: 'Activity deleted' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Get distinct filter values
+// Get filter options
 app.get('/api/filters/:column', (req, res) => {
     try {
-        const values = db.getDistinctValues(req.params.column);
-        res.json(values);
+        res.json(db.getDistinctValues(req.params.column));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Get update history for a record
-app.get('/api/records/:id/history', (req, res) => {
+// Get update history
+app.get('/api/activities/:id/history', (req, res) => {
     try {
-        const history = db.getUpdateHistory(parseInt(req.params.id, 10));
-        res.json(history);
+        res.json(db.getUpdateHistory(parseInt(req.params.id, 10)));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Get sync logs
-app.get('/api/sync/log', (req, res) => {
+// Re-sync from Excel file
+app.post('/api/reload', (req, res) => {
     try {
-        const logs = db.getSyncLog();
-        res.json(logs);
+        const count = loadExcelData();
+        res.json({ message: `Reloaded ${count} activities from Excel`, count });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Trigger manual SharePoint sync
-app.post('/api/sync', async (req, res) => {
-    try {
-        console.log('[Sync] Manual sync triggered...');
-        const data = await sharepoint.fetchExcelData();
-        let totalSynced = 0;
-
-        for (const [sheetName, rows] of Object.entries(data)) {
-            console.log(`[Sync] Processing sheet: ${sheetName} (${rows.length} rows)`);
-            const count = db.bulkUpsertFromSharePoint(rows);
-            totalSynced += count;
-        }
-
-        res.json({ message: `Synced ${totalSynced} records from SharePoint`, count: totalSynced });
-    } catch (error) {
-        console.error('[Sync] Error:', error.message);
-        res.status(500).json({
-            error: 'SharePoint sync failed',
-            details: error.message,
-            hint: 'Ensure Azure AD credentials are configured in .env file'
-        });
-    }
-});
-
-// Serve the main page
+// Serve main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ─── Auto-sync scheduler ────────────────────────────────────
-const syncInterval = (parseInt(process.env.SYNC_INTERVAL_MINUTES, 10) || 5) * 60 * 1000;
-
-async function autoSync() {
-    try {
-        console.log('[AutoSync] Starting scheduled sync...');
-        const data = await sharepoint.fetchExcelData();
-        let totalSynced = 0;
-        for (const [sheetName, rows] of Object.entries(data)) {
-            totalSynced += db.bulkUpsertFromSharePoint(rows);
-        }
-        console.log(`[AutoSync] Completed: ${totalSynced} records synced`);
-    } catch (error) {
-        console.log('[AutoSync] Skipped - SharePoint not configured or unreachable');
-    }
-}
-
-// Start auto-sync after initial delay
-setTimeout(() => {
-    autoSync();
-    setInterval(autoSync, syncInterval);
-}, 10000);
-
 // ─── Start server ────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`\n╔══════════════════════════════════════════════╗`);
-    console.log(`║  Y4 AWP Directory Dashboard                  ║`);
-    console.log(`║  Running at: http://localhost:${PORT}            ║`);
-    console.log(`║  Auto-sync every ${process.env.SYNC_INTERVAL_MINUTES || 5} minutes               ║`);
-    console.log(`╚══════════════════════════════════════════════╝\n`);
+    console.log(`\n╔══════════════════════════════════════════════════════╗`);
+    console.log(`║  COSME Y4 AWP Detailed Activities Directory          ║`);
+    console.log(`║  Running at: http://localhost:${PORT}                    ║`);
+    console.log(`╚══════════════════════════════════════════════════════╝\n`);
 });
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-    db.close();
-    process.exit(0);
-});
+process.on('SIGINT', () => { db.close(); process.exit(0); });
