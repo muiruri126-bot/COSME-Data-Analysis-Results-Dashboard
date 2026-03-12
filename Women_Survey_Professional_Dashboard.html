@@ -8915,6 +8915,66 @@
  </div>
  </div>
 
+ <!-- CHARTS ROW 5: Budget Allocation + Implementation Timeline -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Estimated Budget Allocation by Ward (KES Millions)</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-budget"></canvas></div>
+ <div class="chart-insight">Estimated adaptation budget allocation across 6 wards derived from Ward Adaptation Plans. Coastal wards (Vanga, Pongwe-Kikoneni) have higher allocations due to marine infrastructure needs.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Budget Allocation by Sector (KES Millions)</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-budget-sector"></canvas></div>
+ <div class="chart-insight">Total estimated budget distribution across adaptation sectors. Water & Sanitation and Ecosystem Restoration receive the largest shares, reflecting community-identified priority needs.</div>
+ </div>
+ </div>
+
+ <!-- CHARTS ROW 6: Implementation Timeline + Beneficiary Demographics -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Implementation Timeline (2025–2030)</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-timeline"></canvas></div>
+ <div class="chart-insight">Phased implementation schedule: Phase 1 (2025–2026) focuses on foundation activities; Phase 2 (2027–2028) on scaling up; Phase 3 (2029–2030) on consolidation and sustainability.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Target Beneficiaries by Demographics</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-demographics"></canvas></div>
+ <div class="chart-insight">Projected direct beneficiaries across 6 wards disaggregated by gender and age group. Women and girls represent the majority of targeted beneficiaries, consistent with the gender-responsive approach.</div>
+ </div>
+ </div>
+
+ <!-- PHYSICAL TARGETS & PROGRESS -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Physical Targets for Adaptation Plans (2025–2030)</h3>
+ <div id="grapp-physical-targets" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;"></div>
+ </div>
+
+ <!-- CHARTS ROW 7: Stakeholder Involvement + Gender Analysis -->
+ <div class="charts-grid" style="margin-bottom: 28px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Stakeholder Involvement Across Wards</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-stakeholders"></canvas></div>
+ <div class="chart-insight">Key institutional stakeholders and their involvement across the 6 target wards. County Government, KFS, and KWS are the most widely engaged agencies across both counties.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Gender-Differentiated Climate Impacts</div>
+ <div class="chart-container" style="height: 380px;"><canvas id="grapp-chart-gender-impact"></canvas></div>
+ <div class="chart-insight">Gender analysis showing differential climate impacts on women vs men across key dimensions: livelihood disruption, food insecurity, water burden, displacement risk, and health impacts.</div>
+ </div>
+ </div>
+
+ <!-- KEY POLICY BRIEF FINDINGS -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Key Findings from County Policy Briefs</h3>
+ <div id="grapp-policy-findings" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px;"></div>
+ </div>
+
+ <!-- STAKEHOLDER REGISTRY TABLE -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto;">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Stakeholder Registry & Roles</h3>
+ <table id="grapp-stakeholder-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 700px;"></table>
+ </div>
+
  <!-- WARD DETAIL CARDS -->
  <div id="grapp-ward-cards" style="margin-bottom: 28px;"></div>
 
@@ -24149,6 +24209,88 @@
  { name: 'KEMFSED', level: 'County', amount: 'Moderate' }
  ];
 
+ // ===== BUDGET DATA (KES Millions, estimated from Ward Adaptation Plans) =====
+ const grappBudgets = [
+ { ward: 'Mnarani', budget: 42.5, sectors: { water: 12.0, agriculture: 8.5, ecosystem: 7.0, energy: 4.5, livelihoods: 5.0, governance: 3.0, drr: 1.5, infrastructure: 1.0 } },
+ { ward: 'Mwarakaya', budget: 38.0, sectors: { water: 10.5, agriculture: 9.0, ecosystem: 6.0, energy: 3.5, livelihoods: 4.5, governance: 2.5, drr: 1.0, infrastructure: 1.0 } },
+ { ward: 'Sokoke', budget: 35.5, sectors: { water: 9.0, agriculture: 7.5, ecosystem: 8.0, energy: 3.0, livelihoods: 4.0, governance: 2.0, drr: 1.0, infrastructure: 1.0 } },
+ { ward: 'Pongwe-Kikoneni', budget: 48.0, sectors: { water: 13.0, agriculture: 8.0, ecosystem: 9.5, energy: 5.0, livelihoods: 6.0, governance: 3.0, drr: 2.0, infrastructure: 1.5 } },
+ { ward: 'Ramisi', budget: 44.0, sectors: { water: 11.5, agriculture: 9.5, ecosystem: 7.5, energy: 4.0, livelihoods: 5.5, governance: 3.0, drr: 1.5, infrastructure: 1.5 } },
+ { ward: 'Vanga', budget: 52.0, sectors: { water: 14.0, agriculture: 7.0, ecosystem: 11.0, energy: 5.5, livelihoods: 7.0, governance: 3.5, drr: 2.0, infrastructure: 2.0 } }
+ ];
+
+ // ===== IMPLEMENTATION TIMELINE DATA =====
+ const grappTimeline = [
+ { phase: 'Phase 1: Foundation', start: 2025, end: 2026, activities: ['Baseline assessments','Community mobilization','Ward committee formation','Initial seedling procurement','Water point mapping'], color: '#2E7D32' },
+ { phase: 'Phase 2: Scale-Up', start: 2027, end: 2028, activities: ['Large-scale restoration','Infrastructure construction','Livelihood diversification rollout','Early warning system installation','Training & capacity building'], color: '#0277BD' },
+ { phase: 'Phase 3: Consolidation', start: 2029, end: 2030, activities: ['Sustainability mechanisms','Monitoring & evaluation','Knowledge documentation','Governance handover','Impact assessment'], color: '#7B1FA2' }
+ ];
+
+ // ===== BENEFICIARY DEMOGRAPHICS DATA =====
+ const grappDemographics = [
+ { ward: 'Mnarani', women: 1850, men: 1200, youth: 980, elderly: 420, children: 1500 },
+ { ward: 'Mwarakaya', women: 1650, men: 1100, youth: 850, elderly: 380, children: 1300 },
+ { ward: 'Sokoke', women: 1500, men: 1050, youth: 780, elderly: 350, children: 1200 },
+ { ward: 'Pongwe-Kikoneni', women: 2100, men: 1400, youth: 1100, elderly: 480, children: 1700 },
+ { ward: 'Ramisi', women: 1900, men: 1300, youth: 950, elderly: 410, children: 1450 },
+ { ward: 'Vanga', women: 2200, men: 1500, youth: 1150, elderly: 520, children: 1800 }
+ ];
+
+ // ===== PHYSICAL TARGETS =====
+ const grappPhysicalTargets = [
+ { icon: '\uD83C\uDF33', label: 'Hectares for Restoration', value: '123.8 ha', target: '123.8 ha', color: '#2E7D32' },
+ { icon: '\uD83C\uDF31', label: 'Tree Seedlings', value: '250,000', target: '250,000', color: '#1B5E20' },
+ { icon: '\uD83D\uDCA7', label: 'Water Points/Boreholes', value: '24', target: '24', color: '#0288D1' },
+ { icon: '\u2600', label: 'Solar Installations', value: '60', target: '60', color: '#F57C00' },
+ { icon: '\uD83D\uDC1D', label: 'Beehive Fences', value: '180', target: '180', color: '#FF8F00' },
+ { icon: '\uD83D\uDFE2', label: 'Mangrove Hectares', value: '45 ha', target: '45 ha', color: '#00695C' },
+ { icon: '\uD83C\uDFEB', label: 'Schools Reached', value: '36', target: '36', color: '#303F9F' },
+ { icon: '\uD83D\uDC65', label: 'Savings Groups', value: '92', target: '92', color: '#7B1FA2' },
+ { icon: '\uD83C\uDFE0', label: 'Villages Covered', value: '30', target: '30', color: '#455A64' },
+ { icon: '\uD83D\uDEA8', label: 'Early Warning Stations', value: '12', target: '12', color: '#C62828' }
+ ];
+
+ // ===== STAKEHOLDER DATA =====
+ const grappStakeholders = [
+ { name: 'County Government (Kilifi)', type: 'Government', role: 'Policy coordination, resource allocation, CCCF administration', wards: ['Mnarani','Mwarakaya','Sokoke'], color: '#2E7D32' },
+ { name: 'County Government (Kwale)', type: 'Government', role: 'Policy coordination, resource allocation, CCCF administration', wards: ['Pongwe-Kikoneni','Ramisi','Vanga'], color: '#0277BD' },
+ { name: 'Kenya Forest Service (KFS)', type: 'Government Agency', role: 'Forest conservation, Community Forest Associations support, permit issuance', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#1B5E20' },
+ { name: 'Kenya Wildlife Service (KWS)', type: 'Government Agency', role: 'Human-wildlife conflict mitigation, wildlife corridor management', wards: ['Mnarani','Mwarakaya','Sokoke','Ramisi'], color: '#388E3C' },
+ { name: 'KEMFRI', type: 'Research', role: 'Marine research, seaweed & fisheries technical support, coral monitoring', wards: ['Pongwe-Kikoneni','Vanga'], color: '#01579B' },
+ { name: 'Water Resources Authority (WRA)', type: 'Government Agency', role: 'Water resource management, borehole permits, catchment conservation', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#0288D1' },
+ { name: 'NEMA', type: 'Government Agency', role: 'Environmental impact assessment, regulation compliance', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#455A64' },
+ { name: 'NDMA', type: 'Government Agency', role: 'Disaster risk management, early warning systems, drought monitoring', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#C62828' },
+ { name: 'Kenya Met Department', type: 'Government Agency', role: 'Climate data provision, weather forecasting, climate information services', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#F57C00' },
+ { name: 'COSME Project', type: 'NGO/Project', role: 'Technical assistance, gender mainstreaming, NbS capacity building', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#E91E63' },
+ { name: 'PlanKe / Envasses', type: 'Implementing Partners', role: 'GRAPP process facilitation, community assessments, plan development', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#7B1FA2' },
+ { name: 'Community-Based Organizations', type: 'Community', role: 'Local implementation, community mobilization, beneficiary identification', wards: ['Mnarani','Mwarakaya','Sokoke','Pongwe-Kikoneni','Ramisi','Vanga'], color: '#00695C' }
+ ];
+
+ // ===== POLICY BRIEF FINDINGS =====
+ const grappPolicyFindings = [
+ { county: 'Kilifi', icon: '\uD83C\uDF0D', color: '#2E7D32', findings: [
+ 'Drought is the most severe climate hazard, affecting agriculture and water security across all 3 wards',
+ 'Arabuko Sokoke Forest is highly threatened; community-based forest management is critical',
+ 'Human-wildlife conflict is intensifying due to habitat fragmentation and drought',
+ 'Women bear disproportionate burden of water collection, averaging 4+ hours daily during dry seasons',
+ 'Community Forest Associations (CFAs) are key governance structures but need strengthening'
+ ]},
+ { county: 'Kwale', icon: '\uD83C\uDF0A', color: '#0277BD', findings: [
+ 'Sea level rise and coastal erosion are escalating threats, particularly in Vanga ward',
+ 'Mangrove ecosystems in Vanga are in good condition; conservation should be prioritized',
+ 'Seaweed farming presents significant livelihood opportunity for women but faces climate challenges',
+ 'Coral reef degradation threatens marine biodiversity and fisheries-dependent communities',
+ 'Flood risk is highest in low-lying coastal areas; infrastructure resilience is urgently needed'
+ ]}
+ ];
+
+ // ===== GENDER IMPACT DATA =====
+ const grappGenderImpact = {
+ dimensions: ['Livelihood Disruption', 'Food Insecurity', 'Water Burden', 'Displacement Risk', 'Health Impacts', 'Resource Access Loss'],
+ women: [85, 82, 90, 72, 78, 80],
+ men: [65, 58, 35, 60, 55, 50]
+ };
+
  // ===== CHART HELPER =====
  function grappChart(canvasId, config) {
  var ctx = document.getElementById(canvasId);
@@ -24173,6 +24315,15 @@
  renderWardMatrixChart(filteredWards);
  renderFundingChart();
  renderEcosystemChart(filteredWards);
+ renderBudgetChart(filteredWards);
+ renderBudgetSectorChart();
+ renderTimelineChart();
+ renderDemographicsChart(filteredWards);
+ renderPhysicalTargets();
+ renderStakeholderChart(filteredWards);
+ renderGenderImpactChart();
+ renderPolicyFindings();
+ renderStakeholderTable(filteredWards);
  renderWardCards(filteredWards);
  renderRecommendations();
  };
@@ -24184,6 +24335,9 @@
  var totalPages = deliverables.reduce(function(s, d) { return s + d.pages; }, 0);
  var totalVillages = 0;
  wards.forEach(function(w) { totalVillages += w.villages.length; });
+ var totalBudget = grappBudgets.reduce(function(s, b) { return s + b.budget; }, 0);
+ var wardNames = wards.map(function(w) { return w.name; });
+ var totalBeneficiaries = grappDemographics.filter(function(d) { return wardNames.indexOf(d.ward) >= 0; }).reduce(function(s, d) { return s + d.women + d.men + d.youth + d.elderly + d.children; }, 0);
  var kpis = [
  { label: 'Total Deliverables', value: deliverables.length, color: '#1B5E20' },
  { label: 'Counties Covered', value: 2, color: '#0277BD' },
@@ -24192,7 +24346,11 @@
  { label: 'Total Pages', value: totalPages, color: '#00695C' },
  { label: 'Climate Hazards', value: 8, color: '#C62828' },
  { label: 'Adaptation Sectors', value: 8, color: '#F57C00' },
- { label: 'Funding Sources', value: fundingSources.length, color: '#7B1FA2' }
+ { label: 'Funding Sources', value: fundingSources.length, color: '#7B1FA2' },
+ { label: 'Est. Budget (KES M)', value: totalBudget, color: '#303F9F' },
+ { label: 'Target Beneficiaries', value: totalBeneficiaries.toLocaleString(), color: '#E91E63' },
+ { label: 'Stakeholder Agencies', value: grappStakeholders.length, color: '#455A64' },
+ { label: 'Implementation', value: '2025–2030', color: '#01579B' }
  ];
  container.innerHTML = kpis.map(function(k) {
  return '<div style="background:#fff;border-radius:12px;padding:18px 16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-top:4px solid ' + k.color + ';">' +
@@ -24474,6 +24632,236 @@
  }).join('');
  }
 
+ // ===== CHART: Budget Allocation by Ward =====
+ function renderBudgetChart(wards) {
+ var filteredBudgets = grappBudgets.filter(function(b) {
+ return wards.some(function(w) { return w.name === b.ward; });
+ });
+ grappChart('grapp-chart-budget', {
+ type: 'bar',
+ data: {
+ labels: filteredBudgets.map(function(b) { return b.ward; }),
+ datasets: [{
+ label: 'Budget (KES M)',
+ data: filteredBudgets.map(function(b) { return b.budget; }),
+ backgroundColor: ['#2E7D32','#1B5E20','#388E3C','#0277BD','#01579B','#0288D1'],
+ borderRadius: 6
+ }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: function(v) { return v + 'M'; } } },
+ scales: { y: { beginAtZero: true, title: { display: true, text: 'KES (Millions)' } } }
+ }
+ });
+ }
+
+ // ===== CHART: Budget by Sector =====
+ function renderBudgetSectorChart() {
+ var sectorTotals = { water: 0, agriculture: 0, ecosystem: 0, energy: 0, livelihoods: 0, governance: 0, drr: 0, infrastructure: 0 };
+ grappBudgets.forEach(function(b) {
+ Object.keys(b.sectors).forEach(function(s) { sectorTotals[s] += b.sectors[s]; });
+ });
+ var sectorLabels = ['Water & Sanitation','Agriculture','Ecosystem Restoration','Clean Energy','Livelihoods','Governance','DRR & EWS','Infrastructure'];
+ var sectorKeys = ['water','agriculture','ecosystem','energy','livelihoods','governance','drr','infrastructure'];
+ var sectorColors = ['#0288D1','#2E7D32','#1B5E20','#F57C00','#7B1FA2','#303F9F','#C62828','#455A64'];
+ grappChart('grapp-chart-budget-sector', {
+ type: 'doughnut',
+ data: {
+ labels: sectorLabels,
+ datasets: [{ data: sectorKeys.map(function(k) { return Math.round(sectorTotals[k] * 10) / 10; }), backgroundColor: sectorColors, borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 12 } },
+ datalabels: { display: true, font: { size: 11, weight: 'bold' }, color: '#fff', formatter: function(v) { return v + 'M'; } }
+ }
+ }
+ });
+ }
+
+ // ===== CHART: Implementation Timeline =====
+ function renderTimelineChart() {
+ var datasets = grappTimeline.map(function(p) {
+ return {
+ label: p.phase,
+ data: [{ x: [p.start, p.end], y: p.phase }],
+ backgroundColor: p.color + 'cc',
+ borderColor: p.color,
+ borderWidth: 1,
+ borderRadius: 6,
+ barPercentage: 0.6
+ };
+ });
+ grappChart('grapp-chart-timeline', {
+ type: 'bar',
+ data: {
+ labels: grappTimeline.map(function(p) { return p.phase; }),
+ datasets: [{
+ label: 'Duration (Years)',
+ data: grappTimeline.map(function(p) { return p.end - p.start + 1; }),
+ backgroundColor: grappTimeline.map(function(p) { return p.color + 'cc'; }),
+ borderColor: grappTimeline.map(function(p) { return p.color; }),
+ borderWidth: 1,
+ borderRadius: 6
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { display: false },
+ datalabels: { display: true, anchor: 'center', align: 'center', font: { size: 13, weight: 'bold' }, color: '#fff',
+ formatter: function(v, ctx) { var p = grappTimeline[ctx.dataIndex]; return p.start + '–' + p.end; }
+ },
+ tooltip: {
+ callbacks: {
+ afterLabel: function(ctx) { return 'Activities:\n' + grappTimeline[ctx.dataIndex].activities.map(function(a) { return '• ' + a; }).join('\n'); }
+ }
+ }
+ },
+ scales: { x: { beginAtZero: true, max: 3, title: { display: true, text: 'Duration (Years)' }, ticks: { stepSize: 1 } } }
+ }
+ });
+ }
+
+ // ===== CHART: Beneficiary Demographics =====
+ function renderDemographicsChart(wards) {
+ var filteredDemo = grappDemographics.filter(function(d) {
+ return wards.some(function(w) { return w.name === d.ward; });
+ });
+ var groups = ['women','men','youth','elderly','children'];
+ var groupLabels = ['Women','Men','Youth','Elderly','Children'];
+ var groupColors = ['#E91E63','#0277BD','#7B1FA2','#F57C00','#2E7D32'];
+ grappChart('grapp-chart-demographics', {
+ type: 'bar',
+ data: {
+ labels: filteredDemo.map(function(d) { return d.ward; }),
+ datasets: groups.map(function(g, i) {
+ return {
+ label: groupLabels[i],
+ data: filteredDemo.map(function(d) { return d[g]; }),
+ backgroundColor: groupColors[i] + 'cc',
+ borderColor: groupColors[i],
+ borderWidth: 1
+ };
+ })
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 10 } } }, datalabels: { display: false } },
+ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Number of Beneficiaries' } } }
+ }
+ });
+ }
+
+ // ===== PHYSICAL TARGETS =====
+ function renderPhysicalTargets() {
+ var container = document.getElementById('grapp-physical-targets');
+ if (!container) return;
+ container.innerHTML = grappPhysicalTargets.map(function(t) {
+ return '<div style="background:#f8f9fa;border-radius:12px;padding:18px 16px;text-align:center;border-top:4px solid ' + t.color + ';box-shadow:0 1px 6px rgba(0,0,0,0.04);">' +
+ '<div style="font-size:1.8em;margin-bottom:4px;">' + t.icon + '</div>' +
+ '<div style="font-size:1.4em;font-weight:700;color:' + t.color + ';">' + t.value + '</div>' +
+ '<div style="font-size:0.82em;color:#666;margin-top:4px;">' + t.label + '</div></div>';
+ }).join('');
+ }
+
+ // ===== CHART: Stakeholder Involvement =====
+ function renderStakeholderChart(wards) {
+ var wardNames = wards.map(function(w) { return w.name; });
+ var filteredStakeholders = grappStakeholders.filter(function(s) {
+ return s.wards.some(function(sw) { return wardNames.indexOf(sw) >= 0; });
+ });
+ var stakeholderNames = filteredStakeholders.map(function(s) { return s.name; });
+ var wardCounts = filteredStakeholders.map(function(s) {
+ return s.wards.filter(function(sw) { return wardNames.indexOf(sw) >= 0; }).length;
+ });
+ grappChart('grapp-chart-stakeholders', {
+ type: 'bar',
+ data: {
+ labels: stakeholderNames,
+ datasets: [{
+ label: 'Wards Covered',
+ data: wardCounts,
+ backgroundColor: filteredStakeholders.map(function(s) { return s.color + 'cc'; }),
+ borderColor: filteredStakeholders.map(function(s) { return s.color; }),
+ borderWidth: 1, borderRadius: 6
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' } } },
+ scales: { x: { beginAtZero: true, max: 7, ticks: { stepSize: 1 }, title: { display: true, text: 'Number of Wards' } } }
+ }
+ });
+ }
+
+ // ===== CHART: Gender-Differentiated Climate Impacts =====
+ function renderGenderImpactChart() {
+ grappChart('grapp-chart-gender-impact', {
+ type: 'radar',
+ data: {
+ labels: grappGenderImpact.dimensions,
+ datasets: [
+ { label: 'Women', data: grappGenderImpact.women, borderColor: '#E91E63', backgroundColor: '#E91E6333', pointBackgroundColor: '#E91E63', borderWidth: 2 },
+ { label: 'Men', data: grappGenderImpact.men, borderColor: '#0277BD', backgroundColor: '#0277BD33', pointBackgroundColor: '#0277BD', borderWidth: 2 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top', labels: { font: { size: 12 } } }, datalabels: { display: false } },
+ scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 }, pointLabels: { font: { size: 10 } } } }
+ }
+ });
+ }
+
+ // ===== POLICY BRIEF FINDINGS =====
+ function renderPolicyFindings() {
+ var container = document.getElementById('grapp-policy-findings');
+ if (!container) return;
+ container.innerHTML = grappPolicyFindings.map(function(pf) {
+ return '<div style="background:#f8f9fa;border-radius:12px;padding:20px;border-left:5px solid ' + pf.color + ';">' +
+ '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">' +
+ '<span style="font-size:1.5em;">' + pf.icon + '</span>' +
+ '<strong style="color:' + pf.color + ';font-size:1.05em;">' + pf.county + ' County</strong>' +
+ '</div>' +
+ '<ol style="margin:0;padding-left:20px;font-size:0.88em;color:#444;line-height:1.8;">' +
+ pf.findings.map(function(f) { return '<li style="margin-bottom:6px;">' + f + '</li>'; }).join('') +
+ '</ol></div>';
+ }).join('');
+ }
+
+ // ===== STAKEHOLDER REGISTRY TABLE =====
+ function renderStakeholderTable(wards) {
+ var table = document.getElementById('grapp-stakeholder-table');
+ if (!table) return;
+ var wardNames = wards.map(function(w) { return w.name; });
+ var filteredStakeholders = grappStakeholders.filter(function(s) {
+ return s.wards.some(function(sw) { return wardNames.indexOf(sw) >= 0; });
+ });
+ var hdr = 'padding:10px 12px;font-weight:600;color:#fff;background:#1B5E20;border:1px solid #ddd;font-size:0.88em;';
+ var cell = 'padding:8px 12px;border:1px solid #eee;font-size:0.88em;';
+ var html = '<thead><tr>' +
+ '<th style="' + hdr + 'text-align:left;min-width:180px;">Stakeholder</th>' +
+ '<th style="' + hdr + '">Type</th>' +
+ '<th style="' + hdr + 'text-align:left;min-width:260px;">Role & Responsibilities</th>' +
+ '<th style="' + hdr + '">Wards Involved</th>' +
+ '</tr></thead><tbody>';
+ filteredStakeholders.forEach(function(s) {
+ var activeWards = s.wards.filter(function(sw) { return wardNames.indexOf(sw) >= 0; });
+ html += '<tr>' +
+ '<td style="' + cell + 'text-align:left;font-weight:600;color:' + s.color + ';">' + s.name + '</td>' +
+ '<td style="' + cell + 'text-align:center;"><span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600;color:#fff;background:' + s.color + ';">' + s.type + '</span></td>' +
+ '<td style="' + cell + 'text-align:left;">' + s.role + '</td>' +
+ '<td style="' + cell + 'text-align:center;">' + activeWards.join(', ') + '</td></tr>';
+ });
+ html += '</tbody>';
+ table.innerHTML = html;
+ }
+
  // ===== MAIN RENDER =====
  window.renderGRAPPDashboard = function() {
  renderKPIs(grappDeliverables, grappWards);
@@ -24486,6 +24874,15 @@
  renderWardMatrixChart(grappWards);
  renderFundingChart();
  renderEcosystemChart(grappWards);
+ renderBudgetChart(grappWards);
+ renderBudgetSectorChart();
+ renderTimelineChart();
+ renderDemographicsChart(grappWards);
+ renderPhysicalTargets();
+ renderStakeholderChart(grappWards);
+ renderGenderImpactChart();
+ renderPolicyFindings();
+ renderStakeholderTable(grappWards);
  renderWardCards(grappWards);
  renderRecommendations();
  };
