@@ -182,18 +182,18 @@ function openModal(activity = null) {
     $('#frmId').value = '';
 
     if (activity) {
-        // Edit mode: show readonly context, hide new-activity fields
-        $('#modalTitle').textContent = 'Track Activity Progress';
+        // Edit mode: show editable activity fields, pre-filled
+        $('#modalTitle').textContent = 'Edit Activity';
         $('#frmId').value = activity.id;
-        $('#newActivityFields').style.display = 'none';
-        $('#readonlyBlock').style.display = 'block';
-        $('#readonlyBlock').innerHTML = `
-            <div class="rb-row"><span class="rb-label">Thematic Area:</span><span class="rb-value">${esc(activity.thematic_area)}${activity.sub_theme ? ' / ' + esc(activity.sub_theme) : ''}</span></div>
-            <div class="rb-row"><span class="rb-label">Strategy ${esc(activity.strategy_code)}:</span><span class="rb-value">${esc(activity.strategy_description)}</span></div>
-            <div class="rb-row"><span class="rb-label">Activity #${activity.activity_number}:</span><span class="rb-value">${esc(activity.activity_description)}</span></div>
-            ${activity.resources_required ? `<div class="rb-row"><span class="rb-label">Resources:</span><span class="rb-value">${esc(activity.resources_required)}</span></div>` : ''}
-            ${activity.technical_notes ? `<div class="rb-row"><span class="rb-label">Technical Notes:</span><span class="rb-value">${esc(activity.technical_notes)}</span></div>` : ''}
-        `;
+        $('#newActivityFields').style.display = 'block';
+        // Fill activity fields
+        $('#frmThematic').value = activity.thematic_area || '';
+        $('#frmSubTheme').value = activity.sub_theme || '';
+        $('#frmStrategyCode').value = activity.strategy_code || 'A';
+        $('#frmStrategyDesc').value = activity.strategy_description || '';
+        $('#frmActivityDesc').value = activity.activity_description || '';
+        $('#frmResources').value = activity.resources_required || '';
+        $('#frmTechNotes').value = activity.technical_notes || '';
         // Fill tracking fields
         $('#frmStatus').value = activity.status || 'Not Started';
         $('#frmResponsible').value = activity.responsible_person || '';
@@ -204,7 +204,6 @@ function openModal(activity = null) {
         // New mode: show new-activity fields, hide readonly
         $('#modalTitle').textContent = 'Add New Activity';
         $('#newActivityFields').style.display = 'block';
-        $('#readonlyBlock').style.display = 'none';
     }
 
     $('#modalOverlay').classList.add('active');
@@ -224,8 +223,15 @@ async function handleSubmit(e) {
     const id = $('#frmId').value;
 
     if (id) {
-        // Update tracking fields only
+        // Update all fields
         const data = {
+            thematic_area: $('#frmThematic').value,
+            sub_theme: $('#frmSubTheme').value,
+            strategy_code: $('#frmStrategyCode').value,
+            strategy_description: $('#frmStrategyDesc').value,
+            activity_description: $('#frmActivityDesc').value,
+            resources_required: $('#frmResources').value,
+            technical_notes: $('#frmTechNotes').value,
             status: $('#frmStatus').value,
             responsible_person: $('#frmResponsible').value,
             target_date: $('#frmTargetDate').value,

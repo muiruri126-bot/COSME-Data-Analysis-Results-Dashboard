@@ -105,45 +105,7 @@
                 <form id="activityForm">
                     <input type="hidden" id="frmId">
 
-                    <!-- Read-only context from Excel -->
-                    <div class="form-section">
-                        <h3>Activity Details (from AWP)</h3>
-                        <div class="readonly-block" id="readonlyBlock"></div>
-                    </div>
-
-                    <!-- Editable tracking fields -->
-                    <div class="form-section">
-                        <h3>Tracking & Updates</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="frmStatus">Status</label>
-                                <select id="frmStatus" name="status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="On Hold">On Hold</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="frmResponsible">Responsible Person</label>
-                                <input type="text" id="frmResponsible" name="responsible_person" placeholder="e.g., Benard Muiruri">
-                            </div>
-                            <div class="form-group">
-                                <label for="frmTargetDate">Target Date</label>
-                                <input type="date" id="frmTargetDate" name="target_date">
-                            </div>
-                            <div class="form-group">
-                                <label for="frmCompletionDate">Completion Date</label>
-                                <input type="date" id="frmCompletionDate" name="completion_date">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="frmProgressNotes">Progress Notes</label>
-                                <textarea id="frmProgressNotes" name="progress_notes" rows="4" placeholder="Update progress, issues encountered, next steps..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- For new activities: editable core fields -->
+                    <!-- Editable activity fields -->
                     <div class="form-section" id="newActivityFields" style="display:none">
                         <h3>Activity Information</h3>
                         <div class="form-grid">
@@ -186,6 +148,38 @@
                             <div class="form-group full-width">
                                 <label for="frmTechNotes">Technical Notes</label>
                                 <textarea id="frmTechNotes" name="technical_notes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tracking fields -->
+                    <div class="form-section">
+                        <h3>Tracking & Updates</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="frmStatus">Status</label>
+                                <select id="frmStatus" name="status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="On Hold">On Hold</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="frmResponsible">Responsible Person</label>
+                                <input type="text" id="frmResponsible" name="responsible_person" placeholder="e.g., Benard Muiruri">
+                            </div>
+                            <div class="form-group">
+                                <label for="frmTargetDate">Target Date</label>
+                                <input type="date" id="frmTargetDate" name="target_date">
+                            </div>
+                            <div class="form-group">
+                                <label for="frmCompletionDate">Completion Date</label>
+                                <input type="date" id="frmCompletionDate" name="completion_date">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="frmProgressNotes">Progress Notes</label>
+                                <textarea id="frmProgressNotes" name="progress_notes" rows="4" placeholder="Update progress, issues encountered, next steps..."></textarea>
                             </div>
                         </div>
                     </div>
