@@ -1,0 +1,43 @@
+# ===== Node / NestJS Backend =====
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== Flutter / Dart =====
+platform_mobile/.dart_tool/
+platform_mobile/.packages
+platform_mobile/.pub-cache/
+platform_mobile/.pub/
+platform_mobile/build/
+platform_mobile/.flutter-plugins
+platform_mobile/.flutter-plugins-dependencies
+platform_mobile/pubspec.lock
+
+# ===== Prisma =====
+platform/prisma/migrations/**/migration_lock.toml
+
+# ===== IDE / Editor =====
+.idea/
+*.swp
+*.swo
+*~
+.vscode/settings.json
+
+# ===== OS Files =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+
+# ===== Docker =====
+docker-compose.override.yml
+
+# ===== Coverage & Test =====
+coverage/
+.nyc_output/

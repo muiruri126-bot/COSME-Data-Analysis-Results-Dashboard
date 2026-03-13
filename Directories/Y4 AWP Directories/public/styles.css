@@ -35,7 +35,7 @@ body {
     position: sticky; top: 0; z-index: 100;
 }
 .logo { display: flex; align-items: center; gap: 12px; }
-.logo img { height: 44px; }
+.logo img { height: 50px; width: auto; }
 .logo i { font-size: 1.6rem; color: #7EB8E0; }
 .logo h1 { font-size: 1.2rem; font-weight: 700; }
 .subtitle { font-size: 0.72rem; opacity: 0.8; letter-spacing: 0.5px; }
