@@ -28,6 +28,16 @@
         </div>
     </header>
 
+    <!-- Main Module Navigation -->
+    <nav class="module-nav" id="moduleNav">
+        <button class="module-tab active" data-module="activities">Detailed Activities</button>
+        <button class="module-tab" data-module="workback">Workback Schedule</button>
+        <button class="module-tab" data-module="validation">Activity Validation</button>
+    </nav>
+
+    <!-- ═══════ MODULE 1: Detailed Activities ═══════ -->
+    <div class="module-panel active" id="panelActivities">
+
     <!-- Navigation Tabs (Thematic Areas) -->
     <nav class="theme-tabs" id="themeTabs">
         <button class="tab active" data-theme="">All Areas</button>
@@ -94,6 +104,31 @@
     <section class="content-area" id="contentArea">
         <div class="loading-msg">Loading activities...</div>
     </section>
+
+    </div><!-- end panelActivities -->
+
+    <!-- ═══════ MODULE 2: Workback Schedule ═══════ -->
+    <div class="module-panel" id="panelWorkback">
+        <section class="workback-header">
+            <h2>COSME Workplan & Reporting Workback Schedule</h2>
+            <p class="subtitle">Y4 AWP — Weekly task timeline (Feb–May 2026)</p>
+        </section>
+        <div class="workback-content" id="workbackContent">
+            <div class="loading-msg">Loading workback schedule...</div>
+        </div>
+    </div>
+
+    <!-- ═══════ MODULE 3: Activity Validation ═══════ -->
+    <div class="module-panel" id="panelValidation">
+        <section class="validation-header">
+            <h2>Y4 AWP Activity Validation</h2>
+            <p class="subtitle">Activity-level validation across outcome areas (1100, 1200, 1300)</p>
+        </section>
+        <nav class="validation-tabs" id="validationTabs"></nav>
+        <div class="validation-content" id="validationContent">
+            <div class="loading-msg">Loading activity validation data...</div>
+        </div>
+    </div>
 
     <!-- Activity Form Modal -->
     <div class="modal-overlay" id="modalOverlay">

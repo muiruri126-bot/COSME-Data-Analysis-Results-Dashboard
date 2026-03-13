@@ -1,5 +1,6 @@
 // ─── COSME Y4 AWP Directory – Frontend ─────────────────────
 const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
 let allActivities = [];
 let currentFilters = {};
 
@@ -29,6 +30,20 @@ function setupListeners() {
     $('#historyClose').addEventListener('click', () => $('#historyOverlay').classList.remove('active'));
     $('#historyOverlay').addEventListener('click', (e) => { if (e.target === $('#historyOverlay')) $('#historyOverlay').classList.remove('active'); });
     $('#activityForm').addEventListener('submit', handleSubmit);
+
+    // Module navigation
+    $$('.module-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            $$('.module-tab').forEach(t => t.classList.remove('active'));
+            $$('.module-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            const mod = tab.dataset.module;
+            $(`#panel${mod.charAt(0).toUpperCase() + mod.slice(1)}`).classList.add('active');
+
+            if (mod === 'workback' && !workbackLoaded) loadWorkback();
+            if (mod === 'validation' && !validationLoaded) loadValidation();
+        });
+    });
 }
 
 // ─── API Helpers ─────────────────────────────────────────────
@@ -345,4 +360,130 @@ function toast(msg, type = '') {
     t.textContent = msg;
     t.className = `toast show ${type}`;
     setTimeout(() => { t.className = 'toast'; }, 4000);
+}
+
+// ─── MODULE 2: Workback Schedule ─────────────────────────────
+let workbackLoaded = false;
+
+async function loadWorkback() {
+    try {
+        const data = await api('/api/workback');
+        workbackLoaded = true;
+        renderWorkback(data);
+    } catch (e) {
+        $('#workbackContent').innerHTML = `<div class="loading-msg" style="color:var(--danger)">Failed to load workback schedule</div>`;
+    }
+}
+
+function renderWorkback(data) {
+    const { months, weeks, sections } = data;
+    const totalWeeks = weeks.length;
+
+    let html = '<div class="gantt-wrapper"><table class="gantt-table"><thead>';
+
+    // Month header row
+    html += '<tr><th class="gantt-task-header">Task</th>';
+    months.forEach(m => {
+        const span = weeks.filter(w => w.monthLabel === m.label).length;
+        if (span > 0) html += `<th colspan="${span}" class="gantt-month">${esc(m.label)}</th>`;
+    });
+    html += '</tr>';
+
+    // Week number row
+    html += '<tr><th class="gantt-task-header"></th>';
+    weeks.forEach(w => {
+        html += `<th class="gantt-week">W${w.weekNum}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    // Render sections and tasks
+    sections.forEach(section => {
+        html += `<tr class="gantt-section-row"><td colspan="${totalWeeks + 1}" class="gantt-section-label">${esc(section.name)}</td></tr>`;
+
+        section.tasks.forEach(task => {
+            html += `<tr class="gantt-task-row"><td class="gantt-task-name">${esc(task.name)}</td>`;
+            weeks.forEach(w => {
+                const marked = task.markedWeeks.some(mw => mw.col === w.col);
+                html += `<td class="gantt-cell${marked ? ' gantt-marked' : ''}"></td>`;
+            });
+            html += '</tr>';
+        });
+    });
+
+    html += '</tbody></table></div>';
+    $('#workbackContent').innerHTML = html;
+}
+
+// ─── MODULE 3: Activity Validation ───────────────────────────
+let validationLoaded = false;
+let validationData = [];
+
+async function loadValidation() {
+    try {
+        validationData = await api('/api/validation');
+        validationLoaded = true;
+
+        // Build outcome tabs
+        const tabs = $('#validationTabs');
+        tabs.innerHTML = '';
+        validationData.forEach((outcome, i) => {
+            tabs.innerHTML += `<button class="tab${i === 0 ? ' active' : ''}" data-vidx="${i}">${esc(outcome.outcomeCode)}</button>`;
+        });
+        tabs.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderValidation(parseInt(tab.dataset.vidx));
+            });
+        });
+
+        if (validationData.length > 0) renderValidation(0);
+    } catch (e) {
+        $('#validationContent').innerHTML = `<div class="loading-msg" style="color:var(--danger)">Failed to load validation data</div>`;
+    }
+}
+
+function renderValidation(idx) {
+    const outcome = validationData[idx];
+    if (!outcome) return;
+
+    let html = `<div class="validation-list">`;
+
+    outcome.activities.forEach(a => {
+        if (a.type === 'indicator') {
+            html += `<div class="val-card val-indicator">
+                <div class="val-code">${esc(a.code || '')}</div>
+                <div class="val-body">
+                    <div class="val-desc">${esc(a.description || a.indicator_text)}</div>
+                    ${a.target ? `<div class="val-meta"><strong>Target:</strong> ${esc(a.target)}</div>` : ''}
+                    ${a.indicator_text && a.description ? `<div class="val-meta"><strong>Indicator:</strong> ${esc(a.indicator_text)}</div>` : ''}
+                </div>
+            </div>`;
+            return;
+        }
+
+        const statusClass = a.status === 'Complete' ? 'badge-completed' :
+            a.status === 'Ongoing' ? 'badge-in-progress' :
+            a.status === 'Not Started' ? 'badge-not-started' : 'badge-not-started';
+
+        html += `<div class="val-card val-activity">
+            <div class="val-code">${esc(a.code || '')}</div>
+            <div class="val-body">
+                <div class="val-desc">${esc(a.description)}</div>
+                ${a.status ? `<span class="badge ${statusClass}">${esc(a.status)}</span>` : ''}
+                ${a.pip_narrative ? `<details class="val-details"><summary>PIP Narrative</summary><p>${esc(a.pip_narrative)}</p></details>` : ''}
+                ${a.y3_narrative ? `<details class="val-details"><summary>Y3 AWP Narrative</summary><p>${esc(a.y3_narrative)}</p></details>` : ''}
+                ${a.adjustments ? `<details class="val-details"><summary>Programming Adjustments</summary><p>${esc(a.adjustments)}</p></details>` : ''}
+                ${a.y4_plan ? `<details class="val-details"><summary>Y4 Plan</summary><p>${esc(a.y4_plan)}</p></details>` : ''}
+                ${a.sustainability ? `<details class="val-details"><summary>Sustainability Measures</summary><p>${esc(a.sustainability)}</p></details>` : ''}
+                <div class="val-footer">
+                    ${a.responsible ? `<span class="val-meta"><strong>Responsible:</strong> ${esc(a.responsible)}</span>` : ''}
+                    ${a.quarter ? `<span class="val-meta"><strong>Quarter:</strong> ${esc(a.quarter)}</span>` : ''}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    html += '</div>';
+    $('#validationContent').innerHTML = html;
 }

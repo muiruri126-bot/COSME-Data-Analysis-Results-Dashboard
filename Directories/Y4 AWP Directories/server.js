@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const DirectoryDB = require('./database');
 const { parseExcel } = require('./excel-parser');
+const { parseWorkbackSchedule } = require('./workback-parser');
+const { parseActivityValidation } = require('./validation-parser');
 
 const app = express();
 const db = new DirectoryDB();
@@ -122,6 +124,26 @@ app.post('/api/reload', (req, res) => {
     try {
         const count = loadExcelData();
         res.json({ message: `Reloaded ${count} activities from Excel`, count });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ─── Workback Schedule API ───────────────────────────────────
+app.get('/api/workback', (req, res) => {
+    try {
+        const schedule = parseWorkbackSchedule();
+        res.json(schedule);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ─── Activity Validation API ─────────────────────────────────
+app.get('/api/validation', (req, res) => {
+    try {
+        const outcomes = parseActivityValidation();
+        res.json(outcomes);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
