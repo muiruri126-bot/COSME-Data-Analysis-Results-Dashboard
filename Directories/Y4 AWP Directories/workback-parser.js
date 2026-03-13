@@ -76,11 +76,14 @@ function parseWorkbackSchedule() {
             taskName.startsWith('Holidays in') || taskName.startsWith('Important') ||
             taskName.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s/)) continue;
 
-        // It's a task row — find which weeks are marked
+        // It's a task row — find which weeks are marked via cell fill colors
         const markedWeeks = [];
         for (let col = 2; col <= 121; col++) {
-            const val = row[col];
-            if (val !== '' && val !== undefined && val !== null) {
+            const cellRef = XLSX.utils.encode_cell({ r: i, c: col });
+            const cell = ws[cellRef];
+            if (cell && cell.s && cell.s.patternType === 'solid' && cell.s.fgColor) {
+                // Skip grey fills (weekends) — they have theme:0
+                if (cell.s.fgColor.theme === 0) continue;
                 const week = weeks.find(w => w.col === col);
                 if (week) {
                     markedWeeks.push({

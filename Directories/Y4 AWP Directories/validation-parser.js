@@ -96,7 +96,7 @@ function parseActivityValidation() {
                     description: col0,
                     pip_narrative: col1,
                     target: col2,
-                    y3_narrative: col3,
+                    y3_narrative: '',
                     status: col4,
                     adjustments: col5,
                     y4_plan: col6,
