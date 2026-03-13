@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/profile/bloc/profile_bloc.dart';
+import 'package:platform_mobile/features/profile/repository/profile_repository.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -52,7 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ProfileBloc>()..add(LoadProfile()),
+      create: (_) => ProfileBloc(sl<ProfileRepository>())..add(LoadProfile()),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state is ProfileLoaded && !_loaded) {

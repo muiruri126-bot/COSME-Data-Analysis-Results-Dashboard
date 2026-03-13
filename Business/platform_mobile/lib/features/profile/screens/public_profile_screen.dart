@@ -6,6 +6,7 @@ import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/chat/repository/chat_repository.dart';
 import 'package:platform_mobile/features/profile/bloc/profile_bloc.dart';
+import 'package:platform_mobile/features/profile/repository/profile_repository.dart';
 
 class PublicProfileScreen extends StatelessWidget {
   final String userId;
@@ -14,7 +15,7 @@ class PublicProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ProfileBloc>()..add(LoadPublicProfile(userId)),
+      create: (_) => ProfileBloc(sl<ProfileRepository>())..add(LoadPublicProfile(userId)),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(

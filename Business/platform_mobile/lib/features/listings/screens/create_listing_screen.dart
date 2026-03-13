@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/categories/bloc/categories_bloc.dart';
+import 'package:platform_mobile/features/categories/repository/categories_repository.dart';
 import 'package:platform_mobile/features/listings/repository/listings_repository.dart';
 import 'package:platform_mobile/shared/models/category_model.dart';
 
@@ -100,7 +101,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<CategoriesBloc>()..add(LoadCategories()),
+      create: (_) => CategoriesBloc(sl<CategoriesRepository>())..add(LoadCategories()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Create Listing'),

@@ -5,6 +5,7 @@ import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:platform_mobile/features/categories/bloc/categories_bloc.dart';
+import 'package:platform_mobile/features/categories/repository/categories_repository.dart';
 import 'package:platform_mobile/features/listings/bloc/listings_bloc.dart';
 import 'package:platform_mobile/features/listings/repository/listings_repository.dart';
 import 'package:platform_mobile/shared/models/category_model.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => sl<CategoriesBloc>()..add(LoadCategories()),
+          create: (_) => CategoriesBloc(sl<CategoriesRepository>())..add(LoadCategories()),
         ),
         BlocProvider(
           create: (_) => ListingsBloc(sl<ListingsRepository>())..add(LoadRecentListings()),
@@ -35,10 +36,8 @@ class _HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AuthBloc bloc) {
-      final state = bloc.state;
-      return state is AuthAuthenticated ? state.user : null;
-    });
+    final authState = context.read<AuthBloc>().state;
+    final user = authState is AuthAuthenticated ? authState.user : null;
 
     return Scaffold(
       body: SafeArea(
@@ -333,9 +332,10 @@ class _CategoryChip extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
-                child: Text(
-                  category.emoji,
-                  style: const TextStyle(fontSize: 28),
+                child: Icon(
+                  category.icon,
+                  size: 28,
+                  color: category.iconColor,
                 ),
               ),
             ),

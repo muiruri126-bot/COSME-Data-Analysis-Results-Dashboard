@@ -1,14 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:platform_mobile/core/network/api_client.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:platform_mobile/features/auth/repository/auth_repository.dart';
 import 'package:platform_mobile/features/categories/repository/categories_repository.dart';
-import 'package:platform_mobile/features/categories/bloc/categories_bloc.dart';
 import 'package:platform_mobile/features/listings/repository/listings_repository.dart';
-import 'package:platform_mobile/features/listings/bloc/listings_bloc.dart';
 import 'package:platform_mobile/features/profile/repository/profile_repository.dart';
-import 'package:platform_mobile/features/profile/bloc/profile_bloc.dart';
 import 'package:platform_mobile/features/applications/repository/applications_repository.dart';
 import 'package:platform_mobile/features/chat/repository/chat_repository.dart';
 import 'package:platform_mobile/features/notifications/repository/notifications_repository.dart';
@@ -39,8 +35,7 @@ Future<void> setupServiceLocator() async {
   _register(ChatRepository(apiClient));
   _register(NotificationsRepository(apiClient));
 
-  // BLoCs
+  // BLoCs — only AuthBloc is a long-lived singleton.
+  // Other blocs are created per-screen to avoid closure issues.
   _register(AuthBloc(sl<AuthRepository>()));
-  _register(CategoriesBloc(sl<CategoriesRepository>()));
-  _register(ProfileBloc(sl<ProfileRepository>()));
 }

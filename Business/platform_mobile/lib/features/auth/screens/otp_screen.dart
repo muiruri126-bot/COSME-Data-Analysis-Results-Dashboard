@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phone;
-  const OtpScreen({super.key, required this.phone});
+  final VoidCallback onBack;
+  const OtpScreen({super.key, required this.phone, required this.onBack});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -20,6 +20,7 @@ class _OtpScreenState extends State<OtpScreen> {
   int _secondsRemaining = 60;
   bool _canResend = false;
   bool _isLoading = false;
+  String? _errorMessage;
   StreamSubscription<AuthState>? _authSub;
 
   @override
@@ -31,28 +32,18 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Use raw StreamSubscription instead of BlocListener/BlocBuilder to avoid
-    // InheritedWidget dependency issues when GoRouter removes this page.
-    _authSub ??= context.read<AuthBloc>().stream.listen(_onAuthState);
-  }
-
-  void _onAuthState(AuthState state) {
-    if (!mounted) return;
-    if (state is AuthAuthenticated || state is AuthNeedsProfile) {
-      _timer?.cancel();
-      // Router handles navigation via refreshListenable
-    } else if (state is AuthLoading) {
-      setState(() => _isLoading = true);
-    } else if (state is AuthError) {
-      setState(() => _isLoading = false);
-      _otpController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(state.message),
-          backgroundColor: AppColors.error,
-        ),
-      );
-    }
+    _authSub ??= context.read<AuthBloc>().stream.listen((state) {
+      if (!mounted) return;
+      if (state is AuthError) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = state.message;
+        });
+        _otpController.clear();
+      } else if (state is AuthLoading) {
+        setState(() => _isLoading = true);
+      }
+    });
   }
 
   @override
@@ -89,6 +80,10 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _verifyOtp(String otp) {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
     context.read<AuthBloc>().add(
           AuthOtpSubmitted(phone: widget.phone, otp: otp),
         );
@@ -100,7 +95,7 @@ class _OtpScreenState extends State<OtpScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/login'),
+          onPressed: widget.onBack,
         ),
       ),
       body: SafeArea(
@@ -164,6 +159,16 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
 
               const Spacer(),
+
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(color: AppColors.error),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
 
               if (_isLoading)
                 const Center(child: CircularProgressIndicator()),

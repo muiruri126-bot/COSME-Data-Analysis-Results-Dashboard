@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
@@ -100,7 +99,6 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
               TextButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(AuthLogoutRequested());
-                  context.go('/onboarding');
                 },
                 child: const Text('Log out'),
               ),

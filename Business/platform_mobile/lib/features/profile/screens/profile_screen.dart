@@ -6,6 +6,7 @@ import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/core/di/service_locator.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 import 'package:platform_mobile/features/profile/bloc/profile_bloc.dart';
+import 'package:platform_mobile/features/profile/repository/profile_repository.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -13,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ProfileBloc>()..add(LoadProfile()),
+      create: (_) => ProfileBloc(sl<ProfileRepository>())..add(LoadProfile()),
       child: const _ProfileView(),
     );
   }
@@ -201,7 +202,6 @@ class _ProfileView extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: () {
                       context.read<AuthBloc>().add(AuthLogoutRequested());
-                      context.go('/onboarding');
                     },
                     icon: const Icon(Icons.logout, color: AppColors.error),
                     label: const Text('Log Out', style: TextStyle(color: AppColors.error)),

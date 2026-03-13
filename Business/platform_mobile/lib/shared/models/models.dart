@@ -1,3 +1,10 @@
+double? _toDouble(dynamic v) {
+  if (v == null) return null;
+  if (v is num) return v.toDouble();
+  if (v is String) return double.tryParse(v);
+  return null;
+}
+
 class Conversation {
   final String id;
   final String? listingId;
@@ -175,7 +182,7 @@ class Application {
       applicantId: json['applicantId'],
       status: json['status'],
       coverMessage: json['coverMessage'],
-      proposedRate: json['proposedRate']?.toDouble(),
+      proposedRate: _toDouble(json['proposedRate']),
       ratePeriod: json['ratePeriod'],
       createdAt: DateTime.parse(json['createdAt']),
       listing: json['listing'] != null

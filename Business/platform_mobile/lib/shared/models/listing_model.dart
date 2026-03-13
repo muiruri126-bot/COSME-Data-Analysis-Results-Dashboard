@@ -1,3 +1,10 @@
+double? _toDouble(dynamic v) {
+  if (v == null) return null;
+  if (v is num) return v.toDouble();
+  if (v is String) return double.tryParse(v);
+  return null;
+}
+
 class Listing {
   final String id;
   final String title;
@@ -54,8 +61,8 @@ class Listing {
       userId: json['userId'],
       listingType: json['listingType'],
       status: json['status'],
-      budgetMin: json['budgetMin']?.toDouble(),
-      budgetMax: json['budgetMax']?.toDouble(),
+      budgetMin: _toDouble(json['budgetMin']),
+      budgetMax: _toDouble(json['budgetMax']),
       budgetPeriod: json['budgetPeriod'],
       engagementType: json['engagementType'],
       images: List<String>.from(json['images'] ?? []),
@@ -66,7 +73,7 @@ class Listing {
       location: json['location'] != null ? ListingLocation.fromJson(json['location']) : null,
       user: json['user'] != null ? ListingUser.fromJson(json['user']) : null,
       applicationCount: json['_count']?['applications'],
-      distance: json['_distance']?.toDouble(),
+      distance: _toDouble(json['_distance']),
     );
   }
 
@@ -160,7 +167,7 @@ class ListingUserProfile {
     return ListingUserProfile(
       displayName: json['displayName'],
       avatarUrl: json['avatarUrl'],
-      averageRating: json['averageRating']?.toDouble(),
+      averageRating: _toDouble(json['averageRating']),
     );
   }
 }

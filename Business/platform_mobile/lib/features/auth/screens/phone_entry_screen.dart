@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 import 'package:platform_mobile/features/auth/bloc/auth_bloc.dart';
 
 class PhoneEntryScreen extends StatefulWidget {
-  const PhoneEntryScreen({super.key});
+  final VoidCallback onBack;
+  const PhoneEntryScreen({super.key, required this.onBack});
 
   @override
   State<PhoneEntryScreen> createState() => _PhoneEntryScreenState();
@@ -23,25 +23,15 @@ class _PhoneEntryScreenState extends State<PhoneEntryScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _authSub ??= context.read<AuthBloc>().stream.listen(_onAuthState);
-  }
-
-  void _onAuthState(AuthState state) {
-    if (!mounted) return;
-    if (state is AuthOtpSent) {
-      setState(() => _isLoading = false);
-      context.go('/otp', extra: state.phone);
-    } else if (state is AuthLoading) {
-      setState(() => _isLoading = true);
-    } else {
-      // Reset loading for any other state (AuthError, AuthUnauthenticated, etc.)
-      if (_isLoading) setState(() => _isLoading = false);
+    _authSub ??= context.read<AuthBloc>().stream.listen((state) {
+      if (!mounted) return;
       if (state is AuthError) {
+        setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
         );
       }
-    }
+    });
   }
 
   @override
@@ -61,6 +51,7 @@ class _PhoneEntryScreenState extends State<PhoneEntryScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
       context.read<AuthBloc>().add(AuthOtpRequested(_fullPhone));
     }
   }
@@ -71,7 +62,7 @@ class _PhoneEntryScreenState extends State<PhoneEntryScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/onboarding'),
+          onPressed: widget.onBack,
         ),
       ),
       body: SafeArea(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:platform_mobile/config/theme/app_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final VoidCallback onGetStarted;
+  const OnboardingScreen({super.key, required this.onGetStarted});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -77,12 +77,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 children: [
                   ElevatedButton(
-                    onPressed: () => context.go('/login'),
+                    onPressed: widget.onGetStarted,
                     child: const Text('Get Started'),
                   ),
                   const SizedBox(height: 12),
                   TextButton(
-                    onPressed: () => context.go('/login'),
+                    onPressed: widget.onGetStarted,
                     child: const Text('I already have an account'),
                   ),
                 ],
