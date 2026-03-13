@@ -185,7 +185,7 @@ body {
 .badge-completed { background: #e8f5e9; color: #2e7d32; }
 .badge-on-hold { background: #fce4ec; color: #c62828; }
 
-.activity-actions { display: flex; gap: 4px; justify-content: flex-end; }
+.activity-actions { display: flex; gap: 12px; justify-content: flex-end; }
 
 /* Strategic Issues Panel */
 .issues-panel {
