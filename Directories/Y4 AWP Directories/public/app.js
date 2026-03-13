@@ -163,8 +163,8 @@ function renderContent(activities) {
                 <div>${a.responsible_person ? esc(a.responsible_person) : '<span style="color:var(--text-light);font-size:0.75rem">Unassigned</span>'}</div>
                 <div>${statusBadge(a.status)}</div>
                 <div class="activity-actions">
-                    <button class="btn btn-sm btn-outline btn-icon" onclick="editActivity(${a.id})" title="Track/Update">Track/Update</button>
-                    <button class="btn btn-sm btn-outline btn-icon" onclick="viewHistory(${a.id})" title="History">History</button>
+                    <button class="btn btn-sm btn-outline" onclick="editActivity(${a.id})">Track/Update</button>
+                    <button class="btn btn-sm btn-outline" onclick="viewHistory(${a.id})">History</button>
                 </div>
             </div>`;
         });
