@@ -29,7 +29,38 @@ function loadExcelData() {
 }
 
 loadExcelData();
+function loadValidationData() {
+    try {
+        const count = db.db.prepare('SELECT COUNT(*) as c FROM validation_items').get().c;
+        if (count === 0) {
+            const outcomes = parseActivityValidation();
+            const inserted = db.bulkInsertValidation(outcomes);
+            console.log(`[Data] Loaded ${inserted} validation items from Excel`);
+        } else {
+            console.log(`[Data] ${count} validation items already in database`);
+        }
+    } catch (error) {
+        console.error('[Data] Failed to load validation:', error.message);
+    }
+}
 
+function loadWorkbackData() {
+    try {
+        const count = db.db.prepare('SELECT COUNT(*) as c FROM workback_meta').get().c;
+        if (count === 0) {
+            const data = parseWorkbackSchedule();
+            db.bulkInsertWorkback(data);
+            console.log('[Data] Loaded workback schedule from Excel');
+        } else {
+            console.log('[Data] Workback schedule already in database');
+        }
+    } catch (error) {
+        console.error('[Data] Failed to load workback:', error.message);
+    }
+}
+
+loadValidationData();
+loadWorkbackData();
 // ─── API Routes ──────────────────────────────────────────────
 
 // Dashboard stats
@@ -123,7 +154,11 @@ app.get('/api/activities/:id/history', (req, res) => {
 app.post('/api/reload', (req, res) => {
     try {
         const count = loadExcelData();
-        res.json({ message: `Reloaded ${count} activities from Excel`, count });
+        const outcomes = parseActivityValidation();
+        const valCount = db.bulkInsertValidation(outcomes);
+        const wbData = parseWorkbackSchedule();
+        db.bulkInsertWorkback(wbData);
+        res.json({ message: `Reloaded ${count} activities, ${valCount} validation items`, count });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -132,18 +167,39 @@ app.post('/api/reload', (req, res) => {
 // ─── Workback Schedule API ───────────────────────────────────
 app.get('/api/workback', (req, res) => {
     try {
-        const schedule = parseWorkbackSchedule();
-        res.json(schedule);
+        const data = db.getWorkbackData();
+        res.json(data || parseWorkbackSchedule());
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// ─── Activity Validation API ─────────────────────────────────
+app.post('/api/workback/toggle', (req, res) => {
+    try {
+        const { taskId, col } = req.body;
+        if (!taskId || col === undefined) return res.status(400).json({ error: 'taskId and col required' });
+        const result = db.toggleWorkbackCell(parseInt(taskId, 10), parseInt(col, 10));
+        if (!result) return res.status(404).json({ error: 'Task not found' });
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ─── Activity Validation API ─────────────────────────────
 app.get('/api/validation', (req, res) => {
     try {
-        const outcomes = parseActivityValidation();
-        res.json(outcomes);
+        res.json(db.getAllValidation());
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/api/validation/:id', (req, res) => {
+    try {
+        const updated = db.updateValidationItem(parseInt(req.params.id, 10), req.body);
+        if (!updated) return res.status(404).json({ error: 'Item not found' });
+        res.json(updated);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

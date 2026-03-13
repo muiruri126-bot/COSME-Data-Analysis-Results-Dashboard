@@ -354,8 +354,10 @@ body {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     z-index: 1;
 }
-.gantt-cell { min-width: 28px; height: 26px; }
+.gantt-cell { min-width: 28px; height: 26px; cursor: pointer; transition: background 0.15s; }
+.gantt-cell:hover { background: rgba(0,94,184,0.15); }
 .gantt-marked { background: var(--primary) !important; }
+.gantt-marked:hover { background: var(--primary-dark) !important; }
 
 /* ─── Activity Validation ─────────────────────────────────── */
 .validation-header {

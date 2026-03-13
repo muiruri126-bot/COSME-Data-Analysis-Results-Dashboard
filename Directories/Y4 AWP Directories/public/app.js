@@ -31,6 +31,12 @@ function setupListeners() {
     $('#historyOverlay').addEventListener('click', (e) => { if (e.target === $('#historyOverlay')) $('#historyOverlay').classList.remove('active'); });
     $('#activityForm').addEventListener('submit', handleSubmit);
 
+    // Validation edit modal
+    $('#valEditClose').addEventListener('click', () => $('#valEditOverlay').classList.remove('active'));
+    $('#valEditCancel').addEventListener('click', () => $('#valEditOverlay').classList.remove('active'));
+    $('#valEditOverlay').addEventListener('click', (e) => { if (e.target === $('#valEditOverlay')) $('#valEditOverlay').classList.remove('active'); });
+    $('#valEditForm').addEventListener('submit', handleValSave);
+
     // Module navigation
     $$('.module-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -313,6 +319,8 @@ async function reloadFromExcel() {
         toast(r.message, 'success');
         loadActivities();
         loadStats();
+        workbackLoaded = false;
+        validationLoaded = false;
     } catch (e) { toast('Reload failed: ' + e.message, 'error'); }
     finally {
         btn.disabled = false;
@@ -401,10 +409,10 @@ function renderWorkback(data) {
         html += `<tr class="gantt-section-row"><td colspan="${totalWeeks + 1}" class="gantt-section-label">${esc(section.name)}</td></tr>`;
 
         section.tasks.forEach(task => {
-            html += `<tr class="gantt-task-row"><td class="gantt-task-name">${esc(task.name)}</td>`;
+            html += `<tr class="gantt-task-row"><td class="gantt-task-name" title="${esc(task.name)}">${esc(task.name)}</td>`;
             weeks.forEach(w => {
                 const marked = task.markedWeeks.some(mw => mw.col === w.col);
-                html += `<td class="gantt-cell${marked ? ' gantt-marked' : ''}"></td>`;
+                html += `<td class="gantt-cell${marked ? ' gantt-marked' : ''}" data-task="${task.id}" data-col="${w.col}" onclick="toggleGanttCell(this)"></td>`;
             });
             html += '</tr>';
         });
@@ -457,6 +465,9 @@ function renderValidation(idx) {
                     <div class="val-desc">${esc(a.description || a.indicator_text)}</div>
                     ${a.target ? `<div class="val-meta"><strong>Target:</strong> ${esc(a.target)}</div>` : ''}
                     ${a.indicator_text && a.description ? `<div class="val-meta"><strong>Indicator:</strong> ${esc(a.indicator_text)}</div>` : ''}
+                    <div class="val-footer">
+                        <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
+                    </div>
                 </div>
             </div>`;
             return;
@@ -479,6 +490,7 @@ function renderValidation(idx) {
                 <div class="val-footer">
                     ${a.responsible ? `<span class="val-meta"><strong>Responsible:</strong> ${esc(a.responsible)}</span>` : ''}
                     ${a.quarter ? `<span class="val-meta"><strong>Quarter:</strong> ${esc(a.quarter)}</span>` : ''}
+                    <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
                 </div>
             </div>
         </div>`;
@@ -486,4 +498,64 @@ function renderValidation(idx) {
 
     html += '</div>';
     $('#validationContent').innerHTML = html;
+}
+
+// ─── Validation Editing ──────────────────────────────────
+function editValItem(id) {
+    let item = null;
+    for (const outcome of validationData) {
+        item = outcome.activities.find(a => a.id === id);
+        if (item) break;
+    }
+    if (!item) { toast('Item not found', 'error'); return; }
+
+    let readonlyHtml = '';
+    if (item.code) readonlyHtml += `<div class="rb-row"><span class="rb-label">Code</span><span class="rb-value">${esc(item.code)}</span></div>`;
+    readonlyHtml += `<div class="rb-row"><span class="rb-label">Description</span><span class="rb-value">${esc(item.description || item.indicator_text)}</span></div>`;
+    if (item.pip_narrative) readonlyHtml += `<div class="rb-row"><span class="rb-label">PIP Narrative</span><span class="rb-value">${esc(item.pip_narrative)}</span></div>`;
+    if (item.y3_narrative) readonlyHtml += `<div class="rb-row"><span class="rb-label">Y3 Narrative</span><span class="rb-value">${esc(item.y3_narrative)}</span></div>`;
+    $('#valReadonly').innerHTML = readonlyHtml;
+
+    $('#valEditId').value = item.id;
+    $('#valStatus').value = item.status || '';
+    $('#valResponsible').value = item.responsible || '';
+    $('#valQuarter').value = item.quarter || '';
+    $('#valTarget').value = item.target || '';
+    $('#valAdjustments').value = item.adjustments || '';
+    $('#valY4Plan').value = item.y4_plan || '';
+    $('#valSustainability').value = item.sustainability || '';
+    $('#valEditTitle').textContent = item.code ? `Edit ${item.code}` : 'Edit Activity';
+    $('#valEditOverlay').classList.add('active');
+}
+
+async function handleValSave(e) {
+    e.preventDefault();
+    const id = $('#valEditId').value;
+    const data = {
+        status: $('#valStatus').value,
+        responsible: $('#valResponsible').value,
+        quarter: $('#valQuarter').value,
+        target: $('#valTarget').value,
+        adjustments: $('#valAdjustments').value,
+        y4_plan: $('#valY4Plan').value,
+        sustainability: $('#valSustainability').value,
+    };
+    try {
+        await api(`/api/validation/${id}`, { method: 'PUT', body: data });
+        toast('Validation item updated', 'success');
+        $('#valEditOverlay').classList.remove('active');
+        validationData = await api('/api/validation');
+        const activeTab = document.querySelector('#validationTabs .tab.active');
+        renderValidation(activeTab ? parseInt(activeTab.dataset.vidx) : 0);
+    } catch (err) { toast(err.message, 'error'); }
+}
+
+// ─── Gantt Cell Toggle ───────────────────────────────────
+async function toggleGanttCell(cell) {
+    const taskId = parseInt(cell.dataset.task);
+    const col = parseInt(cell.dataset.col);
+    try {
+        const result = await api('/api/workback/toggle', { method: 'POST', body: { taskId, col } });
+        cell.classList.toggle('gantt-marked', result.marked);
+    } catch (err) { toast('Failed to update', 'error'); }
 }

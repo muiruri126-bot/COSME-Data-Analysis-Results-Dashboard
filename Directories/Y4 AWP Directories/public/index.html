@@ -242,6 +242,67 @@
         </div>
     </div>
 
+    <!-- Validation Edit Modal -->
+    <div class="modal-overlay" id="valEditOverlay">
+        <div class="modal" id="valEditModal">
+            <div class="modal-header">
+                <h2 id="valEditTitle">Edit Validation Activity</h2>
+                <button class="modal-close" id="valEditClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="valEditForm">
+                    <input type="hidden" id="valEditId">
+                    <div class="form-section">
+                        <h3>Activity Details</h3>
+                        <div class="readonly-block" id="valReadonly"></div>
+                    </div>
+                    <div class="form-section">
+                        <h3>Editable Fields</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="valStatus">Status</label>
+                                <select id="valStatus">
+                                    <option value="">Not Set</option>
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="Ongoing">Ongoing</option>
+                                    <option value="Complete">Complete</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="valResponsible">Responsible</label>
+                                <input type="text" id="valResponsible">
+                            </div>
+                            <div class="form-group">
+                                <label for="valQuarter">Quarter</label>
+                                <input type="text" id="valQuarter" placeholder="e.g., Q1, Q2">
+                            </div>
+                            <div class="form-group">
+                                <label for="valTarget">Target</label>
+                                <input type="text" id="valTarget">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="valAdjustments">Programming Adjustments</label>
+                                <textarea id="valAdjustments" rows="3"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="valY4Plan">Y4 Plan</label>
+                                <textarea id="valY4Plan" rows="3"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="valSustainability">Sustainability Measures</label>
+                                <textarea id="valSustainability" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="valEditCancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
     <script src="app.js"></script>
 </body>
