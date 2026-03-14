@@ -31,12 +31,6 @@ function setupListeners() {
     $('#historyOverlay').addEventListener('click', (e) => { if (e.target === $('#historyOverlay')) $('#historyOverlay').classList.remove('active'); });
     $('#activityForm').addEventListener('submit', handleSubmit);
 
-    // Validation edit modal
-    $('#valEditClose').addEventListener('click', () => $('#valEditOverlay').classList.remove('active'));
-    $('#valEditCancel').addEventListener('click', () => $('#valEditOverlay').classList.remove('active'));
-    $('#valEditOverlay').addEventListener('click', (e) => { if (e.target === $('#valEditOverlay')) $('#valEditOverlay').classList.remove('active'); });
-    $('#valEditForm').addEventListener('submit', handleValSave);
-
     // Module navigation
     $$('.module-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -47,7 +41,6 @@ function setupListeners() {
             $(`#panel${mod.charAt(0).toUpperCase() + mod.slice(1)}`).classList.add('active');
 
             if (mod === 'workback' && !workbackLoaded) loadWorkback();
-            if (mod === 'validation' && !validationLoaded) loadValidation();
         });
     });
 }
@@ -320,7 +313,6 @@ async function reloadFromExcel() {
         loadActivities();
         loadStats();
         workbackLoaded = false;
-        validationLoaded = false;
     } catch (e) { toast('Reload failed: ' + e.message, 'error'); }
     finally {
         btn.disabled = false;
@@ -420,149 +412,6 @@ function renderWorkback(data) {
 
     html += '</tbody></table></div>';
     $('#workbackContent').innerHTML = html;
-}
-
-// ─── MODULE 3: Activity Validation ───────────────────────────
-let validationLoaded = false;
-let validationData = [];
-
-async function loadValidation() {
-    try {
-        validationData = await api('/api/validation');
-        validationLoaded = true;
-
-        // Build outcome tabs
-        const tabs = $('#validationTabs');
-        tabs.innerHTML = '';
-        validationData.forEach((outcome, i) => {
-            tabs.innerHTML += `<button class="tab${i === 0 ? ' active' : ''}" data-vidx="${i}">${esc(outcome.outcomeCode)}</button>`;
-        });
-        tabs.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                renderValidation(parseInt(tab.dataset.vidx));
-            });
-        });
-
-        if (validationData.length > 0) renderValidation(0);
-    } catch (e) {
-        $('#validationContent').innerHTML = `<div class="loading-msg" style="color:var(--danger)">Failed to load validation data</div>`;
-    }
-}
-
-function renderValidation(idx) {
-    const outcome = validationData[idx];
-    if (!outcome) return;
-
-    let html = `<div class="validation-list">`;
-    html += `<div class="val-outcome-header">
-        <h3>${esc(outcome.outcomeDescription || outcome.outcomeCode)}</h3>
-    </div>`;
-
-    // Build a table-style layout
-    html += `<table class="val-table">
-        <thead>
-            <tr>
-                <th class="val-th-code">Code</th>
-                <th class="val-th-desc">Description</th>
-                <th class="val-th-status">Status</th>
-                <th class="val-th-target">Target</th>
-                <th class="val-th-responsible">Responsible</th>
-                <th class="val-th-quarter">Quarter</th>
-                <th class="val-th-actions">Actions</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-    outcome.activities.forEach(a => {
-        const isIndicator = a.type === 'indicator';
-        const rowClass = isIndicator ? 'val-row-indicator' : 'val-row-activity';
-        const statusClass = a.status === 'Complete' ? 'badge-completed' :
-            a.status === 'Ongoing' ? 'badge-in-progress' :
-            a.status === 'Not Started' ? 'badge-not-started' : '';
-
-        html += `<tr class="${rowClass}">
-            <td class="val-td-code">${esc(a.code || '')}</td>
-            <td class="val-td-desc">
-                ${esc(a.description || a.indicator_text || '')}
-                ${isIndicator ? '<span class="val-type-badge">Indicator</span>' : ''}
-            </td>
-            <td class="val-td-status">${a.status ? `<span class="badge ${statusClass}">${esc(a.status)}</span>` : '<span class="val-empty">—</span>'}</td>
-            <td class="val-td-target">${a.target ? esc(a.target) : '<span class="val-empty">—</span>'}</td>
-            <td class="val-td-responsible">${a.responsible ? esc(a.responsible) : '<span class="val-empty">—</span>'}</td>
-            <td class="val-td-quarter">${a.quarter ? esc(a.quarter) : '<span class="val-empty">—</span>'}</td>
-            <td class="val-td-actions">
-                <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
-            </td>
-        </tr>`;
-
-        // Show expandable details row if any narrative fields are filled
-        if (a.adjustments || a.y4_plan || a.sustainability) {
-            html += `<tr class="val-row-details">
-                <td></td>
-                <td colspan="6">
-                    <div class="val-details-grid">
-                        ${a.adjustments ? `<div class="val-detail-item"><strong>Adjustments:</strong> ${esc(a.adjustments)}</div>` : ''}
-                        ${a.y4_plan ? `<div class="val-detail-item"><strong>Y4 Plan:</strong> ${esc(a.y4_plan)}</div>` : ''}
-                        ${a.sustainability ? `<div class="val-detail-item"><strong>Sustainability:</strong> ${esc(a.sustainability)}</div>` : ''}
-                    </div>
-                </td>
-            </tr>`;
-        }
-    });
-
-    html += `</tbody></table>`;
-    html += '</div>';
-    $('#validationContent').innerHTML = html;
-}
-
-// ─── Validation Editing ──────────────────────────────────
-function editValItem(id) {
-    let item = null;
-    for (const outcome of validationData) {
-        item = outcome.activities.find(a => a.id === id);
-        if (item) break;
-    }
-    if (!item) { toast('Item not found', 'error'); return; }
-
-    let readonlyHtml = '';
-    if (item.code) readonlyHtml += `<div class="rb-row"><span class="rb-label">Code</span><span class="rb-value">${esc(item.code)}</span></div>`;
-    readonlyHtml += `<div class="rb-row"><span class="rb-label">Description</span><span class="rb-value">${esc(item.description || item.indicator_text)}</span></div>`;
-    $('#valReadonly').innerHTML = readonlyHtml;
-
-    $('#valEditId').value = item.id;
-    $('#valStatus').value = item.status || '';
-    $('#valResponsible').value = item.responsible || '';
-    $('#valQuarter').value = item.quarter || '';
-    $('#valTarget').value = item.target || '';
-    $('#valAdjustments').value = item.adjustments || '';
-    $('#valY4Plan').value = item.y4_plan || '';
-    $('#valSustainability').value = item.sustainability || '';
-    $('#valEditTitle').textContent = item.code ? `Edit ${item.code}` : 'Edit Activity';
-    $('#valEditOverlay').classList.add('active');
-}
-
-async function handleValSave(e) {
-    e.preventDefault();
-    const id = $('#valEditId').value;
-    const data = {
-        status: $('#valStatus').value,
-        responsible: $('#valResponsible').value,
-        quarter: $('#valQuarter').value,
-        target: $('#valTarget').value,
-        adjustments: $('#valAdjustments').value,
-        y4_plan: $('#valY4Plan').value,
-        sustainability: $('#valSustainability').value,
-    };
-    try {
-        await api(`/api/validation/${id}`, { method: 'PUT', body: data });
-        toast('Validation item updated', 'success');
-        $('#valEditOverlay').classList.remove('active');
-        validationData = await api('/api/validation');
-        const activeTab = document.querySelector('#validationTabs .tab.active');
-        renderValidation(activeTab ? parseInt(activeTab.dataset.vidx) : 0);
-    } catch (err) { toast(err.message, 'error'); }
 }
 
 // ─── Gantt Cell Toggle ───────────────────────────────────

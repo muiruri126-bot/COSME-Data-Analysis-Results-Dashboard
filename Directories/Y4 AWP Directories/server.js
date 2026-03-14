@@ -6,8 +6,6 @@ require('dotenv').config();
 const DirectoryDB = require('./database');
 const { parseExcel } = require('./excel-parser');
 const { parseWorkbackSchedule } = require('./workback-parser');
-const { parseActivityValidation } = require('./validation-parser');
-
 const app = express();
 const db = new DirectoryDB();
 
@@ -29,20 +27,6 @@ function loadExcelData() {
 }
 
 loadExcelData();
-function loadValidationData() {
-    try {
-        const count = db.db.prepare('SELECT COUNT(*) as c FROM validation_items').get().c;
-        if (count === 0) {
-            const outcomes = parseActivityValidation();
-            const inserted = db.bulkInsertValidation(outcomes);
-            console.log(`[Data] Loaded ${inserted} validation items from Excel`);
-        } else {
-            console.log(`[Data] ${count} validation items already in database`);
-        }
-    } catch (error) {
-        console.error('[Data] Failed to load validation:', error.message);
-    }
-}
 
 function loadWorkbackData() {
     try {
@@ -59,7 +43,6 @@ function loadWorkbackData() {
     }
 }
 
-loadValidationData();
 loadWorkbackData();
 // ─── API Routes ──────────────────────────────────────────────
 
@@ -154,11 +137,9 @@ app.get('/api/activities/:id/history', (req, res) => {
 app.post('/api/reload', (req, res) => {
     try {
         const count = loadExcelData();
-        const outcomes = parseActivityValidation();
-        const valCount = db.bulkInsertValidation(outcomes);
         const wbData = parseWorkbackSchedule();
         db.bulkInsertWorkback(wbData);
-        res.json({ message: `Reloaded ${count} activities, ${valCount} validation items`, count });
+        res.json({ message: `Reloaded ${count} activities`, count });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -181,25 +162,6 @@ app.post('/api/workback/toggle', (req, res) => {
         const result = db.toggleWorkbackCell(parseInt(taskId, 10), parseInt(col, 10));
         if (!result) return res.status(404).json({ error: 'Task not found' });
         res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// ─── Activity Validation API ─────────────────────────────
-app.get('/api/validation', (req, res) => {
-    try {
-        res.json(db.getAllValidation());
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.put('/api/validation/:id', (req, res) => {
-    try {
-        const updated = db.updateValidationItem(parseInt(req.params.id, 10), req.body);
-        if (!updated) return res.status(404).json({ error: 'Item not found' });
-        res.json(updated);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
