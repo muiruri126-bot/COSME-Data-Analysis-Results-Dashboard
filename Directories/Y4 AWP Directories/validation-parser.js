@@ -27,8 +27,8 @@ function parseActivityValidation() {
 
             if (!col0 && !col1) continue;
 
-            // Detect hierarchy level by code pattern
-            const codePattern = col0.match(/^(\d{4})\b/);
+            // Detect hierarchy level by code pattern (but not activity codes like 1111.1)
+            const codePattern = col0.match(/^(\d{4})(?!\.\d)\b/);
             if (codePattern) {
                 const code = codePattern[1];
                 const level = code.length === 4 ? (
@@ -37,19 +37,19 @@ function parseActivityValidation() {
                 ) : 'activity';
 
                 if (level === 'outcome') {
-                    currentOutcome = col0;
+                    currentOutcome = code;
                     continue;
                 }
                 if (level === 'output') {
-                    currentOutput = col0;
+                    currentOutput = code;
                     continue;
                 }
                 if (level === 'indicator') {
-                    currentIndicator = col0;
+                    currentIndicator = code;
                     activities.push({
                         type: 'indicator',
                         code: code,
-                        description: col0,
+                        description: '',
                         indicator_text: '',
                         target: '',
                         outcome: currentOutcome,
@@ -71,8 +71,7 @@ function parseActivityValidation() {
                 activities.push({
                     type: 'activity',
                     code: activityCode ? activityCode[1] : '',
-                    description: col0,
-                    pip_narrative: '',
+                    description: '',
                     target: '',
                     status: '',
                     adjustments: '',
@@ -109,7 +108,7 @@ function parseActivityValidation() {
         outcomes.push({
             sheetName,
             outcomeCode,
-            outcomeDescription: currentOutcome || sheetName,
+            outcomeDescription: currentOutcome || outcomeCode,
             activities
         });
     });
