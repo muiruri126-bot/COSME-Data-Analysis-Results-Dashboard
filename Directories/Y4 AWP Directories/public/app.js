@@ -456,46 +456,63 @@ function renderValidation(idx) {
     if (!outcome) return;
 
     let html = `<div class="validation-list">`;
+    html += `<div class="val-outcome-header">
+        <h3>${esc(outcome.outcomeDescription || outcome.outcomeCode)}</h3>
+    </div>`;
+
+    // Build a table-style layout
+    html += `<table class="val-table">
+        <thead>
+            <tr>
+                <th class="val-th-code">Code</th>
+                <th class="val-th-desc">Description</th>
+                <th class="val-th-status">Status</th>
+                <th class="val-th-target">Target</th>
+                <th class="val-th-responsible">Responsible</th>
+                <th class="val-th-quarter">Quarter</th>
+                <th class="val-th-actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
     outcome.activities.forEach(a => {
-        if (a.type === 'indicator') {
-            html += `<div class="val-card val-indicator">
-                <div class="val-code">${esc(a.code || '')}</div>
-                <div class="val-body">
-                    <div class="val-desc">${esc(a.description || a.indicator_text)}</div>
-                    ${a.target ? `<div class="val-meta"><strong>Target:</strong> ${esc(a.target)}</div>` : ''}
-                    ${a.indicator_text && a.description ? `<div class="val-meta"><strong>Indicator:</strong> ${esc(a.indicator_text)}</div>` : ''}
-                    <div class="val-footer">
-                        <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
-                    </div>
-                </div>
-            </div>`;
-            return;
-        }
-
+        const isIndicator = a.type === 'indicator';
+        const rowClass = isIndicator ? 'val-row-indicator' : 'val-row-activity';
         const statusClass = a.status === 'Complete' ? 'badge-completed' :
             a.status === 'Ongoing' ? 'badge-in-progress' :
-            a.status === 'Not Started' ? 'badge-not-started' : 'badge-not-started';
+            a.status === 'Not Started' ? 'badge-not-started' : '';
 
-        html += `<div class="val-card val-activity">
-            <div class="val-code">${esc(a.code || '')}</div>
-            <div class="val-body">
-                <div class="val-desc">${esc(a.description)}</div>
-                ${a.status ? `<span class="badge ${statusClass}">${esc(a.status)}</span>` : ''}
-                ${a.pip_narrative ? `<details class="val-details"><summary>PIP Narrative</summary><p>${esc(a.pip_narrative)}</p></details>` : ''}
-                ${a.y3_narrative ? `<details class="val-details"><summary>Y3 AWP Narrative</summary><p>${esc(a.y3_narrative)}</p></details>` : ''}
-                ${a.adjustments ? `<details class="val-details"><summary>Programming Adjustments</summary><p>${esc(a.adjustments)}</p></details>` : ''}
-                ${a.y4_plan ? `<details class="val-details"><summary>Y4 Plan</summary><p>${esc(a.y4_plan)}</p></details>` : ''}
-                ${a.sustainability ? `<details class="val-details"><summary>Sustainability Measures</summary><p>${esc(a.sustainability)}</p></details>` : ''}
-                <div class="val-footer">
-                    ${a.responsible ? `<span class="val-meta"><strong>Responsible:</strong> ${esc(a.responsible)}</span>` : ''}
-                    ${a.quarter ? `<span class="val-meta"><strong>Quarter:</strong> ${esc(a.quarter)}</span>` : ''}
-                    <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
-                </div>
-            </div>
-        </div>`;
+        html += `<tr class="${rowClass}">
+            <td class="val-td-code">${esc(a.code || '')}</td>
+            <td class="val-td-desc">
+                ${esc(a.description || a.indicator_text || '')}
+                ${isIndicator ? '<span class="val-type-badge">Indicator</span>' : ''}
+            </td>
+            <td class="val-td-status">${a.status ? `<span class="badge ${statusClass}">${esc(a.status)}</span>` : '<span class="val-empty">—</span>'}</td>
+            <td class="val-td-target">${a.target ? esc(a.target) : '<span class="val-empty">—</span>'}</td>
+            <td class="val-td-responsible">${a.responsible ? esc(a.responsible) : '<span class="val-empty">—</span>'}</td>
+            <td class="val-td-quarter">${a.quarter ? esc(a.quarter) : '<span class="val-empty">—</span>'}</td>
+            <td class="val-td-actions">
+                <button class="btn btn-sm btn-outline" onclick="editValItem(${a.id})">Edit</button>
+            </td>
+        </tr>`;
+
+        // Show expandable details row if any narrative fields are filled
+        if (a.adjustments || a.y4_plan || a.sustainability) {
+            html += `<tr class="val-row-details">
+                <td></td>
+                <td colspan="6">
+                    <div class="val-details-grid">
+                        ${a.adjustments ? `<div class="val-detail-item"><strong>Adjustments:</strong> ${esc(a.adjustments)}</div>` : ''}
+                        ${a.y4_plan ? `<div class="val-detail-item"><strong>Y4 Plan:</strong> ${esc(a.y4_plan)}</div>` : ''}
+                        ${a.sustainability ? `<div class="val-detail-item"><strong>Sustainability:</strong> ${esc(a.sustainability)}</div>` : ''}
+                    </div>
+                </td>
+            </tr>`;
+        }
     });
 
+    html += `</tbody></table>`;
     html += '</div>';
     $('#validationContent').innerHTML = html;
 }
@@ -512,8 +529,6 @@ function editValItem(id) {
     let readonlyHtml = '';
     if (item.code) readonlyHtml += `<div class="rb-row"><span class="rb-label">Code</span><span class="rb-value">${esc(item.code)}</span></div>`;
     readonlyHtml += `<div class="rb-row"><span class="rb-label">Description</span><span class="rb-value">${esc(item.description || item.indicator_text)}</span></div>`;
-    if (item.pip_narrative) readonlyHtml += `<div class="rb-row"><span class="rb-label">PIP Narrative</span><span class="rb-value">${esc(item.pip_narrative)}</span></div>`;
-    if (item.y3_narrative) readonlyHtml += `<div class="rb-row"><span class="rb-label">Y3 Narrative</span><span class="rb-value">${esc(item.y3_narrative)}</span></div>`;
     $('#valReadonly').innerHTML = readonlyHtml;
 
     $('#valEditId').value = item.id;

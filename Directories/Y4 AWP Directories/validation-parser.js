@@ -15,18 +15,6 @@ function parseActivityValidation() {
         const codeMatch = sheetName.match(/(\d{4})/);
         const outcomeCode = codeMatch ? codeMatch[1] : sheetName;
 
-        // Row 0 is header: columns map to specific fields
-        // Col 0: Activity code/description
-        // Col 1: PIP Narrative & Targets
-        // Col 2: (target values)
-        // Col 3: Y3 AWP Narrative
-        // Col 4: Status
-        // Col 5: Required Programming Adjustments
-        // Col 6: What will be carried out in Y4?
-        // Col 7: Sustainability measures
-        // Col 8: Who will carry this out?
-        // Col 9-10: Which quarter(s)?
-
         const activities = [];
         let currentOutcome = '';
         let currentOutput = '';
@@ -36,14 +24,6 @@ function parseActivityValidation() {
             const row = data[i];
             const col0 = String(row[0] || '').trim();
             const col1 = String(row[1] || '').trim();
-            const col2 = String(row[2] || '').trim();
-            const col3 = String(row[3] || '').trim();
-            const col4 = String(row[4] || '').trim();
-            const col5 = String(row[5] || '').trim();
-            const col6 = String(row[6] || '').trim();
-            const col7 = String(row[7] || '').trim();
-            const col8 = String(row[8] || '').trim();
-            const col9 = String(row[9] || '').trim();
 
             if (!col0 && !col1) continue;
 
@@ -66,7 +46,6 @@ function parseActivityValidation() {
                 }
                 if (level === 'indicator') {
                     currentIndicator = col0;
-                    // Indicators have targets in col1/col2, store them
                     activities.push({
                         type: 'indicator',
                         code: code,
@@ -76,7 +55,6 @@ function parseActivityValidation() {
                         outcome: currentOutcome,
                         output: currentOutput,
                         status: '',
-                        y3_narrative: '',
                         adjustments: '',
                         y4_plan: '',
                         sustainability: '',
@@ -96,7 +74,6 @@ function parseActivityValidation() {
                     description: col0,
                     pip_narrative: '',
                     target: '',
-                    y3_narrative: '',
                     status: '',
                     adjustments: '',
                     y4_plan: '',
@@ -120,7 +97,6 @@ function parseActivityValidation() {
                     outcome: currentOutcome,
                     output: currentOutput,
                     status: '',
-                    y3_narrative: '',
                     adjustments: '',
                     y4_plan: '',
                     sustainability: '',

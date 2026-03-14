@@ -51,9 +51,7 @@ class DirectoryDB {
                 code TEXT DEFAULT '',
                 description TEXT DEFAULT '',
                 indicator_text TEXT DEFAULT '',
-                pip_narrative TEXT DEFAULT '',
                 target TEXT DEFAULT '',
-                y3_narrative TEXT DEFAULT '',
                 status TEXT DEFAULT '',
                 adjustments TEXT DEFAULT '',
                 y4_plan TEXT DEFAULT '',
@@ -222,9 +220,9 @@ class DirectoryDB {
             const stmt = this.db.prepare(`
                 INSERT INTO validation_items 
                 (sheet_name, outcome_code, outcome_description, type, code, description, indicator_text,
-                 pip_narrative, target, y3_narrative, status, adjustments, y4_plan,
+                 target, status, adjustments, y4_plan,
                  sustainability, responsible, quarter, outcome_ref, output_ref, indicator_ref, sort_order)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `);
             let order = 0;
             for (const outcome of data) {
@@ -232,8 +230,7 @@ class DirectoryDB {
                     stmt.run(
                         outcome.sheetName, outcome.outcomeCode, outcome.outcomeDescription || '',
                         a.type, a.code || '', a.description || '', a.indicator_text || '',
-                        a.pip_narrative || '', a.target || '', a.y3_narrative || '',
-                        a.status || '', a.adjustments || '', a.y4_plan || '',
+                        a.target || '', a.status || '', a.adjustments || '', a.y4_plan || '',
                         a.sustainability || '', a.responsible || '', a.quarter || '',
                         a.outcome || '', a.output || '', a.indicator || '', order++
                     );
