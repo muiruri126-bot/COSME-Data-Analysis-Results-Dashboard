@@ -20935,10 +20935,7 @@
       else if (v.name) uniqueVisitorIds.add(v.name);
       if (v.visitedAt >= todayStart.getTime()) todayCount += loads;
       if (v.visitedAt >= weekStart.getTime()) weekCount += loads;
- if (statTotal) statTotal.textContent = totalVisits;
- if (statToday) statToday.textContent = todayCount;
- if (statWeek) statWeek.textContent = weekCount;
- if (statUnique) statUnique.textContent = uniqueVisitorIds.size;
+     });
 
  // Render history list (last 50)
  const histList = document.getElementById('visit-history-list');
@@ -29085,6 +29082,12 @@
  window.renderAnalyticsDashboard = function() {
  destroyCharts();
 
+ // Show loading state on KPIs so we can tell the function was called
+ ['an-kpi-total','an-kpi-today','an-kpi-week','an-kpi-unique','an-kpi-live','an-kpi-avg-dur'].forEach(id => {
+ const el = document.querySelector('#' + id + ' .an-kpi-val');
+ if (el) el.textContent = '...';
+ });
+
  // Fetch all analytics data
  Promise.all([
  db.ref('visits').orderByChild('visitedAt').limitToLast(500).once('value'),
@@ -29093,6 +29096,7 @@
  db.ref('analytics/downloadCounts').once('value'),
  db.ref('analytics/visits').orderByKey().limitToLast(500).once('value')
  ]).then(([visitsSnap, presenceSnap, tabCountsSnap, dlCountsSnap, aVisitsSnap]) => {
+ try {
 
  const visits = visitsSnap.val() || {};
  const presence = presenceSnap.val() || {};
@@ -29591,8 +29595,29 @@
  ).join('');
  }
 
+ } catch(innerErr) {
+ console.error('Analytics render error:', innerErr);
+ const errEl = document.querySelector('#an-kpi-total .an-kpi-val');
+ if (errEl) errEl.textContent = 'Render Error';
+ const errDetail = document.getElementById('analytics-kpi-row');
+ if (errDetail) {
+ const errDiv = document.createElement('div');
+ errDiv.style.cssText = 'grid-column:1/-1;background:#ffebee;color:#c62828;padding:12px 16px;border-radius:8px;font-size:0.9em;word-break:break-all;';
+ errDiv.textContent = 'Render error: ' + (innerErr.message || innerErr);
+ errDetail.appendChild(errDiv);
+ }
+ }
  }).catch(err => {
  console.error('Analytics load error:', err);
+ const errEl = document.querySelector('#an-kpi-total .an-kpi-val');
+ if (errEl) errEl.textContent = 'Load Error';
+ const errDetail = document.getElementById('analytics-kpi-row');
+ if (errDetail) {
+ const errDiv = document.createElement('div');
+ errDiv.style.cssText = 'grid-column:1/-1;background:#fff3e0;color:#e65100;padding:12px 16px;border-radius:8px;font-size:0.9em;word-break:break-all;';
+ errDiv.textContent = 'Firebase error: ' + (err.message || err);
+ errDetail.appendChild(errDiv);
+ }
  });
  };
 
