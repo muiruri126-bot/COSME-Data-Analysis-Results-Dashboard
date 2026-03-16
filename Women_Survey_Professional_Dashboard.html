@@ -9330,7 +9330,7 @@
  <div id="analytics-kpi-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px;">
  <div class="an-kpi" id="an-kpi-total"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Total Visits</div></div>
  <div class="an-kpi" id="an-kpi-today"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Today</div></div>
- <div class="an-kpi" id="an-kpi-week"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">This Week</div></div>
+ <div class="an-kpi" id="an-kpi-week"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Last 7 Days</div></div>
  <div class="an-kpi" id="an-kpi-unique"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Unique Visitors</div></div>
  <div class="an-kpi" id="an-kpi-live"><div class="an-kpi-val" style="color:#2e7d32;">--</div><div class="an-kpi-lbl">Live Now</div></div>
  <div class="an-kpi" id="an-kpi-avg-dur"><div class="an-kpi-val">--</div><div class="an-kpi-lbl">Avg Duration</div></div>
@@ -20870,16 +20870,34 @@
 
  // === PERSISTENT VISIT LOG (one entry per visitor per day) ===
  const visitLogRef = db.ref('visits/' + dailyVisitId);
- const visitData = {
- name: displayName,
- visitorId: visitorId,
- visitedAt: firebase.database.ServerValue.TIMESTAMP,
- leftAt: null,
- userAgent: navigator.userAgent.substring(0, 80)
- };
- visitLogRef.set(visitData);
+    // Use transaction to preserve firstVisitedAt and avoid overwriting on page reload
+    visitLogRef.transaction(existing => {
+     if (existing && existing.visitedAt) {
+      // Entry exists — update name/UA but keep original visitedAt
+      existing.name = displayName;
+      existing.visitorId = visitorId;
+      existing.lastPageLoad = { '.sv': 'timestamp' };
+      existing.userAgent = navigator.userAgent.substring(0, 80);
+      existing.pageLoads = (existing.pageLoads || 1) + 1;
+      return existing;
+     }
+     // First visit today — create new entry
+     return {
+      name: displayName,
+      visitorId: visitorId,
+      visitedAt: { '.sv': 'timestamp' },
+      lastPageLoad: { '.sv': 'timestamp' },
+      leftAt: null,
+      userAgent: navigator.userAgent.substring(0, 80),
+      pageLoads: 1
+     };
+    });
 
- // Update visit log with location once geo is available
+    // Log each individual pageview for accurate total visit counts
+    db.ref('analytics/pageviews').push().set({
+     visitorId: visitorId,
+     ts: firebase.database.ServerValue.TIMESTAMP
+    });
  geoPromise.then(geo => {
  visitLogRef.update({
  city: geo.city,
@@ -20896,26 +20914,23 @@
 
  const now = Date.now();
  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
- const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+     // Rolling 7-day window instead of calendar week
+     const weekStart = new Date(now - 7 * 24 * 60 * 60 * 1000); weekStart.setHours(0,0,0,0);
 
- let totalVisits = entries.length;
- let todayCount = 0;
- let weekCount = 0;
- const uniqueVisitorIds = new Set();
+     let totalVisits = 0;
+     let todayCount = 0;
+     let weekCount = 0;
+     const uniqueVisitorIds = new Set();
 
- entries.forEach(v => {
- // Deduplicate by persistent visitorId; fall back to name for legacy entries
- if (v.visitorId) uniqueVisitorIds.add(v.visitorId);
- else if (v.name) uniqueVisitorIds.add(v.name);
- if (v.visitedAt >= todayStart.getTime()) todayCount++;
- if (v.visitedAt >= weekStart.getTime()) weekCount++;
- });
-
- // Update stats
- const statTotal = document.getElementById('stat-total');
- const statToday = document.getElementById('stat-today');
- const statWeek = document.getElementById('stat-week');
- const statUnique = document.getElementById('stat-unique');
+     entries.forEach(v => {
+      // Count total pageloads (sum of all pageLoads fields, default 1)
+      const loads = v.pageLoads || 1;
+      totalVisits += loads;
+      // Deduplicate by persistent visitorId; fall back to name for legacy entries
+      if (v.visitorId) uniqueVisitorIds.add(v.visitorId);
+      else if (v.name) uniqueVisitorIds.add(v.name);
+      if (v.visitedAt >= todayStart.getTime()) todayCount += loads;
+      if (v.visitedAt >= weekStart.getTime()) weekCount += loads;
  if (statTotal) statTotal.textContent = totalVisits;
  if (statToday) statToday.textContent = todayCount;
  if (statWeek) statWeek.textContent = weekCount;
@@ -23958,7 +23973,7 @@
  badge: 'Training',
  badgeColor: '#00695c',
  desc: 'Pre- and post-training assessment analysis across all programme areas — mangrove, forestry, seaweed, and GJJ training effectiveness and knowledge gain.',
- pdf: 'COSME_PrePost_Report.pdf',
+ pdf: null,
  dataFiles: [
  { name: 'Mangrove Training Pre/Post', file: 'Mangrove Training Pre_post results.xlsx' },
  { name: 'Forest Training Pre/Post', file: 'Forest Training Pre_post results.xlsx' }
@@ -24074,10 +24089,14 @@
 
  // Actions
  const actions = document.getElementById('reportDetailActions');
- actions.innerHTML = `
- <a href="${r.pdf}" download="${r.pdf}" class="rpt-dl-btn primary">Download PDF</a>
- <a href="${r.pdf}" target="_blank" class="rpt-dl-btn outline"> View in Browser</a>
- `;
+     if (r.pdf) {
+      actions.innerHTML = `
+       <a href="${r.pdf}" download="${r.pdf}" class="rpt-dl-btn primary">Download PDF</a>
+       <a href="${r.pdf}" target="_blank" class="rpt-dl-btn outline"> View in Browser</a>
+      `;
+     } else {
+      actions.innerHTML = `<p style="color:#888;font-size:0.92em;margin:0;">No combined PDF — download individual reports from the files list below.</p>`;
+     }
 
  // Sections table
  document.getElementById('reportDetailTbody').innerHTML = r.sections.map((s, i) =>
@@ -29080,10 +29099,12 @@
  const entries = Object.values(visits).filter(v => v.visitedAt);
  const now = Date.now();
  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
- const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+ // Rolling 7-day window instead of calendar week
+ const weekStart = new Date(now - 7 * 24 * 60 * 60 * 1000); weekStart.setHours(0,0,0,0);
 
- // KPI calculations — deduplicate unique visitors by visitorId
+ // KPI calculations
  let totalDuration = 0, durationCount = 0;
+ let totalPageLoads = 0, todayPageLoads = 0, weekPageLoads = 0;
  const uniqueVisitors = new Set();
  const uniqueToday = new Set();
  const uniqueWeek = new Set();
@@ -29092,9 +29113,11 @@
 
  entries.forEach(v => {
  const vid = v.visitorId || v.name || 'anon';
+ const loads = v.pageLoads || 1;
+ totalPageLoads += loads;
  uniqueVisitors.add(vid);
- if (v.visitedAt >= todayStart.getTime()) uniqueToday.add(vid);
- if (v.visitedAt >= weekStart.getTime()) uniqueWeek.add(vid);
+ if (v.visitedAt >= todayStart.getTime()) { uniqueToday.add(vid); todayPageLoads += loads; }
+ if (v.visitedAt >= weekStart.getTime()) { uniqueWeek.add(vid); weekPageLoads += loads; }
  if (v.leftAt && v.visitedAt) {
  const dur = v.leftAt - v.visitedAt;
  if (dur > 0 && dur < 7200000) { totalDuration += dur; durationCount++; }
@@ -29142,11 +29165,11 @@
  const avgDur = durationCount > 0 ? Math.round(totalDuration / durationCount / 60000) : 0;
  const liveCount = liveVisitorIds.size;
 
- // Update KPIs
+ // Update KPIs — show visit counts (not just unique visitors) for Total/Today/Week
  const kpiMap = {
- 'an-kpi-total': uniqueVisitors.size,
- 'an-kpi-today': uniqueToday.size,
- 'an-kpi-week': uniqueWeek.size,
+ 'an-kpi-total': totalPageLoads,
+ 'an-kpi-today': todayPageLoads,
+ 'an-kpi-week': weekPageLoads,
  'an-kpi-unique': uniqueVisitors.size,
  'an-kpi-live': liveCount,
  'an-kpi-avg-dur': avgDur + 'm'
@@ -29156,17 +29179,20 @@
  if (el) el.textContent = val;
  });
 
- // Daily visits chart (last 14 days) — unique visitors per day
+ // Daily visits chart (last 14 days) — visitors and pageloads per day
  const dayLabels = [];
  const dayCounts = [];
+ const dayPageLoadCounts = [];
  for (let i = 13; i >= 0; i--) {
  const d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
  const dEnd = new Date(d); dEnd.setDate(dEnd.getDate() + 1);
  dayLabels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
  const dayVisitors = new Set();
+ let dayLoads = 0;
  entries.filter(v => v.visitedAt >= d.getTime() && v.visitedAt < dEnd.getTime())
- .forEach(v => dayVisitors.add(v.visitorId || v.name || 'anon'));
+ .forEach(v => { dayVisitors.add(v.visitorId || v.name || 'anon'); dayLoads += (v.pageLoads || 1); });
  dayCounts.push(dayVisitors.size);
+ dayPageLoadCounts.push(dayLoads);
  }
 
  const dailyCtx = document.getElementById('analytics-chart-daily');
@@ -29176,16 +29202,22 @@
  data: {
  labels: dayLabels,
  datasets: [{
- label: 'Visits',
- data: dayCounts,
+ label: 'Total Visits',
+ data: dayPageLoadCounts,
  backgroundColor: 'rgba(26,35,126,0.7)',
+ borderRadius: 6,
+ borderSkipped: false
+ },{
+ label: 'Unique Visitors',
+ data: dayCounts,
+ backgroundColor: 'rgba(46,125,50,0.6)',
  borderRadius: 6,
  borderSkipped: false
  }]
  },
  options: {
  responsive: true, maintainAspectRatio: false,
- plugins: { legend: { display: false } },
+ plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
  scales: {
  y: { beginAtZero: true, ticks: { stepSize: 1 } },
  x: { ticks: { maxRotation: 45, font: { size: 10 } } }
