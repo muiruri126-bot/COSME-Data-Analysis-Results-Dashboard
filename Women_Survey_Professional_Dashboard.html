@@ -20870,34 +20870,36 @@
 
  // === PERSISTENT VISIT LOG (one entry per visitor per day) ===
  const visitLogRef = db.ref('visits/' + dailyVisitId);
-    // Use transaction to preserve firstVisitedAt and avoid overwriting on page reload
-    visitLogRef.transaction(existing => {
-     if (existing && existing.visitedAt) {
-      // Entry exists — update name/UA but keep original visitedAt
-      existing.name = displayName;
-      existing.visitorId = visitorId;
-      existing.lastPageLoad = { '.sv': 'timestamp' };
-      existing.userAgent = navigator.userAgent.substring(0, 80);
-      existing.pageLoads = (existing.pageLoads || 1) + 1;
-      return existing;
-     }
-     // First visit today — create new entry
-     return {
-      name: displayName,
-      visitorId: visitorId,
-      visitedAt: { '.sv': 'timestamp' },
-      lastPageLoad: { '.sv': 'timestamp' },
-      leftAt: null,
-      userAgent: navigator.userAgent.substring(0, 80),
-      pageLoads: 1
-     };
-    });
+ // Check if entry exists first, then set or update accordingly
+ visitLogRef.once('value').then(snap => {
+ if (snap.exists() && snap.val().visitedAt) {
+ // Entry exists — update fields but keep original visitedAt
+ visitLogRef.update({
+ name: displayName,
+ visitorId: visitorId,
+ lastPageLoad: firebase.database.ServerValue.TIMESTAMP,
+ userAgent: navigator.userAgent.substring(0, 80),
+ pageLoads: (snap.val().pageLoads || 1) + 1
+ });
+ } else {
+ // First visit today — create new entry
+ visitLogRef.set({
+ name: displayName,
+ visitorId: visitorId,
+ visitedAt: firebase.database.ServerValue.TIMESTAMP,
+ lastPageLoad: firebase.database.ServerValue.TIMESTAMP,
+ leftAt: null,
+ userAgent: navigator.userAgent.substring(0, 80),
+ pageLoads: 1
+ });
+ }
+ });
 
-    // Log each individual pageview for accurate total visit counts
-    db.ref('analytics/pageviews').push().set({
-     visitorId: visitorId,
-     ts: firebase.database.ServerValue.TIMESTAMP
-    });
+ // Log each individual pageview for accurate total visit counts
+ db.ref('analytics/pageviews').push().set({
+ visitorId: visitorId,
+ ts: firebase.database.ServerValue.TIMESTAMP
+ });
  geoPromise.then(geo => {
  visitLogRef.update({
  city: geo.city,
@@ -20910,7 +20912,9 @@
  const allVisitsRef = db.ref('visits');
  allVisitsRef.orderByChild('visitedAt').limitToLast(200).on('value', (snapshot) => {
  const visits = snapshot.val() || {};
- const entries = Object.values(visits).sort((a, b) => (b.visitedAt || 0) - (a.visitedAt || 0));
+ // Filter: only entries with valid numeric visitedAt
+ const entries = Object.values(visits).filter(v => typeof v.visitedAt === 'number' && v.visitedAt > 0)
+ .sort((a, b) => (b.visitedAt || 0) - (a.visitedAt || 0));
 
  const now = Date.now();
  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
@@ -29096,7 +29100,11 @@
  const dlCounts = dlCountsSnap.val() || {};
  const aVisits = aVisitsSnap.val() || {};
 
- const entries = Object.values(visits).filter(v => v.visitedAt);
+ // Filter entries: visitedAt must be a valid number (not an object from broken transactions)
+ const entries = Object.values(visits).filter(v => typeof v.visitedAt === 'number' && v.visitedAt > 0);
+
+ // Also use analytics/visits as supplementary data (these always have valid timestamps)
+ const aEntries = Object.values(aVisits).filter(v => typeof v.ts === 'number' && v.ts > 0);
  const now = Date.now();
  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
  // Rolling 7-day window instead of calendar week
@@ -29135,10 +29143,12 @@
  }
  });
 
- // Also pull location data from analytics/visits (deduped)
- Object.values(aVisits).forEach(v => {
+ // Also pull location & visitor data from analytics/visits (deduped, with valid timestamps)
+ aEntries.forEach(v => {
  const vid = v.visitorId || 'anon';
  uniqueVisitors.add(vid);
+ if (v.ts >= todayStart.getTime()) uniqueToday.add(vid);
+ if (v.ts >= weekStart.getTime()) uniqueWeek.add(vid);
  let locKey = null;
  if (v.city && v.city !== 'Unknown') {
  locKey = v.city + ', ' + (v.country || '');
@@ -29150,6 +29160,15 @@
  locationVisitorMap[locKey].add(vid);
  }
  });
+
+ // If main visits had no valid entries, use aEntries count as fallback for pageloads
+ if (totalPageLoads === 0 && aEntries.length > 0) {
+ totalPageLoads = aEntries.length;
+ aEntries.forEach(v => {
+ if (v.ts >= todayStart.getTime()) todayPageLoads++;
+ if (v.ts >= weekStart.getTime()) weekPageLoads++;
+ });
+ }
 
  // Convert locationVisitorMap to locationMap counts
  Object.entries(locationVisitorMap).forEach(([key, ids]) => {
@@ -29189,10 +29208,14 @@
  dayLabels.push(d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
  const dayVisitors = new Set();
  let dayLoads = 0;
+ // Count from main visits
  entries.filter(v => v.visitedAt >= d.getTime() && v.visitedAt < dEnd.getTime())
  .forEach(v => { dayVisitors.add(v.visitorId || v.name || 'anon'); dayLoads += (v.pageLoads || 1); });
+ // Also count from analytics/visits for visitors not already seen
+ aEntries.filter(v => v.ts >= d.getTime() && v.ts < dEnd.getTime())
+ .forEach(v => { dayVisitors.add(v.visitorId || 'anon'); if (dayLoads === 0) dayLoads++; });
  dayCounts.push(dayVisitors.size);
- dayPageLoadCounts.push(dayLoads);
+ dayPageLoadCounts.push(dayLoads || dayVisitors.size);
  }
 
  const dailyCtx = document.getElementById('analytics-chart-daily');
@@ -29359,6 +29382,13 @@
  if (v.visitedAt) {
  const h = new Date(v.visitedAt).getHours();
  hourSets[h].add(v.visitorId || v.name || 'anon');
+ }
+ });
+ // Also use analytics/visits timestamps
+ aEntries.forEach(v => {
+ if (v.ts) {
+ const h = new Date(v.ts).getHours();
+ hourSets[h].add(v.visitorId || 'anon');
  }
  });
  const hourCounts = hourSets.map(s => s.size);
@@ -29641,22 +29671,10 @@
  }
 
  // ====== CLEAR ANALYTICS HISTORY ======
- (function clearAnalyticsOnce() {
- const CLEAR_KEY = 'analytics_cleared_v2';
- if (localStorage.getItem(CLEAR_KEY)) return;
- const db = firebase.database();
- Promise.all([
- db.ref('visits').remove(),
- db.ref('analytics/visits').remove(),
- db.ref('analytics/tabSwitches').remove(),
- db.ref('analytics/tabCounts').remove(),
- db.ref('analytics/downloadCounts').remove(),
- db.ref('analytics/downloads').remove()
- ]).then(() => {
- localStorage.setItem(CLEAR_KEY, Date.now().toString());
- console.log('Analytics history cleared successfully');
- }).catch(err => console.error('Failed to clear analytics:', err));
- })();
+ // Removed: clearAnalyticsOnce was deleting ALL analytics data from Firebase
+ // on every new visitor's first load (localStorage is per-browser, so each
+ // new user's browser would wipe the entire database). This caused only 
+ // the last visitor's data to remain visible.
  </script>
 </body>
 </html>
