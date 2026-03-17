@@ -43,6 +43,12 @@ function setupListeners() {
             if (mod === 'workback' && !workbackLoaded) loadWorkback();
         });
     });
+
+    // Strategic Actions toggle
+    $('#saToggle').addEventListener('click', () => {
+        $('#saToggle').classList.toggle('collapsed');
+        $('#saBody').classList.toggle('collapsed');
+    });
 }
 
 // ─── API Helpers ─────────────────────────────────────────────
