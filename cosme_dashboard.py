@@ -2973,24 +2973,24 @@ def render_women_tab5(w):
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_heard'], 'Response',
                             f'Awareness of {module}', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_current'], 'Response',
-                            f'Currently Involved', height=280), use_container_width=True)
+                            f'{module} - Currently Involved', height=280), use_container_width=True)
         with cb:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_ever'], 'Response',
-                            f'Ever Participated', height=300), use_container_width=True)
+                            f'{module} - Ever Participated', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_modality'], 'Modality',
-                            f'Participation Modality', height=300), use_container_width=True)
+                            f'{module} - Participation Modality', height=300), use_container_width=True)
 
         cc, cd = st.columns(2)
         with cc:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_training'], 'Response',
-                            f'Training Received', height=300), use_container_width=True)
+                            f'{module} - Training Received', height=300), use_container_width=True)
         with cd:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_assets'], 'Response',
-                            f'Assets/Inputs Received', height=300), use_container_width=True)
+                            f'{module} - Assets/Inputs Received', height=300), use_container_width=True)
 
         if f'{prefix}_interest' in w:
             st.plotly_chart(make_comparison_bar(w[f'{prefix}_interest'], 'Response',
-                            f'Interest in Participating', height=280), use_container_width=True)
+                            f'{module} - Interest in Participating', height=280), use_container_width=True)
         st.markdown("---")
 
 
@@ -3482,12 +3482,12 @@ def render_men_tab3(m):
             st.plotly_chart(make_comparison_bar(m[f'{prefix}_heard'], 'Response',
                             f'Awareness of {module}', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(m[f'{prefix}_current'], 'Response',
-                            f'Female HH Currently Involved', height=280), use_container_width=True)
+                            f'{module} - Female HH Currently Involved', height=280), use_container_width=True)
         with cb:
             st.plotly_chart(make_comparison_bar(m[f'{prefix}_ever'], 'Response',
-                            f'Female HH Ever Participated', height=300), use_container_width=True)
+                            f'{module} - Female HH Ever Participated', height=300), use_container_width=True)
             st.plotly_chart(make_comparison_bar(m[f'{prefix}_support'], 'Response',
-                            f'Men Supporting Female HH Members', height=300), use_container_width=True)
+                            f'{module} - Men Supporting Female HH Members', height=300), use_container_width=True)
 
         _section_header('', f'Type of Support — {module}', 'Support')
         st.plotly_chart(make_comparison_bar(m[f'{prefix}_support_type'], 'Type',
