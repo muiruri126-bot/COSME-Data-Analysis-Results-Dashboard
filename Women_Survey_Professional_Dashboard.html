@@ -3744,6 +3744,9 @@
  <button class="sidebar-item" onclick="sidebarNav('schools-dashboard', this)" data-key="schools-dashboard">
  <span class="item-label">Schools Dashboard</span>
  </button>
+ <button class="sidebar-item" onclick="sidebarNav('school-initiatives', this)" data-key="school-initiatives">
+ <span class="item-label">School Initiatives</span>
+ </button>
  <button class="sidebar-item" onclick="sidebarNav('grapp-dashboard', this)" data-key="grapp-dashboard">
  <span class="item-label">GRAPP</span>
  </button>
@@ -3958,6 +3961,7 @@
  <button class="survey-btn" onclick="switchSurvey('forestry')">Forestry Functionality (Midline)</button>
  <button class="survey-btn" onclick="switchSurvey('prepost-forest')">Trainings Pre & Post</button>
  <button class="survey-btn" onclick="switchSurvey('schools-dashboard')">Schools Dashboard</button>
+ <button class="survey-btn" onclick="switchSurvey('school-initiatives')">School Initiatives</button>
  <button class="survey-btn" onclick="switchSurvey('seaweed-assessment')">Seaweed Assessment</button>
  <button class="survey-btn" onclick="switchSurvey('mangrove-resources')">Mangrove Resources</button>
  <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
@@ -7260,6 +7264,206 @@
 
  </div>
  <!-- END SCHOOLS DASHBOARD SECTION -->
+
+ <!-- ========================================================== -->
+ <!-- ========= SCHOOL INITIATIVES ASSESSMENT SECTION ========== -->
+ <!-- ========================================================== -->
+ <div id="school-initiatives-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #2E7D32;">
+
+ <!-- HEADER -->
+ <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);">
+ <h1>School Initiatives Assessment Results</h1>
+ <div class="header-subtitle">4K Club Environmental Initiatives, Clean Water Interventions & Sustainability — July 2025</div>
+ <div class="header-meta">
+ <div class="meta-item">
+ <div class="meta-label">Schools Surveyed (Midline)</div>
+ <div class="meta-value">65 Schools</div>
+ </div>
+ <div class="meta-item">
+ <div class="meta-label">4K Club Members</div>
+ <div class="meta-value">5,065 (F: 2,917 | M: 2,148)</div>
+ </div>
+ <div class="meta-item">
+ <div class="meta-label">Assessment Period</div>
+ <div class="meta-value">July 2025</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- INDICATOR 1310b KPI CARD -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #2E7D32;">
+ <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Indicator 1310b: Percentage of initiatives led by school clubs in support of climate change adaptation</h3>
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+ <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Schools Surveyed</div>
+ <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">65</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Baseline</div>
+ <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">0%</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Target</div>
+ <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">60%</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Midline Result</div>
+ <div style="font-size: 2em; font-weight: 800; color: #1B5E20;">65.3%</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+ <div style="font-size: 1.6em; font-weight: 800; color: #2E7D32;">EXCEEDED</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- LOGFRAME TABLE -->
+ <div class="section" style="margin-bottom: 30px;">
+ <button class="collapsible-header" onclick="toggleCollapsible(this)">School Initiatives — Program Target vs Result</button>
+ <div class="collapsible-content">
+ <div class="highlight-box">
+ <h4>Indicator 1310b &amp; 1310c Performance</h4>
+ <p>The percentage of initiatives led by school clubs in support of climate change adaptation <strong>exceeded the 60% target</strong>, reaching <strong>65.3%</strong> at midline from a baseline of <strong>0%</strong>. Additionally, indicator 1310c (schools with access to sustainable clean water solutions) rose from <strong>23.4%</strong> to <strong>62.5%</strong>, also exceeding the 60% target.</p>
+ </div>
+ <table class="comparison-table">
+ <thead>
+ <tr>
+ <th style="width: 35%;">Indicator</th>
+ <th style="width: 13%;">Baseline</th>
+ <th style="width: 13%;">Midline</th>
+ <th style="width: 13%;">Target</th>
+ <th style="width: 13%;">Change</th>
+ <th style="width: 13%;">Status</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr style="background: #2E7D32; font-weight: 600;">
+ <td colspan="6"><strong style="color: white;">OUTCOME LEVEL — School Children Awareness (IO 1310)</strong></td>
+ </tr>
+ <tr>
+ <td><strong>1310b. % of initiatives led by school clubs in support of climate change adaptation</strong></td>
+ <td>0%</td>
+ <td>65.3%</td>
+ <td>60%</td>
+ <td>+65.3pp</td>
+ <td><span style="background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 4px; font-weight: 600;">EXCEEDED</span></td>
+ </tr>
+ <tr>
+ <td><strong>1310c. % of targeted schools with access to sustainable clean water solutions</strong></td>
+ <td>23.4%</td>
+ <td>62.5%</td>
+ <td>60%</td>
+ <td>+39.1pp</td>
+ <td><span style="background: #c8e6c9; color: #1b5e20; padding: 4px 8px; border-radius: 4px; font-weight: 600;">EXCEEDED</span></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- SECTION A: 4K CLUBS & ENVIRONMENTAL INITIATIVES -->
+ <div class="output-header" style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">A. 4K Clubs &amp; Environmental Initiatives</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">81.5% of 4K clubs implementing environmental initiatives | 2,917 female &amp; 2,148 male members</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Clubs Implementing Initiatives</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #1B5E20;">81.5%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">53 of 65 schools</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">4K Clubs Established</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #1B5E20;">96.9%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">63 with 1 club, 2 with 2 clubs</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Club Materials Received</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #1B5E20;">92.3%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">60 fully, 4 partially</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Patron Training (Agree + SA)</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #1B5E20;">96.9%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">84.6% Agree + 12.3% SA</div></div>
+ </div>
+
+ <!-- Charts -->
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-initiatives-pie" width="400" height="350"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-initiative-types" width="400" height="350"></canvas>
+ </div>
+ </div>
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-4k-functionality" width="400" height="350"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-4k-members" width="400" height="350"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION B: COSME CLEAN WATER INTERVENTIONS -->
+ <div class="output-header" style="background: linear-gradient(135deg, #0277BD 0%, #01579B 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">B. COSME Clean Water Interventions</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Water tanks (83.1%), gutters (83.1%), and Solvatten kits (100%) distributed to schools</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Water Tanks Received</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">83.1%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">54 of 65 schools</div></div>
+ <div class="kpi-card"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Tanks Installed</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #E65100;">33.9%</div><div class="kpi-change" style="color: #E65100; font-size: 0.85em;">48.2% not yet installed</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Gutters Received</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">83.1%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">54 of 65 schools</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Solvatten Kits</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #283593;">100%</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">All 65 schools, 3,123 kits</div></div>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-tanks-status" width="400" height="300"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-gutters-status" width="400" height="300"></canvas>
+ </div>
+ </div>
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-solvatten-use" width="400" height="300"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-connected-rwh" width="400" height="300"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION C: SUSTAINABILITY -->
+ <div class="output-header" style="background: linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">C. Sustainability of Clean Water Solutions</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Maintenance, training, community oversight &amp; income-generating activities</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-sustainability-radar" width="400" height="350"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-maintenance-budget" width="400" height="350"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION D: INDICATOR 1310c BY COUNTY -->
+ <div class="output-header" style="background: linear-gradient(135deg, #BF360C 0%, #D84315 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">D. Indicator 1310c — Clean Water Access by Sub-County</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Baseline vs Midline comparison across Kilifi &amp; Kwale sub-counties</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="si-1310c-county" width="800" height="400"></canvas>
+ </div>
+ </div>
+
+ <!-- OVERALL INSIGHT -->
+ <div class="insight-panel" style="background: linear-gradient(135deg,#E8F5E9,#C8E6C9); border-left: 5px solid #2E7D32; padding: 24px 28px; border-radius: 0 12px 12px 0; margin-bottom: 30px;">
+ <h3 style="color: #1B5E20; margin: 0 0 12px 0;">Key Insights — School Initiatives</h3>
+ <ul style="color: #1B5E20; line-height: 1.8; margin: 0; padding-left: 20px;">
+ <li><strong>Indicator 1310b exceeded target:</strong> 65.3% of school-club-led initiatives focus on climate change adaptation, surpassing the 60% target.</li>
+ <li><strong>Dominant activities:</strong> Tree planting (38 schools) and farming (32 schools) are the most common club-led environmental initiatives.</li>
+ <li><strong>High club functionality:</strong> 96.9% of patrons received adequate training, 100% actively support their clubs.</li>
+ <li><strong>Installation gap:</strong> While 83.1% of schools received water tanks and gutters, only ~33% have fully installed them — financial constraints cited as the primary barrier.</li>
+ <li><strong>Solvatten adoption growing:</strong> Usage rose from 7.8% at baseline to 49.2% at midline, with 100% of schools having received kits.</li>
+ <li><strong>Sustainability needs attention:</strong> Only 20% of schools have full maintenance budgets, though 73.9% have hygiene training programs and community oversight in place.</li>
+ </ul>
+ </div>
+
+ </div>
+ <!-- END SCHOOL INITIATIVES SECTION -->
 
  <!-- ========================================================== -->
  <!-- ========== SEAWEED GROUP ASSESSMENT SECTION ============== -->
@@ -13915,6 +14119,14 @@
  footerTitle: '<strong>GRAPP — Gender Responsive Climate Adaptation & Preparedness Plans</strong>',
  footerSample: '13 Deliverables | 6 Wards | 2 Counties (Kilifi & Kwale) | November 2025',
  renderFn: () => window.renderGRAPPDashboard()
+ },
+ 'school-initiatives': {
+ showSection: 'school-initiatives-section',
+ subSelector: null,
+ title: 'School Initiatives Assessment Results',
+ footerTitle: '<strong>School Initiatives — 1310b Club-Led Climate Adaptation Initiatives</strong>',
+ footerSample: '65 Schools | Kwale & Kilifi Counties | Baseline to Midline Assessment | July 2025',
+ renderFn: () => window.renderSchoolInitiativesCharts()
  }
  };
 
@@ -13930,7 +14142,8 @@
  'mangrove-presentation-section',
  'schools-presentation-section',
  'cosme-pmf-section',
- 'grapp-section'
+ 'grapp-section',
+ 'school-initiatives-section'
  ];
  const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
 
@@ -23032,7 +23245,8 @@
  'forestry-presentation': 'Forestry',
  'seaweed-presentation': 'Seaweed',
  'mangrove-presentation': 'Mangrove',
- 'schools-presentation': 'Schools'
+ 'schools-presentation': 'Schools',
+ 'school-initiatives': 'School Initiatives'
  };
 
  // Toggle mobile nav drawer
@@ -25041,6 +25255,231 @@
  renderRecommendations();
  };
 
+ })();
+ </script>
+
+ })();
+ </script>
+
+ <!-- ============================================================ -->
+ <!-- SCHOOL INITIATIVES RENDER ENGINE -->
+ <!-- ============================================================ -->
+ <script>
+ (function() {
+ const siCharts = {};
+ function destroyAll() { Object.values(siCharts).forEach(c => { try { c.destroy(); } catch(e) {} }); }
+
+ window.renderSchoolInitiativesCharts = function() {
+ destroyAll();
+
+ // 1. Initiatives Pie: Yes/Partially/No
+ const ctxPie = document.getElementById('si-initiatives-pie');
+ if (ctxPie) {
+ siCharts['pie'] = new Chart(ctxPie, {
+ type: 'doughnut',
+ data: {
+ labels: ['Yes (81.5%)', 'Partially (12.3%)', 'No (6.2%)'],
+ datasets: [{ data: [81.5, 12.3, 6.2], backgroundColor: ['#2E7D32', '#FF9800', '#E53935'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false, cutout: '45%',
+ plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } }, title: { display: true, text: '4K Clubs Implementing Environmental Initiatives', font: { size: 14, weight: 'bold' } }, datalabels: { color: '#fff', font: { size: 13, weight: 'bold' }, formatter: v => v + '%' } }
+ }
+ });
+ }
+
+ // 2. Initiative Types horizontal bar
+ const ctxTypes = document.getElementById('si-initiative-types');
+ if (ctxTypes) {
+ siCharts['types'] = new Chart(ctxTypes, {
+ type: 'bar',
+ data: {
+ labels: ['Tree Planting', 'Farming', 'Environmental Conservation', 'Waste Management', 'Water Conservation', 'Hygiene', 'Irrigation', 'Fruit Trees', 'Poultry'],
+ datasets: [{ label: 'Frequency', data: [38, 32, 9, 4, 3, 2, 2, 2, 1], backgroundColor: '#43A047', borderRadius: 4 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, title: { display: true, text: 'Types of Environmental Initiatives (Frequency)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' }, color: '#333' } },
+ scales: { x: { beginAtZero: true, title: { display: true, text: 'Number of Schools' } } }
+ }
+ });
+ }
+
+ // 3. 4K Club Functionality
+ const ctxFunc = document.getElementById('si-4k-functionality');
+ if (ctxFunc) {
+ siCharts['func'] = new Chart(ctxFunc, {
+ type: 'bar',
+ data: {
+ labels: ['Patrons trained', 'Patrons active', 'Materials adequate', 'Members committed', 'Clubs functional'],
+ datasets: [
+ { label: 'Strongly Agree', data: [12.3, 12.3, 4.6, 10.8, 12.3], backgroundColor: '#1B5E20' },
+ { label: 'Agree', data: [84.6, 87.7, 84.6, 78.5, 76.9], backgroundColor: '#66BB6A' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: '4K Club Functionality — Level of Agreement (%)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, font: { size: 10, weight: 'bold' }, color: '#fff', formatter: v => v > 5 ? v + '%' : '' } },
+ scales: { x: { stacked: true, ticks: { maxRotation: 25 } }, y: { stacked: true, beginAtZero: true, max: 110, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+
+ // 4. 4K Members by Sex
+ const ctxMembers = document.getElementById('si-4k-members');
+ if (ctxMembers) {
+ siCharts['members'] = new Chart(ctxMembers, {
+ type: 'bar',
+ data: {
+ labels: ['Average/School', 'Maximum', 'Minimum', 'Total'],
+ datasets: [
+ { label: 'Female', data: [44.9, 123, 15, 2917], backgroundColor: '#E91E63' },
+ { label: 'Male', data: [33.0, 103, 6, 2148], backgroundColor: '#1976D2' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: '4K Club Members by Sex', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v.toLocaleString() } },
+ scales: { y: { beginAtZero: true } }
+ }
+ });
+ }
+
+ // 5. Tanks Status
+ const ctxTanks = document.getElementById('si-tanks-status');
+ if (ctxTanks) {
+ siCharts['tanks'] = new Chart(ctxTanks, {
+ type: 'bar',
+ data: {
+ labels: ['Installed', 'Using'],
+ datasets: [
+ { label: 'Yes', data: [33.9, 34.5], backgroundColor: '#2E7D32' },
+ { label: 'Partially', data: [17.9, 3.6], backgroundColor: '#FF9800' },
+ { label: 'No', data: [48.2, 61.8], backgroundColor: '#E53935' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: 'Water Tanks — Installation & Usage (%)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, font: { size: 11, weight: 'bold' }, color: '#fff', formatter: v => v + '%' } },
+ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, max: 105, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+
+ // 6. Gutters Status
+ const ctxGutters = document.getElementById('si-gutters-status');
+ if (ctxGutters) {
+ siCharts['gutters'] = new Chart(ctxGutters, {
+ type: 'bar',
+ data: {
+ labels: ['Installed', 'Using'],
+ datasets: [
+ { label: 'Yes', data: [32.1, 27.3], backgroundColor: '#2E7D32' },
+ { label: 'Partially', data: [7.1, 5.5], backgroundColor: '#FF9800' },
+ { label: 'No', data: [60.7, 67.3], backgroundColor: '#E53935' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: 'Gutters — Installation & Usage (%)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, font: { size: 11, weight: 'bold' }, color: '#fff', formatter: v => v + '%' } },
+ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, max: 105, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+
+ // 7. Solvatten Use baseline vs midline
+ const ctxSolv = document.getElementById('si-solvatten-use');
+ if (ctxSolv) {
+ siCharts['solv'] = new Chart(ctxSolv, {
+ type: 'bar',
+ data: {
+ labels: ['Yes', 'Partially', 'No'],
+ datasets: [
+ { label: 'Baseline', data: [7.8, 0, 92.2], backgroundColor: '#90CAF9' },
+ { label: 'Midline', data: [49.2, 13.9, 36.9], backgroundColor: '#1565C0' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: 'Solvatten Kit Usage (%)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' } },
+ scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+
+ // 8. Connected rainwater harvesting
+ const ctxRWH = document.getElementById('si-connected-rwh');
+ if (ctxRWH) {
+ siCharts['rwh'] = new Chart(ctxRWH, {
+ type: 'doughnut',
+ data: {
+ labels: ['Connected (30.4%)', 'Partially (5.4%)', 'Not Connected (64.3%)'],
+ datasets: [{ data: [30.4, 5.4, 64.3], backgroundColor: ['#2E7D32', '#FF9800', '#E53935'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false, cutout: '45%',
+ plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Gutters & Tanks Connected for Rainwater Harvesting', font: { size: 14, weight: 'bold' } }, datalabels: { color: '#fff', font: { size: 13, weight: 'bold' }, formatter: v => v + '%' } }
+ }
+ });
+ }
+
+ // 9. Sustainability Radar
+ const ctxRadar = document.getElementById('si-sustainability-radar');
+ if (ctxRadar) {
+ siCharts['radar'] = new Chart(ctxRadar, {
+ type: 'radar',
+ data: {
+ labels: ['Maintenance Budget', 'Trained Staff', 'Repairs (12 mo)', 'Hygiene Training', 'Community Oversight', 'Income-Generating'],
+ datasets: [{
+ label: 'Yes (%)', data: [20.0, 56.9, 64.6, 73.9, 73.9, 63.1],
+ backgroundColor: 'rgba(46,125,50,0.2)', borderColor: '#2E7D32', borderWidth: 2, pointBackgroundColor: '#2E7D32'
+ }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, title: { display: true, text: 'Sustainability Dimensions — % Yes', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, font: { size: 11, weight: 'bold' }, color: '#1B5E20', formatter: v => v + '%' } },
+ scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } }
+ }
+ });
+ }
+
+ // 10. Maintenance Budget
+ const ctxBudget = document.getElementById('si-maintenance-budget');
+ if (ctxBudget) {
+ siCharts['budget'] = new Chart(ctxBudget, {
+ type: 'bar',
+ data: {
+ labels: ['Yes', 'Partially', 'No', 'Don\'t Know'],
+ datasets: [{ label: 'Schools (%)', data: [20.0, 46.2, 32.3, 1.5], backgroundColor: ['#2E7D32', '#FF9800', '#E53935', '#9E9E9E'], borderRadius: 4 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, title: { display: true, text: 'Budget Allocated for Water Maintenance (%)', font: { size: 14, weight: 'bold' } }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => v + '%' } },
+ scales: { y: { beginAtZero: true, max: 55, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+
+ // 11. 1310c by County
+ const ctxCounty = document.getElementById('si-1310c-county');
+ if (ctxCounty) {
+ siCharts['county'] = new Chart(ctxCounty, {
+ type: 'bar',
+ data: {
+ labels: ['Ganze', 'Kaloleni', 'Kilifi North', 'Kilifi South', 'Kilifi Total', 'Kinango', 'Lungalunga', 'Msambweni', 'Kwale Total', 'Grand Total'],
+ datasets: [
+ { label: 'Baseline', data: [37.5, 0, 16.7, 35.7, null, 27.8, 37.5, 5.3, 19.6, 23.4], backgroundColor: '#90CAF9' },
+ { label: 'Midline', data: [57.1, 66.7, 40.0, 57.1, null, 75.0, null, 60.0, 68.6, 62.5], backgroundColor: '#1565C0' }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { position: 'top' }, title: { display: true, text: '1310c: Clean Water Access by Sub-County (%)', font: { size: 15, weight: 'bold' } }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v != null ? v + '%' : '' } },
+ scales: { x: { ticks: { maxRotation: 30 } }, y: { beginAtZero: true, max: 85, title: { display: true, text: '%' } } }
+ }
+ });
+ }
+ };
  })();
  </script>
 
