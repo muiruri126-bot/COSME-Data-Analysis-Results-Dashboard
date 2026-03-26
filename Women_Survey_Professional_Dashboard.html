@@ -2310,78 +2310,63 @@
  .anim-progress-bar { transition: none; }
  .skeleton { animation: none; }
  .anim-countup { transition: none; }
- .live-motion, .live-motion * { animation: none !important; }
- .live-motion .insight-li { opacity: 1 !important; transform: none !important; }
+ .live-motion, .live-motion * { animation-duration: 0s !important; }
+ .live-motion .lm-li-anim { opacity: 1 !important; transform: none !important; }
  }
 
  /* ======================================== */
  /* LIVE MOTION — Real-time animation system */
  /* for Key Highlights & Insight sections */
+ /* PURELY ADDITIVE — never hides content */
  /* ======================================== */
 
- /* 6a. ANIMATED GRADIENT BORDER — flowing color along left edge */
- @keyframes lm-borderFlow {
- 0% { background-position: 0% 0%; }
- 50% { background-position: 0% 100%; }
- 100% { background-position: 0% 0%; }
- }
- .live-motion.insight-panel,
- .live-motion.insight-card,
- .live-motion.highlight-box {
- border-left: none !important;
- position: relative;
- }
- .live-motion.insight-panel::before,
- .live-motion.insight-card::before,
- .live-motion.highlight-box::before {
- content: '';
- position: absolute;
- top: 0; left: 0; bottom: 0;
- width: 5px;
- border-radius: 5px 0 0 5px;
- background: linear-gradient(180deg, #2E7D32, #1565C0, #E91E63, #FF9800, #2E7D32);
- background-size: 100% 300%;
- animation: lm-borderFlow 4s ease-in-out infinite;
- z-index: 2;
- }
- .live-motion.insight-card.green::before { background: linear-gradient(180deg, #1B5E20, #43A047, #81C784, #43A047, #1B5E20); background-size: 100% 300%; animation: lm-borderFlow 3.5s ease-in-out infinite; }
- .live-motion.insight-card.amber::before { background: linear-gradient(180deg, #E65100, #FF9800, #FFD54F, #FF9800, #E65100); background-size: 100% 300%; animation: lm-borderFlow 3.5s ease-in-out infinite; }
- .live-motion.insight-card.red::before { background: linear-gradient(180deg, #B71C1C, #E53935, #EF9A9A, #E53935, #B71C1C); background-size: 100% 300%; animation: lm-borderFlow 3.5s ease-in-out infinite; }
- .live-motion.insight-card.darkblue::before { background: linear-gradient(180deg, #01579B, #0288D1, #4FC3F7, #0288D1, #01579B); background-size: 100% 300%; animation: lm-borderFlow 3.5s ease-in-out infinite; }
-
- /* 6b. PULSE GLOW — subtle breathing shadow */
+ /* 6a. PULSE GLOW — subtle breathing shadow on panels */
  @keyframes lm-pulseGlow {
  0%, 100% { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
- 50% { box-shadow: 0 4px 24px rgba(46,125,50,0.18), 0 0 12px rgba(46,125,50,0.08); }
+ 50% { box-shadow: 0 6px 28px rgba(46,125,50,0.16), 0 0 14px rgba(46,125,50,0.06); }
  }
- .live-motion.insight-panel {
+ @keyframes lm-pulseGlowBlue {
+ 0%, 100% { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
+ 50% { box-shadow: 0 6px 28px rgba(21,101,192,0.16), 0 0 14px rgba(21,101,192,0.06); }
+ }
+ @keyframes lm-pulseGlowAmber {
+ 0%, 100% { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
+ 50% { box-shadow: 0 6px 28px rgba(230,81,0,0.14), 0 0 14px rgba(230,81,0,0.06); }
+ }
+ .live-motion.insight-panel,
+ .live-motion.highlight-box {
  animation: lm-pulseGlow 3s ease-in-out infinite;
  }
- .live-motion.highlight-box {
+ .live-motion.insight-card {
  animation: lm-pulseGlow 3.5s ease-in-out infinite;
  }
-
- /* 6c. SEQUENTIAL LIST REVEAL — items slide in one by one */
- @keyframes lm-slideInItem {
- from { opacity: 0; transform: translateX(-18px); }
- to { opacity: 1; transform: translateX(0); }
+ .live-motion.insight-card.darkblue,
+ .live-motion.insight-panel.blue {
+ animation: lm-pulseGlowBlue 3.5s ease-in-out infinite;
  }
- .live-motion .insight-li {
- opacity: 0;
- animation: lm-slideInItem 0.4s ease-out forwards;
+ .live-motion.insight-card.amber,
+ .live-motion.insight-card.orange,
+ .live-motion.insight-panel.amber {
+ animation: lm-pulseGlowAmber 3.5s ease-in-out infinite;
  }
- .live-motion .insight-li:nth-child(1) { animation-delay: 0.15s; }
- .live-motion .insight-li:nth-child(2) { animation-delay: 0.35s; }
- .live-motion .insight-li:nth-child(3) { animation-delay: 0.55s; }
- .live-motion .insight-li:nth-child(4) { animation-delay: 0.70s; }
- .live-motion .insight-li:nth-child(5) { animation-delay: 0.85s; }
- .live-motion .insight-li:nth-child(6) { animation-delay: 1.00s; }
- .live-motion .insight-li:nth-child(7) { animation-delay: 1.15s; }
- .live-motion .insight-li:nth-child(8) { animation-delay: 1.30s; }
- .live-motion .insight-li:nth-child(9) { animation-delay: 1.45s; }
- .live-motion .insight-li:nth-child(10) { animation-delay: 1.60s; }
 
- /* 6d. FLOATING PARTICLES — decorative background dots */
+ /* 6b. ANIMATED BORDER ACCENT — overlay strip on left edge */
+ @keyframes lm-borderShimmer {
+ 0% { opacity: 0.25; transform: scaleY(0.3) translateY(-60%); }
+ 50% { opacity: 0.6; transform: scaleY(1) translateY(0); }
+ 100% { opacity: 0.25; transform: scaleY(0.3) translateY(60%); }
+ }
+ .live-motion .lm-border-accent {
+ position: absolute;
+ top: 0; left: 0; bottom: 0; width: 5px;
+ pointer-events: none;
+ z-index: 2;
+ border-radius: 5px 0 0 5px;
+ background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.1));
+ animation: lm-borderShimmer 2.5s ease-in-out infinite alternate;
+ }
+
+ /* 6c. FLOATING PARTICLES — decorative background dots */
  @keyframes lm-float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(12px,-18px); } }
  @keyframes lm-float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-10px,14px); } }
  @keyframes lm-float3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,10px); } }
@@ -2392,7 +2377,7 @@
  .live-motion .lm-particles .lm-dot {
  position: absolute;
  border-radius: 50%;
- opacity: 0.12;
+ opacity: 0.10;
  }
  .live-motion .lm-particles .lm-dot:nth-child(1) { width: 6px; height: 6px; top: 15%; right: 10%; background: #2E7D32; animation: lm-float1 5s ease-in-out infinite; }
  .live-motion .lm-particles .lm-dot:nth-child(2) { width: 4px; height: 4px; top: 50%; right: 25%; background: #1565C0; animation: lm-float2 6s ease-in-out infinite; }
@@ -2400,39 +2385,42 @@
  .live-motion .lm-particles .lm-dot:nth-child(4) { width: 3px; height: 3px; top: 30%; right: 40%; background: #FF9800; animation: lm-float1 8s ease-in-out infinite; }
  .live-motion .lm-particles .lm-dot:nth-child(5) { width: 5px; height: 5px; top: 60%; right: 60%; background: #7B1FA2; animation: lm-float2 5.5s ease-in-out infinite; }
 
- /* 6e. STAT NUMBER HIGHLIGHT — inline numbers get a brief glow */
+ /* 6d. STAT NUMBER HIGHLIGHT — inline numbers get a brief scale pop */
  @keyframes lm-numPop {
- 0% { transform: scale(1); color: inherit; }
- 40% { transform: scale(1.12); }
- 100% { transform: scale(1); color: inherit; }
+ 0% { transform: scale(1); }
+ 40% { transform: scale(1.1); }
+ 100% { transform: scale(1); }
  }
  .live-motion .lm-stat {
  display: inline-block;
- animation: lm-numPop 0.6s ease-out forwards;
- font-weight: 800;
+ animation: lm-numPop 0.6s ease-out;
  }
 
- /* 6f. UNDERLINE SWEEP for headers in insight sections */
- @keyframes lm-underlineSweep {
- from { width: 0; }
- to { width: 100%; }
+ /* 6e. LIST ITEM ENTRANCE — subtle left-slide, always ends visible */
+ @keyframes lm-slideInItem {
+ from { transform: translateX(-12px); opacity: 0.3; }
+ to { transform: translateX(0); opacity: 1; }
  }
- .live-motion h3::after,
- .live-motion h4::after {
- content: '';
- display: block;
- height: 2px;
- background: linear-gradient(90deg, currentColor, transparent);
- opacity: 0.3;
- animation: lm-underlineSweep 0.8s ease-out forwards;
- margin-top: 4px;
+ .live-motion.lm-active .lm-li-anim {
+ animation: lm-slideInItem 0.35s ease-out both;
  }
+ .live-motion.lm-active .lm-li-anim:nth-child(1) { animation-delay: 0.08s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(2) { animation-delay: 0.18s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(3) { animation-delay: 0.28s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(4) { animation-delay: 0.38s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(5) { animation-delay: 0.48s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(6) { animation-delay: 0.58s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(7) { animation-delay: 0.68s; }
+ .live-motion.lm-active .lm-li-anim:nth-child(8) { animation-delay: 0.78s; }
 
  /* Hide animations in print */
  @media print {
  .anim-observe { opacity: 1 !important; transform: none !important; }
  .anim-visible { animation: none !important; }
  .skeleton { display: none !important; }
+ .live-motion, .live-motion * { animation: none !important; }
+ .lm-particles, .lm-border-accent { display: none !important; }
+ .lm-li-anim { opacity: 1 !important; transform: none !important; }
  }
 
  /* ======================================== */
@@ -23740,23 +23728,20 @@
  document.querySelectorAll('[data-counted]').forEach(function(el) {
  delete el.dataset.counted;
  });
- // Reset scroll-reveal state for hidden elements
- document.querySelectorAll('.anim-visible').forEach(function(el) {
- el.classList.remove('anim-visible', 'anim-observe');
- });
 
  // Call original function
  _origSwitchSurvey(surveyKey);
 
- // Post-switch: animate the newly visible content
+ // Post-switch: animate only the NEWLY VISIBLE section
  requestAnimationFrame(function() {
- // Find the visible section and animate its entrance
  var sections = document.querySelectorAll('[id$="-section"], [id$="-dashboard-section"]');
  sections.forEach(function(sec) {
- if (sec.style.display === 'block' || sec.style.display === '') {
- if (sec.offsetParent !== null) {
+ if (sec.style.display !== 'none' && sec.offsetParent !== null) {
  animateSectionEnter(sec);
- }
+ // Reset anim-observe only inside this visible section
+ sec.querySelectorAll('.anim-visible').forEach(function(el) {
+ el.classList.remove('anim-visible', 'anim-observe');
+ });
  }
  });
  // Animate KPI numbers
@@ -23767,7 +23752,7 @@
  refreshScrollReveal();
  // Apply live motion to newly visible insight sections
  applyLiveMotion();
- retriggerLiveMotion();
+ activateLiveMotion();
  });
  };
  }
@@ -23782,7 +23767,7 @@
  animateSectionEnter(tab);
  refreshScrollReveal();
  applyLiveMotion();
- retriggerLiveMotion();
+ activateLiveMotion();
  }
  };
  }
@@ -23847,10 +23832,12 @@
  // sequential reveal, and highlights stat numbers.
  // 
 
- const PARTICLE_HTML = '<div class="lm-particles">' +
+ var PARTICLE_HTML = '<div class="lm-particles">' +
  '<div class="lm-dot"></div><div class="lm-dot"></div>' +
  '<div class="lm-dot"></div><div class="lm-dot"></div>' +
  '<div class="lm-dot"></div></div>';
+
+ var BORDER_ACCENT_HTML = '<div class="lm-border-accent"></div>';
 
  function applyLiveMotion() {
  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -23858,25 +23845,34 @@
  // Target all insight panels, insight cards, and highlight boxes
  var targets = document.querySelectorAll('.insight-panel, .insight-card, .highlight-box');
  targets.forEach(function(el) {
+ // Ensure position: relative for absolute children
+ var pos = window.getComputedStyle(el).position;
+ if (pos === 'static') el.style.position = 'relative';
+ if (el.style.overflow !== 'visible') el.style.overflow = 'hidden';
+
  if (el.classList.contains('live-motion')) return; // already applied
  el.classList.add('live-motion');
 
- // Inject floating particles if not already present
+ // Inject floating particles
  if (!el.querySelector('.lm-particles')) {
- el.insertAdjacentHTML('afterbegin', PARTICLE_HTML);
+ el.insertAdjacentHTML('beforeend', PARTICLE_HTML);
  }
 
- // Tag list items for sequential reveal
+ // Inject border shimmer accent overlay
+ if (!el.querySelector('.lm-border-accent')) {
+ el.insertAdjacentHTML('beforeend', BORDER_ACCENT_HTML);
+ }
+
+ // Tag list items for sequential entrance (class-based, no opacity default)
  el.querySelectorAll('ul li, ol li').forEach(function(li) {
- if (!li.classList.contains('insight-li')) {
- li.classList.add('insight-li');
+ if (!li.classList.contains('lm-li-anim')) {
+ li.classList.add('lm-li-anim');
  }
  });
 
  // Tag bold inline stats for pop animation
  el.querySelectorAll('strong').forEach(function(strong) {
  var text = strong.textContent.trim();
- // Match patterns like "65.3%", "+39.1pp", "71.4%", "3,520", "49"
  if (/^[+\-]?\d[\d,.]*%?(?:pp)?$/.test(text) && !strong.classList.contains('lm-stat')) {
  strong.classList.add('lm-stat');
  }
@@ -23884,12 +23880,15 @@
  });
  }
 
- // Re-trigger list item animations (reset and replay)
- function retriggerLiveMotion() {
- document.querySelectorAll('.live-motion .insight-li').forEach(function(li) {
- li.style.animation = 'none';
- void li.offsetWidth; // force reflow
- li.style.animation = '';
+ // Activate list animations for visible sections (add lm-active class)
+ function activateLiveMotion() {
+ document.querySelectorAll('.live-motion').forEach(function(el) {
+ if (el.offsetParent !== null) {
+ // Re-trigger: remove and re-add lm-active
+ el.classList.remove('lm-active');
+ void el.offsetWidth;
+ el.classList.add('lm-active');
+ }
  });
  // Re-trigger stat pop
  document.querySelectorAll('.live-motion .lm-stat').forEach(function(s) {
@@ -23907,12 +23906,12 @@
  animateVisibleKPIs();
  injectProgressBars();
  applyLiveMotion();
+ activateLiveMotion();
  }
 
  if (document.readyState === 'loading') {
  document.addEventListener('DOMContentLoaded', initAnimations);
  } else {
- // DOM already ready — run after a tick to let other scripts finish
  requestAnimationFrame(initAnimations);
  }
  })();
