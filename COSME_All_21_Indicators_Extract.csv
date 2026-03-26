@@ -1,0 +1,53 @@
+id,code,name,thematic_area,unit,baseline,midline,target,change,status,source
+1,1000a,Resilience Index (RI) average score,1000 Climate-resilient economies,/100,37.0/100,43.0/100,45.0/100,+6.0 pts,ON TRACK,Women COSME Survey - composite index score averaged across 345 respondents
+2,1000b,Women and Girl's Empowerment Index (WGEI) average score,1000 Climate-resilient economies,/100,51.2/100,68.3/100,60.0/100,+17.1 pts,EXCEEDED,Women COSME Survey - composite index score averaged across 345 respondents
+3,1100a,Area (hectares) under rehabilitation using gender responsive NbS for climate mitigation and adaptation with biodiversity benefits,1100 NbS adoption,ha,0 ha,63 ha,123.8 ha,+63 ha,ON TRACK (50.9%),Field Monitoring / GIS measurement - cumulative hectares rehabilitated
+4,1110a,% and Number of women and men with adequate practical knowledge on gender-responsive mangrove restoration and conservation - ALL (combined),1110 Mangrove capacity,%,36.9%,81.9%,57.0%,+45.0pp,EXCEEDED,Women (n=345) + Men (n=267) combined = 612
+5,1110a (F),% and Number of WOMEN with adequate practical knowledge on gender-responsive mangrove restoration and conservation,1110 Mangrove capacity,%,34.7%,87.4%,57.0%,+52.7pp,EXCEEDED,Women COSME Survey (n=345)
+6,1110a (M),% and Number of MEN with adequate practical knowledge on gender-responsive mangrove restoration and conservation,1110 Mangrove capacity,%,38.2%,80.2%,57.0%,+42.0pp,EXCEEDED,Men COSME Survey (n=267)
+7,1110b,% and Number of women and men with adequate resources to undertake mangrove restoration and conservation,1110 Mangrove capacity,%,0%,52%,70%,+52.0pp,ON TRACK (74.3%),Mangrove Resource Survey - Women+Men combined (n=612)
+8,1120a,% and Number of targeted women with adequate practical knowledge in seaweed farming,1120 Seaweed capacity,%,49.3%,29.3%,68.0%,-20.0pp,BELOW TARGET,"Seaweed Assessment - 19 groups, 610 women assessed"
+9,1120b,"% and Number of targeted women with adequate resources for seaweed production, value addition and commercialization",1120 Seaweed capacity,%,0%,34%,75%,+34.0pp,ON TRACK (45.3%),"Seaweed Assessment - 19 groups, 610 women assessed"
+10,1130a,% and Number of women and men with adequate practical knowledge in forest management and conservation (disaggregated by sex),1130 Forest management,%,50.0%,94.7%,68.0%,+44.7pp,EXCEEDED,Forest Conservation Training — Pre-test (n=546) vs Post-test (n=909)
+11,1130b,% and Number of community forest conservation groups that are functional (scoring >= 70%),1130 Forest management,%,53.5%,85.7%,70.0%,+32.2pp,EXCEEDED,"Forestry Assessment - BL: 43 groups, ML: 28 groups (units = groups, not people)"
+12,1200a,"% of targeted women with adequate involvement in HH, group and enterprise decision making",1200 Women's agency,%,57.6%,95.9%,65.0%,+38.3pp,EXCEEDED,Women COSME Survey (n=345)
+13,1200b,Average time women spend in unpaid work,1200 Women's agency,hrs/day,9.3 hrs/day,7.7 hrs/day,8.3 hrs,-1.6 hrs,EXCEEDED,Women COSME Survey (n=345) - average hours per day across all respondents
+14,1200c,% of targeted women with adequate access and control over household and enterprise resources,1200 Women's agency,%,41.2%,53.8%,50.0%,+12.6pp,EXCEEDED,Women COSME Survey (n=345)
+15,1210a,"% of targeted women with adequate practical knowledge on NbS, Economic Rights and GE&I",1210 Knowledge & skills,%,20.7%,80.9%,55.0%,+60.2pp,EXCEEDED,Women COSME Survey (n=345)
+16,1210b,% of targeted women with adequate personal skills and confidence to assert their rights and express their decisions,1210 Knowledge & skills,%,32.7%,46.3%,55.0%,+13.6pp,ON TRACK (84.2%),Women COSME Survey (n=345)
+17,1210c,Degree/extent to which women are perceived as equal to men by targeted women,1210 Knowledge & skills,/100,42.1/100,64.7/100,55.0/100,+22.6 pts,EXCEEDED,Women COSME Survey (n=345) - perception index score averaged across respondents
+18,1220a,% of targeted women and young women who report having savings (actively saving in a Savings Group),1220 Resilience assets,%,28.8%,91.9%,70.0%,+63.1pp,EXCEEDED,Women COSME Survey (n=345) + VSLA Monitoring
+19,1220b,% of women with access to time-saving and environmentally friendly solar panels and cooking stoves,1220 Resilience assets,%,50.8%,83.1%,80.0%,+32.3pp,EXCEEDED,Women COSME Survey (n=345)
+20,1230a,"% of male family members with adequate knowledge and practical skills to promote and support NbS, economic rights of women and GE&I",1230 Male engagement,%,43.57%,89.77%,65.0%,+46.2pp,EXCEEDED,Men COSME Survey (n=267)
+21,1230b,Degree/extent to which women are perceived as equal to men by male family members,1230 Male engagement,/100,41.2/100,70.2/100,55.0/100,+29.0 pts,EXCEEDED,Men COSME Survey (n=267) - perception index score averaged across respondents
+22,1310b,% of initiatives led by school clubs in support of climate change adaptation,1310 School children awareness,%,0%,65.3%,60.0%,+65.3pp,EXCEEDED,School Water System Assessment & 4K Club Survey (n=65 schools)
+4,1110a,Baseline,612,226,Y,,,,,
+4,1110a,Midline,612,501,Y,,,,,
+5,1110a (F),Baseline,345,120,Y,,,,,
+5,1110a (F),Midline,345,302,Y,,,,,
+6,1110a (M),Baseline,267,102,Y,,,,,
+6,1110a (M),Midline,267,214,Y,,,,,
+7,1110b,Baseline,612,0,Y,,,,,
+7,1110b,Midline,612,318,Y,,,,,
+8,1120a,Baseline,610,301,Y,,,,,
+8,1120a,Midline,610,179,Y,,,,,
+9,1120b,Baseline,610,0,Y,,,,,
+9,1120b,Midline,610,207,Y,,,,,
+10,1130a,Baseline,546,273,Y,,,,,
+10,1130a,Midline,909,861,Y,,,,,
+11,1130b,Baseline,43,23,Y,,,,,
+11,1130b,Midline,28,24,Y,,,,,
+12,1200a,Baseline,345,199,Y,,,,,
+12,1200a,Midline,345,331,Y,,,,,
+14,1200c,Baseline,345,142,Y,,,,,
+14,1200c,Midline,345,186,Y,,,,,
+15,1210a,Baseline,345,71,Y,,,,,
+15,1210a,Midline,345,279,Y,,,,,
+16,1210b,Baseline,345,113,Y,,,,,
+16,1210b,Midline,345,160,Y,,,,,
+18,1220a,Baseline,345,99,Y,,,,,
+18,1220a,Midline,345,317,Y,,,,,
+19,1220b,Baseline,345,175,Y,,,,,
+19,1220b,Midline,345,287,Y,,,,,
+20,1230a,Baseline,267,116,Y,,,,,
+20,1230a,Midline,267,240,Y,,,,,
