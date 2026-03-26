@@ -3777,9 +3777,6 @@
  <button class="sidebar-item" onclick="sidebarNav('schools-dashboard', this)" data-key="schools-dashboard">
  <span class="item-label">Schools Dashboard</span>
  </button>
- <button class="sidebar-item" onclick="sidebarNav('school-initiatives', this)" data-key="school-initiatives">
- <span class="item-label">School Initiatives</span>
- </button>
  <button class="sidebar-item" onclick="sidebarNav('grapp-dashboard', this)" data-key="grapp-dashboard">
  <span class="item-label">GRAPP</span>
  </button>
@@ -3994,7 +3991,6 @@
  <button class="survey-btn" onclick="switchSurvey('forestry')">Forestry Functionality (Midline)</button>
  <button class="survey-btn" onclick="switchSurvey('prepost-forest')">Trainings Pre & Post</button>
  <button class="survey-btn" onclick="switchSurvey('schools-dashboard')">Schools Dashboard</button>
- <button class="survey-btn" onclick="switchSurvey('school-initiatives')">School Initiatives</button>
  <button class="survey-btn" onclick="switchSurvey('seaweed-assessment')">Seaweed Assessment</button>
  <button class="survey-btn" onclick="switchSurvey('mangrove-resources')">Mangrove Resources</button>
  <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
@@ -4043,7 +4039,8 @@
  <button class="tab-button active" onclick="showSchoolsDashType(event, 'clean-water')" style="background: #283593; color: #fff;">A. Access to Clean Water</button>
  <button class="tab-button" onclick="showSchoolsDashType(event, 'water-midline')">B. Water in Schools</button>
  <button class="tab-button" onclick="showSchoolsDashType(event, 'four-k-clubs')">C. 4K Clubs</button>
- <button class="tab-button" onclick="showSchoolsDashType(event, 'overall-insights')">Overall Insights</button>
+ <button class="tab-button" onclick="showSchoolsDashType(event, 'overall-insights')">D. Overall Insights</button>
+ <button class="tab-button" onclick="showSchoolsDashType(event, 'initiatives')">E. School Initiatives</button>
  </div>
 
  <!-- AWP PRESENTATION SUB-SELECTOR (Topics) -->
@@ -7452,33 +7449,8 @@
  </div>
  </div>
 
- </div>
- <!-- END SCHOOLS DASHBOARD SECTION -->
-
- <!-- ========================================================== -->
- <!-- ========= SCHOOL INITIATIVES ASSESSMENT SECTION ========== -->
- <!-- ========================================================== -->
- <div id="school-initiatives-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #2E7D32;">
-
- <!-- HEADER -->
- <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);">
- <h1>School Initiatives Assessment Results</h1>
- <div class="header-subtitle">4K Club Green Initiatives — Operational Status, Functionality &amp; Climate Adaptation Impact</div>
- <div class="header-meta">
- <div class="meta-item">
- <div class="meta-label">Schools Assessed</div>
- <div class="meta-value">15 Schools</div>
- </div>
- <div class="meta-item">
- <div class="meta-label">Total Green Initiatives</div>
- <div class="meta-value">49 Initiatives</div>
- </div>
- <div class="meta-item">
- <div class="meta-label">4K Club Members</div>
- <div class="meta-value">3,520 (F: 1,922 | M: 1,598)</div>
- </div>
- </div>
- </div>
+ <!-- School Initiatives Sub-section -->
+ <div id="schools-dash-initiatives" style="display: none;">
 
  <!-- INDICATOR 1310b KPI CARD -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #2E7D32;">
@@ -7627,7 +7599,10 @@
  </div>
 
  </div>
- <!-- END SCHOOL INITIATIVES SECTION -->
+ <!-- END School Initiatives Sub-section -->
+
+ </div>
+ <!-- END SCHOOLS DASHBOARD SECTION -->
 
  <!-- ========================================================== -->
  <!-- ========== SEAWEED GROUP ASSESSMENT SECTION ============== -->
@@ -14309,15 +14284,8 @@
  footerSample: '13 Deliverables | 6 Wards | 2 Counties (Kilifi & Kwale) | November 2025',
  renderFn: () => window.renderGRAPPDashboard()
  },
- 'school-initiatives': {
- showSection: 'school-initiatives-section',
- subSelector: null,
- title: 'School Initiatives Assessment Results',
- footerTitle: '<strong>School Initiatives — 1310b Club-Led Climate Adaptation Initiatives</strong>',
- footerSample: '15 Schools | 49 Green Initiatives | 3,520 4K Members | Midline Assessment',
- renderFn: () => window.renderSchoolInitiativesCharts()
- }
  };
+
 
  // All toggleable section IDs (used by both standalone and regular survey switching)
  const allSectionIds = [
@@ -14331,8 +14299,7 @@
  'mangrove-presentation-section',
  'schools-presentation-section',
  'cosme-pmf-section',
- 'grapp-section',
- 'school-initiatives-section'
+ 'grapp-section'
  ];
  const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
 
@@ -17437,7 +17404,7 @@
  }
  }
  // Hide all sub-sections
- const subSections = ['schools-dash-clean-water', 'schools-dash-water-midline', 'schools-dash-four-k-clubs', 'schools-dash-overall-insights'];
+ const subSections = ['schools-dash-clean-water', 'schools-dash-water-midline', 'schools-dash-four-k-clubs', 'schools-dash-overall-insights', 'schools-dash-initiatives'];
  subSections.forEach(id => {
  const el = document.getElementById(id);
  if (el) el.style.display = 'none';
@@ -17447,7 +17414,8 @@
  'clean-water': 'schools-dash-clean-water',
  'water-midline': 'schools-dash-water-midline',
  'four-k-clubs': 'schools-dash-four-k-clubs',
- 'overall-insights': 'schools-dash-overall-insights'
+ 'overall-insights': 'schools-dash-overall-insights',
+ 'initiatives': 'schools-dash-initiatives'
  };
  const targetId = typeMap[typeName];
  if (targetId) {
@@ -17459,13 +17427,15 @@
  'clean-water': 'Access to Clean Water',
  'water-midline': 'Water in Schools \u2014 Midline Results',
  'four-k-clubs': '4K Clubs \u2014 Midline Results',
- 'overall-insights': 'Overall Insights'
+ 'overall-insights': 'Overall Insights',
+ 'initiatives': 'School Initiatives \u2014 1310b Club-Led Climate Adaptation'
  };
  document.getElementById('footer-title').innerHTML = '<strong>Schools Dashboard \u2014 ' + (footerLabels[typeName] || typeName) + '</strong>';
  // Render charts for sub-tab
  if (typeName === 'clean-water') renderSchoolsDashCleanWaterCharts();
  if (typeName === 'water-midline') renderSchoolsDashWaterMidlineCharts();
  if (typeName === 'four-k-clubs') renderSchoolsDash4KCharts();
+ if (typeName === 'initiatives') window.renderSchoolInitiativesCharts();
  }
 
  // ====== SCHOOLS DASHBOARD CHART INSTANCES ======
@@ -23603,8 +23573,7 @@
  'forestry-presentation': 'Forestry',
  'seaweed-presentation': 'Seaweed',
  'mangrove-presentation': 'Mangrove',
- 'schools-presentation': 'Schools',
- 'school-initiatives': 'School Initiatives'
+ 'schools-presentation': 'Schools'
  };
 
  // Toggle mobile nav drawer
@@ -24099,7 +24068,8 @@
  'clean-water': 'schools-dash-clean-water',
  'water-midline': 'schools-dash-water-midline',
  'four-k-clubs': 'schools-dash-four-k-clubs',
- 'overall-insights': 'schools-dash-overall-insights'
+ 'overall-insights': 'schools-dash-overall-insights',
+ 'initiatives': 'schools-dash-initiatives'
  };
  var el = document.getElementById(typeMap[typeName]);
  if (el) animateSectionEnter(el);
