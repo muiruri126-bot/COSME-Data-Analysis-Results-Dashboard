@@ -4035,6 +4035,7 @@
  <button class="tab-button active" onclick="showPrePostType(event, 'forest')" style="background: #0D47A1; color: #fff;">Forest Conservation</button>
  <button class="tab-button" onclick="showPrePostType(event, 'seaweed')">Seaweed Farming</button>
  <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">Mangrove Restoration</button>
+ <button class="tab-button" onclick="showPrePostType(event, 'eba')">EBA Advocacy</button>
  </div>
 
  <!-- SCHOOLS DASHBOARD SUB-SELECTOR (Clean Water / Water in Schools / 4K Clubs) -->
@@ -6834,6 +6835,162 @@
  </div>
  </div>
  <!-- END SEAWEED FARMING PRE/POST -->
+
+ <!-- EBA ADVOCACY PRE/POST TEST CONTENT -->
+ <div id="pp-eba-content" style="display: none;">
+ <div class="tabs-container" id="eba-tabs-container">
+ <button class="tab-button active" onclick="showEBATab(event, 'ebatab-overview')">A. Scores & Thresholds</button>
+ <button class="tab-button" onclick="showEBATab(event, 'ebatab-climate')">B. Climate Change</button>
+ <button class="tab-button" onclick="showEBATab(event, 'ebatab-gesi')">C. GESI</button>
+ <button class="tab-button" onclick="showEBATab(event, 'ebatab-advocacy')">D. Advocacy</button>
+ </div>
+
+ <!-- TAB A: SCORES & THRESHOLDS -->
+ <div id="ebatab-overview" class="eba-tab-content active" style="display: block;">
+ <div class="section">
+ <div class="section-title">A. AVERAGE SCORES & PASSING THRESHOLDS</div>
+ <div class="highlight-box">
+ <h4>EBA Knowledge Assessment Summary</h4>
+ <p>Participants completing the Evidence-Based Advocacy (EBA) training demonstrated significant knowledge gains across all three domains. Overall average score improved from <strong>65.8%</strong> to <strong>76.5%</strong> (<strong>+10.7pp</strong>). The proportion meeting the ≥60% adequate knowledge threshold surged from <strong>61.8%</strong> to <strong>88.7%</strong> (<strong>+26.9pp</strong>). Advocacy showed the strongest baseline (71.5%) while Climate Change showed the largest improvement (+17.5pp). At the ≥80% threshold, achievement more than doubled from 20.8% to 41.7%.</p>
+ </div>
+ <div class="charts-grid">
+ <div class="chart-wrapper">
+ <div class="chart-title">Average Scores by Test Area — Pre-Test vs Post-Test (%)</div>
+ <div class="chart-container"><canvas id="pp-eba-chart-scores"></canvas></div>
+ <div class="chart-insight">Climate Change: 48.6%→66.0% (+17.5pp). GESI: 59.3%→67.0% (+7.7pp). Advocacy: 71.5%→80.4% (+9.0pp). Overall: 65.8%→76.5% (+10.7pp). Climate Change had the largest gain.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Trainees Meeting Passing Thresholds — Pre-Test vs Post-Test (%)</div>
+ <div class="chart-container"><canvas id="pp-eba-chart-thresholds"></canvas></div>
+ <div class="chart-insight">≥60%: 61.8%→88.7% (+26.9pp). ≥70%: 38.2%→66.2% (+28.0pp). ≥80%: 20.8%→41.7% (+20.9pp). Strongest proportional gain at ≥70% threshold.</div>
+ </div>
+ </div>
+ <div class="charts-grid" style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Adequate Knowledge (≥60%) by Test Area — Pre-Test vs Post-Test</div>
+ <div class="chart-container"><canvas id="pp-eba-chart-adequate"></canvas></div>
+ <div class="chart-insight">Climate Change: 20.8%→51.0% (+30.2pp, largest gain). GESI: 51.7%→70.2% (+18.5pp). Advocacy: 73.6%→92.7% (+19.1pp). Overall: 61.8%→88.7% (+26.9pp).</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- TAB B: CLIMATE CHANGE QUESTIONS -->
+ <div id="ebatab-climate" class="eba-tab-content" style="display: none;">
+ <div class="section">
+ <div class="section-title">B. CLIMATE CHANGE — QUESTION-LEVEL PERFORMANCE</div>
+ <div class="highlight-box">
+ <h4>Climate Change Domain — 7 Questions</h4>
+ <p>Climate Change had the lowest pre-test baseline (48.6%) but showed the strongest improvement (+17.5pp to 66.0%). The proportion with adequate knowledge (≥60%) more than doubled from 20.8% to 51.0%. Strong gains on Paris Agreement (+39.2pp) and most-affected groups (+24.0pp). However, greenhouse gases identification (31.8%) and irreversible impacts (50.3%) remain challenging.</p>
+ </div>
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="data-table" style="width: 100%; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #E3F2FD;"><th style="text-align:left; min-width:300px;">Question</th><th>Pre-Test</th><th>Post-Test</th><th>Change</th></tr>
+ </thead>
+ <tbody>
+ <tr><td style="text-align:left;">Q1. Climate change caused by human activities</td><td>98.3%</td><td>96.7%</td><td style="color:#EF6C00;">−1.6pp</td></tr>
+ <tr><td style="text-align:left;">Q2. Temperature threshold — irreversible impacts</td><td>43.3%</td><td>73.5%</td><td style="color:#2E7D32; font-weight:bold;">+30.2pp</td></tr>
+ <tr><td style="text-align:left;">Q3. Temperature threshold (duplicate)</td><td>31.5%</td><td>50.3%</td><td style="color:#2E7D32;">+18.9pp</td></tr>
+ <tr><td style="text-align:left;">Q4. Most affected group in Coastal Kenya</td><td>71.3%</td><td>95.4%</td><td style="color:#2E7D32; font-weight:bold;">+24.0pp</td></tr>
+ <tr><td style="text-align:left;">Q5. Greenhouse gases identification</td><td>21.3%</td><td>31.8%</td><td style="color:#2E7D32;">+10.4pp</td></tr>
+ <tr style="background:#FFEBEE;"><td style="text-align:left;">Q6. All climate change impacts can be reversed</td><td>29.2%</td><td>30.5%</td><td style="color:#EF6C00;">+1.3pp</td></tr>
+ <tr><td style="text-align:left;">Q7. Paris Agreement guides climate action</td><td>44.9%</td><td>84.1%</td><td style="color:#2E7D32; font-weight:bold;">+39.2pp</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="charts-grid" style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Climate Change Questions — Pre-Test vs Post-Test (% Correct)</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="pp-eba-chart-climate"></canvas></div>
+ <div class="chart-insight">Paris Agreement recognition (+39.2pp) and temperature thresholds (+30.2pp) showed strongest gains. Greenhouse gases identification (31.8%) remains the weakest topic.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- TAB C: GESI QUESTIONS -->
+ <div id="ebatab-gesi" class="eba-tab-content" style="display: none;">
+ <div class="section">
+ <div class="section-title">C. GESI — QUESTION-LEVEL PERFORMANCE</div>
+ <div class="highlight-box">
+ <h4>Gender Equality & Social Inclusion Domain — 8 Questions</h4>
+ <p>GESI average scores improved from 59.3% to 67.0% (+7.7pp). The domain showed mixed results: strong gains on gendered drought impacts (+18.2pp) and resilience (+4.6pp), but intersectionality understanding declined slightly (−1.6pp). Women's climate leadership recognition (70.2%) and barriers to participation (34.4%) need continued attention.</p>
+ </div>
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="data-table" style="width: 100%; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #F3E5F5;"><th style="text-align:left; min-width:300px;">Question</th><th>Pre-Test</th><th>Post-Test</th><th>Change</th></tr>
+ </thead>
+ <tbody>
+ <tr><td style="text-align:left;">Q8. Vulnerability to climate risks same for everyone</td><td>44.9%</td><td>55.0%</td><td style="color:#2E7D32;">+10.0pp</td></tr>
+ <tr><td style="text-align:left;">Q9. Gendered impact of drought (best example)</td><td>75.8%</td><td>94.0%</td><td style="color:#2E7D32; font-weight:bold;">+18.2pp</td></tr>
+ <tr><td style="text-align:left;">Q10. Resilience — individual and collective capacity</td><td>92.1%</td><td>96.7%</td><td style="color:#2E7D32;">+4.6pp</td></tr>
+ <tr style="background:#FFEBEE;"><td style="text-align:left;">Q11. Intersectionality definition</td><td>46.6%</td><td>45.0%</td><td style="color:#C62828;">−1.6pp</td></tr>
+ <tr><td style="text-align:left;">Q12. Women only victims, never climate leaders</td><td>68.5%</td><td>70.2%</td><td style="color:#2E7D32;">+1.7pp</td></tr>
+ <tr><td style="text-align:left;">Q13. Key principle of climate justice</td><td>31.5%</td><td>45.7%</td><td style="color:#2E7D32;">+14.2pp</td></tr>
+ <tr><td style="text-align:left;">Q14. Barriers to women's participation</td><td>20.2%</td><td>34.4%</td><td style="color:#2E7D32;">+14.2pp</td></tr>
+ <tr><td style="text-align:left;">Q15. GESI approaches improve outcomes</td><td>94.4%</td><td>94.7%</td><td style="color:#2E7D32;">+0.3pp</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="charts-grid" style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">GESI Questions — Pre-Test vs Post-Test (% Correct)</div>
+ <div class="chart-container" style="height: 350px;"><canvas id="pp-eba-chart-gesi"></canvas></div>
+ <div class="chart-insight">Gendered drought impacts (+18.2pp) and climate justice (+14.2pp) improved most. Intersectionality (45.0%) and barriers to participation (34.4%) remain challenging areas.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- TAB D: ADVOCACY QUESTIONS -->
+ <div id="ebatab-advocacy" class="eba-tab-content" style="display: none;">
+ <div class="section">
+ <div class="section-title">D. ADVOCACY — QUESTION-LEVEL PERFORMANCE</div>
+ <div class="highlight-box">
+ <h4>Evidence-Based Advocacy Domain — 16 Questions</h4>
+ <p>Advocacy was the strongest domain with an average pre-test of 71.5% rising to 80.4% (+9.0pp). 92.7% of trainees demonstrated adequate knowledge (≥60%) post-test. Notable gains in EBA process steps (+18.9pp), SMART objectives (+18.3pp), and advocacy indicators (+22.3pp). Feminist advocacy principles showed slight decline (−2.2pp), suggesting this nuanced topic needs reinforcement.</p>
+ </div>
+ <div style="overflow-x: auto; margin-top: 20px;">
+ <table class="data-table" style="width: 100%; font-size: 0.88em;">
+ <thead>
+ <tr style="background: #E8F5E9;"><th style="text-align:left; min-width:300px;">Question</th><th>Pre-Test</th><th>Post-Test</th><th>Change</th></tr>
+ </thead>
+ <tbody>
+ <tr><td style="text-align:left;">Q16. Definition of advocacy</td><td>93.8%</td><td>96.7%</td><td style="color:#2E7D32;">+2.9pp</td></tr>
+ <tr><td style="text-align:left;">Q17. EBA requires reliable information</td><td>83.1%</td><td>92.7%</td><td style="color:#2E7D32;">+9.6pp</td></tr>
+ <tr><td style="text-align:left;">Q18. Evidence-based advocacy uses</td><td>39.9%</td><td>57.6%</td><td style="color:#2E7D32; font-weight:bold;">+17.7pp</td></tr>
+ <tr><td style="text-align:left;">Q19. First step of the EBA process</td><td>72.5%</td><td>91.4%</td><td style="color:#2E7D32; font-weight:bold;">+18.9pp</td></tr>
+ <tr><td style="text-align:left;">Q20. SMART objectives must be</td><td>69.1%</td><td>87.4%</td><td style="color:#2E7D32; font-weight:bold;">+18.3pp</td></tr>
+ <tr><td style="text-align:left;">Q21. Examples of evidence</td><td>37.1%</td><td>50.3%</td><td style="color:#2E7D32;">+13.3pp</td></tr>
+ <tr><td style="text-align:left;">Q22. Advocacy messages tailored to audience</td><td>92.7%</td><td>90.7%</td><td style="color:#EF6C00;">−2.0pp</td></tr>
+ <tr><td style="text-align:left;">Q23. Good advocacy message should be</td><td>96.1%</td><td>96.7%</td><td style="color:#2E7D32;">+0.6pp</td></tr>
+ <tr style="background:#FFEBEE;"><td style="text-align:left;">Q24. Feminist advocacy centers rights & inclusion</td><td>91.6%</td><td>89.4%</td><td style="color:#EF6C00;">−2.2pp</td></tr>
+ <tr><td style="text-align:left;">Q25. Principles of feminist advocacy</td><td>43.3%</td><td>59.6%</td><td style="color:#2E7D32; font-weight:bold;">+16.3pp</td></tr>
+ <tr><td style="text-align:left;">Q26. Advocacy at national level only</td><td>71.9%</td><td>87.4%</td><td style="color:#2E7D32; font-weight:bold;">+15.5pp</td></tr>
+ <tr><td style="text-align:left;">Q27. Stakeholder mapping helps identify</td><td>92.1%</td><td>96.7%</td><td style="color:#2E7D32;">+4.5pp</td></tr>
+ <tr><td style="text-align:left;">Q28. Stakeholder analysis examines</td><td>34.3%</td><td>49.0%</td><td style="color:#2E7D32;">+14.7pp</td></tr>
+ <tr><td style="text-align:left;">Q29. Invisible power dynamics</td><td>92.7%</td><td>89.4%</td><td style="color:#EF6C00;">−3.3pp</td></tr>
+ <tr><td style="text-align:left;">Q30. Key advantage of coalitions</td><td>94.4%</td><td>97.4%</td><td style="color:#2E7D32;">+3.0pp</td></tr>
+ <tr><td style="text-align:left;">Q31. Coalitions never face challenges</td><td>69.1%</td><td>72.8%</td><td style="color:#2E7D32;">+3.7pp</td></tr>
+ <tr><td style="text-align:left;">Q32. Advocacy indicators</td><td>28.7%</td><td>51.0%</td><td style="color:#2E7D32; font-weight:bold;">+22.3pp</td></tr>
+ <tr><td style="text-align:left;">Q33. Monitoring in advocacy involves</td><td>92.1%</td><td>94.7%</td><td style="color:#2E7D32;">+2.6pp</td></tr>
+ <tr><td style="text-align:left;">Q34. Risk matrix evaluates based on</td><td>63.5%</td><td>76.8%</td><td style="color:#2E7D32; font-weight:bold;">+13.3pp</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="charts-grid" style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Advocacy Questions — Pre-Test vs Post-Test (% Correct)</div>
+ <div class="chart-container" style="height: 500px;"><canvas id="pp-eba-chart-advocacy"></canvas></div>
+ <div class="chart-insight">Advocacy indicators (+22.3pp), EBA process steps (+18.9pp), and SMART objectives (+18.3pp) showed the largest gains. Feminist advocacy principles and invisible power dynamics showed slight declines.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <!-- END EBA ADVOCACY PRE/POST -->
 
  </div>
  <!-- END PRE & POST TEST SECTION -->
@@ -13973,6 +14130,31 @@
  { id: '1110a', name: 'Percentage and Number of women and men with adequate practical knowledge on gender-responsive and equitable mangrove restoration and conservation (disaggregated by sex)', baseline: 'All: 36.9% | F: 34.7% | M: 38.2%', target: 'All: 57.0% | F: 57.0% | M: 57.0%', result: 'All: 81.9% | F: 87.4% | M: 80.2%', achievement: '+45.0pp (All)', status: 'EXCEEDED' }
  ]}
  ]
+ },
+ 'prepost-eba': {
+ title: 'Pre & Post Test — EBA Advocacy Knowledge',
+ logframeHighlight: '<h4>EBA Advocacy Knowledge — Training Pre &amp; Post Test Performance</h4><p>Evidence-Based Advocacy training covering Climate Change, GESI, and Advocacy domains. Overall average score improved from 65.8% to 76.5% (+10.7pp). Participants meeting ≥60% adequate knowledge threshold surged from 61.8% to 88.7% (+26.9pp). 151 trainees assessed at pre-test, rising to post-test participation. All three domains showed improvement.</p>',
+ findings: [
+ { title: 'Overall Knowledge Gain', metric: '+10.7pp', description: 'Overall average score improved from 65.8% to 76.5%. All three test domains — Climate Change, GESI, and Advocacy — showed positive gains, confirming training effectiveness across the EBA curriculum.', badge: 'exceeded', badgeText: '' },
+ { title: 'Adequate Knowledge (≥60%)', metric: '+26.9pp', description: 'Proportion of trainees meeting the ≥60% threshold surged from 61.8% to 88.7%. At ≥70%, achievement rose from 38.2% to 66.2% (+28.0pp). At ≥80%, from 20.8% to 41.7% (+20.9pp).', badge: 'exceeded', badgeText: '' },
+ { title: 'Climate Change Domain', metric: '+17.5pp', description: 'Largest improvement across domains: 48.6%→66.0%. Adequate knowledge (≥60%) more than doubled from 20.8% to 51.0% (+30.2pp). Paris Agreement recognition surged +39.2pp.', badge: 'exceeded', badgeText: '' },
+ { title: 'GESI Domain', metric: '+7.7pp', description: 'GESI improved from 59.3% to 67.0%. Gendered drought impacts (+18.2pp) and climate justice (+14.2pp) showed strong gains. Intersectionality understanding remains a challenge area.', badge: 'exceeded', badgeText: '' },
+ { title: 'Advocacy Domain', metric: '+9.0pp', description: 'Strongest baseline domain at 71.5%, rising to 80.4%. 92.7% achieved adequate knowledge post-test. Advocacy indicators recognition (+22.3pp) and EBA process steps (+18.9pp) showed largest gains.', badge: 'exceeded', badgeText: '' },
+ { title: 'Knowledge Gaps Remaining', metric: '3 areas', description: 'Greenhouse gases identification (31.8%), barriers to women\'s participation (34.4%), and intersectionality (45.0%) remain below 50% post-test, requiring targeted reinforcement in future trainings.', badge: 'drop', badgeText: '' }
+ ],
+ kpis: [
+ { label: 'Overall Average Score', value: '76.5%', change: '↑ 10.7pp from 65.8% pre-test', trend: 'positive' },
+ { label: 'Adequate Knowledge (≥60%)', value: '88.7%', change: '↑ 26.9pp from 61.8% pre-test', trend: 'positive' },
+ { label: 'Passing ≥70% Threshold', value: '66.2%', change: '↑ 28.0pp from 38.2% pre-test', trend: 'positive' },
+ { label: 'Climate Change Score', value: '66.0%', change: '↑ 17.5pp from 48.6% pre-test', trend: 'positive' },
+ { label: 'Advocacy Score', value: '80.4%', change: '↑ 9.0pp from 71.5% pre-test', trend: 'positive' },
+ { label: 'GESI Score', value: '67.0%', change: '↑ 7.7pp from 59.3% pre-test', trend: 'positive' }
+ ],
+ logframe: [
+ { level: 'IMMEDIATE OUTCOME', name: 'EBA Advocacy Knowledge', color: '#4A148C', indicators: [
+ { id: 'EBA', name: 'Percentage of women and men with adequate knowledge on Evidence-Based Advocacy (Climate Change, GESI, Advocacy)', baseline: '61.8%', target: '≥60%', result: '88.7%', achievement: '+26.9pp', status: 'EXCEEDED' }
+ ]}
+ ]
  }
  };
 
@@ -14270,7 +14452,8 @@
  'forestry': 'Forestry Functionality (Midline)',
  'prepost-forest': 'Trainings Pre & Post',
  'prepost-seaweed': 'Trainings Pre & Post',
- 'prepost-mangrove': 'Trainings Pre & Post'
+ 'prepost-mangrove': 'Trainings Pre & Post',
+ 'prepost-eba': 'Trainings Pre & Post'
  };
  const tabName = tabNames[surveyKey] || surveyKey;
  const highlightsHeader = document.getElementById('highlights-header');
@@ -14335,6 +14518,7 @@
  const surveySectionMap = {
  'prepost-forest': 'prepost-section',
  'prepost-mangrove': 'prepost-section',
+ 'prepost-eba': 'prepost-section',
  'forestry': 'forestry-section',
  'men-cosme': 'men-survey-section'
  };
@@ -14536,7 +14720,7 @@
  destroyAllCharts();
 
  // Force reflow so the section is fully visible before rendering charts
- const activeSectionId = {'prepost-forest':'prepost-section','prepost-mangrove':'prepost-section','forestry':'forestry-section','men-cosme':'men-survey-section'}[surveyKey] || 'women-survey-section';
+ const activeSectionId = {'prepost-forest':'prepost-section','prepost-mangrove':'prepost-section','prepost-eba':'prepost-section','forestry':'forestry-section','men-cosme':'men-survey-section'}[surveyKey] || 'women-survey-section';
  const activeSection = document.getElementById(activeSectionId);
  if (activeSection) void activeSection.offsetHeight;
 
@@ -14586,9 +14770,13 @@
  prepostTabs.forEach(tab => tab.style.display = 'block');
  void (prepostSec && prepostSec.offsetHeight);
  
- // Show forest content, hide mangrove
+ // Show forest content, hide others
  document.getElementById('pp-forest-content').style.display = 'block';
  document.getElementById('pp-mangrove-content').style.display = 'none';
+ var swHide = document.getElementById('pp-seaweed-content');
+ if (swHide) swHide.style.display = 'none';
+ var ebaHide = document.getElementById('pp-eba-content');
+ if (ebaHide) ebaHide.style.display = 'none';
  
  updatePrePostCharts();
  
@@ -14602,9 +14790,13 @@
  } else if (surveyKey === 'prepost-mangrove') {
  const prepostSec = document.getElementById('prepost-section');
  
- // Show mangrove content, hide forest
+ // Show mangrove content, hide others
  document.getElementById('pp-forest-content').style.display = 'none';
  document.getElementById('pp-mangrove-content').style.display = 'block';
+ var swHide2 = document.getElementById('pp-seaweed-content');
+ if (swHide2) swHide2.style.display = 'none';
+ var ebaHide2 = document.getElementById('pp-eba-content');
+ if (ebaHide2) ebaHide2.style.display = 'none';
  void (prepostSec && prepostSec.offsetHeight);
  
  updateMangrovePrePostCharts();
@@ -14615,6 +14807,30 @@
  
  // Activate mangrove sub-selector button
  activatePrePostTypeButton('mangrove');
+ } else if (surveyKey === 'prepost-eba') {
+ const prepostSec = document.getElementById('prepost-section');
+
+ // Hide all other pre/post content
+ document.getElementById('pp-forest-content').style.display = 'none';
+ document.getElementById('pp-mangrove-content').style.display = 'none';
+ var swEl = document.getElementById('pp-seaweed-content');
+ if (swEl) swEl.style.display = 'none';
+ document.getElementById('pp-eba-content').style.display = 'block';
+ void (prepostSec && prepostSec.offsetHeight);
+
+ // Temporarily show all EBA tabs for chart rendering
+ const ebaTabs = document.querySelectorAll('.eba-tab-content');
+ ebaTabs.forEach(tab => tab.style.display = 'block');
+ updateEBAPrePostCharts();
+ ebaTabs.forEach(tab => tab.style.display = '');
+ if (ebaTabs.length > 0) ebaTabs[0].style.display = 'block';
+
+ // Update header meta
+ document.getElementById('pp-meta-pre').textContent = '151';
+ document.getElementById('pp-meta-post').textContent = '151';
+
+ // Activate eba sub-selector button
+ activatePrePostTypeButton('eba');
  } else {
  // Temporarily show ALL GJJ tabs so Chart.js can measure canvas dimensions
  const womenSec = document.getElementById('women-survey-section');
@@ -16341,6 +16557,8 @@
  document.getElementById('pp-mangrove-content').style.display = 'none';
  var swEl = document.getElementById('pp-seaweed-content');
  if (swEl) swEl.style.display = 'none';
+ var ebaEl = document.getElementById('pp-eba-content');
+ if (ebaEl) ebaEl.style.display = 'none';
 
  if (typeName === 'forest') {
  document.getElementById('pp-forest-content').style.display = 'block';
@@ -16372,6 +16590,19 @@
  document.getElementById('pp-meta-pre').textContent = 'Baseline';
  document.getElementById('pp-meta-post').textContent = 'Endline';
  updateSeaweedPrePostCharts();
+ } else if (typeName === 'eba') {
+ var ebaContent = document.getElementById('pp-eba-content');
+ if (ebaContent) ebaContent.style.display = 'block';
+ const ebaData = window.surveyData['prepost-eba'];
+ updateSharedSections(ebaData, 'prepost-eba');
+ document.getElementById('pp-meta-pre').textContent = '151';
+ document.getElementById('pp-meta-post').textContent = '151';
+ // Temporarily show all EBA tabs for chart rendering
+ const ebaTabs = document.querySelectorAll('.eba-tab-content');
+ ebaTabs.forEach(tab => tab.style.display = 'block');
+ updateEBAPrePostCharts();
+ ebaTabs.forEach(tab => tab.style.display = '');
+ if (ebaTabs.length > 0) ebaTabs[0].style.display = 'block';
  }
  }
 
@@ -20329,12 +20560,14 @@
  const sampleText = {
  'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%',
  'prepost-seaweed': 'Baseline: 175 Participants | Endline: 293 Participants | Threshold: ≥70%',
- 'prepost-mangrove': 'Mangrove Restoration Training | Kilifi & Kwale Counties | Data Quality: High'
+ 'prepost-mangrove': 'Mangrove Restoration Training | Kilifi & Kwale Counties | Data Quality: High',
+ 'prepost-eba': 'EBA Training: 151 Participants | 3 Domains (Climate Change, GESI, Advocacy) | Threshold: ≥60%'
  };
  const titleText = {
  'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment',
  'prepost-seaweed': 'Pre & Post Test — Seaweed Farming Knowledge Assessment',
- 'prepost-mangrove': 'Pre & Post Test — Mangrove Restoration Knowledge Assessment'
+ 'prepost-mangrove': 'Pre & Post Test — Mangrove Restoration Knowledge Assessment',
+ 'prepost-eba': 'Pre & Post Test — EBA Advocacy Knowledge Assessment'
  };
  document.getElementById('footer-title').innerHTML = '<strong>' + (titleText[surveyKey] || '') + '</strong>';
  document.getElementById('footer-sample').textContent = sampleText[surveyKey] || '';
@@ -20648,6 +20881,124 @@
  },
  scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } }
  }
+ });
+ }
+
+ // EBA Pre & Post Test Tab Navigation
+ function showEBATab(evt, tabName) {
+ const tabContents = document.querySelectorAll('.eba-tab-content');
+ tabContents.forEach(tab => {
+ tab.classList.remove('active');
+ tab.style.display = 'none';
+ });
+ const tabButtons = document.getElementById('eba-tabs-container').querySelectorAll('.tab-button');
+ tabButtons.forEach(btn => btn.classList.remove('active'));
+ const target = document.getElementById(tabName);
+ if (target) {
+ target.classList.add('active');
+ target.style.display = 'block';
+ }
+ evt.currentTarget.classList.add('active');
+ requestAnimationFrame(() => {
+ if (target) {
+ target.querySelectorAll('canvas').forEach(canvas => {
+ const chart = Chart.getChart(canvas);
+ if (chart) chart.resize();
+ });
+ }
+ });
+ }
+
+ // EBA Pre & Post Charts
+ function updateEBAPrePostCharts() {
+ const ebaColors = { pre: '#7B1FA2', post: '#00897B' };
+
+ function ebaChart(id, config) {
+ const canvas = document.getElementById(id);
+ if (!canvas) { console.warn('EBA Canvas not found:', id); return; }
+ const existing = Chart.getChart(canvas);
+ if (existing) existing.destroy();
+ return new Chart(canvas, config);
+ }
+
+ const dlPlugin = { display: true, color: '#333', font: { size: 11, weight: 'bold' }, anchor: 'end', align: 'top', formatter: v => v.toFixed(1) + '%' };
+
+ // Tab A: Average Scores by Test Area
+ ebaChart('pp-eba-chart-scores', {
+ type: 'bar',
+ data: {
+ labels: ['Climate Change', 'GESI', 'Advocacy', 'Overall'],
+ datasets: [
+ { label: 'Pre-Test', data: [48.6, 59.3, 71.5, 65.8], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test', data: [66.0, 67.0, 80.4, 76.5], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: dlPlugin }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score (%)' } } } }
+ });
+
+ // Tab A: Passing Thresholds
+ ebaChart('pp-eba-chart-thresholds', {
+ type: 'bar',
+ data: {
+ labels: ['≥60%', '≥70%', '≥80%'],
+ datasets: [
+ { label: 'Pre-Test', data: [61.8, 38.2, 20.8], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test', data: [88.7, 66.2, 41.7], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: dlPlugin }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Trainees' } } } }
+ });
+
+ // Tab A: Adequate Knowledge by Test Area
+ ebaChart('pp-eba-chart-adequate', {
+ type: 'bar',
+ data: {
+ labels: ['Climate Change', 'GESI', 'Advocacy', 'Overall'],
+ datasets: [
+ { label: 'Pre-Test (≥60%)', data: [20.8, 51.7, 73.6, 61.8], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test (≥60%)', data: [51.0, 70.2, 92.7, 88.7], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: dlPlugin }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% with Adequate Knowledge' } } } }
+ });
+
+ // Tab B: Climate Change Questions
+ ebaChart('pp-eba-chart-climate', {
+ type: 'bar',
+ data: {
+ labels: ['Q1. Human\nactivities', 'Q2. Temp\nthreshold', 'Q3. Temp\n(dup)', 'Q4. Most\naffected', 'Q5. Greenhouse\ngases', 'Q6. Impacts\nreversed', 'Q7. Paris\nAgreement'],
+ datasets: [
+ { label: 'Pre-Test', data: [98.3, 43.3, 31.5, 71.3, 21.3, 29.2, 44.9], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test', data: [96.7, 73.5, 50.3, 95.4, 31.8, 30.5, 84.1], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: true, color: '#333', font: { size: 10, weight: 'bold' }, formatter: v => v.toFixed(1) + '%' } }, scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+ });
+
+ // Tab C: GESI Questions
+ ebaChart('pp-eba-chart-gesi', {
+ type: 'bar',
+ data: {
+ labels: ['Q8. Vulnerability\nsame', 'Q9. Gendered\ndrought', 'Q10. Resilience\ncapacity', 'Q11. Inter-\nsectionality', 'Q12. Women\nleaders', 'Q13. Climate\njustice', 'Q14. Barriers\nparticipation', 'Q15. GESI\noutcomes'],
+ datasets: [
+ { label: 'Pre-Test', data: [44.9, 75.8, 92.1, 46.6, 68.5, 31.5, 20.2, 94.4], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test', data: [55.0, 94.0, 96.7, 45.0, 70.2, 45.7, 34.4, 94.7], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: true, color: '#333', font: { size: 10, weight: 'bold' }, formatter: v => v.toFixed(1) + '%' } }, scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
+ });
+
+ // Tab D: Advocacy Questions
+ ebaChart('pp-eba-chart-advocacy', {
+ type: 'bar',
+ data: {
+ labels: ['Q16. Definition', 'Q17. Reliable info', 'Q18. EBA uses', 'Q19. First step', 'Q20. SMART', 'Q21. Evidence', 'Q22. Tailored msg', 'Q23. Good msg', 'Q24. Feminist adv', 'Q25. Feminist princ', 'Q26. National only', 'Q27. Stakeholder map', 'Q28. Stakeholder anal', 'Q29. Power dynamics', 'Q30. Coalitions adv', 'Q31. Coalition chall', 'Q32. Adv indicators', 'Q33. Monitoring', 'Q34. Risk matrix'],
+ datasets: [
+ { label: 'Pre-Test', data: [93.8, 83.1, 39.9, 72.5, 69.1, 37.1, 92.7, 96.1, 91.6, 43.3, 71.9, 92.1, 34.3, 92.7, 94.4, 69.1, 28.7, 92.1, 63.5], backgroundColor: ebaColors.pre },
+ { label: 'Post-Test', data: [96.7, 92.7, 57.6, 91.4, 87.4, 50.3, 90.7, 96.7, 89.4, 59.6, 87.4, 96.7, 49.0, 89.4, 97.4, 72.8, 51.0, 94.7, 76.8], backgroundColor: ebaColors.post }
+ ]
+ },
+ options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: true, color: '#333', font: { size: 9, weight: 'bold' }, formatter: v => v.toFixed(1) + '%' } }, scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } } }
  });
  }
 
@@ -23773,7 +24124,7 @@
  if (typeof _origShowPrePost === 'function') {
  window.showPrePostType = function(evt, typeName) {
  _origShowPrePost(evt, typeName);
- var contentId = typeName === 'forest' ? 'pp-forest-content' : (typeName === 'seaweed' ? 'pp-seaweed-content' : 'pp-mangrove-content');
+ var contentId = typeName === 'forest' ? 'pp-forest-content' : (typeName === 'seaweed' ? 'pp-seaweed-content' : (typeName === 'eba' ? 'pp-eba-content' : 'pp-mangrove-content'));
  var el = document.getElementById(contentId);
  if (el) animateSectionEnter(el);
  refreshScrollReveal();
