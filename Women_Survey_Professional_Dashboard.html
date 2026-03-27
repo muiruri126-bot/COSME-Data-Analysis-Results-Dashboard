@@ -30107,13 +30107,14 @@
  if (el) el.textContent = '...';
  });
 
- // Fetch all analytics data
+ // Fetch all analytics data — each query wrapped so one permission error doesn't break all
+ const safeQuery = (ref) => ref.once('value').then(s => s).catch(() => ({ val: () => null }));
  Promise.all([
- db.ref('visits').orderByChild('visitedAt').limitToLast(500).once('value'),
- db.ref('presence').once('value'),
- db.ref('analytics/tabCounts').once('value'),
- db.ref('analytics/downloadCounts').once('value'),
- db.ref('analytics/visits').orderByKey().limitToLast(500).once('value')
+ safeQuery(db.ref('visits').orderByChild('visitedAt').limitToLast(500)),
+ safeQuery(db.ref('presence')),
+ safeQuery(db.ref('analytics/tabCounts')),
+ safeQuery(db.ref('analytics/downloadCounts')),
+ safeQuery(db.ref('analytics/visits').orderByKey().limitToLast(500))
  ]).then(([visitsSnap, presenceSnap, tabCountsSnap, dlCountsSnap, aVisitsSnap]) => {
  try {
 
