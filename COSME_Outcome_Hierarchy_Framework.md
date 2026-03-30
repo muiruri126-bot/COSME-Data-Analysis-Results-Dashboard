@@ -319,6 +319,35 @@
 - **Data Source:** School Water System Assessment & 4K Club Survey (n=65 schools)
 - **Dashboard:** [Schools Initiatives Dashboard](COSME_Offline_Dashboard.html) — Schools Initiatives tab
 
+### 1310c - Schools with Access to Sustainable Clean Water Solutions
+- **Code:** 1310c
+- **Full Name:** Percentage of targeted schools with access to sustainable clean water solutions
+- **Unit:** Percentage (%)
+- **Baseline:** 23.4%
+- **Midline:** 62.5%
+- **Target:** 60.0%
+- **Change:** +39.1 percentage points
+- **Status:** EXCEEDED
+- **Data Source:** School Water System Assessment — Baseline (Sept 2023) & Midline (July 2025) (n=65 schools)
+- **Dashboard:** [Schools Dashboard](COSME_Offline_Dashboard.html) — Section A: Access to Clean Water
+
+---
+
+# IMMEDIATE OUTCOME 1330
+**WRO and YLO Advocacy Capacity**
+
+### 1330a - EBA Advocacy Knowledge
+- **Code:** 1330a
+- **Full Name:** Percentage of WRO and YLO members with adequate practical knowledge on leadership, gender and climate change, and evidenced-based advocacy
+- **Unit:** Percentage (%)
+- **Baseline:** 38.2%
+- **Midline:** 66.2%
+- **Target:** 60.0%
+- **Change:** +28.0 percentage points
+- **Status:** EXCEEDED
+- **Data Source:** EBA Pre- and Post-Test Knowledge Assessment (n=151 trainees)
+- **Dashboard:** [EBA Pre & Post Test Dashboard](COSME_Offline_Dashboard.html) — Trainings Pre & Post tab
+
 ---
 
 ## SUMMARY STATISTICS
@@ -327,11 +356,11 @@
 |---------------|-------|--------|
 | Ultimate Outcomes (1000) | 2 | 1 ON TRACK, 1 EXCEEDED |
 | Intermediate Outcomes | 3 | 1 ON TRACK (1100), 1 ON TRACK (1200 partial) |
-| Immediate Outcomes | 17 | Mix of ON TRACK, EXCEEDED, BELOW TARGET |
-| **TOTAL INDICATORS** | **22** | |
+| Immediate Outcomes | 19 | Mix of ON TRACK, EXCEEDED, BELOW TARGET |
+| **TOTAL INDICATORS** | **24** | |
 
 ### Performance Status Breakdown:
-- **EXCEEDED:** 15 indicators
+- **EXCEEDED:** 17 indicators
 - **ON TRACK:** 6 indicators
 - **BELOW TARGET:** 1 indicator (1120a - Seaweed knowledge)
 

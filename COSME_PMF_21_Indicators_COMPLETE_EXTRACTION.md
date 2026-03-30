@@ -438,7 +438,51 @@
 
 ---
 
-# SUMMARY TABLE: ALL 21 PMF INDICATORS PERFORMANCE AT A GLANCE
+### **1310c: Percentage of Targeted Schools with Access to Sustainable Clean Water Solutions**
+
+| Field | Value |
+|---|---|
+| **Indicator Code** | 1310c |
+| **Full Indicator Name** | Percentage of targeted schools with access to sustainable clean water solutions |
+| **Thematic Area** | School children awareness — WASH & clean water |
+| **Outcome Level** | Immediate Outcome 1310 |
+| **Unit of Measurement** | Percentage (%) |
+| **Baseline Value** | 23.4% |
+| **Midline Value** | 62.5% |
+| **Target (End of Project)** | 60.0% |
+| **Change** | +39.1 pp |
+| **Performance Status** | ✅ **EXCEEDED** Target (+4.2% above target) |
+| **Sample Size** | 65 schools (Kwale: 35, Kilifi: 30) |
+| **Data Source** | School Water System Assessment — Baseline (Sept 2023) & Midline (July 2025) |
+| **Key Disaggregations** | **Water Sources (B→M):** Borehole 44.2%→52.3% (+8.1pp), Rainwater Harvesting 13.0%→27.7% (+14.7pp), Water Tanks 2.6%→9.2% (+6.6pp), Piped 31.2%→35.4% (+4.2pp); **Year-round Availability:** 49.4%→55.4% (+6.0pp); **Private Ownership:** 63.6%→81.5% (+17.9pp); **Functional Rainwater Harvesting:** 37.7%→53.8% (+16.1pp); **County:** Kwale 19.6%→68.6% |
+| **Notes** | Composite indicator capturing water source diversification, harvesting infrastructure, year-round availability, and private ownership. While 83% of schools received tanks and gutters, only 34% installed tanks, 32% installed gutters, and 30% had them connected. Clean/safe drinking water perception declined slightly from 81.2% to 78.5% (−2.7pp). Solvatten kits distributed to all 65 schools but only 49% actively used. Only 20% of schools had dedicated maintenance budgets. |
+| **Dashboard** | [Schools Dashboard](COSME_Offline_Dashboard.html) — Section A: Access to Clean Water & Section B: Water in Schools |
+
+---
+
+### **1330a: Percentage of WRO and YLO Members with Adequate Practical Knowledge on Leadership, Gender and Climate Change, and Evidence-Based Advocacy**
+
+| Field | Value |
+|---|---|
+| **Indicator Code** | 1330a |
+| **Full Indicator Name** | Percentage of WRO and YLO members with adequate practical knowledge on leadership, gender and climate change, and evidenced-based advocacy |
+| **Thematic Area** | WRO/YLO advocacy capacity building |
+| **Outcome Level** | Immediate Outcome 1330 |
+| **Unit of Measurement** | Percentage (%) |
+| **Baseline Value** | 38.2% |
+| **Midline Value** | 66.2% |
+| **Target (End of Project)** | 60.0% |
+| **Change** | +28.0 pp |
+| **Performance Status** | ✅ **EXCEEDED** Target (+10.3% above target) |
+| **Sample Size** | 151 trainees |
+| **Data Source** | EBA Pre- and Post-Test Knowledge Assessment (31 questions, 3 domains) |
+| **Key Disaggregations** | **Domain Scores (Pre→Post):** Climate Change 48.6%→66.0% (+17.5pp), GESI 59.3%→67.0% (+7.7pp), Advocacy 71.5%→80.4% (+9.0pp); **Overall Average:** 65.8%→76.5% (+10.7pp); **Thresholds:** ≥60%: 61.8%→88.7% (+26.9pp), ≥70%: 38.2%→66.2% (+28.0pp), ≥80%: 20.8%→41.7% (+20.9pp); **Adequate Knowledge by Domain (≥60%):** Climate Change 20.8%→51.0%, GESI 51.7%→70.2%, Advocacy 73.6%→92.7% |
+| **Notes** | EBA training covering Climate Change (7 Qs), GESI (8 Qs), and Advocacy (16 Qs). Climate Change showed largest improvement (+17.5pp) from lowest baseline. Advocacy was strongest domain (92.7% adequate post-test). Three persistent knowledge gaps remain below 50% post-test: greenhouse gases identification (31.8%), barriers to women's participation (34.4%), and intersectionality (45.0%). Slight post-test declines on feminist advocacy principles (−2.2pp) and invisible power dynamics (−3.3pp). |
+| **Dashboard** | [EBA Pre & Post Test Dashboard](COSME_Offline_Dashboard.html) — Trainings Pre & Post tab |
+
+---
+
+# SUMMARY TABLE: ALL 24 PMF INDICATORS PERFORMANCE AT A GLANCE
 
 | # | Indicator Code | Indicator Name (Short) | Baseline | Midline | Target | Change | Status |
 |---|---|---|---|---|---|---|---|
@@ -474,6 +518,9 @@
 | 21 | 1230b | Women Perceived Equal (by Men) | 41.2/100 | 70.2/100 | 55.0/100 | +29.0 pts | ✅ **EXCEEDED** (+27.6%) |
 | **IMMEDIATE OUTCOME 1310** |
 | 22 | 1310b | Club-Led Climate Initiatives | 0% | 65.3% | 60.0% | +65.3 pp | ✅ **EXCEEDED** (+8.8%) |
+| 23 | 1310c | Schools with Clean Water Access | 23.4% | 62.5% | 60.0% | +39.1 pp | ✅ **EXCEEDED** (+4.2%) |
+| **IMMEDIATE OUTCOME 1330** |
+| 24 | 1330a | EBA Advocacy Knowledge (≥70%) | 38.2% | 66.2% | 60.0% | +28.0 pp | ✅ **EXCEEDED** (+10.3%) |
 
 ---
 
@@ -481,11 +528,11 @@
 
 | Performance Category | Count | % of All Indicators |
 |---|---|---|
-| ✅ **EXCEEDED TARGET** | 17 | **77.3%** |
-| 🟡 **ON TRACK** (>75% of target) | 3 | **13.6%** |
-| 🟡 **ON TRACK** (50-75% of target) | 1 | **4.5%** |
-| ⚠️ **BELOW TARGET** | 1* | **4.5%** |
-| **TOTAL** | **22** | **100%** |
+| ✅ **EXCEEDED TARGET** | 19 | **79.2%** |
+| 🟡 **ON TRACK** (>75% of target) | 3 | **12.5%** |
+| 🟡 **ON TRACK** (50-75% of target) | 1 | **4.2%** |
+| ⚠️ **BELOW TARGET** | 1* | **4.2%** |
+| **TOTAL** | **24** | **100%** |
 
 **\*Note on 1120a (Seaweed Knowledge):** While technically "below target" at 29.3% vs. 68% goal, the apparent -20pp decline reflects **revised assessment criteria**, not actual knowledge loss. Production quality metrics show substantial improvements (89.5% using regenerative practices, 78.9% with improved yields).
 
@@ -528,6 +575,15 @@
 - **Time contribution doubled (2.3→4.2 hrs unpaid care)** — men's household role redesigning in real-time
 - **Narrative power:** Men aren't passive supporters — they're actively reconstituting masculine identity around caregiving and equality
 
+## IMMEDIATE OUTCOMES 1310-1330 — Schools, WASH & Advocacy Capacity
+- **Clean water access near-tripled (23.4%→62.5%)** — composite 1310c exceeded 60% target by +2.5pp; Kwale county strongest at 68.6%
+- **Club-led climate initiatives operational (65.3%)** — 49 initiatives across 15 schools; 71.4% fully operational; 93.8% with girls in leadership
+- **Infrastructure delivery-to-use gap** — 83% of schools received tanks/gutters but only 34% installed; conversion from distribution to functional use is the critical bottleneck
+- **EBA advocacy knowledge exceeded target (66.2%)** — 151 trainees assessed; all three domains (Climate Change, GESI, Advocacy) showed gains
+- **Climate Change domain largest gain (+17.5pp)** — from lowest baseline (48.6%) to 66.0%; Paris Agreement recognition surged +39.2pp
+- **Persistent knowledge gaps** — greenhouse gases (31.8%), barriers to women's participation (34.4%), and intersectionality (45.0%) remain below 50% post-test
+- **Water safety perception paradox** — infrastructure improved but perceived safety declined slightly (81.2%→78.5%), suggesting awareness or quality issues
+
 ---
 
 # DATA SOURCE SUMMARY & QUALITY NOTES
@@ -541,9 +597,10 @@
 | **Forestry Groups** | 43 BL / 28 ML groups | FY23/FY25 | Functionality assessments; mixed methods |
 | **Seaweed Assessment** | 610 women / 19 groups | FY25 | Production data; field monitoring; mixed methods |
 | **VSLA Monitoring** | 211 assessments / 173 groups | Monthly | Transactional data; objective; real-time |
-| **Schools Dashboard** | 65 schools | FY25 | Infrastructure audits; enrollment verification |
+| **Schools Dashboard** | 65 schools | FY23/FY25 | Infrastructure audits; enrollment verification; baseline & midline |
+| **EBA Pre/Post Test** | 151 trainees | FY25 | Knowledge tests; 31 questions across 3 domains; objective assessment |
 | **GJJ KAP** | 312 W / 289 M | Endline | Likert-scale psychological measures; deep qualitative component |
 
 ---
 
-*Data extraction compiled: March 22, 2026 | All 21 PMF indicators complete with baseline, midline, target, and disaggregations | Ready for outcome-level narrative development*
+*Data extraction compiled: March 30, 2026 | All 24 PMF indicators complete with baseline, midline, target, and disaggregations | Ready for outcome-level narrative development*
