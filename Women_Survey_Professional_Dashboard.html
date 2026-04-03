@@ -22064,13 +22064,42 @@
   }
  }
 
+ function sanitizePdfText(text) {
+  // Replace Unicode characters that jsPDF's default font cannot render
+  return text
+   .replace(/\u2192|\u2794|\u279C|\u27A1/g, ' -> ')  // → arrows
+   .replace(/\u2190/g, ' <- ')                         // ← left arrow
+   .replace(/\u2191/g, '(up) ')                        // ↑ up arrow
+   .replace(/\u2193/g, '(down) ')                      // ↓ down arrow
+   .replace(/\u2264/g, '<=')                           // ≤
+   .replace(/\u2265/g, '>=')                           // ≥
+   .replace(/\u2260/g, '!=')                           // ≠
+   .replace(/\u2014/g, ' -- ')                         // — em dash
+   .replace(/\u2013/g, ' - ')                          // – en dash
+   .replace(/\u2018|\u2019/g, "'")                     // ' ' smart quotes
+   .replace(/\u201C|\u201D/g, '"')                     // " " smart quotes
+   .replace(/\u2026/g, '...')                          // … ellipsis
+   .replace(/\u2022/g, '* ')                           // • bullet
+   .replace(/\u00B7/g, '.')                            // · middle dot
+   .replace(/\u2713|\u2714/g, '[v]')                   // ✓ ✔ check
+   .replace(/\u2717|\u2718/g, '[x]')                   // ✗ ✘ cross
+   .replace(/\u00B0/g, ' deg')                         // ° degree
+   .replace(/\u00B1/g, '+/-')                          // ± plus-minus
+   .replace(/\u2248/g, '~')                            // ≈ approx
+   .replace(/\u221E/g, 'inf')                          // ∞ infinity
+   .replace(/[\u0080-\u00FF]/g, function(ch) {         // Latin-1 Supplement passthrough
+    return ch;
+   })
+   .replace(/[^\x00-\xFF]/g, '');                      // Strip remaining non-Latin1 chars
+ }
+
  function exportPDFSummary() {
   var btn = document.getElementById('pdf-export-btn');
   var origText = btn.innerHTML;
   btn.innerHTML = '&#9203; Generating PDF...';
   btn.disabled = true;
 
-  var title = (document.getElementById('survey-title') || {}).textContent || 'COSME Dashboard';
+  var title = sanitizePdfText((document.getElementById('survey-title') || {}).textContent || 'COSME Dashboard');
   var jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
   if (!jsPDF) { alert('PDF library not loaded. Please check your internet connection.'); btn.innerHTML = origText; btn.disabled = false; return; }
 
@@ -22098,9 +22127,9 @@
    y += 7;
    doc.setFontSize(9);
    findings.forEach(function(card) {
-    var cardTitle = (card.querySelector('.finding-title') || {}).textContent || '';
-    var metric = (card.querySelector('.finding-metric') || {}).textContent || '';
-    var desc = (card.querySelector('.finding-description') || {}).textContent || '';
+    var cardTitle = sanitizePdfText((card.querySelector('.finding-title') || {}).textContent || '');
+    var metric = sanitizePdfText((card.querySelector('.finding-metric') || {}).textContent || '');
+    var desc = sanitizePdfText((card.querySelector('.finding-description') || {}).textContent || '');
     if (y > 270) { doc.addPage(); y = 20; }
     doc.setTextColor(0, 114, 206);
     doc.setFont(undefined, 'bold');
@@ -22125,9 +22154,9 @@
    y += 7;
    doc.setFontSize(9);
    kpis.forEach(function(kpi) {
-    var label = (kpi.querySelector('.kpi-label') || {}).textContent || '';
-    var value = (kpi.querySelector('.kpi-value') || {}).textContent || '';
-    var change = (kpi.querySelector('.kpi-change') || {}).textContent || '';
+    var label = sanitizePdfText((kpi.querySelector('.kpi-label') || {}).textContent || '');
+    var value = sanitizePdfText((kpi.querySelector('.kpi-value') || {}).textContent || '');
+    var change = sanitizePdfText((kpi.querySelector('.kpi-change') || {}).textContent || '');
     if (y > 275) { doc.addPage(); y = 20; }
     doc.setTextColor(0);
     doc.text(label + ': ' + value + '  ' + change, margin, y);
