@@ -8,6 +8,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <meta name="description" content="COSME Project Professional Survey Dashboard - Comprehensive analysis of Women, Men, Forestry, Schools, Seaweed, and VSLA monitoring data across Kilifi & Kwale counties.">
  <meta name="theme-color" content="#0072CE">
+ <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230072CE'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='18' font-weight='bold' fill='white' font-family='Arial'%3EP%3C/text%3E%3C/svg%3E">
  <title>COSME Project Surveys Dashboard | Plan International</title>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
@@ -3691,7 +3692,10 @@
  .sidebar-overlay,
  .sidebar-mobile-toggle,
  .chart-expand-btn,
- .chart-fullscreen-overlay {
+ .chart-fullscreen-overlay,
+ .chart-table-toggle-btn,
+ #dashboardLoadingOverlay,
+ .cb-toggle-row {
  display: none !important;
  }
 
@@ -3699,9 +3703,190 @@
  margin-left: 0 !important;
  }
  }
+
+ /* ====== LOADING SKELETON OVERLAY ====== */
+ #dashboardLoadingOverlay {
+ position: fixed;
+ inset: 0;
+ z-index: 10000;
+ background: rgba(255,255,255,0.72);
+ backdrop-filter: blur(2px);
+ display: none;
+ align-items: center;
+ justify-content: center;
+ transition: opacity 0.25s;
+ }
+ #dashboardLoadingOverlay.active {
+ display: flex;
+ }
+ .loading-spinner-box {
+ background: #fff;
+ border-radius: 14px;
+ box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+ padding: 32px 44px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 14px;
+ }
+ .loading-spinner {
+ width: 38px; height: 38px;
+ border: 4px solid #e0e0e0;
+ border-top-color: #0072CE;
+ border-radius: 50%;
+ animation: spin-loader 0.7s linear infinite;
+ }
+ @keyframes spin-loader {
+ to { transform: rotate(360deg); }
+ }
+ .loading-spinner-box span {
+ font-size: 0.88em;
+ color: #555;
+ font-weight: 600;
+ }
+
+ /* ====== DATA TABLE TOGGLE BUTTON ====== */
+ .chart-table-toggle-btn {
+ position: absolute;
+ top: 8px;
+ right: 40px;
+ z-index: 5;
+ background: #fff;
+ border: 1.5px solid #ccc;
+ border-radius: 6px;
+ padding: 4px 8px;
+ cursor: pointer;
+ font-size: 0.72em;
+ font-weight: 600;
+ color: #555;
+ display: flex;
+ align-items: center;
+ gap: 4px;
+ transition: all 0.2s;
+ }
+ .chart-table-toggle-btn:hover {
+ border-color: #0072CE;
+ color: #0072CE;
+ background: #f0f4ff;
+ }
+ .chart-table-toggle-btn.active {
+ background: #0072CE;
+ color: #fff;
+ border-color: #0072CE;
+ }
+ .chart-data-table-wrap {
+ display: none;
+ overflow-x: auto;
+ margin-top: 10px;
+ }
+ .chart-data-table-wrap.visible {
+ display: block;
+ }
+ .chart-data-table {
+ width: 100%;
+ border-collapse: collapse;
+ font-size: 0.82em;
+ }
+ .chart-data-table th {
+ background: #f0f4ff;
+ color: #283593;
+ padding: 8px 10px;
+ text-align: center;
+ font-weight: 600;
+ border-bottom: 2px solid #283593;
+ font-size: 0.9em;
+ }
+ .chart-data-table td {
+ padding: 6px 10px;
+ text-align: center;
+ border-bottom: 1px solid #eee;
+ }
+ .chart-data-table tr:nth-child(even) {
+ background: #f9fafb;
+ }
+ .chart-data-table tr:hover {
+ background: #f0f4ff;
+ }
+
+ /* ====== COLOR-BLIND TOGGLE ====== */
+ .cb-toggle-row {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ padding: 8px 14px;
+ font-size: 0.78em;
+ color: #ccc;
+ border-top: 1px solid rgba(255,255,255,0.08);
+ }
+ .cb-toggle-row label {
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ .cb-toggle-switch {
+ position: relative;
+ width: 32px;
+ height: 18px;
+ background: #555;
+ border-radius: 9px;
+ cursor: pointer;
+ transition: background 0.2s;
+ flex-shrink: 0;
+ }
+ .cb-toggle-switch.on {
+ background: #0072CE;
+ }
+ .cb-toggle-switch::after {
+ content: '';
+ position: absolute;
+ top: 2px;
+ left: 2px;
+ width: 14px;
+ height: 14px;
+ background: #fff;
+ border-radius: 50%;
+ transition: left 0.2s;
+ }
+ .cb-toggle-switch.on::after {
+ left: 16px;
+ }
+
+ /* Color-blind safe palette overrides */
+ body.colorblind-mode .kpi-card.positive { border-top-color: #0072B2; }
+ body.colorblind-mode .kpi-card.negative { border-top-color: #D55E00; }
+ body.colorblind-mode .kpi-card.warning { border-top-color: #E69F00; }
+ body.colorblind-mode .kpi-change.positive { background: #d6eaf8; color: #0072B2; }
+ body.colorblind-mode .kpi-change.negative { background: #fde8d0; color: #D55E00; }
+ body.colorblind-mode .positive-change { color: #0072B2; }
+ body.colorblind-mode .negative-change { color: #D55E00; }
+ body.colorblind-mode .finding-card { border-left-color: #0072B2; }
+ body.colorblind-mode .finding-card .finding-metric { color: #0072B2; }
+ body.colorblind-mode .finding-card.negative { border-left-color: #D55E00; }
+ body.colorblind-mode .finding-card.negative .finding-metric { color: #D55E00; }
+ body.colorblind-mode .highlight-box { border-left-color: #0072B2; }
+ body.colorblind-mode .highlight-box.warning { border-left-color: #E69F00; }
+
+ /* ====== KEYBOARD FOCUS INDICATORS ====== */
+ .sidebar-item:focus-visible,
+ .sidebar-group-header:focus-visible,
+ .tab-button:focus-visible,
+ .survey-btn:focus-visible {
+ outline: 2px solid #fff;
+ outline-offset: -2px;
+ box-shadow: 0 0 0 3px rgba(0,114,206,0.5);
+ }
  </style>
 </head>
 <body>
+ <!-- LOADING OVERLAY -->
+ <div id="dashboardLoadingOverlay">
+ <div class="loading-spinner-box">
+ <div class="loading-spinner"></div>
+ <span>Loading section...</span>
+ </div>
+ </div>
+
  <!-- SIDEBAR MOBILE TOGGLE -->
  <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
  
@@ -3720,6 +3905,25 @@
  <h2>COSME Project</h2>
  <small>Plan International Kenya</small>
  </div>
+ </div>
+
+ <!-- SIDEBAR SEARCH -->
+ <div class="sidebar-search" style="padding: 10px 14px 6px;">
+ <div style="position:relative;">
+ <input type="text" id="sidebarSearchInput" placeholder="Search indicators, sections..." autocomplete="off"
+ style="width:100%;padding:9px 12px 9px 34px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.85em;
+ background:#f8f9fa;color:#333;outline:none;transition:border-color 0.2s,box-shadow 0.2s;"
+ onfocus="this.style.borderColor='#0072CE';this.style.boxShadow='0 0 0 3px rgba(0,114,206,0.12)'"
+ onblur="this.style.borderColor='#e0e0e0';this.style.boxShadow='none'"
+ oninput="sidebarSearch(this.value)" />
+ <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:#999;pointer-events:none" viewBox="0 0 24 24">
+ <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+ </svg>
+ <button id="sidebarSearchClear" onclick="document.getElementById('sidebarSearchInput').value='';sidebarSearch('');"
+ style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;
+ cursor:pointer;color:#999;font-size:1.1em;padding:2px 4px;line-height:1;" title="Clear search">&times;</button>
+ </div>
+ <div id="sidebarSearchResults" style="display:none;margin-top:6px;max-height:260px;overflow-y:auto;"></div>
  </div>
 
  <nav class="sidebar-nav">
@@ -3854,6 +4058,12 @@
  </nav>
 
  <div class="sidebar-footer">
+ <div class="cb-toggle-row">
+ <label onclick="toggleColorBlindMode()">
+ <div class="cb-toggle-switch" id="cbToggleSwitch"></div>
+ <span>Color-blind safe</span>
+ </label>
+ </div>
  <small>COSME Project M&E Dashboard</small>
  </div>
  </aside>
@@ -21384,9 +21594,708 @@
  // Initialize men survey tabs
  initializeMenSurveyTabs();
  
- // Default to Project Outputs tab
- switchSurvey('project-outputs');
+ // ====== URL HASH ROUTING ======
+ function getHashSurvey() {
+ const h = window.location.hash.replace('#', '');
+ return h || null;
+ }
+ function setHashSurvey(key) {
+ if (key) history.replaceState(null, '', '#' + key);
+ }
+ window.addEventListener('hashchange', function() {
+ const key = getHashSurvey();
+ if (key) switchSurvey(key);
  });
+
+ // On load: use hash if present, else default
+ const initialHash = getHashSurvey();
+ switchSurvey(initialHash || 'project-outputs');
+
+ // Patch switchSurvey to update hash
+ const _origSwitchSurvey = switchSurvey;
+ switchSurvey = function(surveyKey) {
+ setHashSurvey(surveyKey);
+ return _origSwitchSurvey(surveyKey);
+ };
+ });
+
+ // ====== SIDEBAR GLOBAL SEARCH ======
+ (function() {
+ // Build search index from sidebar items, section titles, chart titles, and indicator IDs
+ function buildSearchIndex() {
+ const index = [];
+ // Sidebar items
+ document.querySelectorAll('.sidebar-item[data-key]').forEach(function(item) {
+ const label = (item.querySelector('.item-label') || item).textContent.trim();
+ const key = item.getAttribute('data-key');
+ index.push({ label: label, key: key, type: 'section' });
+ });
+ // Section titles and chart titles
+ document.querySelectorAll('.section-title, .chart-title, .output-header h2, .summary-title').forEach(function(el) {
+ const text = el.textContent.trim();
+ if (!text || text.length < 3) return;
+ // Find which section this belongs to
+ var section = el.closest('[id$="-section"]');
+ if (!section) section = el.closest('.section');
+ const sectionId = section ? section.id : null;
+ // Map section ID to survey key
+ var surveyKey = null;
+ if (sectionId) {
+ surveyKey = sectionId.replace('-section', '').replace('-survey', '');
+ // Check if it maps to a valid sidebar key
+ var sidebarBtn = document.querySelector('.sidebar-item[data-key="' + surveyKey + '"]');
+ if (!sidebarBtn) {
+ // Try common mappings
+ var mappings = {'women':'women-cosme','men':'men-cosme','output':'project-outputs','prepost':'prepost-forest','seaweed':'seaweed-assessment','vsla':'vsla-monitoring','schools-dashboard':'schools-dashboard','grapp':'grapp-dashboard','pdm':'pdm-dashboard'};
+ surveyKey = mappings[surveyKey] || surveyKey;
+ }
+ }
+ index.push({ label: text, key: surveyKey, type: 'content', elementId: el.id || null });
+ });
+ return index;
+ }
+
+ var searchIndex = null;
+
+ window.sidebarSearch = function(query) {
+ var clearBtn = document.getElementById('sidebarSearchClear');
+ var resultsEl = document.getElementById('sidebarSearchResults');
+ if (!query || query.trim().length < 2) {
+ if (clearBtn) clearBtn.style.display = 'none';
+ resultsEl.style.display = 'none';
+ resultsEl.innerHTML = '';
+ // Show all sidebar items
+ document.querySelectorAll('.sidebar-item, .sidebar-group').forEach(function(el) { el.style.display = ''; });
+ return;
+ }
+ if (clearBtn) clearBtn.style.display = 'block';
+ if (!searchIndex) searchIndex = buildSearchIndex();
+
+ var q = query.trim().toLowerCase();
+ var matches = searchIndex.filter(function(item) {
+ return item.label.toLowerCase().indexOf(q) !== -1;
+ });
+
+ // Also filter sidebar items visually
+ document.querySelectorAll('.sidebar-item[data-key]').forEach(function(el) {
+ var label = (el.querySelector('.item-label') || el).textContent.toLowerCase();
+ el.style.display = label.indexOf(q) !== -1 ? '' : 'none';
+ });
+ // Show groups that have visible items
+ document.querySelectorAll('.sidebar-group').forEach(function(grp) {
+ var hasVisible = grp.querySelector('.sidebar-item[data-key]:not([style*="display: none"])');
+ grp.style.display = hasVisible ? '' : 'none';
+ if (hasVisible) grp.classList.remove('collapsed');
+ });
+
+ // Show dropdown results for content matches
+ var contentMatches = matches.filter(function(m) { return m.type === 'content' && m.key; });
+ if (contentMatches.length === 0) {
+ resultsEl.style.display = 'none';
+ resultsEl.innerHTML = '';
+ return;
+ }
+ // Deduplicate
+ var seen = {};
+ var unique = contentMatches.filter(function(m) {
+ var k = m.key + '|' + m.label.substring(0, 50);
+ if (seen[k]) return false;
+ seen[k] = true;
+ return true;
+ }).slice(0, 12);
+
+ resultsEl.innerHTML = unique.map(function(m) {
+ var highlighted = m.label.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark style="background:#fff3cd;padding:0 2px;border-radius:2px;">$1</mark>');
+ return '<button onclick="sidebarSearchGo(\'' + m.key + '\');return false;" style="display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:#fff;cursor:pointer;font-size:0.82em;color:#333;border-bottom:1px solid #f0f0f0;transition:background 0.15s;" onmouseover="this.style.background=\'#f0f4ff\'" onmouseout="this.style.background=\'#fff\'">' +
+ '<div style="font-weight:600;line-height:1.4;margin-bottom:2px;">' + highlighted + '</div>' +
+ '<div style="font-size:0.78em;color:#999;">' + (m.key || '').replace(/-/g, ' ') + '</div></button>';
+ }).join('');
+ resultsEl.style.display = 'block';
+ };
+
+ window.sidebarSearchGo = function(key) {
+ document.getElementById('sidebarSearchInput').value = '';
+ sidebarSearch('');
+ if (key) switchSurvey(key);
+ };
+ })();
+
+ // ====== CSV EXPORT PER TABLE ======
+ (function() {
+ function tableToCSV(table) {
+ var rows = [];
+ table.querySelectorAll('tr').forEach(function(tr) {
+ var cols = [];
+ tr.querySelectorAll('th, td').forEach(function(cell) {
+ var text = cell.textContent.trim().replace(/"/g, '""');
+ cols.push('"' + text + '"');
+ });
+ rows.push(cols.join(','));
+ });
+ return rows.join('\n');
+ }
+
+ function downloadCSV(csv, filename) {
+ var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+ var link = document.createElement('a');
+ link.href = URL.createObjectURL(blob);
+ link.download = filename;
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ link.click();
+ document.body.removeChild(link);
+ URL.revokeObjectURL(link.href);
+ }
+
+ function injectCSVButtons() {
+ document.querySelectorAll('.output-table, .comparison-table').forEach(function(table) {
+ if (table.dataset.csvBtnAdded) return;
+ table.dataset.csvBtnAdded = 'true';
+ var wrapper = table.closest('.table-scroll-wrapper') || table.parentElement;
+ var btn = document.createElement('button');
+ btn.className = 'csv-export-btn';
+ btn.title = 'Export table as CSV';
+ btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 11v4h-2v-4H8l4-4 4 4h-3zm-1-8V3.5L17.5 9H12z"/></svg>CSV';
+ btn.style.cssText = 'display:inline-flex;align-items:center;gap:2px;padding:5px 12px;margin:8px 0 4px;background:#fff;color:#283593;border:1.5px solid #283593;border-radius:6px;font-size:0.78em;font-weight:600;cursor:pointer;transition:all 0.2s;';
+ btn.onmouseover = function() { this.style.background = '#283593'; this.style.color = '#fff'; };
+ btn.onmouseout = function() { this.style.background = '#fff'; this.style.color = '#283593'; };
+ btn.onclick = function() {
+ var sectionTitle = '';
+ var section = table.closest('.output-card, .section');
+ if (section) {
+ var h = section.querySelector('h3, .section-title, .chart-title');
+ if (h) sectionTitle = h.textContent.trim().replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+ }
+ var filename = 'COSME_' + (sectionTitle || 'Table') + '_' + new Date().toISOString().slice(0, 10) + '.csv';
+ downloadCSV(tableToCSV(table), filename);
+ };
+ wrapper.insertBefore(btn, table);
+ });
+ }
+
+ // Inject on load and after survey switches
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', function() { setTimeout(injectCSVButtons, 500); });
+ } else {
+ setTimeout(injectCSVButtons, 500);
+ }
+
+ // Re-inject after survey switches (observe DOM changes)
+ var csvObserver = new MutationObserver(function() {
+ setTimeout(injectCSVButtons, 200);
+ });
+ csvObserver.observe(document.body, { childList: true, subtree: true });
+ })();
+
+ // ====== LOADING SKELETON OVERLAY ======
+ (function() {
+ var overlay = document.getElementById('dashboardLoadingOverlay');
+ var hideTimer = null;
+
+ // Patch switchSurvey to show/hide loading
+ var _prevSwitch = window.switchSurvey || function(){};
+ window.switchSurvey = function(key) {
+ if (overlay) {
+ overlay.classList.add('active');
+ }
+ // Clear any pending hide
+ if (hideTimer) clearTimeout(hideTimer);
+ // Call original
+ var result = _prevSwitch(key);
+ // Hide after charts render (requestAnimationFrame + fallback)
+ hideTimer = setTimeout(function() {
+ requestAnimationFrame(function() {
+ if (overlay) overlay.classList.remove('active');
+ });
+ }, 350);
+ return result;
+ };
+ })();
+
+ // ====== DATA TABLE TOGGLE PER CHART ======
+ (function() {
+ function chartDataToTable(chartInstance) {
+ if (!chartInstance || !chartInstance.data) return null;
+ var data = chartInstance.data;
+ var labels = data.labels || [];
+ var datasets = data.datasets || [];
+ if (labels.length === 0 || datasets.length === 0) return null;
+
+ var html = '<table class="chart-data-table"><thead><tr><th></th>';
+ datasets.forEach(function(ds) {
+ html += '<th>' + (ds.label || 'Value') + '</th>';
+ });
+ html += '</tr></thead><tbody>';
+ labels.forEach(function(label, i) {
+ html += '<tr><td style="text-align:left;font-weight:600;">' + label + '</td>';
+ datasets.forEach(function(ds) {
+ var val = ds.data[i];
+ html += '<td>' + (val !== null && val !== undefined ? val : '—') + '</td>';
+ });
+ html += '</tr>';
+ });
+ html += '</tbody></table>';
+ return html;
+ }
+
+ function injectTableToggleButtons() {
+ document.querySelectorAll('.chart-wrapper').forEach(function(wrapper) {
+ if (wrapper.querySelector('.chart-table-toggle-btn')) return;
+ wrapper.style.position = 'relative';
+
+ var btn = document.createElement('button');
+ btn.className = 'chart-table-toggle-btn';
+ btn.title = 'Toggle data table';
+ btn.setAttribute('aria-label', 'Toggle data table view');
+ btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v4h6V5H5zm8 0v4h6V5h-6zM5 11v4h6v-4H5zm8 0v4h6v-4h-6zM5 17v2h6v-2H5zm8 0v2h6v-2h-6z"/></svg>Table';
+
+ var tableWrap = document.createElement('div');
+ tableWrap.className = 'chart-data-table-wrap';
+
+ btn.onclick = function() {
+ var isActive = btn.classList.toggle('active');
+ var canvas = wrapper.querySelector('canvas');
+ var chartContainer = wrapper.querySelector('.chart-container');
+ if (isActive) {
+ // Build table from chart data
+ var ci = canvas ? (Chart.getChart(canvas)) : null;
+ var html = chartDataToTable(ci);
+ if (html) {
+ tableWrap.innerHTML = html;
+ tableWrap.classList.add('visible');
+ if (chartContainer) chartContainer.style.display = 'none';
+ btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v4h6V5H5zm8 0v4h6V5h-6zM5 11v4h6v-4H5zm8 0v4h6v-4h-6zM5 17v2h6v-2H5zm8 0v2h6v-2h-6z"/></svg>Chart';
+ } else {
+ tableWrap.innerHTML = '<div style="padding:20px;text-align:center;color:#999;font-size:0.85em;">No data available for this chart</div>';
+ tableWrap.classList.add('visible');
+ if (chartContainer) chartContainer.style.display = 'none';
+ }
+ } else {
+ tableWrap.classList.remove('visible');
+ if (chartContainer) chartContainer.style.display = '';
+ btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 3h18v18H3V3zm2 2v4h6V5H5zm8 0v4h6V5h-6zM5 11v4h6v-4H5zm8 0v4h6v-4h-6zM5 17v2h6v-2H5zm8 0v2h6v-2h-6z"/></svg>Table';
+ }
+ };
+
+ wrapper.appendChild(btn);
+ wrapper.appendChild(tableWrap);
+ });
+ }
+
+ // Inject on load
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', function() { setTimeout(injectTableToggleButtons, 600); });
+ } else {
+ setTimeout(injectTableToggleButtons, 600);
+ }
+
+ // Re-inject after DOM changes (survey switches)
+ var tableObserver = new MutationObserver(function() {
+ setTimeout(injectTableToggleButtons, 300);
+ });
+ tableObserver.observe(document.body, { childList: true, subtree: true });
+ })();
+
+ // ====== COLOR-BLIND FRIENDLY MODE ======
+ (function() {
+ // Color-blind safe palette (Okabe-Ito inspired)
+ var CB_PALETTE = ['#0072B2', '#E69F00', '#009E73', '#D55E00', '#CC79A7', '#56B4E9', '#F0E442', '#999999'];
+ var cbEnabled = localStorage.getItem('cosme_colorblind') === 'true';
+
+ function applyCBMode(enable) {
+ cbEnabled = enable;
+ localStorage.setItem('cosme_colorblind', enable ? 'true' : 'false');
+ document.body.classList.toggle('colorblind-mode', enable);
+ var toggle = document.getElementById('cbToggleSwitch');
+ if (toggle) toggle.classList.toggle('on', enable);
+
+ // Re-color all Chart.js instances
+ if (enable) {
+ document.querySelectorAll('canvas').forEach(function(canvas) {
+ var chart = Chart.getChart(canvas);
+ if (!chart) return;
+ chart.data.datasets.forEach(function(ds, i) {
+ var c = CB_PALETTE[i % CB_PALETTE.length];
+ if (Array.isArray(ds.backgroundColor) && ds.backgroundColor.length > 1) {
+ ds.backgroundColor = ds.backgroundColor.map(function(_, j) { return CB_PALETTE[j % CB_PALETTE.length]; });
+ } else {
+ ds.backgroundColor = c;
+ }
+ if (ds.borderColor && !Array.isArray(ds.borderColor)) {
+ ds.borderColor = c;
+ }
+ });
+ chart.update('none');
+ });
+ }
+ }
+
+ window.toggleColorBlindMode = function() {
+ applyCBMode(!cbEnabled);
+ };
+
+ // Apply on load if previously enabled
+ if (cbEnabled) {
+ document.body.classList.add('colorblind-mode');
+ var toggle = document.getElementById('cbToggleSwitch');
+ if (toggle) toggle.classList.add('on');
+ // Re-color charts after they're created
+ setTimeout(function() { applyCBMode(true); }, 1500);
+ }
+ })();
+
+ // ====== KEYBOARD NAVIGATION ======
+ (function() {
+ // Make sidebar items keyboard-accessible
+ function enhanceKeyboardNav() {
+ document.querySelectorAll('.sidebar-item, .sidebar-group-header').forEach(function(el) {
+ if (el.getAttribute('tabindex') === null) {
+ el.setAttribute('tabindex', '0');
+ }
+ el.addEventListener('keydown', function(e) {
+ if (e.key === 'Enter' || e.key === ' ') {
+ e.preventDefault();
+ el.click();
+ }
+ // Arrow key navigation within sidebar
+ if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+ e.preventDefault();
+ var items = Array.from(document.querySelectorAll('.sidebar-item:not([style*="display: none"]), .sidebar-group-header'));
+ var idx = items.indexOf(el);
+ var next = e.key === 'ArrowDown' ? idx + 1 : idx - 1;
+ if (next >= 0 && next < items.length) {
+ items[next].focus();
+ }
+ }
+ });
+ });
+
+ // Tab buttons
+ document.querySelectorAll('.tab-button').forEach(function(el) {
+ if (el.getAttribute('tabindex') === null) {
+ el.setAttribute('tabindex', '0');
+ }
+ el.addEventListener('keydown', function(e) {
+ if (e.key === 'Enter' || e.key === ' ') {
+ e.preventDefault();
+ el.click();
+ }
+ });
+ });
+ }
+
+ if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', enhanceKeyboardNav);
+ } else {
+ enhanceKeyboardNav();
+ }
+ })();
+ </script>
+
+ <!-- ====== LAZY-LOAD CHARTS (IntersectionObserver) ====== -->
+ <script>
+ (function() {
+ if (!('IntersectionObserver' in window)) return; // graceful fallback
+ const lazyCanvases = new Set();
+ const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+   if (entry.isIntersecting) {
+    const canvas = entry.target;
+    observer.unobserve(canvas);
+    lazyCanvases.delete(canvas);
+    // Trigger a resize so Chart.js redraws correctly when scrolled into view
+    if (canvas.__chartInstance || (window.Chart && Chart.getChart(canvas))) {
+     const chart = Chart.getChart(canvas);
+     if (chart) chart.resize();
+    }
+   }
+  });
+ }, { rootMargin: '200px' });
+
+ // After each survey switch, observe all visible canvases
+ function observeCanvases() {
+  document.querySelectorAll('canvas[id]').forEach(function(c) {
+   if (!lazyCanvases.has(c) && c.offsetParent !== null) {
+    lazyCanvases.add(c);
+    observer.observe(c);
+   }
+  });
+ }
+ // Patch switchSurvey to trigger lazy observation
+ var _origSwitch = window.switchSurvey;
+ if (typeof _origSwitch === 'function') {
+  window.switchSurvey = function(key) {
+   var result = _origSwitch(key);
+   setTimeout(observeCanvases, 300);
+   return result;
+  };
+ }
+ document.addEventListener('DOMContentLoaded', function() { setTimeout(observeCanvases, 500); });
+ if (document.readyState !== 'loading') setTimeout(observeCanvases, 500);
+ })();
+ </script>
+
+ <!-- ====== PDF SUMMARY EXPORT ====== -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script>
+ (function() {
+ function addPDFButton() {
+  // Find the PPTX export button to place PDF button near it
+  var pptxBtns = document.querySelectorAll('button');
+  var headerBar = document.querySelector('.dashboard-header') || document.querySelector('header');
+  if (!headerBar) return;
+  // Check if PDF button already exists
+  if (document.getElementById('pdf-export-btn')) return;
+  var btn = document.createElement('button');
+  btn.id = 'pdf-export-btn';
+  btn.innerHTML = '&#128196; Export PDF Summary';
+  btn.title = 'Download a PDF summary of the current section';
+  btn.style.cssText = 'background:#0072CE;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;margin-left:8px;transition:background .2s;';
+  btn.onmouseenter = function() { btn.style.background = '#005a9e'; };
+  btn.onmouseleave = function() { btn.style.background = '#0072CE'; };
+  btn.onclick = exportPDFSummary;
+  // Insert near the header actions area
+  var actionsRow = headerBar.querySelector('.header-actions, .header-buttons, .export-buttons');
+  if (actionsRow) {
+   actionsRow.appendChild(btn);
+  } else {
+   headerBar.appendChild(btn);
+  }
+ }
+
+ function exportPDFSummary() {
+  var btn = document.getElementById('pdf-export-btn');
+  var origText = btn.innerHTML;
+  btn.innerHTML = '&#9203; Generating PDF...';
+  btn.disabled = true;
+
+  var title = (document.getElementById('survey-title') || {}).textContent || 'COSME Dashboard';
+  var jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+  if (!jsPDF) { alert('PDF library not loaded. Please check your internet connection.'); btn.innerHTML = origText; btn.disabled = false; return; }
+
+  var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  var pageW = doc.internal.pageSize.getWidth();
+  var margin = 15;
+  var y = 20;
+
+  // Title
+  doc.setFontSize(18);
+  doc.setTextColor(0, 114, 206);
+  doc.text(title, pageW / 2, y, { align: 'center' });
+  y += 10;
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text('Generated: ' + new Date().toLocaleString(), pageW / 2, y, { align: 'center' });
+  y += 10;
+
+  // Key Findings
+  var findings = document.querySelectorAll('.key-findings .finding-card');
+  if (findings.length) {
+   doc.setFontSize(13);
+   doc.setTextColor(0, 0, 0);
+   doc.text('Key Findings', margin, y);
+   y += 7;
+   doc.setFontSize(9);
+   findings.forEach(function(card) {
+    var cardTitle = (card.querySelector('.finding-title') || {}).textContent || '';
+    var metric = (card.querySelector('.finding-metric') || {}).textContent || '';
+    var desc = (card.querySelector('.finding-description') || {}).textContent || '';
+    if (y > 270) { doc.addPage(); y = 20; }
+    doc.setTextColor(0, 114, 206);
+    doc.setFont(undefined, 'bold');
+    doc.text(cardTitle + ': ' + metric, margin, y);
+    y += 5;
+    doc.setTextColor(60);
+    doc.setFont(undefined, 'normal');
+    var lines = doc.splitTextToSize(desc, pageW - margin * 2);
+    doc.text(lines, margin, y);
+    y += lines.length * 4 + 3;
+   });
+   y += 5;
+  }
+
+  // KPIs
+  var kpis = document.querySelectorAll('.kpi-card');
+  if (kpis.length) {
+   if (y > 250) { doc.addPage(); y = 20; }
+   doc.setFontSize(13);
+   doc.setTextColor(0, 0, 0);
+   doc.text('Key Performance Indicators', margin, y);
+   y += 7;
+   doc.setFontSize(9);
+   kpis.forEach(function(kpi) {
+    var label = (kpi.querySelector('.kpi-label') || {}).textContent || '';
+    var value = (kpi.querySelector('.kpi-value') || {}).textContent || '';
+    var change = (kpi.querySelector('.kpi-change') || {}).textContent || '';
+    if (y > 275) { doc.addPage(); y = 20; }
+    doc.setTextColor(0);
+    doc.text(label + ': ' + value + '  ' + change, margin, y);
+    y += 5;
+   });
+   y += 5;
+  }
+
+  // Capture visible charts as images
+  var visibleCanvases = [];
+  document.querySelectorAll('canvas').forEach(function(c) {
+   if (c.offsetParent !== null && c.width > 50 && c.height > 50) visibleCanvases.push(c);
+  });
+
+  var chartIdx = 0;
+  function addNextChart() {
+   if (chartIdx >= visibleCanvases.length || chartIdx >= 6) {
+    // Footer
+    var totalPages = doc.internal.getNumberOfPages();
+    for (var p = 1; p <= totalPages; p++) {
+     doc.setPage(p);
+     doc.setFontSize(8);
+     doc.setTextColor(150);
+     doc.text('COSME Project Dashboard | Plan International', margin, 290);
+     doc.text('Page ' + p + ' of ' + totalPages, pageW - margin, 290, { align: 'right' });
+    }
+    doc.save(title.replace(/[^a-zA-Z0-9]/g, '_') + '_Summary.pdf');
+    btn.innerHTML = origText;
+    btn.disabled = false;
+    return;
+   }
+   var canvas = visibleCanvases[chartIdx];
+   try {
+    var imgData = canvas.toDataURL('image/png', 0.8);
+    var ratio = canvas.width / canvas.height;
+    var imgW = pageW - margin * 2;
+    var imgH = imgW / ratio;
+    if (imgH > 120) { imgH = 120; imgW = imgH * ratio; }
+    if (y + imgH > 270) { doc.addPage(); y = 20; }
+    doc.addImage(imgData, 'PNG', margin, y, imgW, imgH);
+    y += imgH + 8;
+   } catch(e) { /* skip cross-origin canvases */ }
+   chartIdx++;
+   addNextChart();
+  }
+
+  if (visibleCanvases.length) {
+   if (y > 250) { doc.addPage(); y = 20; }
+   doc.setFontSize(13);
+   doc.setTextColor(0, 0, 0);
+   doc.text('Charts', margin, y);
+   y += 8;
+   addNextChart();
+  } else {
+   // No charts — just save
+   doc.save(title.replace(/[^a-zA-Z0-9]/g, '_') + '_Summary.pdf');
+   btn.innerHTML = origText;
+   btn.disabled = false;
+  }
+ }
+
+ if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', addPDFButton);
+ } else {
+  addPDFButton();
+ }
+ })();
+ </script>
+
+ <!-- ====== OFFLINE PWA SUPPORT ====== -->
+ <script>
+ (function() {
+ // Register Service Worker for offline caching
+ if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+   // Create an inline service worker via Blob
+   var swCode = [
+    "var CACHE_NAME = 'cosme-dashboard-v1';",
+    "var URLS_TO_CACHE = [",
+    " './',",
+    " 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',",
+    " 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js',",
+    " 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',",
+    " 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',",
+    " 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'",
+    "];",
+    "",
+    "self.addEventListener('install', function(e) {",
+    " e.waitUntil(",
+    "  caches.open(CACHE_NAME).then(function(cache) {",
+    "   return cache.addAll(URLS_TO_CACHE);",
+    "  })",
+    " );",
+    "});",
+    "",
+    "self.addEventListener('fetch', function(e) {",
+    " e.respondWith(",
+    "  caches.match(e.request).then(function(resp) {",
+    "   return resp || fetch(e.request).then(function(response) {",
+    "    if (response && response.status === 200 && response.type === 'basic') {",
+    "     var clone = response.clone();",
+    "     caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });",
+    "    }",
+    "    return response;",
+    "   });",
+    "  })",
+    " );",
+    "});",
+    "",
+    "self.addEventListener('activate', function(e) {",
+    " e.waitUntil(",
+    "  caches.keys().then(function(names) {",
+    "   return Promise.all(",
+    "    names.filter(function(n) { return n !== CACHE_NAME; }).map(function(n) { return caches.delete(n); })",
+    "   );",
+    "  })",
+    " );",
+    "});"
+   ].join("\\n");
+
+   var blob = new Blob([swCode], { type: 'application/javascript' });
+   var swUrl = URL.createObjectURL(blob);
+   navigator.serviceWorker.register(swUrl, { scope: './' }).then(function(reg) {
+    console.log('[PWA] Service Worker registered, scope:', reg.scope);
+   }).catch(function(err) {
+    console.warn('[PWA] SW registration failed (Blob SW may not be supported on all hosts):', err);
+   });
+  });
+
+  // Add Web App Manifest dynamically
+  var manifest = {
+   name: 'COSME Project Dashboard',
+   short_name: 'COSME Dashboard',
+   description: 'Plan International COSME Project M&E Dashboard',
+   start_url: './',
+   display: 'standalone',
+   background_color: '#f5f7fa',
+   theme_color: '#0072CE',
+   icons: [{
+    src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><circle cx="96" cy="96" r="96" fill="#0072CE"/><text x="96" y="130" text-anchor="middle" font-size="120" font-weight="bold" fill="white" font-family="Arial">P</text></svg>'),
+    sizes: '192x192',
+    type: 'image/svg+xml'
+   }]
+  };
+  var manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  var manifestUrl = URL.createObjectURL(manifestBlob);
+  var link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestUrl;
+  document.head.appendChild(link);
+
+  // Offline indicator banner
+  function showOfflineBanner(isOffline) {
+   var banner = document.getElementById('offline-banner');
+   if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'offline-banner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100000;background:#ff9800;color:#fff;text-align:center;padding:6px 12px;font-size:13px;font-weight:600;display:none;transition:transform .3s;';
+    banner.textContent = '⚡ You are offline — viewing cached data';
+    document.body.insertBefore(banner, document.body.firstChild);
+   }
+   banner.style.display = isOffline ? 'block' : 'none';
+  }
+  window.addEventListener('offline', function() { showOfflineBanner(true); });
+  window.addEventListener('online', function() { showOfflineBanner(false); });
+  if (!navigator.onLine) showOfflineBanner(true);
+ }
+ })();
  </script>
 
  <!-- FIREBASE REALTIME PRESENCE TRACKING -->
@@ -27111,7 +28020,8 @@
  let chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation;
 
  function destroyCharts() {
- [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation].forEach(c => { if (c) c.destroy(); });
+ [chartDaily, chartTabs, chartDevice, chartBrowser, chartHourly, chartDownloads, chartDuration, chartLocation].forEach(c => { if (c) { try { c.destroy(); } catch(e) {} } });
+ chartDaily = chartTabs = chartDevice = chartBrowser = chartHourly = chartDownloads = chartDuration = chartLocation = null;
  }
 
  // ====== FORESTRY PRESENTATION — CHARTS & TAB SWITCHING ======
@@ -30160,7 +31070,11 @@
 
  // Render Analytics Dashboard 
  window.renderAnalyticsDashboard = function() {
- destroyCharts();
+ try { destroyCharts(); } catch(e) { console.warn('destroyCharts error (safe):', e); }
+
+ // Clear any previous error banners
+ const prevErr = document.getElementById('analytics-firebase-error');
+ if (prevErr) prevErr.remove();
 
  // Show loading state on KPIs so we can tell the function was called
  ['an-kpi-total','an-kpi-today','an-kpi-week','an-kpi-unique','an-kpi-live','an-kpi-avg-dur'].forEach(id => {
@@ -30169,7 +31083,9 @@
  });
 
  // Fetch all analytics data — each query wrapped so one permission error doesn't break all
- const safeQuery = (ref) => ref.once('value').then(s => s).catch(() => ({ val: () => null }));
+ let queryFailCount = 0;
+ let lastQueryError = '';
+ const safeQuery = (ref) => ref.once('value').then(s => s).catch(err => { queryFailCount++; lastQueryError = err.message || String(err); console.warn('Firebase query failed:', err); return { val: () => null }; });
  Promise.all([
  safeQuery(db.ref('visits').orderByChild('visitedAt').limitToLast(500)),
  safeQuery(db.ref('presence')),
@@ -30178,6 +31094,21 @@
  safeQuery(db.ref('analytics/visits').orderByKey().limitToLast(500))
  ]).then(([visitsSnap, presenceSnap, tabCountsSnap, dlCountsSnap, aVisitsSnap]) => {
  try {
+
+ // Show Firebase error banner if most/all queries failed
+ if (queryFailCount >= 3) {
+ const kpiRow = document.getElementById('analytics-kpi-row');
+ if (kpiRow) {
+ const errBanner = document.createElement('div');
+ errBanner.id = 'analytics-firebase-error';
+ errBanner.style.cssText = 'grid-column:1/-1;background:#fff3e0;color:#e65100;padding:14px 18px;border-radius:10px;font-size:0.92em;border-left:4px solid #e65100;margin-bottom:8px;';
+ errBanner.innerHTML = '<strong>\u26a0 Firebase Connection Issue</strong><br>Most analytics queries failed (' + queryFailCount + '/5). ' +
+ 'This usually means Firebase security rules have expired. ' +
+ 'Please check your Firebase Console \u2192 Realtime Database \u2192 Rules and ensure read access is allowed.<br>' +
+ '<span style="font-size:0.85em;color:#999;">Error: ' + lastQueryError + '</span>';
+ kpiRow.parentElement.insertBefore(errBanner, kpiRow);
+ }
+ }
 
  const visits = visitsSnap.val() || {};
  const presence = presenceSnap.val() || {};
@@ -30514,6 +31445,9 @@
 
  const dlCtx = document.getElementById('analytics-chart-downloads');
  if (dlCtx) {
+ dlCtx.style.display = '';
+ const existingNoData = dlCtx.parentElement.querySelector('.an-nodata');
+ if (existingNoData) existingNoData.style.display = 'none';
  if (dlEntries.length > 0) {
  const dlColors = ['#2e7d32','#388e3c','#43a047','#4caf50','#66bb6a','#81c784','#a5d6a7','#c8e6c9','#e8f5e9','#f1f8e9','#f9fbe7'];
  chartDownloads = new Chart(dlCtx, {
@@ -30539,7 +31473,10 @@
  }
  });
  } else {
- dlCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;">No report downloads recorded yet</div>';
+ dlCtx.style.display = 'none';
+ let noDataEl = dlCtx.parentElement.querySelector('.an-nodata');
+ if (!noDataEl) { noDataEl = document.createElement('div'); noDataEl.className = 'an-nodata'; noDataEl.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;'; noDataEl.textContent = 'No report downloads recorded yet'; dlCtx.parentElement.appendChild(noDataEl); }
+ noDataEl.style.display = 'flex';
  }
  }
 
@@ -30612,6 +31549,9 @@
  // Visitors by Location chart 
  const locCtx = document.getElementById('analytics-chart-location');
  if (locCtx) {
+ locCtx.style.display = '';
+ const existingLocNoData = locCtx.parentElement.querySelector('.an-nodata');
+ if (existingLocNoData) existingLocNoData.style.display = 'none';
  const sortedLocs = Object.entries(locationMap)
  .map(([loc, count]) => ({ loc, count }))
  .sort((a, b) => b.count - a.count)
@@ -30642,7 +31582,10 @@
  }
  });
  } else {
- locCtx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;">No location data yet — visits will start showing locations shortly.</div>';
+ locCtx.style.display = 'none';
+ let noLocEl = locCtx.parentElement.querySelector('.an-nodata');
+ if (!noLocEl) { noLocEl = document.createElement('div'); noLocEl.className = 'an-nodata'; noLocEl.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;color:#999;font-size:0.95em;'; noLocEl.textContent = 'No location data yet — visits will start showing locations shortly.'; locCtx.parentElement.appendChild(noLocEl); }
+ noLocEl.style.display = 'flex';
  }
  }
 
