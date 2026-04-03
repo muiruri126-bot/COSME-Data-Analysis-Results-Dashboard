@@ -3889,7 +3889,7 @@
 
  <!-- SIDEBAR MOBILE TOGGLE -->
  <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
- 
+ <svg id="sidebarToggleIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
  </button>
 
  <!-- SIDEBAR OVERLAY (mobile) -->
@@ -13602,10 +13602,10 @@
  sidebar.classList.toggle('mobile-open');
  if (sidebar.classList.contains('mobile-open')) {
  overlay.classList.add('open');
- toggle.innerHTML = '';
+ toggle.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>';
  } else {
  overlay.classList.remove('open');
- toggle.innerHTML = '';
+ toggle.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
  }
  }
 
@@ -13618,7 +13618,7 @@
  if (sidebar.classList.contains('mobile-open')) {
  sidebar.classList.remove('mobile-open');
  overlay.classList.remove('open');
- if (toggle) toggle.innerHTML = '';
+ if (toggle) toggle.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
  }
  }
 
