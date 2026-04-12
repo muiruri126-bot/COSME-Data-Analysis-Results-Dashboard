@@ -8005,7 +8005,7 @@
  <h4 style="margin: 0 0 14px; color: #4A148C;">Learning Outcomes &amp; Key Observations</h4>
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
  <div style="padding: 16px; background: #EDE7F6; border-radius: 10px;">
- <h5 style="margin: 0 0 8px; color: #4A148C;">&#128218; Knowledge Gains</h5>
+ <h5 style="margin: 0 0 8px; color: #4A148C;">Knowledge Gains</h5>
  <ul style="margin: 0; padding-left: 18px; font-size: 0.88em; line-height: 1.6;">
  <li>Awareness of waste management as climate action rose significantly (+12.9pp)</li>
  <li>Misconception of deforestation as positive action dropped by 2.1pp</li>
@@ -8014,7 +8014,7 @@
  </ul>
  </div>
  <div style="padding: 16px; background: #EDE7F6; border-radius: 10px;">
- <h5 style="margin: 0 0 8px; color: #4A148C;">&#127793; Behavioral Commitments</h5>
+ <h5 style="margin: 0 0 8px; color: #4A148C;">Behavioral Commitments</h5>
  <ul style="margin: 0; padding-left: 18px; font-size: 0.88em; line-height: 1.6;">
  <li>Students pledged to become climate ambassadors in their communities</li>
  <li>Schools adopted climate change handbooks for peer-to-peer learning</li>
@@ -8023,7 +8023,7 @@
  </ul>
  </div>
  <div style="padding: 16px; background: #EDE7F6; border-radius: 10px;">
- <h5 style="margin: 0 0 8px; color: #4A148C;">&#127758; Community Impact</h5>
+ <h5 style="margin: 0 0 8px; color: #4A148C;">Community Impact</h5>
  <ul style="margin: 0; padding-left: 18px; font-size: 0.88em; line-height: 1.6;">
  <li>200 community members engaged (approx. 100M / 100F)</li>
  <li>300 teachers participated (150M / 150F)</li>
@@ -8032,7 +8032,7 @@
  </ul>
  </div>
  <div style="padding: 16px; background: #EDE7F6; border-radius: 10px;">
- <h5 style="margin: 0 0 8px; color: #4A148C;">&#9889; Effectiveness of Puppetry</h5>
+ <h5 style="margin: 0 0 8px; color: #4A148C;">Effectiveness of Puppetry</h5>
  <ul style="margin: 0; padding-left: 18px; font-size: 0.88em; line-height: 1.6;">
  <li>Puppetry proved highly effective for simplifying complex climate issues</li>
  <li>Interactive &amp; participatory approach transformed pupils from observers to actors</li>
@@ -9820,6 +9820,9 @@
  </div>
  </div>
 
+ <!-- WARD DETAIL CARDS -->
+ <div id="grapp-ward-cards" style="margin-bottom: 28px;"></div>
+
  <!-- FUNDING REGISTRY: Detailed Listing of Mapped Funding Mechanisms -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
  <h3 style="margin: 0 0 6px 0; color: #1B5E20; font-size: 1.15em;">Funding Mechanisms Registry</h3>
@@ -9861,11 +9864,7 @@
  </div>
  </div>
 
- <!-- PHYSICAL TARGETS & PROGRESS -->
- <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
- <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Physical Targets for Adaptation Plans (2025–2030)</h3>
- <div id="grapp-physical-targets" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;"></div>
- </div>
+
 
  <!-- CHARTS ROW 7: Stakeholder Involvement + Gender Analysis -->
  <div class="charts-grid" style="margin-bottom: 28px;">
@@ -9892,9 +9891,6 @@
  <h3 style="margin: 0 0 16px 0; color: #1B5E20; font-size: 1.15em;">Stakeholder Registry & Roles</h3>
  <table id="grapp-stakeholder-table" style="width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 700px;"></table>
  </div>
-
- <!-- WARD DETAIL CARDS -->
- <div id="grapp-ward-cards" style="margin-bottom: 28px;"></div>
 
  <!-- RECOMMENDATIONS SECTION -->
  <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
@@ -22162,196 +22158,6 @@
  })();
  </script>
 
- <!-- ====== PDF SUMMARY EXPORT ====== -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
- <script>
- (function() {
- function addPDFButton() {
-  // Find the PPTX export button to place PDF button near it
-  var pptxBtns = document.querySelectorAll('button');
-  var headerBar = document.querySelector('.dashboard-header') || document.querySelector('header');
-  if (!headerBar) return;
-  // Check if PDF button already exists
-  if (document.getElementById('pdf-export-btn')) return;
-  var btn = document.createElement('button');
-  btn.id = 'pdf-export-btn';
-  btn.innerHTML = '&#128196; Export PDF Summary';
-  btn.title = 'Download a PDF summary of the current section';
-  btn.style.cssText = 'background:#0072CE;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;margin-left:8px;transition:background .2s;';
-  btn.onmouseenter = function() { btn.style.background = '#005a9e'; };
-  btn.onmouseleave = function() { btn.style.background = '#0072CE'; };
-  btn.onclick = exportPDFSummary;
-  // Insert near the header actions area
-  var actionsRow = headerBar.querySelector('.header-actions, .header-buttons, .export-buttons');
-  if (actionsRow) {
-   actionsRow.appendChild(btn);
-  } else {
-   headerBar.appendChild(btn);
-  }
- }
-
- function sanitizePdfText(text) {
-  // Replace Unicode characters that jsPDF's default font cannot render
-  return text
-   .replace(/\u2192|\u2794|\u279C|\u27A1/g, ' -> ')  // → arrows
-   .replace(/\u2190/g, ' <- ')                         // ← left arrow
-   .replace(/\u2191/g, '(up) ')                        // ↑ up arrow
-   .replace(/\u2193/g, '(down) ')                      // ↓ down arrow
-   .replace(/\u2264/g, '<=')                           // ≤
-   .replace(/\u2265/g, '>=')                           // ≥
-   .replace(/\u2260/g, '!=')                           // ≠
-   .replace(/\u2014/g, ' -- ')                         // — em dash
-   .replace(/\u2013/g, ' - ')                          // – en dash
-   .replace(/\u2018|\u2019/g, "'")                     // ' ' smart quotes
-   .replace(/\u201C|\u201D/g, '"')                     // " " smart quotes
-   .replace(/\u2026/g, '...')                          // … ellipsis
-   .replace(/\u2022/g, '* ')                           // • bullet
-   .replace(/\u00B7/g, '.')                            // · middle dot
-   .replace(/\u2713|\u2714/g, '[v]')                   // ✓ ✔ check
-   .replace(/\u2717|\u2718/g, '[x]')                   // ✗ ✘ cross
-   .replace(/\u00B0/g, ' deg')                         // ° degree
-   .replace(/\u00B1/g, '+/-')                          // ± plus-minus
-   .replace(/\u2248/g, '~')                            // ≈ approx
-   .replace(/\u221E/g, 'inf')                          // ∞ infinity
-   .replace(/[\u0080-\u00FF]/g, function(ch) {         // Latin-1 Supplement passthrough
-    return ch;
-   })
-   .replace(/[^\x00-\xFF]/g, '');                      // Strip remaining non-Latin1 chars
- }
-
- function exportPDFSummary() {
-  var btn = document.getElementById('pdf-export-btn');
-  var origText = btn.innerHTML;
-  btn.innerHTML = '&#9203; Generating PDF...';
-  btn.disabled = true;
-
-  var title = sanitizePdfText((document.getElementById('survey-title') || {}).textContent || 'COSME Dashboard');
-  var jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
-  if (!jsPDF) { alert('PDF library not loaded. Please check your internet connection.'); btn.innerHTML = origText; btn.disabled = false; return; }
-
-  var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  var pageW = doc.internal.pageSize.getWidth();
-  var margin = 15;
-  var y = 20;
-
-  // Title
-  doc.setFontSize(18);
-  doc.setTextColor(0, 114, 206);
-  doc.text(title, pageW / 2, y, { align: 'center' });
-  y += 10;
-  doc.setFontSize(9);
-  doc.setTextColor(100);
-  doc.text('Generated: ' + new Date().toLocaleString(), pageW / 2, y, { align: 'center' });
-  y += 10;
-
-  // Key Findings
-  var findings = document.querySelectorAll('.key-findings .finding-card');
-  if (findings.length) {
-   doc.setFontSize(13);
-   doc.setTextColor(0, 0, 0);
-   doc.text('Key Findings', margin, y);
-   y += 7;
-   doc.setFontSize(9);
-   findings.forEach(function(card) {
-    var cardTitle = sanitizePdfText((card.querySelector('.finding-title') || {}).textContent || '');
-    var metric = sanitizePdfText((card.querySelector('.finding-metric') || {}).textContent || '');
-    var desc = sanitizePdfText((card.querySelector('.finding-description') || {}).textContent || '');
-    if (y > 270) { doc.addPage(); y = 20; }
-    doc.setTextColor(0, 114, 206);
-    doc.setFont(undefined, 'bold');
-    doc.text(cardTitle + ': ' + metric, margin, y);
-    y += 5;
-    doc.setTextColor(60);
-    doc.setFont(undefined, 'normal');
-    var lines = doc.splitTextToSize(desc, pageW - margin * 2);
-    doc.text(lines, margin, y);
-    y += lines.length * 4 + 3;
-   });
-   y += 5;
-  }
-
-  // KPIs
-  var kpis = document.querySelectorAll('.kpi-card');
-  if (kpis.length) {
-   if (y > 250) { doc.addPage(); y = 20; }
-   doc.setFontSize(13);
-   doc.setTextColor(0, 0, 0);
-   doc.text('Key Performance Indicators', margin, y);
-   y += 7;
-   doc.setFontSize(9);
-   kpis.forEach(function(kpi) {
-    var label = sanitizePdfText((kpi.querySelector('.kpi-label') || {}).textContent || '');
-    var value = sanitizePdfText((kpi.querySelector('.kpi-value') || {}).textContent || '');
-    var change = sanitizePdfText((kpi.querySelector('.kpi-change') || {}).textContent || '');
-    if (y > 275) { doc.addPage(); y = 20; }
-    doc.setTextColor(0);
-    doc.text(label + ': ' + value + '  ' + change, margin, y);
-    y += 5;
-   });
-   y += 5;
-  }
-
-  // Capture visible charts as images
-  var visibleCanvases = [];
-  document.querySelectorAll('canvas').forEach(function(c) {
-   if (c.offsetParent !== null && c.width > 50 && c.height > 50) visibleCanvases.push(c);
-  });
-
-  var chartIdx = 0;
-  function addNextChart() {
-   if (chartIdx >= visibleCanvases.length || chartIdx >= 6) {
-    // Footer
-    var totalPages = doc.internal.getNumberOfPages();
-    for (var p = 1; p <= totalPages; p++) {
-     doc.setPage(p);
-     doc.setFontSize(8);
-     doc.setTextColor(150);
-     doc.text('COSME Project Dashboard | Plan International', margin, 290);
-     doc.text('Page ' + p + ' of ' + totalPages, pageW - margin, 290, { align: 'right' });
-    }
-    doc.save(title.replace(/[^a-zA-Z0-9]/g, '_') + '_Summary.pdf');
-    btn.innerHTML = origText;
-    btn.disabled = false;
-    return;
-   }
-   var canvas = visibleCanvases[chartIdx];
-   try {
-    var imgData = canvas.toDataURL('image/png', 0.8);
-    var ratio = canvas.width / canvas.height;
-    var imgW = pageW - margin * 2;
-    var imgH = imgW / ratio;
-    if (imgH > 120) { imgH = 120; imgW = imgH * ratio; }
-    if (y + imgH > 270) { doc.addPage(); y = 20; }
-    doc.addImage(imgData, 'PNG', margin, y, imgW, imgH);
-    y += imgH + 8;
-   } catch(e) { /* skip cross-origin canvases */ }
-   chartIdx++;
-   addNextChart();
-  }
-
-  if (visibleCanvases.length) {
-   if (y > 250) { doc.addPage(); y = 20; }
-   doc.setFontSize(13);
-   doc.setTextColor(0, 0, 0);
-   doc.text('Charts', margin, y);
-   y += 8;
-   addNextChart();
-  } else {
-   // No charts — just save
-   doc.save(title.replace(/[^a-zA-Z0-9]/g, '_') + '_Summary.pdf');
-   btn.innerHTML = origText;
-   btn.disabled = false;
-  }
- }
-
- if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', addPDFButton);
- } else {
-  addPDFButton();
- }
- })();
- </script>
 
  <!-- ====== OFFLINE PWA SUPPORT ====== -->
  <script>
@@ -26105,20 +25911,6 @@
  { ward: 'Vanga', women: 2200, men: 1500, youth: 1150, elderly: 520, children: 1800 }
  ];
 
- // ===== PHYSICAL TARGETS =====
- const grappPhysicalTargets = [
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14l3-3-3-3"/><path d="M7 14l-3-3 3-3"/><path d="M12 2v6l-3 6h6l-3-6V2z"/><path d="M12 22v-4"/></svg>', label: 'Hectares for Restoration', value: '123.8 ha', target: '123.8 ha', color: '#2E7D32' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z"/><path d="M12 10v4"/><path d="M10 12h4"/></svg>', label: 'Tree Seedlings', value: '250,000', target: '250,000', color: '#1B5E20' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>', label: 'Water Points/Boreholes', value: '24', target: '24', color: '#0288D1' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>', label: 'Solar Installations', value: '60', target: '60', color: '#F57C00' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-6 8z"/><rect x="8" y="11" width="8" height="8" rx="1"/><path d="M10 19v2h4v-2"/></svg>', label: 'Beehive Fences', value: '180', target: '180', color: '#FF8F00' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', label: 'Mangrove Hectares', value: '45 ha', target: '45 ha', color: '#00695C' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>', label: 'Schools Reached', value: '36', target: '36', color: '#303F9F' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>', label: 'Savings Groups', value: '92', target: '92', color: '#7B1FA2' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>', label: 'Villages Covered', value: '30', target: '30', color: '#455A64' },
- { icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>', label: 'Early Warning Stations', value: '12', target: '12', color: '#C62828' }
- ];
-
  // ===== STAKEHOLDER DATA =====
  const grappStakeholders = [
  { name: 'County Government (Kilifi)', type: 'Government', role: 'Policy coordination, resource allocation, CCCF administration', wards: ['Mnarani','Mwarakaya','Sokoke'], color: '#2E7D32' },
@@ -26190,7 +25982,6 @@
  renderBudgetSectorChart(filteredWards);
  renderTimelineChart();
  renderDemographicsChart(filteredWards);
- renderPhysicalTargets();
  renderStakeholderChart(filteredWards);
  renderGenderImpactChart();
  renderPolicyFindings(county);
@@ -26726,18 +26517,6 @@
  });
  }
 
- // ===== PHYSICAL TARGETS =====
- function renderPhysicalTargets() {
- var container = document.getElementById('grapp-physical-targets');
- if (!container) return;
- container.innerHTML = grappPhysicalTargets.map(function(t) {
- return '<div style="background:#f8f9fa;border-radius:12px;padding:18px 16px;text-align:center;border-top:4px solid ' + t.color + ';box-shadow:0 1px 6px rgba(0,0,0,0.04);">' +
- '<div style="font-size:1.8em;margin-bottom:4px;">' + t.icon + '</div>' +
- '<div style="font-size:1.4em;font-weight:700;color:' + t.color + ';">' + t.value + '</div>' +
- '<div style="font-size:0.82em;color:#666;margin-top:4px;">' + t.label + '</div></div>';
- }).join('');
- }
-
  // ===== CHART: Stakeholder Involvement =====
  function renderStakeholderChart(wards) {
  var wardNames = wards.map(function(w) { return w.name; });
@@ -26851,7 +26630,6 @@
  renderBudgetSectorChart(grappWards);
  renderTimelineChart();
  renderDemographicsChart(grappWards);
- renderPhysicalTargets();
  renderStakeholderChart(grappWards);
  renderGenderImpactChart();
  renderPolicyFindings('all');
