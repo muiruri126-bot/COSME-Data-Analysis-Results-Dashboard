@@ -8927,6 +8927,7 @@
  </div>
  </div>
  </div><!-- END farmer-protected-content for page 5 -->
+ </div><!-- END sfd-page-map -->
 
  <!-- ============ PAGE 6: FARMER PROFILING & CATEGORIZATION ============ -->
  <div id="sfd-page-profiling" class="sfd-page" style="display: none;">
@@ -12922,6 +12923,7 @@
  </div>
  </div>
  </div><!-- end farmer-protected-content for SPG page 5 -->
+ </div><!-- END spg-page-map -->
 
  <!-- PAGE 6: FARMER PROFILING -->
  <div id="spg-page-profiling" class="spg-page" style="display: none;">
@@ -12983,7 +12985,6 @@
  </div>
 
  </div>
- </div><!-- end farmer-protected-content for SPG page 6 -->
 
  </div>
  <!-- END sp-farmer-dashboard -->
@@ -18394,6 +18395,12 @@
    _farmerUnlocked = true;
    document.querySelectorAll('.farmer-auth-gate').forEach(function(el) { el.style.display = 'none'; });
    document.querySelectorAll('.farmer-protected-content').forEach(function(el) { el.style.display = 'block'; });
+   // Resize charts that were rendered while hidden
+   requestAnimationFrame(function() {
+    document.querySelectorAll('.farmer-protected-content canvas').forEach(function(c) {
+     var ch = Chart.getChart(c); if (ch) ch.resize();
+    });
+   });
   } else {
    errEls.forEach(function(el) { el.style.display = 'block'; el.textContent = 'Incorrect access code. Please try again.'; });
    inputs.forEach(function(inp) { inp.value = ''; });
