@@ -624,6 +624,22 @@
         .footer strong { color: white; }
         .footer { font-size: 0.92rem; line-height: 1.65; }
 
+        /* VISITOR COUNTER */
+        .visitor-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 10px;
+        }
+        .visitor-counter svg { opacity: 0.6; }
+        .visitor-counter .count { color: var(--gold); font-weight: 600; }
+
         /* PRINT */
         @media print {
             .header, .sidebar, .menu-toggle, .header-actions { display: none !important; }
@@ -4797,6 +4813,10 @@
     <p>Plan International Canada | Blue Economy Program | Prepared for GAC Proposals, Results Frameworks, Workplans & MEL Plans</p>
     <p style="margin-top:8px; font-size:0.75rem;">Document updated April 2026 | For internal and consortium use</p>
     <p style="margin-top:6px; font-size:0.7rem; opacity:0.7;">Until we are all equal &trade;</p>
+    <div class="visitor-counter" id="visitorCounter">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Unique Visitors: <span class="count" id="visitor-count">—</span></span>
+    </div>
 </footer>
 
 <!-- BACK TO TOP -->
@@ -5454,6 +5474,88 @@
             if (e.key === 'Enter') attemptLogin();
         });
     });
+
+    /* ── UNIQUE VISITOR COUNTER ── */
+    (function() {
+        var STORAGE_KEY = 'cosme_visitor_counted';
+        var NAMESPACE = 'cosme-blue-economy-platform';
+        var KEY = 'unique-visitors';
+
+        function generateFingerprint() {
+            var components = [
+                navigator.language || '',
+                navigator.platform || '',
+                screen.width + 'x' + screen.height,
+                screen.colorDepth || '',
+                (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
+                navigator.hardwareConcurrency || 0
+            ];
+            return components.join('|');
+        }
+
+        function simpleHash(str) {
+            var hash = 0;
+            for (var i = 0; i < str.length; i++) {
+                var ch = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + ch;
+                hash |= 0;
+            }
+            return 'v_' + Math.abs(hash).toString(36);
+        }
+
+        function updateCounterDisplay(count) {
+            var el = document.getElementById('visitor-count');
+            if (el && count > 0) el.textContent = count.toLocaleString();
+        }
+
+        function trackVisitor() {
+            var counterEl = document.getElementById('visitor-count');
+            if (!counterEl) return;
+
+            var fp = simpleHash(generateFingerprint());
+            var alreadyCounted = localStorage.getItem(STORAGE_KEY);
+
+            if (!alreadyCounted) {
+                // New unique visitor — increment counter
+                fetch('https://api.countapi.xyz/hit/' + NAMESPACE + '/' + KEY)
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data && data.value) {
+                            updateCounterDisplay(data.value);
+                            localStorage.setItem(STORAGE_KEY, fp);
+                        }
+                    })
+                    .catch(function() {
+                        // Fallback: use localStorage-only count
+                        var localCount = parseInt(localStorage.getItem('cosme_local_count') || '0', 10) + 1;
+                        localStorage.setItem('cosme_local_count', String(localCount));
+                        localStorage.setItem(STORAGE_KEY, fp);
+                        updateCounterDisplay(localCount);
+                    });
+            } else {
+                // Returning visitor — just read current count without incrementing
+                fetch('https://api.countapi.xyz/get/' + NAMESPACE + '/' + KEY)
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data && data.value) updateCounterDisplay(data.value);
+                    })
+                    .catch(function() {
+                        var localCount = parseInt(localStorage.getItem('cosme_local_count') || '0', 10);
+                        if (localCount > 0) updateCounterDisplay(localCount);
+                    });
+            }
+        }
+
+        // Only track after authentication is confirmed
+        var authCheck = setInterval(function() {
+            if (sessionStorage.getItem('cosme_auth')) {
+                clearInterval(authCheck);
+                trackVisitor();
+            }
+        }, 500);
+        // Stop checking after 60 seconds
+        setTimeout(function() { clearInterval(authCheck); }, 60000);
+    })();
 </script>
 
 </body>
