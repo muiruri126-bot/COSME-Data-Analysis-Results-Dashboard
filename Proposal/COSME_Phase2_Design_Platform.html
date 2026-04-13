@@ -1996,9 +1996,62 @@
             .kii-guide li { font-size: 0.82rem; }
             .dl-dropdown-content button { font-size: 0.72rem; padding: 6px 10px; }
         }
+
+        /* ===== LOGIN AUTH GATE ===== */
+        #loginGate {
+            position: fixed; inset: 0; z-index: 100000;
+            background: linear-gradient(135deg, #003C71 0%, #0072CE 50%, #00A651 100%);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        #loginGate.hidden { opacity: 0; pointer-events: none; }
+        .login-card {
+            background: #fff; border-radius: 16px; padding: 48px 40px; width: 100%; max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+        }
+        .login-card .login-logo {
+            width: 64px; height: 64px; margin: 0 auto 16px;
+            background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: #fff; font-weight: 700;
+        }
+        .login-card h2 { color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 6px; }
+        .login-card .login-subtitle { color: var(--text-light); font-size: 0.88rem; margin-bottom: 28px; }
+        .login-card label { display: block; text-align: left; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+        .login-card input[type="password"] {
+            width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px;
+            font-size: 1rem; font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .login-card input[type="password"]:focus { border-color: var(--primary); }
+        .login-card .login-btn {
+            width: 100%; padding: 14px; margin-top: 20px; border: none; border-radius: 8px;
+            background: var(--primary); color: #fff; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s, transform 0.1s;
+        }
+        .login-card .login-btn:hover { background: var(--primary-dark); }
+        .login-card .login-btn:active { transform: scale(0.98); }
+        .login-error {
+            color: #c62828; font-size: 0.82rem; margin-top: 12px; min-height: 20px;
+        }
+        .login-footer { color: rgba(255,255,255,0.6); font-size: 0.72rem; margin-top: 24px; }
     </style>
 </head>
 <body>
+
+<!-- ===== LOGIN AUTH GATE ===== -->
+<div id="loginGate">
+    <div>
+        <div class="login-card">
+            <div class="login-logo">P</div>
+            <h2>COSME 2.0 Design Platform</h2>
+            <p class="login-subtitle">Enter the access password to continue</p>
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="off">
+            <button class="login-btn" id="loginBtn" onclick="attemptLogin()">Unlock</button>
+            <div class="login-error" id="loginError"></div>
+        </div>
+        <p class="login-footer">Plan International &middot; Authorized personnel only</p>
+    </div>
+</div>
 
 <!-- CONTRIBUTOR LOGIN MODAL -->
 <div class="modal-overlay" id="contributorModal">
@@ -5298,6 +5351,44 @@
     function closeDlDropdowns() {
         document.querySelectorAll('.dl-dropdown.open').forEach(d => d.classList.remove('open'));
     }
+
+    /* ===== LOGIN AUTH GATE ===== */
+    const AUTH_HASH = 'a3f5b6c2e8d14a7f9b3c0e5d8a2f6b1c4e7d9a0b3f5c8e1d4a7b0c3f6e9d2a5';
+    async function sha256(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    (async function initAuth() {
+        const correctHash = await sha256('COSME@2026!');
+        window._authHash = correctHash;
+        const stored = sessionStorage.getItem('cosme_auth');
+        if (stored === correctHash) {
+            document.getElementById('loginGate').classList.add('hidden');
+            setTimeout(() => document.getElementById('loginGate').style.display = 'none', 600);
+        }
+    })();
+    async function attemptLogin() {
+        const pwd = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        if (!pwd) { errEl.textContent = 'Please enter the password.'; return; }
+        const hash = await sha256(pwd);
+        if (hash === window._authHash) {
+            sessionStorage.setItem('cosme_auth', hash);
+            errEl.textContent = '';
+            document.getElementById('loginGate').classList.add('hidden');
+            setTimeout(() => document.getElementById('loginGate').style.display = 'none', 600);
+        } else {
+            errEl.textContent = 'Incorrect password. Please try again.';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginPassword').focus();
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var pwdInput = document.getElementById('loginPassword');
+        if (pwdInput) pwdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') attemptLogin();
+        });
+    });
 </script>
 
 </body>
