@@ -407,7 +407,6 @@
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.6px;
-            white-space: nowrap;
             border-bottom: 2px solid rgba(255,255,255,0.15);
             border-right: 1px solid rgba(255,255,255,0.1);
         }
@@ -424,7 +423,6 @@
             transition: background 0.15s ease;
         }
         tbody td:last-child { border-right: none; }
-        tbody td:first-child { font-weight: 600; }
 
         tbody tr:nth-child(even) { background: #f7f9fc; }
         tbody tr:hover { background: #e8f0fa; }
@@ -462,12 +460,25 @@
             color: #0d47a1;
         }
 
-        /* Logframe tables — balanced column widths */
-        .table-container table th:nth-child(1) { width: 5%; }   /* Level */
-        .table-container table th:nth-child(2) { width: 5%; }   /* Code */
-        .table-container table th:nth-child(3) { width: 25%; }  /* Statement */
-        .table-container table th:nth-child(4) { width: 32%; }  /* Outputs */
-        .table-container table th:nth-child(5) { width: 33%; }  /* Key Activities */
+        /* ===== LOGFRAME TABLES (5-col: Level|Code|Statement|Outputs|Activities) ===== */
+        table.logframe { table-layout: fixed; }
+        table.logframe th:nth-child(1) { width: 6%; }
+        table.logframe th:nth-child(2) { width: 5%; }
+        table.logframe th:nth-child(3) { width: 24%; }
+        table.logframe th:nth-child(4) { width: 33%; }
+        table.logframe th:nth-child(5) { width: 32%; }
+
+        /* ===== WORKPLAN TABLES (6-col: Activities|Timeline|Location|Lead|Support|Outputs) ===== */
+        table.workplan { table-layout: fixed; }
+        table.workplan th:nth-child(1) { width: 30%; }
+        table.workplan th:nth-child(2) { width: 11%; }
+        table.workplan th:nth-child(3) { width: 14%; }
+        table.workplan th:nth-child(4) { width: 12%; }
+        table.workplan th:nth-child(5) { width: 18%; }
+        table.workplan th:nth-child(6) { width: 15%; }
+
+        /* All other tables: auto layout (no fixed widths) */
+        table:not(.logframe):not(.workplan) { table-layout: auto; }
 
         .level-badge {
             display: inline-block;
@@ -2553,7 +2564,7 @@
             <!-- ===== COMPONENT 1: Inclusive Nature-based Market Opportunities ===== -->
             <h3 style="border-left:4px solid #00A651; padding-left:14px; color:#1b5e20;"><span class="pillar-tag pillar-1" style="background:#00A651;">Component 1</span> Inclusive Nature-based Market Opportunities (Mangrove NbS &amp; Carbon)</h3>
             <div class="table-container">
-                <table>
+                <table class="logframe">
                     <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
                     <tbody>
                         <tr>
@@ -2651,7 +2662,7 @@
             <!-- ===== COMPONENT 2: Climate-Resilient Seaweed Industry ===== -->
             <h3 style="border-left:4px solid #0072CE; padding-left:14px; color:#0d47a1;"><span class="pillar-tag pillar-2" style="background:#0072CE;">Component 2</span> Climate-Resilient, Inclusive Seaweed Industry</h3>
             <div class="table-container">
-                <table>
+                <table class="logframe">
                     <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
                     <tbody>
                         <tr>
@@ -2748,7 +2759,7 @@
             <!-- ===== COMPONENT 3: Enabling Policy & Coordination ===== -->
             <h3 style="border-left:4px solid #FF8F00; padding-left:14px; color:#e65100;"><span class="pillar-tag" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy, Regulatory &amp; Coordination Environment</h3>
             <div class="table-container">
-                <table>
+                <table class="logframe">
                     <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
                     <tbody>
                         <tr>
@@ -2823,7 +2834,7 @@
 
             <h3 style="border-left:4px solid #00A651; padding-left:14px;"><span class="pillar-tag pillar-1" style="background:#00A651;">Component 1</span> Inclusive Nature-based Market Opportunities (Mangrove NbS &amp; Carbon)</h3>
             <div class="table-container">
-                <table>
+                <table class="workplan">
                     <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
                     <tbody>
                         <tr style="background:#f0faf0;"><td colspan="6"><strong>IMO 1110 — Mangrove Restoration, Conservation &amp; Compliance</strong></td></tr>
@@ -2855,7 +2866,7 @@
 
             <h3 style="border-left:4px solid #0072CE; padding-left:14px;"><span class="pillar-tag pillar-2" style="background:#0072CE;">Component 2</span> Climate-Resilient Seaweed Industry</h3>
             <div class="table-container">
-                <table>
+                <table class="workplan">
                     <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
                     <tbody>
                         <tr style="background:#e3f2fd;"><td colspan="6"><strong>IMO 1210 — Production, Seed Systems &amp; Quality</strong></td></tr>
@@ -2881,7 +2892,7 @@
 
             <h3 style="border-left:4px solid #FF8F00; padding-left:14px;"><span class="pillar-tag" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy &amp; Coordination</h3>
             <div class="table-container">
-                <table>
+                <table class="workplan">
                     <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
                     <tbody>
                         <tr style="background:#fff3e0;"><td colspan="6"><strong>IMO 1310 — Policy Dialogue &amp; Coordination Mechanisms</strong></td></tr>
@@ -2898,7 +2909,7 @@
 
             <h3 style="border-left:4px solid #888; padding-left:14px;">Cross-Cutting Activities</h3>
             <div class="table-container">
-                <table>
+                <table class="workplan">
                     <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Linkages</th></tr></thead>
                     <tbody>
                         <tr><td>Gender Justice Journey upgrade (group/enterprise level); social norms engagement; GBV mitigation</td><td>Y1 Q2 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>All partners, WROs/YLOs/CBTs</td><td>All components</td></tr>
