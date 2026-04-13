@@ -8595,6 +8595,21 @@
  <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Individual farmer monitoring — Ropes, Production, Challenges & Geolocation | Kilifi County</p>
  </div>
 
+ <!-- AUTH GATE for entire farmer dashboard -->
+ <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
+ <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
+ <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
+ <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
+ <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This dashboard contains personal farmer data (names, GPS locations, individual production). Enter the access code to view.</p>
+ <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
+  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
+  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
+ <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
+ <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
+ </div>
+ </div>
+
+ <div class="farmer-protected-content" style="display:none;">
  <!-- Global Filters -->
  <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 10px; align-items: center;">
  <label style="font-weight: 600; color: #004D40;">Filters:</label>
@@ -8812,23 +8827,6 @@
 
  <!-- ============ PAGE 4: CHALLENGES & FIELD OBSERVATIONS ============ -->
  <div id="sfd-page-challenges" class="sfd-page" style="display: none;">
-
- <!-- AUTH GATE for farmer challenges -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data. Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">CHALLENGES & FIELD OBSERVATIONS</div>
 
@@ -8878,28 +8876,10 @@
  </div>
  </div>
  </div>
- </div><!-- end farmer-protected-content for sfd challenges -->
- </div><!-- END sfd-page-challenges -->
+ </div>
 
  <!-- ============ PAGE 5: GEO-MAP ============ -->
  <div id="sfd-page-map" class="sfd-page" style="display: none;">
-
- <!-- AUTH GATE for farmer pages -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data (names &amp; GPS locations). Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">GEO-MAP OF SEAWEED FARMS</div>
 
@@ -8944,28 +8924,10 @@
  </div>
  </div>
  </div>
- </div><!-- END farmer-protected-content for page 5 -->
- </div><!-- END sfd-page-map -->
+ </div>
 
  <!-- ============ PAGE 6: FARMER PROFILING & CATEGORIZATION ============ -->
  <div id="sfd-page-profiling" class="sfd-page" style="display: none;">
-
- <!-- AUTH GATE for farmer profiling -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data. Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">SEAWEED FARMERS PROFILING & CATEGORIZATION</div>
  <p style="color:#666; margin-bottom:20px; font-size:0.95em;">Farmers are categorized by <strong>Ropes in Ocean</strong> into 5 tiers. Each tier has a tailored support strategy to maximize productivity and sustainable scaling.</p>
@@ -9053,8 +9015,8 @@
  </div>
 
  </div>
- </div><!-- end farmer-protected-content for page 6 -->
 
+ </div><!-- end farmer-protected-content (whole dashboard) -->
  </div>
  <!-- END FARMER DASHBOARD -->
 
@@ -12792,6 +12754,21 @@
  <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Individual farmer monitoring — Ropes, Production, Challenges & Geolocation | Kilifi County</p>
  </div>
 
+ <!-- AUTH GATE for entire farmer dashboard -->
+ <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
+ <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
+ <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
+ <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
+ <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This dashboard contains personal farmer data (names, GPS locations, individual production). Enter the access code to view.</p>
+ <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
+  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
+  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
+ <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
+ <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
+ </div>
+ </div>
+
+ <div class="farmer-protected-content" style="display:none;">
  <!-- Global Filters -->
  <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 10px; align-items: center;">
  <label style="font-weight: 600; color: #004D40;">Filters:</label>
@@ -12885,23 +12862,6 @@
 
  <!-- PAGE 4: CHALLENGES -->
  <div id="spg-page-challenges" class="spg-page" style="display: none;">
-
- <!-- AUTH GATE for farmer challenges -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data. Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">CHALLENGES & FIELD OBSERVATIONS</div>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
@@ -12918,28 +12878,10 @@
  <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;"><table class="comparison-table" id="spg-challenges-table"><thead style="position: sticky; top: 0;"><tr><th>#</th><th>Group</th><th>Member</th><th>Challenges</th><th>Total KG</th></tr></thead><tbody></tbody></table></div>
  </div>
  </div>
- </div><!-- end farmer-protected-content for spg challenges -->
  </div><!-- END spg-page-challenges -->
 
  <!-- PAGE 5: GEO-MAP -->
  <div id="spg-page-map" class="spg-page" style="display: none;">
-
- <!-- AUTH GATE for farmer map -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data. Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">GEO-MAP OF SEAWEED FARMS</div>
  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
@@ -12958,28 +12900,10 @@
  <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;"><table class="comparison-table" id="spg-location-table"><thead style="position: sticky; top: 0;"><tr><th>#</th><th>Group</th><th>Member</th><th>Lat</th><th>Lon</th><th>Total KG</th><th>Ropes</th></tr></thead><tbody></tbody></table></div>
  </div>
  </div>
- </div><!-- end farmer-protected-content for SPG page 5 -->
  </div><!-- END spg-page-map -->
 
  <!-- PAGE 6: FARMER PROFILING -->
  <div id="spg-page-profiling" class="spg-page" style="display: none;">
-
- <!-- AUTH GATE for farmer profiling -->
- <div class="farmer-auth-gate" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:350px; padding:40px 20px;">
- <div style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); padding:40px; max-width:420px; width:100%; text-align:center;">
- <div style="font-size:3em; margin-bottom:12px;">&#128274;</div>
- <h2 style="color:#004D40; margin:0 0 8px;">Restricted Access</h2>
- <p style="color:#666; font-size:0.92em; margin-bottom:24px;">This page contains personal farmer data. Enter the access code to view.</p>
- <input type="password" class="farmer-auth-input" placeholder="Enter access code" autocomplete="off"
-  style="width:100%; padding:12px 16px; border:2px solid #ccc; border-radius:8px; font-size:1em; box-sizing:border-box; margin-bottom:12px; text-align:center; letter-spacing:2px;"
-  onkeydown="if(event.key==='Enter') unlockFarmerPages();">
- <div class="farmer-auth-error" style="color:#C62828; font-size:0.88em; margin-bottom:12px; display:none;"></div>
- <button onclick="unlockFarmerPages()" style="background:#00695C; color:#fff; border:none; padding:12px 32px; border-radius:8px; font-size:1em; font-weight:600; cursor:pointer; width:100%; transition:background .2s;" onmouseenter="this.style.background='#004D40'" onmouseleave="this.style.background='#00695C'">Unlock</button>
- </div>
- </div>
-
- <!-- Protected content -->
- <div class="farmer-protected-content" style="display:none;">
  <div class="section">
  <div class="section-title">SEAWEED FARMERS PROFILING & CATEGORIZATION</div>
  <p style="color:#666; margin-bottom:20px; font-size:0.95em;">Farmers are categorized by <strong>Ropes in Ocean</strong> into 5 tiers. Each tier has a tailored support strategy.</p>
@@ -13020,8 +12944,7 @@
  </div>
  </div>
 
- </div>
-
+ </div><!-- end farmer-protected-content (whole dashboard) -->
  </div>
  <!-- END sp-farmer-dashboard -->
 
@@ -19719,15 +19642,6 @@
  const target = document.getElementById(pageId);
  if (target) { target.classList.add('active'); target.style.display = 'block'; }
  if (evt && evt.currentTarget) { evt.currentTarget.classList.add('active'); evt.currentTarget.style.background = '#004D40'; evt.currentTarget.style.color = '#fff'; }
- // If farmer pages already unlocked, ensure gates stay hidden and content visible
- if (_farmerUnlocked && (pageId === 'sfd-page-challenges' || pageId === 'sfd-page-map' || pageId === 'sfd-page-profiling')) {
-  if (target) {
-   var gate = target.querySelector('.farmer-auth-gate');
-   var content = target.querySelector('.farmer-protected-content');
-   if (gate) gate.style.display = 'none';
-   if (content) content.style.display = 'block';
-  }
- }
  // Resize charts
  requestAnimationFrame(() => {
  if (target) target.querySelectorAll('canvas').forEach(c => { const ch = Chart.getChart(c); if (ch) ch.resize(); });
@@ -20312,15 +20226,6 @@
  if (container) {
  container.querySelectorAll('.tab-button').forEach(btn => { btn.classList.remove('active'); btn.style.background = ''; btn.style.color = ''; });
  if (evt && evt.currentTarget) { evt.currentTarget.classList.add('active'); evt.currentTarget.style.background = '#004D40'; evt.currentTarget.style.color = '#fff'; }
- }
- // If farmer pages already unlocked, ensure gates stay hidden and content visible
- if (_farmerUnlocked && (pageId === 'spg-page-challenges' || pageId === 'spg-page-map' || pageId === 'spg-page-profiling')) {
-  if (target) {
-   var gate = target.querySelector('.farmer-auth-gate');
-   var content = target.querySelector('.farmer-protected-content');
-   if (gate) gate.style.display = 'none';
-   if (content) content.style.display = 'block';
-  }
  }
  requestAnimationFrame(() => {
  if (target) { target.querySelectorAll('canvas').forEach(canvas => { const chart = Chart.getChart(canvas); if (chart) chart.resize(); }); }
