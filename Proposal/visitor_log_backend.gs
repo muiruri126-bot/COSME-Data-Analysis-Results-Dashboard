@@ -1,41 +1,23 @@
-/**
- * COSME Platform — Visitor Log Backend (Google Apps Script)
- * 
- * SETUP INSTRUCTIONS:
- * 1. Go to https://script.google.com and create a new project
- * 2. Replace the default code with this entire file
- * 3. Click "Deploy" → "New deployment"
- * 4. Select type: "Web app"
- * 5. Set "Execute as": Me (your account)
- * 6. Set "Who has access": Anyone
- * 7. Click "Deploy" and copy the Web App URL
- * 8. Paste the URL into COSME_Phase2_Design_Platform.html where it says:
- *      var VISITOR_LOG_URL = '';
- *    → var VISITOR_LOG_URL = 'https://script.google.com/macros/s/YOUR_ID/exec';
- * 
- * The script automatically creates a "Visitor Log" spreadsheet in your
- * Google Drive on first use. All visitor data is stored there.
- */
-
-var SHEET_NAME = 'Visitors';
-var SPREADSHEET_NAME = 'COSME Visitor Log';
+// COSME Visitor Log Backend - Google Apps Script
+// Deploy as Web app, access: Anyone, execute as: Me
 
 function getOrCreateSheet() {
-  var files = DriveApp.getFilesByName(SPREADSHEET_NAME);
+  var name = 'COSME Visitor Log';
+  var sheetName = 'Visitors';
+  var files = DriveApp.getFilesByName(name);
   var ss;
   if (files.hasNext()) {
     ss = SpreadsheetApp.open(files.next());
   } else {
-    ss = SpreadsheetApp.create(SPREADSHEET_NAME);
+    ss = SpreadsheetApp.create(name);
     var sheet = ss.getActiveSheet();
-    sheet.setName(SHEET_NAME);
+    sheet.setName(sheetName);
     sheet.appendRow(['Timestamp', 'City', 'Region', 'Country', 'Country Code']);
     sheet.getRange(1, 1, 1, 5).setFontWeight('bold');
   }
-  return ss.getSheetByName(SHEET_NAME) || ss.getActiveSheet();
+  return ss.getSheetByName(sheetName) || ss.getActiveSheet();
 }
 
-// Handle POST — log a new visitor
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
@@ -47,15 +29,14 @@ function doPost(e) {
       data.country || '',
       data.country_code || ''
     ]);
-    return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
+    return ContentService.createTextOutput(JSON.stringify({status: 'ok'}))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+    return ContentService.createTextOutput(JSON.stringify({status: 'error', message: err.toString()}))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Handle GET — return all visitors as JSON
 function doGet(e) {
   try {
     var sheet = getOrCreateSheet();
@@ -69,7 +50,6 @@ function doGet(e) {
       }
       visitors.push(row);
     }
-    // Return newest first
     visitors.reverse();
     return ContentService.createTextOutput(JSON.stringify(visitors))
       .setMimeType(ContentService.MimeType.JSON);
