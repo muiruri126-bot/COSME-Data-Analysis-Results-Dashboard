@@ -639,6 +639,83 @@
         }
         .visitor-counter svg { opacity: 0.6; }
         .visitor-counter .count { color: var(--gold); font-weight: 600; }
+        .visitor-counter .view-log-link {
+            color: rgba(255,255,255,0.5);
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 0.7rem;
+        }
+        .visitor-counter .view-log-link:hover { color: var(--gold); }
+
+        /* VISITOR LOG MODAL */
+        .visitor-log-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .visitor-log-overlay.active { display: flex; }
+        .visitor-log-modal {
+            background: #fff;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .visitor-log-modal .vlm-header {
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .visitor-log-modal .vlm-header h3 { margin: 0; font-size: 1rem; }
+        .visitor-log-modal .vlm-close {
+            background: none; border: none; color: #fff;
+            font-size: 1.4rem; cursor: pointer; padding: 0 4px;
+        }
+        .visitor-log-modal .vlm-body {
+            padding: 16px 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .visitor-log-modal .vlm-info {
+            background: #f0f7ff;
+            border: 1px solid #d0e3f7;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 14px;
+        }
+        .visitor-log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+        .visitor-log-table th {
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .visitor-log-table td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .visitor-log-table tr:nth-child(even) { background: #f9f9f9; }
+        .visitor-log-table .location-flag { margin-right: 4px; }
+        .vlm-empty { text-align: center; color: #999; padding: 30px 0; font-size: 0.85rem; }
 
         /* PRINT */
         @media print {
@@ -4816,8 +4893,27 @@
     <div class="visitor-counter" id="visitorCounter">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>Unique Visitors: <span class="count" id="visitor-count">—</span></span>
+        <span class="view-log-link" onclick="openVisitorLog()">View Log</span>
     </div>
 </footer>
+
+<!-- VISITOR LOG MODAL -->
+<div class="visitor-log-overlay" id="visitorLogOverlay" onclick="if(event.target===this)closeVisitorLog()">
+    <div class="visitor-log-modal">
+        <div class="vlm-header">
+            <h3>Visitor Log</h3>
+            <button class="vlm-close" onclick="closeVisitorLog()">&times;</button>
+        </div>
+        <div class="vlm-body">
+            <div class="vlm-info" id="vlm-setup-info" style="display:none;">
+                <strong>Setup Required:</strong> To enable cross-device visitor tracking, deploy the Google Apps Script backend and set the <code>VISITOR_LOG_URL</code> in the platform code. See <code>visitor_log_backend.gs</code> for instructions.
+            </div>
+            <div id="visitor-log-content">
+                <p class="vlm-empty">Loading visitor data...</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- BACK TO TOP -->
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -5475,7 +5571,10 @@
         });
     });
 
-    /* ── UNIQUE VISITOR COUNTER ── */
+    /* ── UNIQUE VISITOR COUNTER WITH GEOLOCATION ── */
+    // *** SET THIS to your deployed Google Apps Script URL ***
+    var VISITOR_LOG_URL = '';
+
     (function() {
         var STORAGE_KEY = 'cosme_visitor_counted';
         var NAMESPACE = 'cosme-blue-economy-platform';
@@ -5508,6 +5607,52 @@
             if (el && count > 0) el.textContent = count.toLocaleString();
         }
 
+        function getVisitorLocation() {
+            return fetch('https://ipapi.co/json/')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    return {
+                        city: d.city || 'Unknown',
+                        region: d.region || '',
+                        country: d.country_name || 'Unknown',
+                        country_code: d.country_code || '',
+                        ip: d.ip || ''
+                    };
+                })
+                .catch(function() {
+                    return { city: 'Unknown', region: '', country: 'Unknown', country_code: '', ip: '' };
+                });
+        }
+
+        function logVisitorToBackend(location) {
+            if (!VISITOR_LOG_URL) return;
+            var payload = {
+                timestamp: new Date().toISOString(),
+                city: location.city,
+                region: location.region,
+                country: location.country,
+                country_code: location.country_code
+            };
+            fetch(VISITOR_LOG_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
+            }).catch(function() {});
+        }
+
+        function storeVisitorLocally(location) {
+            var log = JSON.parse(localStorage.getItem('cosme_visitor_log') || '[]');
+            log.push({
+                timestamp: new Date().toISOString(),
+                city: location.city,
+                region: location.region,
+                country: location.country,
+                country_code: location.country_code
+            });
+            if (log.length > 500) log = log.slice(-500);
+            localStorage.setItem('cosme_visitor_log', JSON.stringify(log));
+        }
+
         function trackVisitor() {
             var counterEl = document.getElementById('visitor-count');
             if (!counterEl) return;
@@ -5516,24 +5661,23 @@
             var alreadyCounted = localStorage.getItem(STORAGE_KEY);
 
             if (!alreadyCounted) {
-                // New unique visitor — increment counter
+                // New unique visitor
+                getVisitorLocation().then(function(location) {
+                    logVisitorToBackend(location);
+                    storeVisitorLocally(location);
+                    localStorage.setItem(STORAGE_KEY, fp);
+                });
                 fetch('https://api.countapi.xyz/hit/' + NAMESPACE + '/' + KEY)
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
-                        if (data && data.value) {
-                            updateCounterDisplay(data.value);
-                            localStorage.setItem(STORAGE_KEY, fp);
-                        }
+                        if (data && data.value) updateCounterDisplay(data.value);
                     })
                     .catch(function() {
-                        // Fallback: use localStorage-only count
                         var localCount = parseInt(localStorage.getItem('cosme_local_count') || '0', 10) + 1;
                         localStorage.setItem('cosme_local_count', String(localCount));
-                        localStorage.setItem(STORAGE_KEY, fp);
                         updateCounterDisplay(localCount);
                     });
             } else {
-                // Returning visitor — just read current count without incrementing
                 fetch('https://api.countapi.xyz/get/' + NAMESPACE + '/' + KEY)
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
@@ -5546,16 +5690,74 @@
             }
         }
 
-        // Only track after authentication is confirmed
         var authCheck = setInterval(function() {
             if (sessionStorage.getItem('cosme_auth')) {
                 clearInterval(authCheck);
                 trackVisitor();
             }
         }, 500);
-        // Stop checking after 60 seconds
         setTimeout(function() { clearInterval(authCheck); }, 60000);
     })();
+
+    /* ── VISITOR LOG MODAL FUNCTIONS ── */
+    function openVisitorLog() {
+        document.getElementById('visitorLogOverlay').classList.add('active');
+        loadVisitorLog();
+    }
+    function closeVisitorLog() {
+        document.getElementById('visitorLogOverlay').classList.remove('active');
+    }
+    function loadVisitorLog() {
+        var content = document.getElementById('visitor-log-content');
+        var setupInfo = document.getElementById('vlm-setup-info');
+        content.innerHTML = '<p class="vlm-empty">Loading...</p>';
+
+        if (VISITOR_LOG_URL) {
+            setupInfo.style.display = 'none';
+            fetch(VISITOR_LOG_URL)
+                .then(function(r) { return r.json(); })
+                .then(function(visitors) {
+                    renderVisitorTable(visitors, content);
+                })
+                .catch(function() {
+                    renderLocalLog(content);
+                });
+        } else {
+            setupInfo.style.display = 'block';
+            renderLocalLog(content);
+        }
+    }
+    function renderLocalLog(container) {
+        var log = JSON.parse(localStorage.getItem('cosme_visitor_log') || '[]');
+        if (log.length === 0) {
+            container.innerHTML = '<p class="vlm-empty">No visitor data recorded yet.</p>';
+            return;
+        }
+        renderVisitorTable(log.reverse(), container);
+    }
+    function renderVisitorTable(visitors, container) {
+        if (!visitors || visitors.length === 0) {
+            container.innerHTML = '<p class="vlm-empty">No visitor data recorded yet.</p>';
+            return;
+        }
+        var html = '<table class="visitor-log-table"><thead><tr>';
+        html += '<th>#</th><th>Date & Time</th><th>Location</th><th>Country</th>';
+        html += '</tr></thead><tbody>';
+        visitors.forEach(function(v, i) {
+            var dt = v.timestamp ? new Date(v.timestamp) : null;
+            var dateStr = dt ? dt.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) + ' ' + dt.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) : '—';
+            var flag = v.country_code ? '<span class="location-flag">' + countryFlag(v.country_code) + '</span>' : '';
+            var loc = [v.city, v.region].filter(Boolean).join(', ') || '—';
+            html += '<tr><td>' + (i+1) + '</td><td>' + dateStr + '</td><td>' + loc + '</td><td>' + flag + (v.country || '—') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+    function countryFlag(code) {
+        if (!code || code.length !== 2) return '';
+        var c = code.toUpperCase();
+        return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65, 0x1F1E6 + c.charCodeAt(1) - 65);
+    }
 </script>
 
 </body>
