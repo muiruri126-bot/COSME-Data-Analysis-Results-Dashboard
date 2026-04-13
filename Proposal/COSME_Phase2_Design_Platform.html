@@ -440,6 +440,100 @@
             border-bottom-color: #bbdefb;
         }
 
+
+        /* ===== LOGFRAME OUTPUT-ALIGNED TABLES ===== */
+        .logframe-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .logframe-table thead th {
+            background: linear-gradient(135deg, #0e3a5f 0%, #186aab 100%);
+            color: #fff;
+        }
+        .io-row td {
+            background: #f8f9fa !important;
+            border-bottom: 2px solid #d5dce6;
+            font-style: italic;
+        }
+        .imo-header td {
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.3px;
+            border-top: 2px solid currentColor;
+            border-bottom: 1px solid currentColor;
+        }
+        .imo-header.c1 td { background: #e8f5e9 !important; border-color: #66bb6a; color: #1b5e20; }
+        .imo-header.c2 td { background: #e3f2fd !important; border-color: #42a5f5; color: #0d47a1; }
+        .imo-header.c3 td { background: #fff3e0 !important; border-color: #ffa726; color: #e65100; }
+        .output-code {
+            display: inline-block;
+            background: linear-gradient(135deg, #0072CE, #005bb5);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-right: 6px;
+            white-space: nowrap;
+        }
+        .output-row td {
+            border-bottom: 1px solid #edf0f5;
+            vertical-align: top;
+        }
+        .output-row:last-child td {
+            border-bottom: 2px solid #d5dce6;
+        }
+        .output-row td:first-child {
+            font-weight: 400;
+        }
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .activity-list li {
+            position: relative;
+            padding: 3px 0 3px 18px;
+            line-height: 1.55;
+            font-size: 0.88rem;
+        }
+        .activity-list li::before {
+            content: '\25B8';
+            position: absolute;
+            left: 0;
+            color: #0072CE;
+            font-size: 0.7rem;
+            top: 5px;
+        }
+        .c1 .activity-list li::before { color: #00A651; }
+        .c3 .activity-list li::before { color: #FF8F00; }
+
+        /* Workplan table enhancements */
+        .workplan-table .imo-divider td {
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.3px;
+            padding: 10px 18px;
+        }
+        .workplan-table .imo-divider.c1 td { background: #e8f5e9 !important; border-bottom: 2px solid #66bb6a; color: #1b5e20; }
+        .workplan-table .imo-divider.c2 td { background: #e3f2fd !important; border-bottom: 2px solid #42a5f5; color: #0d47a1; }
+        .workplan-table .imo-divider.c3 td { background: #fff3e0 !important; border-bottom: 2px solid #ffa726; color: #e65100; }
+        .workplan-table .imo-divider.cc td { background: #f3e5f5 !important; border-bottom: 2px solid #ab47bc; color: #6a1b9a; }
+        .workplan-table td:last-child {
+            font-weight: 600;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+        .output-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #0d47a1;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
         .level-badge {
             display: inline-block;
             padding: 5px 14px;
@@ -2521,340 +2615,316 @@
                 </table>
             </div>
 
-            <!-- ===== COMPONENT 1: Inclusive Nature-based Market Opportunities ===== -->
-            <h3 style="border-left:4px solid #00A651; padding-left:14px; color:#1b5e20;"><span class="pillar-tag pillar-1" style="background:#00A651;">Component 1</span> Inclusive Nature-based Market Opportunities (Mangrove NbS &amp; Carbon)</h3>
+                        <!-- ===== COMPONENT 1: Inclusive Nature-based Market Opportunities ===== -->
+            <h3 style="border-left:4px solid #00A651; padding-left:14px; color:#1b5e20;"><span class="pillar-tag pillar-1" style="background:#00A651; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 1</span> Inclusive Nature-based Market Opportunities (Mangrove NbS &amp; Carbon)</h3>
             <div class="table-container">
-                <table>
-                    <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
+                <table class="logframe-table">
+                    <thead><tr><th style="width:50%">Output</th><th colspan="2" style="width:50%">Key Activities</th></tr></thead>
                     <tbody>
-                        <tr>
+                        <tr class="io-row">
                             <td><span class="level-badge level-outcome">IO</span></td>
                             <td><strong>1100</strong></td>
                             <td>Enhanced Payment for inclusive (carbon and non-carbon) Ecosystem Services for coastal communities, with prioritized benefits for women and youth</td>
                             <td colspan="2"><em>Achieved through three Immediate Outcomes below</em></td>
                         </tr>
-                        <tr style="background:#f0faf0;">
-                            <td><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span></td>
-                            <td><strong>1110</strong></td>
-                            <td>Targeted degraded and threatened mangrove ecosystems are ecologically restored, protected, and co-managed to recover and conserve ecosystem function and resilience</td>
-                            <td>
-                                <strong>1111</strong> — CBEMR is implemented in priority sites aligned with County Mangrove Restoration Plans<br>
-                                <strong>1112</strong> — Community-led mangrove conservation is implemented in priority sites<br>
-                                <strong>1113</strong> — Community-based monitoring, reporting and compliance mechanisms are established/strengthened (in coordination with KFS)<br>
-                                <strong>1114</strong> — Market-oriented, nature-based enterprises are developed to reduce pressure on mangrove ecosystems, prioritizing women- and youth-led participation
-                            </td>
-                            <td>
-                                Identify nursery locations; support design and set-up<br>
-                                Facilitate sourcing/collection of propagules/seedlings<br>
-                                Participatory site verification, boundary confirmation, demarcation and mapping<br>
-                                Hydrological restoration and site condition checks<br>
-                                Community planting events and follow-up maintenance<br>
-                                Community conservation planning sessions and awareness programs<br>
-                                Support local conservation by-laws/rules development<br>
-                                Joint conservation actions with CFAs/BMUs (clean-ups, signage, education)<br>
-                                Peer-to-peer learning exchanges between sites<br>
-                                Select and orient scouts/forest monitors; provide training and equipment<br>
-                                Establish patrol schedules, reporting templates, incident chains<br>
-                                Joint patrols with KFS<br>
-                                Market and value chain scan; select livelihood pathways<br>
-                                Develop business models and enterprise plans; provide technical coaching<br>
-                                Catalytic grants, inputs, shared enterprise equipment<br>
-                                Buyer and service-provider linkages; access to finance
-                            </td>
+                        <tr class="imo-header c1">
+                            <td colspan="5"><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span> &nbsp;<strong>1110</strong> — Targeted degraded and threatened mangrove ecosystems are ecologically restored, protected, and co-managed to recover and conserve ecosystem function and resilience</td>
                         </tr>
-                        <tr>
-                            <td><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span></td>
-                            <td><strong>1120</strong></td>
-                            <td>Inclusive, gender-responsive and youth-inclusive co-management governance structures are strengthened to support sustainable mangrove ecosystem management</td>
-                            <td>
-                                <strong>1121</strong> — Community-based mangrove co-management organizations are strengthened and functional<br>
-                                <strong>1122</strong> — Gender-transformative capacity of community forestry and coastal user groups is strengthened to address harmful gender norms, GBV and power imbalances and to enable equitable participation, leadership, and benefit-sharing in mangrove conservation and protection<br>
-                                <strong>1123</strong> — Government/rights-holder institutions (including KFS and relevant county structures) are strengthened to support gender-responsive/youth-inclusive co-management and compliance<br>
-                                <strong>1124</strong> — Co-management gender-responsive and youth-inclusive coordination mechanisms and agreements between communities and KFS are strengthened and operational
-                            </td>
-                            <td>
-                                Organizational capacity assessments for CFAs/BMUs<br>
-                                Governance strengthening support (documents, tools, coaching)<br>
-                                Gender norms and power analysis sessions<br>
-                                Women's life-skills, confidence, leadership sessions<br>
-                                Positive masculinities and male allyship dialogues<br>
-                                Gender-responsive group governance and benefit-sharing rules<br>
-                                Safe feedback and grievance mechanisms (incl. GBV referral)<br>
-                                Joint planning workshops with KFS/county; refresher training<br>
-                                Strengthen technical support and supervision systems<br>
-                                Establish/strengthen joint co-management committees<br>
-                                Co-management agreements/MOUs; shared monitoring routines<br>
-                                Grievance and conflict resolution pathways
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1111</span> CBEMR is implemented in priority sites aligned with County Mangrove Restoration Plans</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Identify nursery locations; support design and set-up</li>
+                                    <li>Facilitate sourcing/collection of propagules/seedlings</li>
+                                    <li>Participatory site verification, boundary confirmation, demarcation and mapping</li>
+                                    <li>Hydrological restoration and site condition checks</li>
+                                    <li>Community planting events and follow-up maintenance</li>
+                                </ul></td>
                         </tr>
-                        <tr style="background:#f0faf0;">
-                            <td><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span></td>
-                            <td><strong>1130</strong></td>
-                            <td>Blue-carbon readiness, market engagement, and financing arrangements are established for high-integrity voluntary carbon markets (Plan Vivo and/or Verra VCS/CCB), with transparent benefit-sharing prioritizing women and youth</td>
-                            <td>
-                                <strong>1131</strong> — Blue-carbon readiness systems (governance, safeguards, benefit-sharing) established<br>
-                                <strong>1132</strong> — MRV systems for mangrove carbon established and functional (dMRV via CarbonAi)<br>
-                                <strong>1133</strong> — Carbon project documentation developed and submitted for validation/registration<br>
-                                <strong>1134</strong> — Canadian and international carbon credit market access and commercialization arrangements established
-                            </td>
-                            <td>
-                                Blue-carbon readiness technical working group (BC-TWG)<br>
-                                PPP framework for blue carbon on GoK-owned land<br>
-                                Baseline feasibility, tenure/rights screening, FPIC processes<br>
-                                Benefit-sharing principles and arrangements (gender-responsive)<br>
-                                Carbon standard/methodology selection (VCS VM0033, Plan Vivo)<br>
-                                dMRV plan, field monitoring set-up, permanent plots<br>
-                                Train community monitors; deploy digital data-collection tools<br>
-                                QA/QC routines and audit trail management<br>
-                                Carbon project documentation (PD/PIN, monitoring plan, ESIA)<br>
-                                Third-party validation; address CARs/findings<br>
-                                Market engagement strategy (Canadian + international buyers)<br>
-                                Buyer due diligence; offtake/commercialization arrangements<br>
-                                Canadian-led buyer pool via CarbonAi dMRV platform<br>
-                                Carbon revenue allocation models and permanence strategy<br>
-                                Initial benefit-sharing disbursements (Years 5—6)
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1112</span> Community-led mangrove conservation is implemented in priority sites</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Community conservation planning sessions and awareness programs</li>
+                                    <li>Support local conservation by-laws/rules development</li>
+                                    <li>Joint conservation actions with CFAs/BMUs (clean-ups, signage, education)</li>
+                                    <li>Peer-to-peer learning exchanges between sites</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1113</span> Community-based monitoring, reporting and compliance mechanisms are established/strengthened (in coordination with KFS)</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Select and orient scouts/forest monitors; provide training and equipment</li>
+                                    <li>Establish patrol schedules, reporting templates, incident chains</li>
+                                    <li>Joint patrols with KFS</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1114</span> Market-oriented, nature-based enterprises are developed to reduce pressure on mangrove ecosystems, prioritizing women- and youth-led participation</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Market and value chain scan; select livelihood pathways</li>
+                                    <li>Develop business models and enterprise plans; provide technical coaching</li>
+                                    <li>Catalytic grants, inputs, shared enterprise equipment</li>
+                                    <li>Buyer and service-provider linkages; access to finance</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="imo-header c1">
+                            <td colspan="5"><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span> &nbsp;<strong>1120</strong> — Inclusive, gender-responsive and youth-inclusive co-management governance structures are strengthened to support sustainable mangrove ecosystem management</td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1121</span> Community-based mangrove co-management organizations are strengthened and functional</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Organizational capacity assessments for CFAs/BMUs</li>
+                                    <li>Governance strengthening support (documents, tools, coaching)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1122</span> Gender-transformative capacity of community forestry and coastal user groups is strengthened to address harmful gender norms, GBV and power imbalances and to enable equitable participation, leadership, and benefit-sharing in mangrove conservation and protection</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Gender norms and power analysis sessions</li>
+                                    <li>Women’s life-skills, confidence, leadership sessions</li>
+                                    <li>Positive masculinities and male allyship dialogues</li>
+                                    <li>Gender-responsive group governance and benefit-sharing rules</li>
+                                    <li>Safe feedback and grievance mechanisms (incl. GBV referral)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1123</span> Government/rights-holder institutions (including KFS and relevant county structures) are strengthened to support gender-responsive/youth-inclusive co-management and compliance</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Joint planning workshops with KFS/county; refresher training</li>
+                                    <li>Strengthen technical support and supervision systems</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1124</span> Co-management gender-responsive and youth-inclusive coordination mechanisms and agreements between communities and KFS are strengthened and operational</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Establish/strengthen joint co-management committees</li>
+                                    <li>Co-management agreements/MOUs; shared monitoring routines</li>
+                                    <li>Grievance and conflict resolution pathways</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="imo-header c1">
+                            <td colspan="5"><span class="level-badge" style="background:#00A651;color:#fff;">IMO</span> &nbsp;<strong>1130</strong> — Blue-carbon readiness, market engagement, and financing arrangements are established for high-integrity voluntary carbon markets (Plan Vivo and/or Verra VCS/CCB), with transparent benefit-sharing prioritizing women and youth</td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1131</span> Blue-carbon readiness systems (governance, safeguards, benefit-sharing) established</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Blue-carbon readiness technical working group (BC-TWG)</li>
+                                    <li>PPP framework for blue carbon on GoK-owned land</li>
+                                    <li>Baseline feasibility, tenure/rights screening, FPIC processes</li>
+                                    <li>Benefit-sharing principles and arrangements (gender-responsive)</li>
+                                    <li>Carbon standard/methodology selection (VCS VM0033, Plan Vivo)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1132</span> MRV systems for mangrove carbon established and functional (dMRV via CarbonAi)</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>dMRV plan, field monitoring set-up, permanent plots</li>
+                                    <li>Train community monitors; deploy digital data-collection tools</li>
+                                    <li>QA/QC routines and audit trail management</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1133</span> Carbon project documentation developed and submitted for validation/registration</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Carbon project documentation (PD/PIN, monitoring plan, ESIA)</li>
+                                    <li>Third-party validation; address CARs/findings</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1134</span> Canadian and international carbon credit market access and commercialization arrangements established</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Market engagement strategy (Canadian + international buyers)</li>
+                                    <li>Buyer due diligence; offtake/commercialization arrangements</li>
+                                    <li>Canadian-led buyer pool via CarbonAi dMRV platform</li>
+                                    <li>Carbon revenue allocation models and permanence strategy</li>
+                                    <li>Initial benefit-sharing disbursements (Years 5—6)</li>
+                                </ul></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- ===== COMPONENT 2: Climate-Resilient Seaweed Industry ===== -->
-            <h3 style="border-left:4px solid #0072CE; padding-left:14px; color:#0d47a1;"><span class="pillar-tag pillar-2" style="background:#0072CE;">Component 2</span> Climate-Resilient, Inclusive Seaweed Industry</h3>
+            <h3 style="border-left:4px solid #0072CE; padding-left:14px; color:#0d47a1;"><span class="pillar-tag pillar-2" style="background:#0072CE; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 2</span> Climate-Resilient, Inclusive Seaweed Industry</h3>
             <div class="table-container">
-                <table>
-                    <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
+                <table class="logframe-table">
+                    <thead><tr><th style="width:50%">Output</th><th colspan="2" style="width:50%">Key Activities</th></tr></thead>
                     <tbody>
-                        <tr>
+                        <tr class="io-row">
                             <td><span class="level-badge level-outcome">IO</span></td>
                             <td><strong>1200</strong></td>
                             <td>Strengthened climate-resilient, inclusive, and market-driven seaweed industry positioned for responsible private-sector investment and international market growth, with prioritized economic opportunities for women and youth</td>
                             <td colspan="2"><em>Achieved through three Immediate Outcomes below</em></td>
                         </tr>
-                        <tr style="background:#e3f2fd;">
-                            <td><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span></td>
-                            <td><strong>1210</strong></td>
-                            <td>Reliable, quality and climate-resilient seaweed production increased and de-risked</td>
-                            <td>
-                                <strong>1211</strong> — Sustainable and reliable seaweed seed systems are established and governed, with equitable access for women and youth producers<br>
-                                <strong>1212</strong> — Climate-smart, quality seaweed production and post-harvest practices are adopted at scale by seaweed producer groups, with targeted support to women and youth participants
-                            </td>
-                            <td>
-                                Establish floating/land-based nurseries in priority sites<br>
-                                Train participants as nursery operators and seed custodians<br>
-                                Design and construct biobank and strain selection lab<br>
-                                Thermal tolerance research to ID new native species<br>
-                                Seed multiplication, rotation, biosecurity protocols<br>
-                                Community-level seed governance agreements<br>
-                                Establish/strengthen seaweed producer groups<br>
-                                Hands-on training on seaweed production<br>
-                                Seasonal SOPs (heat stress, disease response)<br>
-                                Climate-resilient cultivation methods (long-line, depth adjustment)<br>
-                                Farm-level quality standards and post-harvest training<br>
-                                Targeted inputs (ropes, lines, drying racks, safety equipment)<br>
-                                Lot traceability systems (digital tools where feasible)
-                            </td>
+                        <tr class="imo-header c2">
+                            <td colspan="5"><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span> &nbsp;<strong>1210</strong> — Reliable, quality and climate-resilient seaweed production increased and de-risked</td>
                         </tr>
-                        <tr>
-                            <td><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span></td>
-                            <td><strong>1220</strong></td>
-                            <td>Seaweed producer groups, cooperatives, and MSMEs increasingly participate in and benefit from higher-value and diversified seaweed value chains, with equitable opportunities for women and youth</td>
-                            <td>
-                                <strong>1221</strong> — Seaweed producer groups, cooperatives, and MSMEs are formalized and operationally strengthened, with gender-responsive and youth-inclusive governance practices<br>
-                                <strong>1222</strong> — Gender-transformative capacity of seaweed producer groups, cooperatives, and MSMEs is strengthened to address gender-based barriers, including GBV, and to enable equitable participation, leadership, and access to markets, services, and value-chain benefits<br>
-                                <strong>1223</strong> — Capacity of producer groups, cooperatives, MSMEs, and related local enterprises is enhanced to aggregate, process, and add value within the seaweed value chain, with gender-responsive and youth-inclusive participation in higher-value functions<br>
-                                <strong>1224</strong> — Feasible seaweed-based sea-to-field value chains are piloted and developed, with inclusive engagement of women and youth as innovators, producers, and enterprise actors
-                            </td>
-                            <td>
-                                Needs assessment of producer groups, cooperatives, MSMEs<br>
-                                Formalization support (registration, governance, bylaws)<br>
-                                Group management and business development training<br>
-                                Gender barriers analysis within value chains<br>
-                                Women's agency, confidence, leadership development<br>
-                                Positive masculinities and male allyship dialogues<br>
-                                Gender-responsive benefit-sharing and income-use practices<br>
-                                Safe feedback/grievance mechanisms (workplace safety, GBV)<br>
-                                Establish community aggregation centres<br>
-                                Processing and value-addition pathways identification and training<br>
-                                Processing equipment and starter inputs<br>
-                                Local enterprise capacity development for aggregation/processing<br>
-                                Multi-stakeholder working group for sea-to-field piloting<br>
-                                Greenhouse/on-farm trials for biostimulant products<br>
-                                SOPs for seaweed-based agricultural products<br>
-                                Feasibility assessment for scaling sea-to-field products
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1211</span> Sustainable and reliable seaweed seed systems are established and governed, with equitable access for women and youth producers</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Establish floating/land-based nurseries in priority sites</li>
+                                    <li>Train participants as nursery operators and seed custodians</li>
+                                    <li>Design and construct biobank and strain selection lab</li>
+                                    <li>Thermal tolerance research to ID new native species</li>
+                                    <li>Seed multiplication, rotation, biosecurity protocols</li>
+                                    <li>Community-level seed governance agreements</li>
+                                </ul></td>
                         </tr>
-                        <tr style="background:#e3f2fd;">
-                            <td><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span></td>
-                            <td><strong>1230</strong></td>
-                            <td>Increased access to gender-responsive, youth-inclusive markets, finance, and enabling services for seaweed producer groups, cooperatives, and MSMEs</td>
-                            <td>
-                                <strong>1231</strong> — Market access and commercial relationships for seaweed producer groups, cooperatives, and MSMEs are established and strengthened, through improved market readiness (both domestic and international) and buyer engagement<br>
-                                <strong>1232</strong> — Inclusive financial products and finance mechanisms for seaweed SMEs are developed and tested to crowd-in responsible private capital and support investment readiness (including for women- and youth-led enterprises)<br>
-                                <strong>1233</strong> — Business development and sector support services are strengthened and connected to technical expertise and innovation partners to improve competitiveness and responsiveness to market opportunities
-                            </td>
-                            <td>
-                                Market readiness assessments; support for buyer requirements<br>
-                                Product and supply readiness (aggregation, quality, costing)<br>
-                                Identify and engage domestic/international buyers and processors<br>
-                                Buyer—seller matchmaking, negotiation support, coaching<br>
-                                Offtake agreements and trial purchase contracts<br>
-                                Anchor buyer / pull-up buyer linkages<br>
-                                Branding, packaging, market information tools<br>
-                                Financial readiness assessments for SMEs<br>
-                                SME investment profiles and pitch materials<br>
-                                Design and pilot demand-driven finance instruments<br>
-                                Engage financial institutions/investors for seaweed-specific products<br>
-                                Transaction advisory (due diligence, term sheets, financial close)<br>
-                                Strengthen local BDS providers to serve seaweed SMEs<br>
-                                Facilitate partnerships (extension, finance, logistics services)<br>
-                                Coordination/dialogue platforms (SMEs, buyers, financiers, regulators)<br>
-                                Gender-responsive service delivery models
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1212</span> Climate-smart, quality seaweed production and post-harvest practices are adopted at scale by seaweed producer groups, with targeted support to women and youth participants</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Establish/strengthen seaweed producer groups</li>
+                                    <li>Hands-on training on seaweed production</li>
+                                    <li>Seasonal SOPs (heat stress, disease response)</li>
+                                    <li>Climate-resilient cultivation methods (long-line, depth adjustment)</li>
+                                    <li>Farm-level quality standards and post-harvest training</li>
+                                    <li>Targeted inputs (ropes, lines, drying racks, safety equipment)</li>
+                                    <li>Lot traceability systems (digital tools where feasible)</li>
+                                </ul></td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- ===== COMPONENT 3: Enabling Policy & Coordination (NEW) ===== -->
-            <h3 style="border-left:4px solid #FF8F00; padding-left:14px; color:#e65100;"><span class="pillar-tag" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy, Regulatory &amp; Coordination Environment</h3>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="level-badge level-outcome">IO</span></td>
-                            <td><strong>1300</strong></td>
-                            <td>An enabling policy, regulatory, and coordination environment is strengthened to support sustainable coastal livelihoods and blue economies, reflecting the priorities and participation of women and youth</td>
-                            <td colspan="2"><em>Achieved through two Immediate Outcomes below</em></td>
+                        <tr class="imo-header c2">
+                            <td colspan="5"><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span> &nbsp;<strong>1220</strong> — Seaweed producer groups, cooperatives, and MSMEs increasingly participate in and benefit from higher-value and diversified seaweed value chains, with equitable opportunities for women and youth</td>
                         </tr>
-                        <tr style="background:#fff3e0;">
-                            <td><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span></td>
-                            <td><strong>1310</strong></td>
-                            <td>Inclusive, evidence-informed policy dialogue and coordination mechanisms are strengthened at national and sub-national levels for coastal and blue-economy sectors, with meaningful participation of women and youth</td>
-                            <td>
-                                <strong>1311</strong> — Multi-stakeholder coordination platforms for coastal and blue-economy issues are supported and functional, with inclusive participation of women’s and youth representatives<br>
-                                <strong>1312</strong> — Priority policy and regulatory gaps affecting mangroves, carbon finance, and seaweed value chains are identified and documented, including gender- and youth-related barriers<br>
-                                <strong>1313</strong> — Government, private sector, civil society, women's, and youth actors engage regularly in structured dialogue on coastal and blue-economy policy issues
-                            </td>
-                            <td>
-                                Map and convene national/county stakeholders for coordination forums<br>
-                                Develop/update ToRs, workplans, meeting schedules for platforms<br>
-                                Support regular convenings and documentation of decisions<br>
-                                Facilitate inclusion of community, women, private-sector representatives<br>
-                                Rapid policy and regulatory scan (mangrove, blue-carbon, seaweed)<br>
-                                Targeted stakeholder consultations to validate and prioritize bottlenecks<br>
-                                Gap analysis with prioritized recommendations<br>
-                                Identify priority bottlenecks for seaweed SMEs (licensing, finance, coordination)<br>
-                                Organized structured policy dialogues (roundtables, technical sessions)<br>
-                                Joint agenda setting; track commitments through action trackers
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1221</span> Seaweed producer groups, cooperatives, and MSMEs are formalized and operationally strengthened, with gender-responsive and youth-inclusive governance practices</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Needs assessment of producer groups, cooperatives, MSMEs</li>
+                                    <li>Formalization support (registration, governance, bylaws)</li>
+                                    <li>Group management and business development training</li>
+                                </ul></td>
                         </tr>
-                        <tr>
-                            <td><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span></td>
-                            <td><strong>1320</strong></td>
-                            <td>Advocacy and technical engagement are strengthened to influence policy and regulatory processes for coastal ecosystems and blue-economy, amplifying women's and youth participation</td>
-                            <td>
-                                <strong>1321</strong> — Policy-relevant evidence, analyses, and lessons from project implementation synthesized and disseminated<br>
-                                <strong>1322</strong> — Targeted policy engagement and advocacy initiatives are implemented with decision-makers and influencers, informed by women's and youth perspectives<br>
-                                <strong>1323</strong> — Capacity of selected stakeholders, including women’s and youth-led organizations, is strengthened to engage effectively in policy and regulatory processes
-                            </td>
-                            <td>
-                                Synthesize learning into policy briefs, case studies, learning notes<br>
-                                Data visualizations and summaries for non-technical audiences<br>
-                                Disseminate through coordination platforms and targeted briefings<br>
-                                Policy engagement plan (priority decision-makers, timelines, pathways)<br>
-                                Briefings with ministries, regulators, parliamentary committees<br>
-                                Multi-stakeholder advocacy coalitions on priority reform<br>
-                                Training/coaching on policy engagement, advocacy, communications<br>
-                                Support evidence-informed inputs (submissions, position notes)<br>
-                                Peer learning and exchange between stakeholder groups<br>
-                                WRO/YLO capacity for sustained policy engagementcolor:#fff;">IMO</span></td>
-                            <td><strong>1230</strong></td>
-                            <td>Increased access to gender-responsive, youth-inclusive markets, finance, and enabling services for seaweed producer groups, cooperatives, and MSMEs</td>
-                            <td>
-                                <strong>1231</strong> — Market access and commercial relationships for seaweed producer groups, cooperatives, and MSMEs are established and strengthened, through improved market readiness (both domestic and international) and buyer engagement<br>
-                                <strong>1232</strong> — Inclusive financial products and finance mechanisms for seaweed SMEs are developed and tested to crowd-in responsible private capital and support investment readiness (including for women- and youth-led enterprises)<br>
-                                <strong>1233</strong> — Business development and sector support services are strengthened and connected to technical expertise and innovation partners to improve competitiveness and responsiveness to market opportunities
-                            </td>
-                            <td>
-                                Market readiness assessments; support for buyer requirements<br>
-                                Product and supply readiness (aggregation, quality, costing)<br>
-                                Identify and engage domestic/international buyers and processors<br>
-                                Buyer—seller matchmaking, negotiation support, coaching<br>
-                                Offtake agreements and trial purchase contracts<br>
-                                Anchor buyer / pull-up buyer linkages<br>
-                                Branding, packaging, market information tools<br>
-                                Financial readiness assessments for SMEs<br>
-                                SME investment profiles and pitch materials<br>
-                                Design and pilot demand-driven finance instruments<br>
-                                Engage financial institutions/investors for seaweed-specific products<br>
-                                Transaction advisory (due diligence, term sheets, financial close)<br>
-                                Strengthen local BDS providers to serve seaweed SMEs<br>
-                                Facilitate partnerships (extension, finance, logistics services)<br>
-                                Coordination/dialogue platforms (SMEs, buyers, financiers, regulators)<br>
-                                Gender-responsive service delivery models
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1222</span> Gender-transformative capacity of seaweed producer groups, cooperatives, and MSMEs is strengthened to address gender-based barriers, including GBV, and to enable equitable participation, leadership, and access to markets, services, and value-chain benefits</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Gender barriers analysis within value chains</li>
+                                    <li>Women’s agency, confidence, leadership development</li>
+                                    <li>Positive masculinities and male allyship dialogues</li>
+                                    <li>Gender-responsive benefit-sharing and income-use practices</li>
+                                    <li>Safe feedback/grievance mechanisms (workplace safety, GBV)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1223</span> Capacity of producer groups, cooperatives, MSMEs, and related local enterprises is enhanced to aggregate, process, and add value within the seaweed value chain, with gender-responsive and youth-inclusive participation in higher-value functions</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Establish community aggregation centres</li>
+                                    <li>Processing and value-addition pathways identification and training</li>
+                                    <li>Processing equipment and starter inputs</li>
+                                    <li>Local enterprise capacity development for aggregation/processing</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1224</span> Feasible seaweed-based sea-to-field value chains are piloted and developed, with inclusive engagement of women and youth as innovators, producers, and enterprise actors</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Multi-stakeholder working group for sea-to-field piloting</li>
+                                    <li>Greenhouse/on-farm trials for biostimulant products</li>
+                                    <li>SOPs for seaweed-based agricultural products</li>
+                                    <li>Feasibility assessment for scaling sea-to-field products</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="imo-header c2">
+                            <td colspan="5"><span class="level-badge" style="background:#0072CE;color:#fff;">IMO</span> &nbsp;<strong>1230</strong> — Increased access to gender-responsive, youth-inclusive markets, finance, and enabling services for seaweed producer groups, cooperatives, and MSMEs</td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1231</span> Market access and commercial relationships for seaweed producer groups, cooperatives, and MSMEs are established and strengthened, through improved market readiness (both domestic and international) and buyer engagement</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Market readiness assessments; support for buyer requirements</li>
+                                    <li>Product and supply readiness (aggregation, quality, costing)</li>
+                                    <li>Identify and engage domestic/international buyers and processors</li>
+                                    <li>Buyer—seller matchmaking, negotiation support, coaching</li>
+                                    <li>Offtake agreements and trial purchase contracts</li>
+                                    <li>Anchor buyer / pull-up buyer linkages</li>
+                                    <li>Branding, packaging, market information tools</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1232</span> Inclusive financial products and finance mechanisms for seaweed SMEs are developed and tested to crowd-in responsible private capital and support investment readiness (including for women- and youth-led enterprises)</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Financial readiness assessments for SMEs</li>
+                                    <li>SME investment profiles and pitch materials</li>
+                                    <li>Design and pilot demand-driven finance instruments</li>
+                                    <li>Engage financial institutions/investors for seaweed-specific products</li>
+                                    <li>Transaction advisory (due diligence, term sheets, financial close)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1233</span> Business development and sector support services are strengthened and connected to technical expertise and innovation partners to improve competitiveness and responsiveness to market opportunities</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Strengthen local BDS providers to serve seaweed SMEs</li>
+                                    <li>Facilitate partnerships (extension, finance, logistics services)</li>
+                                    <li>Coordination/dialogue platforms (SMEs, buyers, financiers, regulators)</li>
+                                    <li>Gender-responsive service delivery models</li>
+                                </ul></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- ===== COMPONENT 3: Enabling Policy & Coordination (NEW) ===== -->
-            <h3 style="border-left:4px solid #FF8F00; padding-left:14px; color:#e65100;"><span class="pillar-tag" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy, Regulatory &amp; Coordination Environment</h3>
+            <!-- ===== COMPONENT 3: Enabling Policy & Coordination ===== -->
+            <h3 style="border-left:4px solid #FF8F00; padding-left:14px; color:#e65100;"><span class="pillar-tag pillar-3" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy, Regulatory &amp; Coordination Environment</h3>
             <div class="table-container">
-                <table>
-                    <thead><tr><th>Level</th><th>Code</th><th>Statement</th><th>Outputs</th><th>Key Activities</th></tr></thead>
+                <table class="logframe-table">
+                    <thead><tr><th style="width:50%">Output</th><th colspan="2" style="width:50%">Key Activities</th></tr></thead>
                     <tbody>
-                        <tr>
+                        <tr class="io-row">
                             <td><span class="level-badge level-outcome">IO</span></td>
                             <td><strong>1300</strong></td>
                             <td>An enabling policy, regulatory, and coordination environment is strengthened to support sustainable coastal livelihoods and blue economies, reflecting the priorities and participation of women and youth</td>
                             <td colspan="2"><em>Achieved through two Immediate Outcomes below</em></td>
                         </tr>
-                        <tr style="background:#fff3e0;">
-                            <td><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span></td>
-                            <td><strong>1310</strong></td>
-                            <td>Inclusive, evidence-informed policy dialogue and coordination mechanisms are strengthened at national and sub-national levels for coastal and blue-economy sectors, with meaningful participation of women and youth</td>
-                            <td>
-                                <strong>1311</strong> — Multi-stakeholder coordination platforms for coastal and blue-economy issues are supported and functional, with inclusive participation of women’s and youth representatives<br>
-                                <strong>1312</strong> — Priority policy and regulatory gaps affecting mangroves, carbon finance, and seaweed value chains are identified and documented, including gender- and youth-related barriers<br>
-                                <strong>1313</strong> — Government, private sector, civil society, women's, and youth actors engage regularly in structured dialogue on coastal and blue-economy policy issues
-                            </td>
-                            <td>
-                                Map and convene national/county stakeholders for coordination forums<br>
-                                Develop/update ToRs, workplans, meeting schedules for platforms<br>
-                                Support regular convenings and documentation of decisions<br>
-                                Facilitate inclusion of community, women, private-sector representatives<br>
-                                Rapid policy and regulatory scan (mangrove, blue-carbon, seaweed)<br>
-                                Targeted stakeholder consultations to validate and prioritize bottlenecks<br>
-                                Gap analysis with prioritized recommendations<br>
-                                Identify priority bottlenecks for seaweed SMEs (licensing, finance, coordination)<br>
-                                Organized structured policy dialogues (roundtables, technical sessions)<br>
-                                Joint agenda setting; track commitments through action trackers
-                            </td>
+                        <tr class="imo-header c3">
+                            <td colspan="5"><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span> &nbsp;<strong>1310</strong> — Inclusive, evidence-informed policy dialogue and coordination mechanisms are strengthened at national and sub-national levels for coastal and blue-economy sectors, with meaningful participation of women and youth</td>
                         </tr>
-                        <tr>
-                            <td><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span></td>
-                            <td><strong>1320</strong></td>
-                            <td>Advocacy and technical engagement are strengthened to influence policy and regulatory processes for coastal ecosystems and blue-economy, amplifying women's and youth participation</td>
-                            <td>
-                                <strong>1321</strong> — Policy-relevant evidence, analyses, and lessons from project implementation synthesized and disseminated<br>
-                                <strong>1322</strong> — Targeted policy engagement and advocacy initiatives are implemented with decision-makers and influencers, informed by women's and youth perspectives<br>
-                                <strong>1323</strong> — Capacity of selected stakeholders, including women’s and youth-led organizations, is strengthened to engage effectively in policy and regulatory processes
-                            </td>
-                            <td>
-                                Synthesize learning into policy briefs, case studies, learning notes<br>
-                                Data visualizations and summaries for non-technical audiences<br>
-                                Disseminate through coordination platforms and targeted briefings<br>
-                                Policy engagement plan (priority decision-makers, timelines, pathways)<br>
-                                Briefings with ministries, regulators, parliamentary committees<br>
-                                Multi-stakeholder advocacy coalitions on priority reform<br>
-                                Training/coaching on policy engagement, advocacy, communications<br>
-                                Support evidence-informed inputs (submissions, position notes)<br>
-                                Peer learning and exchange between stakeholder groups<br>
-                                WRO/YLO capacity for sustained policy engagement
-                            </td>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1311</span> Multi-stakeholder coordination platforms for coastal and blue-economy issues are supported and functional, with inclusive participation of women’s and youth representatives</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Map and convene national/county stakeholders for coordination forums</li>
+                                    <li>Develop/update ToRs, workplans, meeting schedules for platforms</li>
+                                    <li>Support regular convenings and documentation of decisions</li>
+                                    <li>Facilitate inclusion of community, women, private-sector representatives</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1312</span> Priority policy and regulatory gaps affecting mangroves, carbon finance, and seaweed value chains are identified and documented, including gender- and youth-related barriers</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Rapid policy and regulatory scan (mangrove, blue-carbon, seaweed)</li>
+                                    <li>Targeted stakeholder consultations to validate and prioritize bottlenecks</li>
+                                    <li>Gap analysis with prioritized recommendations</li>
+                                    <li>Identify priority bottlenecks for seaweed SMEs (licensing, finance, coordination)</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1313</span> Government, private sector, civil society, women’s, and youth actors engage regularly in structured dialogue on coastal and blue-economy policy issues</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Organized structured policy dialogues (roundtables, technical sessions)</li>
+                                    <li>Joint agenda setting; track commitments through action trackers</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="imo-header c3">
+                            <td colspan="5"><span class="level-badge" style="background:#FF8F00;color:#fff;">IMO</span> &nbsp;<strong>1320</strong> — Advocacy and technical engagement are strengthened to influence policy and regulatory processes for coastal ecosystems and blue-economy, amplifying women’s and youth participation</td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1321</span> Policy-relevant evidence, analyses, and lessons from project implementation synthesized and disseminated</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Synthesize learning into policy briefs, case studies, learning notes</li>
+                                    <li>Data visualizations and summaries for non-technical audiences</li>
+                                    <li>Disseminate through coordination platforms and targeted briefings</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1322</span> Targeted policy engagement and advocacy initiatives are implemented with decision-makers and influencers, informed by women’s and youth perspectives</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Policy engagement plan (priority decision-makers, timelines, pathways)</li>
+                                    <li>Briefings with ministries, regulators, parliamentary committees</li>
+                                    <li>Multi-stakeholder advocacy coalitions on priority reform</li>
+                                </ul></td>
+                        </tr>
+                        <tr class="output-row">
+                            <td colspan="3"><span class="output-code">1323</span> Capacity of selected stakeholders, including women’s and youth-led organizations, is strengthened to engage effectively in policy and regulatory processes</td>
+                            <td colspan="2"><ul class="activity-list">
+                                    <li>Training/coaching on policy engagement, advocacy, communications</li>
+                                    <li>Support evidence-informed inputs (submissions, position notes)</li>
+                                    <li>Peer learning and exchange between stakeholder groups</li>
+                                    <li>WRO/YLO capacity for sustained policy engagement</li>
+                                </ul></td>
                         </tr>
                     </tbody>
                 </table>
@@ -2879,31 +2949,31 @@
             <h3 style="border-left:4px solid #00A651; padding-left:14px;"><span class="pillar-tag pillar-1" style="background:#00A651;">Component 1</span> Inclusive Nature-based Market Opportunities (Mangrove NbS &amp; Carbon)</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <thead><tr><th style="width:30%">Key Activities</th><th style="width:12%">Timeline</th><th style="width:14%">Location(s)</th><th style="width:12%">Lead Partner</th><th style="width:18%">Supporting Partners</th><th style="width:14%">Outputs</th></tr></thead>
                     <tbody>
-                        <tr style="background:#f0faf0;"><td colspan="6"><strong>IMO 1110 — Mangrove Restoration, Conservation &amp; Compliance</strong></td></tr>
-                        <tr><td>Identify nursery locations; support design and set-up; source propagules/seedlings</td><td>Y1 Q1—Q3</td><td>Kilifi, Kwale (1,300 ha)</td><td>Plan KE</td><td>Verst Carbon, KFS</td><td>Output 1111</td></tr>
-                        <tr><td>Site verification, boundary confirmation, demarcation, mapping; hydrological restoration</td><td>Y1 Q2—Q4</td><td>Priority mangrove sites</td><td>Plan KE</td><td>Verst Carbon, County Govt</td><td>Output 1111</td></tr>
-                        <tr><td>Community planting events, follow-up maintenance; establish monitoring tools</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>Community groups, KFS</td><td>Output 1111</td></tr>
-                        <tr><td>Community conservation planning; awareness programs; local by-laws; joint conservation actions</td><td>Y1 Q2 — Y6 Q4</td><td>Kilifi, Kwale</td><td>Plan KE</td><td>CFAs/BMUs, KFS</td><td>Output 1112</td></tr>
-                        <tr><td>Peer-to-peer learning exchanges between sites; clean energy access approaches</td><td>Y2 Q1 — Y5 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>Community groups</td><td>Output 1112</td></tr>
-                        <tr><td>Select/orient scouts; patrol procedures, safety, reporting training; equipment provision</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>KFS</td><td>Output 1113</td></tr>
-                        <tr><td>Joint patrols with KFS; incident reporting chains; protective infrastructure</td><td>Y2 Q1 — Y6 Q4</td><td>High-pressure areas</td><td>Plan KE</td><td>KFS, CFAs/BMUs</td><td>Output 1113</td></tr>
-                        <tr><td>Market/value chain scan; validate livelihood pathways; business models; enterprise coaching</td><td>Y1 Q3 — Y4 Q4</td><td>Kilifi, Kwale</td><td>MEDA</td><td>Plan KE</td><td>Output 1114</td></tr>
-                        <tr><td>Catalytic grants, inputs, shared equipment; buyer/service-provider linkages; access to finance</td><td>Y2 Q1 — Y6 Q4</td><td>Kilifi, Kwale</td><td>MEDA</td><td>Plan KE</td><td>Output 1114</td></tr>
-                        <tr style="background:#f0faf0;"><td colspan="6"><strong>IMO 1120 — Co-Management Governance &amp; Gender-Responsive Leadership</strong></td></tr>
-                        <tr><td>Organizational capacity assessments for CFAs/BMUs; governance strengthening</td><td>Y1 Q2 — Y3 Q4</td><td>All target areas</td><td>Plan KE</td><td>CFAs/BMUs</td><td>Output 1121</td></tr>
-                        <tr><td>Gender norms analysis; women's life-skills &amp; leadership sessions; positive masculinities dialogues</td><td>Y1 Q3 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, CBTs</td><td>Output 1122</td></tr>
-                        <tr><td>Gender-responsive benefit-sharing rules; safe feedback/grievance mechanisms (incl. GBV referral)</td><td>Y2 Q1 — Y4 Q4</td><td>All co-management sites</td><td>Plan KE</td><td>CFAs/BMUs</td><td>Output 1122</td></tr>
-                        <tr><td>Joint planning workshops with KFS/county; refresher training; supervision systems</td><td>Y1 Q3 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>KFS, County Govt</td><td>Output 1123</td></tr>
-                        <tr><td>Joint co-management committees; co-management agreements/MOUs; shared monitoring</td><td>Y2 Q1 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>KFS, CFAs/BMUs</td><td>Output 1124</td></tr>
-                        <tr style="background:#f0faf0;"><td colspan="6"><strong>IMO 1130 — Blue-Carbon Readiness &amp; Market Engagement (Phased)</strong></td></tr>
-                        <tr><td>BC-TWG established; PPP framework; baseline feasibility; FPIC processes; benefit-sharing design</td><td>Y1 Q1 — Y2 Q4</td><td>Kilifi (1,300 ha)</td><td>Verst Carbon</td><td>CarbonAi, Plan KE, NEMA</td><td>Output 1131</td></tr>
-                        <tr><td>Carbon standard/methodology selection (VCS VM0033, Plan Vivo); dMRV plan; field monitoring</td><td>Y1 Q2 — Y3 Q4</td><td>All restoration sites</td><td>CarbonAi</td><td>Verst Carbon, Plan KE</td><td>Output 1132</td></tr>
-                        <tr><td>Train community monitors; deploy digital tools; QA/QC routines; periodic MRV summaries</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>CarbonAi</td><td>Plan KE, Verst Carbon</td><td>Output 1132</td></tr>
-                        <tr><td>Carbon documentation (PD/PIN, monitoring plan, ESIA); third-party validation; registry submission</td><td>Y3 Q1 — Y4 Q4</td><td>Priority sites</td><td>Verst Carbon</td><td>CarbonAi, Plan KE</td><td>Output 1133</td></tr>
-                        <tr><td>Market engagement strategy; buyer due diligence; Canadian-led buyer pool; commercialization arrangements</td><td>Y3 Q1 — Y6 Q4</td><td>Kenya + Canada + International</td><td>CarbonAi</td><td>Verst Carbon, Plan KE</td><td>Output 1134</td></tr>
-                        <tr><td>Initial benefit-sharing disbursements; carbon revenue allocation; permanence strategy</td><td>Y5 Q1 — Y6 Q4</td><td>All target communities</td><td>Plan KE</td><td>Verst Carbon, CarbonAi, CFAs</td><td>Output 1134</td></tr>
+                        <tr class="imo-divider c1"><td colspan="6"><strong>IMO 1110 — Mangrove Restoration, Conservation &amp; Compliance</strong></td></tr>
+                        <tr><td>Identify nursery locations; support design and set-up; source propagules/seedlings</td><td>Y1 Q1—Q3</td><td>Kilifi, Kwale (1,300 ha)</td><td>Plan KE</td><td>Verst Carbon, KFS</td><td><span class="output-tag">Output 1111</span></td></tr>
+                        <tr><td>Site verification, boundary confirmation, demarcation, mapping; hydrological restoration</td><td>Y1 Q2—Q4</td><td>Priority mangrove sites</td><td>Plan KE</td><td>Verst Carbon, County Govt</td><td><span class="output-tag">Output 1111</span></td></tr>
+                        <tr><td>Community planting events, follow-up maintenance; establish monitoring tools</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>Community groups, KFS</td><td><span class="output-tag">Output 1111</span></td></tr>
+                        <tr><td>Community conservation planning; awareness programs; local by-laws; joint conservation actions</td><td>Y1 Q2 — Y6 Q4</td><td>Kilifi, Kwale</td><td>Plan KE</td><td>CFAs/BMUs, KFS</td><td><span class="output-tag">Output 1112</span></td></tr>
+                        <tr><td>Peer-to-peer learning exchanges between sites; clean energy access approaches</td><td>Y2 Q1 — Y5 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>Community groups</td><td><span class="output-tag">Output 1112</span></td></tr>
+                        <tr><td>Select/orient scouts; patrol procedures, safety, reporting training; equipment provision</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>Plan KE</td><td>KFS</td><td><span class="output-tag">Output 1113</span></td></tr>
+                        <tr><td>Joint patrols with KFS; incident reporting chains; protective infrastructure</td><td>Y2 Q1 — Y6 Q4</td><td>High-pressure areas</td><td>Plan KE</td><td>KFS, CFAs/BMUs</td><td><span class="output-tag">Output 1113</span></td></tr>
+                        <tr><td>Market/value chain scan; validate livelihood pathways; business models; enterprise coaching</td><td>Y1 Q3 — Y4 Q4</td><td>Kilifi, Kwale</td><td>MEDA</td><td>Plan KE</td><td><span class="output-tag">Output 1114</span></td></tr>
+                        <tr><td>Catalytic grants, inputs, shared equipment; buyer/service-provider linkages; access to finance</td><td>Y2 Q1 — Y6 Q4</td><td>Kilifi, Kwale</td><td>MEDA</td><td>Plan KE</td><td><span class="output-tag">Output 1114</span></td></tr>
+                        <tr class="imo-divider c1"><td colspan="6"><strong>IMO 1120 — Co-Management Governance &amp; Gender-Responsive Leadership</strong></td></tr>
+                        <tr><td>Organizational capacity assessments for CFAs/BMUs; governance strengthening</td><td>Y1 Q2 — Y3 Q4</td><td>All target areas</td><td>Plan KE</td><td>CFAs/BMUs</td><td><span class="output-tag">Output 1121</span></td></tr>
+                        <tr><td>Gender norms analysis; women's life-skills &amp; leadership sessions; positive masculinities dialogues</td><td>Y1 Q3 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, CBTs</td><td><span class="output-tag">Output 1122</span></td></tr>
+                        <tr><td>Gender-responsive benefit-sharing rules; safe feedback/grievance mechanisms (incl. GBV referral)</td><td>Y2 Q1 — Y4 Q4</td><td>All co-management sites</td><td>Plan KE</td><td>CFAs/BMUs</td><td><span class="output-tag">Output 1122</span></td></tr>
+                        <tr><td>Joint planning workshops with KFS/county; refresher training; supervision systems</td><td>Y1 Q3 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>KFS, County Govt</td><td><span class="output-tag">Output 1123</span></td></tr>
+                        <tr><td>Joint co-management committees; co-management agreements/MOUs; shared monitoring</td><td>Y2 Q1 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>KFS, CFAs/BMUs</td><td><span class="output-tag">Output 1124</span></td></tr>
+                        <tr class="imo-divider c1"><td colspan="6"><strong>IMO 1130 — Blue-Carbon Readiness &amp; Market Engagement (Phased)</strong></td></tr>
+                        <tr><td>BC-TWG established; PPP framework; baseline feasibility; FPIC processes; benefit-sharing design</td><td>Y1 Q1 — Y2 Q4</td><td>Kilifi (1,300 ha)</td><td>Verst Carbon</td><td>CarbonAi, Plan KE, NEMA</td><td><span class="output-tag">Output 1131</span></td></tr>
+                        <tr><td>Carbon standard/methodology selection (VCS VM0033, Plan Vivo); dMRV plan; field monitoring</td><td>Y1 Q2 — Y3 Q4</td><td>All restoration sites</td><td>CarbonAi</td><td>Verst Carbon, Plan KE</td><td><span class="output-tag">Output 1132</span></td></tr>
+                        <tr><td>Train community monitors; deploy digital tools; QA/QC routines; periodic MRV summaries</td><td>Y1 Q3 — Y6 Q4</td><td>All restoration sites</td><td>CarbonAi</td><td>Plan KE, Verst Carbon</td><td><span class="output-tag">Output 1132</span></td></tr>
+                        <tr><td>Carbon documentation (PD/PIN, monitoring plan, ESIA); third-party validation; registry submission</td><td>Y3 Q1 — Y4 Q4</td><td>Priority sites</td><td>Verst Carbon</td><td>CarbonAi, Plan KE</td><td><span class="output-tag">Output 1133</span></td></tr>
+                        <tr><td>Market engagement strategy; buyer due diligence; Canadian-led buyer pool; commercialization arrangements</td><td>Y3 Q1 — Y6 Q4</td><td>Kenya + Canada + International</td><td>CarbonAi</td><td>Verst Carbon, Plan KE</td><td><span class="output-tag">Output 1134</span></td></tr>
+                        <tr><td>Initial benefit-sharing disbursements; carbon revenue allocation; permanence strategy</td><td>Y5 Q1 — Y6 Q4</td><td>All target communities</td><td>Plan KE</td><td>Verst Carbon, CarbonAi, CFAs</td><td><span class="output-tag">Output 1134</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -2911,25 +2981,25 @@
             <h3 style="border-left:4px solid #0072CE; padding-left:14px;"><span class="pillar-tag pillar-2" style="background:#0072CE;">Component 2</span> Climate-Resilient Seaweed Industry</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <thead><tr><th style="width:30%">Key Activities</th><th style="width:12%">Timeline</th><th style="width:14%">Location(s)</th><th style="width:12%">Lead Partner</th><th style="width:18%">Supporting Partners</th><th style="width:14%">Outputs</th></tr></thead>
                     <tbody>
-                        <tr style="background:#e3f2fd;"><td colspan="6"><strong>IMO 1210 — Production, Seed Systems &amp; Quality</strong></td></tr>
-                        <tr><td>Establish nurseries; train nursery operators/seed custodians; biobank and strain selection lab</td><td>Y1 Q1—Q4</td><td>Priority coastal sites</td><td>Cascadia</td><td>Plan KE</td><td>Output 1211</td></tr>
-                        <tr><td>Thermal tolerance research; seed multiplication/rotation/biosecurity; seed governance agreements</td><td>Y1 Q2 — Y3 Q4</td><td>All seaweed sites</td><td>Cascadia</td><td>Plan KE, producers</td><td>Output 1211</td></tr>
-                        <tr><td>Producer group establishment/strengthening; hands-on production training; climate-resilient methods</td><td>Y1 Q2 — Y4 Q4</td><td>All seaweed sites</td><td>Plan KE</td><td>Cascadia, MEDA</td><td>Output 1212</td></tr>
-                        <tr><td>Farm-level quality standards; post-harvest training; inputs provision; traceability systems</td><td>Y1 Q3 — Y5 Q4</td><td>All seaweed sites</td><td>MEDA</td><td>Cascadia, Plan KE</td><td>Output 1212</td></tr>
-                        <tr style="background:#e3f2fd;"><td colspan="6"><strong>IMO 1220 — Enterprise, Value Addition &amp; Sea-to-Field</strong></td></tr>
-                        <tr><td>Needs assessments; formalization of cooperatives/MSMEs; group management &amp; BDS training</td><td>Y1 Q2 — Y3 Q4</td><td>All seaweed sites</td><td>MEDA</td><td>Plan KE</td><td>Output 1221</td></tr>
-                        <tr><td>Gender barriers analysis; women's agency/leadership development; positive masculinities dialogues</td><td>Y1 Q3 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, YLOs, CBTs</td><td>Output 1222</td></tr>
-                        <tr><td>Gender-responsive benefit-sharing; safe GBV feedback mechanisms; inclusive governance practices</td><td>Y2 Q1 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>MEDA</td><td>Output 1222</td></tr>
-                        <tr><td>Aggregation centres; processing pathways; equipment/inputs; local enterprise development</td><td>Y2 Q1 — Y5 Q4</td><td>Processing hubs, Kilifi/Kwale</td><td>MEDA</td><td>Cascadia, Plan KE</td><td>Output 1223</td></tr>
-                        <tr><td>Sea-to-field working group; greenhouse/on-farm trials (biostimulants); SOPs; feasibility assessments</td><td>Y2 Q1 — Y5 Q4</td><td>Kilifi, Kwale + Canada</td><td>Cascadia</td><td>MEDA, Plan KE</td><td>Output 1224</td></tr>
-                        <tr><td>Scale-up viable sea-to-field value chains (linked with blended finance)</td><td>Y4 Q1 — Y6 Q4</td><td>Coastal + export markets</td><td>Cascadia</td><td>MEDA</td><td>Output 1224</td></tr>
-                        <tr style="background:#e3f2fd;"><td colspan="6"><strong>IMO 1230 — Market Access, Finance &amp; Enabling Services</strong></td></tr>
-                        <tr><td>Market readiness assessments; product/supply readiness; buyer engagement (domestic + international)</td><td>Y2 Q1 — Y6 Q4</td><td>Coastal + Nairobi + Export</td><td>MEDA</td><td>Cascadia, Plan KE</td><td>Output 1231</td></tr>
-                        <tr><td>Offtake agreements; anchor buyer linkages (C-WEED, Cascadia); branding/packaging</td><td>Y2 Q2 — Y6 Q4</td><td>Coastal + international</td><td>MEDA</td><td>Cascadia</td><td>Output 1231</td></tr>
-                        <tr><td>Financial readiness; SME investment profiles; demand-driven finance instruments; FI engagement</td><td>Y2 Q1 — Y5 Q4</td><td>All target areas</td><td>MEDA</td><td>Plan KE</td><td>Output 1232</td></tr>
-                        <tr><td>Strengthen BDS providers; innovation partnerships; coordination platforms; gender-responsive services</td><td>Y2 Q1 — Y6 Q4</td><td>All target counties</td><td>MEDA</td><td>Cascadia, Plan KE</td><td>Output 1233</td></tr>
+                        <tr class="imo-divider c2"><td colspan="6"><strong>IMO 1210 — Production, Seed Systems &amp; Quality</strong></td></tr>
+                        <tr><td>Establish nurseries; train nursery operators/seed custodians; biobank and strain selection lab</td><td>Y1 Q1—Q4</td><td>Priority coastal sites</td><td>Cascadia</td><td>Plan KE</td><td><span class="output-tag">Output 1211</span></td></tr>
+                        <tr><td>Thermal tolerance research; seed multiplication/rotation/biosecurity; seed governance agreements</td><td>Y1 Q2 — Y3 Q4</td><td>All seaweed sites</td><td>Cascadia</td><td>Plan KE, producers</td><td><span class="output-tag">Output 1211</span></td></tr>
+                        <tr><td>Producer group establishment/strengthening; hands-on production training; climate-resilient methods</td><td>Y1 Q2 — Y4 Q4</td><td>All seaweed sites</td><td>Plan KE</td><td>Cascadia, MEDA</td><td><span class="output-tag">Output 1212</span></td></tr>
+                        <tr><td>Farm-level quality standards; post-harvest training; inputs provision; traceability systems</td><td>Y1 Q3 — Y5 Q4</td><td>All seaweed sites</td><td>MEDA</td><td>Cascadia, Plan KE</td><td><span class="output-tag">Output 1212</span></td></tr>
+                        <tr class="imo-divider c2"><td colspan="6"><strong>IMO 1220 — Enterprise, Value Addition &amp; Sea-to-Field</strong></td></tr>
+                        <tr><td>Needs assessments; formalization of cooperatives/MSMEs; group management &amp; BDS training</td><td>Y1 Q2 — Y3 Q4</td><td>All seaweed sites</td><td>MEDA</td><td>Plan KE</td><td><span class="output-tag">Output 1221</span></td></tr>
+                        <tr><td>Gender barriers analysis; women's agency/leadership development; positive masculinities dialogues</td><td>Y1 Q3 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, YLOs, CBTs</td><td><span class="output-tag">Output 1222</span></td></tr>
+                        <tr><td>Gender-responsive benefit-sharing; safe GBV feedback mechanisms; inclusive governance practices</td><td>Y2 Q1 — Y5 Q4</td><td>All target areas</td><td>Plan KE</td><td>MEDA</td><td><span class="output-tag">Output 1222</span></td></tr>
+                        <tr><td>Aggregation centres; processing pathways; equipment/inputs; local enterprise development</td><td>Y2 Q1 — Y5 Q4</td><td>Processing hubs, Kilifi/Kwale</td><td>MEDA</td><td>Cascadia, Plan KE</td><td><span class="output-tag">Output 1223</span></td></tr>
+                        <tr><td>Sea-to-field working group; greenhouse/on-farm trials (biostimulants); SOPs; feasibility assessments</td><td>Y2 Q1 — Y5 Q4</td><td>Kilifi, Kwale + Canada</td><td>Cascadia</td><td>MEDA, Plan KE</td><td><span class="output-tag">Output 1224</span></td></tr>
+                        <tr><td>Scale-up viable sea-to-field value chains (linked with blended finance)</td><td>Y4 Q1 — Y6 Q4</td><td>Coastal + export markets</td><td>Cascadia</td><td>MEDA</td><td><span class="output-tag">Output 1224</span></td></tr>
+                        <tr class="imo-divider c2"><td colspan="6"><strong>IMO 1230 — Market Access, Finance &amp; Enabling Services</strong></td></tr>
+                        <tr><td>Market readiness assessments; product/supply readiness; buyer engagement (domestic + international)</td><td>Y2 Q1 — Y6 Q4</td><td>Coastal + Nairobi + Export</td><td>MEDA</td><td>Cascadia, Plan KE</td><td><span class="output-tag">Output 1231</span></td></tr>
+                        <tr><td>Offtake agreements; anchor buyer linkages (C-WEED, Cascadia); branding/packaging</td><td>Y2 Q2 — Y6 Q4</td><td>Coastal + international</td><td>MEDA</td><td>Cascadia</td><td><span class="output-tag">Output 1231</span></td></tr>
+                        <tr><td>Financial readiness; SME investment profiles; demand-driven finance instruments; FI engagement</td><td>Y2 Q1 — Y5 Q4</td><td>All target areas</td><td>MEDA</td><td>Plan KE</td><td><span class="output-tag">Output 1232</span></td></tr>
+                        <tr><td>Strengthen BDS providers; innovation partnerships; coordination platforms; gender-responsive services</td><td>Y2 Q1 — Y6 Q4</td><td>All target counties</td><td>MEDA</td><td>Cascadia, Plan KE</td><td><span class="output-tag">Output 1233</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -2937,16 +3007,16 @@
             <h3 style="border-left:4px solid #FF8F00; padding-left:14px;"><span class="pillar-tag" style="background:#FF8F00; color:#fff; padding:4px 12px; border-radius:12px; font-size:0.75rem; font-weight:600;">Component 3</span> Enabling Policy &amp; Coordination</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Outputs</th></tr></thead>
+                    <thead><tr><th style="width:30%">Key Activities</th><th style="width:12%">Timeline</th><th style="width:14%">Location(s)</th><th style="width:12%">Lead Partner</th><th style="width:18%">Supporting Partners</th><th style="width:14%">Outputs</th></tr></thead>
                     <tbody>
-                        <tr style="background:#fff3e0;"><td colspan="6"><strong>IMO 1310 — Policy Dialogue &amp; Coordination Mechanisms</strong></td></tr>
-                        <tr><td>Map and convene coordination forums; develop ToRs; regular convenings; inclusive participation</td><td>Y1 Q1 — Y6 Q4</td><td>Kilifi, Kwale + Nairobi</td><td>Plan KE</td><td>All partners, County/National Govt</td><td>Output 1311</td></tr>
-                        <tr><td>Rapid policy/regulatory scan; stakeholder consultations; gap analysis; bottleneck identification</td><td>Y1 Q2 — Y2 Q4</td><td>Kilifi, Kwale + Nairobi</td><td>Plan KE</td><td>MEDA, Verst Carbon</td><td>Output 1312</td></tr>
-                        <tr><td>Structured policy dialogues; joint agenda setting; action tracking; seaweed SME bottleneck resolution</td><td>Y1 Q3 — Y6 Q4</td><td>National + County</td><td>Plan KE</td><td>MEDA, all partners</td><td>Output 1313</td></tr>
-                        <tr style="background:#fff3e0;"><td colspan="6"><strong>IMO 1320 — Advocacy &amp; Technical Engagement</strong></td></tr>
-                        <tr><td>Synthesize evidence into policy products; disseminate through platforms; data visualizations</td><td>Y2 Q1 — Y6 Q4</td><td>Coastal + Nairobi</td><td>Plan KE</td><td>All partners</td><td>Output 1321</td></tr>
-                        <tr><td>Policy engagement plan; briefings with ministries/regulators; advocacy coalitions</td><td>Y2 Q1 — Y6 Q4</td><td>Nairobi + County</td><td>Plan KE</td><td>All partners</td><td>Output 1322</td></tr>
-                        <tr><td>Training/coaching on policy engagement for WROs/YLOs; evidence-informed inputs; peer learning</td><td>Y2 Q1 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, YLOs</td><td>Output 1323</td></tr>
+                        <tr class="imo-divider c3"><td colspan="6"><strong>IMO 1310 — Policy Dialogue &amp; Coordination Mechanisms</strong></td></tr>
+                        <tr><td>Map and convene coordination forums; develop ToRs; regular convenings; inclusive participation</td><td>Y1 Q1 — Y6 Q4</td><td>Kilifi, Kwale + Nairobi</td><td>Plan KE</td><td>All partners, County/National Govt</td><td><span class="output-tag">Output 1311</span></td></tr>
+                        <tr><td>Rapid policy/regulatory scan; stakeholder consultations; gap analysis; bottleneck identification</td><td>Y1 Q2 — Y2 Q4</td><td>Kilifi, Kwale + Nairobi</td><td>Plan KE</td><td>MEDA, Verst Carbon</td><td><span class="output-tag">Output 1312</span></td></tr>
+                        <tr><td>Structured policy dialogues; joint agenda setting; action tracking; seaweed SME bottleneck resolution</td><td>Y1 Q3 — Y6 Q4</td><td>National + County</td><td>Plan KE</td><td>MEDA, all partners</td><td><span class="output-tag">Output 1313</span></td></tr>
+                        <tr class="imo-divider c3"><td colspan="6"><strong>IMO 1320 — Advocacy &amp; Technical Engagement</strong></td></tr>
+                        <tr><td>Synthesize evidence into policy products; disseminate through platforms; data visualizations</td><td>Y2 Q1 — Y6 Q4</td><td>Coastal + Nairobi</td><td>Plan KE</td><td>All partners</td><td><span class="output-tag">Output 1321</span></td></tr>
+                        <tr><td>Policy engagement plan; briefings with ministries/regulators; advocacy coalitions</td><td>Y2 Q1 — Y6 Q4</td><td>Nairobi + County</td><td>Plan KE</td><td>All partners</td><td><span class="output-tag">Output 1322</span></td></tr>
+                        <tr><td>Training/coaching on policy engagement for WROs/YLOs; evidence-informed inputs; peer learning</td><td>Y2 Q1 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>WROs, YLOs</td><td><span class="output-tag">Output 1323</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -2954,7 +3024,7 @@
             <h3 style="border-left:4px solid #888; padding-left:14px;">Cross-Cutting Activities</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Key Activities</th><th>Timeline</th><th>Location(s)</th><th>Lead Partner</th><th>Supporting Partners</th><th>Linkages</th></tr></thead>
+                    <thead><tr><th style="width:30%">Key Activities</th><th style="width:12%">Timeline</th><th style="width:14%">Location(s)</th><th style="width:12%">Lead Partner</th><th style="width:18%">Supporting Partners</th><th style="width:14%">Linkages</th></tr></thead>
                     <tbody>
                         <tr><td>Gender Justice Journey upgrade (group/enterprise level); social norms engagement; GBV mitigation</td><td>Y1 Q2 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>All partners, WROs/YLOs/CBTs</td><td>All components</td></tr>
                         <tr><td>Consortium safeguarding systems design, rollout &amp; monitoring</td><td>Y1 Q1 — Y6 Q4</td><td>All target areas</td><td>Plan KE</td><td>All partners</td><td>All components</td></tr>
