@@ -4069,6 +4069,15 @@
                                     <tr><td>PG5</td><td>Does the institution have a complaint/feedback mechanism?</td><td>1=Yes; 2=No</td><td>—</td></tr>
                                     <tr><td>PG6</td><td>Has the institution engaged in any policy advocacy in the last 12 months?</td><td>1=Yes; 2=No</td><td>Ind. 1121</td></tr>
                                     <tr><td>PG7</td><td>Is the institution linked to county government structures?</td><td>1=Yes, formally; 2=Informally; 3=No</td><td>Ind. 1121</td></tr>
+                                    <tr style="background:#fff3e0;"><td colspan="4"><strong>Section H — Policy &amp; Regulatory Environment (IO 1300)</strong></td></tr>
+                                    <tr><td>PG8</td><td>Have you participated in any multi-stakeholder coordination platform on coastal/blue-economy issues in the last 12 months?</td><td>1=Yes; 2=No</td><td>Ind. 1311</td></tr>
+                                    <tr><td>PG9</td><td>Have regulatory, administrative, or compliance bottlenecks affecting your operations been formally identified and documented?</td><td>1=Yes; 2=Partly; 3=No; 4=Don't know</td><td>Ind. 1311 (NEW)</td></tr>
+                                    <tr><td>PG10</td><td>What are the top 3 regulatory/compliance barriers affecting your coastal enterprise or user group? (open text)</td><td>Open text</td><td>Ind. 1312</td></tr>
+                                    <tr><td>PG11</td><td>Have you received any capacity strengthening on regulatory/compliance processes in the last 12 months?</td><td>1=Yes; 2=No</td><td>Ind. 1312 (NEW)</td></tr>
+                                    <tr><td>PG12</td><td>Have you participated in structured dialogue sessions reviewing policy progress and lessons learned?</td><td>1=Yes; 2=No</td><td>Ind. 1313 (NEW)</td></tr>
+                                    <tr><td>PG13</td><td>Are you aware of any policy briefs, evidence products, or advocacy materials produced from project activities?</td><td>1=Yes; 2=No</td><td>Ind. 1321</td></tr>
+                                    <tr><td>PG14</td><td>Has your organization participated in issue-specific coordination forums to resolve overlapping mandates?</td><td>1=Yes; 2=No</td><td>Ind. 1321 (NEW)</td></tr>
+                                    <tr><td>PG15</td><td>Have you or your organization been involved in advocacy initiatives targeting decision-makers on coastal/blue-economy policy?</td><td>1=Yes; 2=No</td><td>Ind. 1322</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -4153,6 +4162,8 @@
                                 <li><strong>Climate Resilience:</strong> How are climate adaptation and resilience integrated into county development plans? What role has COSME played?</li>
                                 <li><strong>Institutional Coordination:</strong> How effective are coordination platforms (BMUs, CFAs, multi-stakeholder forums) in your county?</li>
                                 <li><strong>Sustainability:</strong> What structures or systems need to be in place for these gains to continue beyond the project?</li>
+                                <li><strong>Regulatory Bottlenecks (IO 1300):</strong> What are the top regulatory, administrative, or compliance barriers affecting coastal user groups and blue economy SMEs? How have these been prioritized and addressed?</li>
+                                <li><strong>Coordination Mechanisms (IO 1300):</strong> Have issue-specific coordination forums successfully resolved overlapping mandates between national and county agencies? What evidence of streamlined processes exists?</li>
                                 <li><strong>Recommendations:</strong> What should the project do differently? What should it continue or scale?</li>
                             </ol>
                             <p><strong>Probes:</strong> Can you give an example? What evidence supports that? How did that change occur? Who was involved?</p>
@@ -4474,8 +4485,8 @@
                                     <tr><td>Date(s)</td><td>DD/MM/YYYY</td><td>Start and end date if multi-day</td></tr>
                                     <tr><td>Venue / Location</td><td>Text</td><td>County, sub-county, venue name</td></tr>
                                     <tr><td>Facilitator(s)</td><td>Text</td><td>Name(s) and organization(s)</td></tr>
-                                    <tr><td>Output Reference</td><td>Select</td><td>e.g., Output 1111, Output 1211</td></tr>
-                                    <tr><td>Component</td><td>Select</td><td>Component 1 (IO 1100) or Component 2 (IO 1200)</td></tr>
+                                    <tr><td>Output Reference</td><td>Select</td><td>e.g., Output 1111, Output 1211, Output 1311</td></tr>
+                                    <tr><td>Component</td><td>Select</td><td>Component 1 (IO 1100), Component 2 (IO 1200), or Component 3 (IO 1300)</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -4683,6 +4694,44 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Tool 3.8: Coordination & Dialogue Session Tracker -->
+                <div class="tool-card" id="tool-3-8">
+                    <div class="tool-header" onclick="this.parentElement.classList.toggle('tool-open')">
+                        <h3>3.8 Coordination &amp; Dialogue Session Tracker</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span class="tool-badge tool-badge-routine">Monitoring</span>
+                            <div class="dl-dropdown"><button class="tool-download-btn" onclick="event.stopPropagation();toggleDlDropdown(this.parentElement)">Download ▾</button><div class="dl-dropdown-content"><button onclick="event.stopPropagation();downloadToolPDF('tool-3-8','COSME2_Coordination_Tracker')"><span class="dl-icon-pdf">PDF</span> Download as PDF</button><button onclick="event.stopPropagation();downloadToolExcel('tool-3-8','COSME2_Coordination_Tracker')"><span class="dl-icon-xls">XLS</span> Download as Excel</button></div></div>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p><strong>Purpose:</strong> Track multi-stakeholder coordination platforms, policy dialogue sessions, issue-specific forums, and advocacy engagements under Component 3 (IO 1300). Captures participation, outcomes, bottlenecks addressed, and evidence of policy/regulatory improvements.</p>
+                        <p><strong>Frequency:</strong> After each coordination meeting, dialogue session, or advocacy event.</p>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Field</th><th>Format</th><th>Notes</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Session Date</td><td>DD/MM/YYYY</td><td>Auto-capture</td></tr>
+                                    <tr><td>Session Type</td><td>Select one</td><td>1=Multi-stakeholder coordination; 2=Policy dialogue; 3=Issue-specific forum; 4=Advocacy engagement; 5=Capacity strengthening; 6=Other</td></tr>
+                                    <tr><td>Output Reference</td><td>Select</td><td>Output 1311, 1312, 1313, 1321, 1322, 1323</td></tr>
+                                    <tr><td>Location / Platform</td><td>Text</td><td>Venue, county, or virtual platform</td></tr>
+                                    <tr><td>Convening Organization</td><td>Text</td><td>Lead organization(s)</td></tr>
+                                    <tr><td>Total Participants</td><td>Numeric</td><td>Sex-disaggregated (M/F)</td></tr>
+                                    <tr><td># Women Participants</td><td>Numeric</td><td>Ind. 1311</td></tr>
+                                    <tr><td># Youth Participants (under 35)</td><td>Numeric</td><td>Ind. 1311</td></tr>
+                                    <tr><td>Stakeholder Categories Present</td><td>Select multiple</td><td>National govt, County govt, KFS, NEMA, Private sector, CSOs/NGOs, WROs, YLOs, Producer groups, Academia, Other</td></tr>
+                                    <tr><td>Key Agenda / Topics Discussed</td><td>Open text</td><td>Brief summary</td></tr>
+                                    <tr><td>Bottleneck(s) Addressed</td><td>Open text</td><td>Regulatory, administrative, or compliance barriers discussed — Ind. 1311 (NEW)</td></tr>
+                                    <tr><td>Decisions / Resolutions Made</td><td>Open text</td><td>Agreed actions, commitments, deadlines</td></tr>
+                                    <tr><td>Evidence of Improvement</td><td>Open text</td><td>Any documented regulatory/process improvements resulting — Ind. 1313 (NEW)</td></tr>
+                                    <tr><td>Policy Products Referenced</td><td>Open text</td><td>Briefs, analyses, case studies used or presented — Ind. 1321</td></tr>
+                                    <tr><td>Follow-Up Actions Required</td><td>Open text</td><td>Next steps and responsible parties</td></tr>
+                                    <tr><td>Recorded By</td><td>Text</td><td>Staff name and organization</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ================================================ -->
@@ -4753,6 +4802,29 @@
                                     <tr><td>1231 # market linkages/offtake agreements established (domestic + international)</td><td>HH Survey D6-D8; Market Tool 3.4</td><td>Transaction records, buyer surveys</td><td>Annual</td><td>MEDA, Cascadia</td></tr>
                                     <tr><td>1232 # inclusive finance instruments developed; private capital crowded in</td><td>Market Tool 3.4; Thematic MV5</td><td>Finance records, deal tracking</td><td>Annual</td><td>MEDA</td></tr>
                                     <tr><td>1233 # BDS providers strengthened; innovation partnerships established</td><td>PG Monitoring 3.3; Market Tool 3.4</td><td>Services mapping, partnership records</td><td>Annual</td><td>MEDA, Cascadia</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Component 3 (IO 1300): Enabling Policy, Regulatory &amp; Coordination Environment</h4>
+                        <div class="table-container">
+                            <table class="tool-table">
+                                <thead><tr><th>Indicator</th><th>Tool &amp; Question #</th><th>Data Source</th><th>Frequency</th><th>Responsible</th></tr></thead>
+                                <tbody>
+                                    <tr style="background:#fff3e0;"><td colspan="5"><strong>IMO 1310 — Policy Dialogue, Coordination &amp; Regulatory Bottleneck Resolution</strong></td></tr>
+                                    <tr><td>1311 # multi-stakeholder coordination platforms functional; inclusive participation of women/youth</td><td>Policy Tracker 3.6; KII 2.1a</td><td>Platform records, participation logs</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1311 (NEW) Implementation-based bottleneck analysis and action plan completed and validated</td><td>Policy Tracker 3.6; Thematic PG1</td><td>Analysis reports, validation records</td><td>Annual</td><td>Plan KE, MEDA</td></tr>
+                                    <tr><td>1312 Priority policy and regulatory gaps identified and documented, incl. gender/youth barriers</td><td>Thematic PG1; Policy Tracker 3.6</td><td>Gap analysis reports, policy scans</td><td>Annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1312 (NEW) Targeted capacity strengthening delivered to authorities on regulatory/compliance processes</td><td>Attendance 3.1; Training Eval 3.2</td><td>Training records, evaluation forms</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1313 Government, private sector, civil society actors engage in structured policy dialogue</td><td>Policy Tracker 3.6; FGD 2.2d</td><td>Dialogue session records, minutes</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1313 (NEW) Structured dialogue sessions review progress, lessons learned; evidence of improvements documented</td><td>Outcome Harvesting 2.3; Policy Tracker 3.6</td><td>Session reports, evidence logs</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr style="background:#fff3e0;"><td colspan="5"><strong>IMO 1320 — Advocacy, Technical Engagement &amp; Stakeholder Capacity</strong></td></tr>
+                                    <tr><td>1321 Policy-relevant evidence, analyses, and lessons synthesized and disseminated</td><td>Policy Tracker 3.6</td><td>Publication records, briefs, case studies</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1321 (NEW) Issue-specific coordination forums convened (national-county, multi-agency) to resolve overlapping mandates</td><td>Policy Tracker 3.6; KII 2.1a, 2.1f</td><td>Forum records, resolution documents</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1322 Targeted policy engagement and advocacy initiatives implemented with decision-makers</td><td>Policy Tracker 3.6; Outcome Harvesting 2.3</td><td>Advocacy records, engagement logs</td><td>Annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1322 (NEW) National and county actors receive capacity support on streamlined operational practices</td><td>Attendance 3.1; Training Eval 3.2</td><td>Training records, practice adoption logs</td><td>Semi-annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1323 Capacity of selected stakeholders (incl. WROs/YLOs) strengthened for policy engagement</td><td>HH Survey F2, F3; KII 2.1d</td><td>Capacity assessments, FGDs</td><td>Annual</td><td>Plan KE</td></tr>
+                                    <tr><td>1323 (NEW) Dialogue and feedback mechanisms established for stakeholders to sustain engagement in policy coordination</td><td>Policy Tracker 3.6; FGD 2.2d</td><td>Mechanism records, feedback logs</td><td>Annual</td><td>Plan KE</td></tr>
                                 </tbody>
                             </table>
                         </div>
