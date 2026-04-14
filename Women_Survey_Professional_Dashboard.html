@@ -14970,8 +14970,8 @@
  document.getElementById('survey-title').textContent = standalone.title;
  document.getElementById('footer-title').innerHTML = standalone.footerTitle;
  document.getElementById('footer-sample').textContent = standalone.footerSample;
- // Render charts
- standalone.renderFn();
+ // Render charts (wrapped in try-catch to prevent overlay getting stuck)
+ try { standalone.renderFn(); } catch(e) { console.error('renderFn error for', surveyKey, e); }
  return;
  }
 
@@ -21994,8 +21994,9 @@
  }
  // Clear any pending hide
  if (hideTimer) clearTimeout(hideTimer);
- // Call original
- var result = _prevSwitch(key);
+ // Call original (wrapped in try-catch to always dismiss overlay)
+ var result;
+ try { result = _prevSwitch(key); } catch(e) { console.error('switchSurvey error:', e); }
  // Hide after charts render (requestAnimationFrame + fallback)
  hideTimer = setTimeout(function() {
  requestAnimationFrame(function() {
@@ -22238,7 +22239,7 @@
   window.addEventListener('load', function() {
    // Create an inline service worker via Blob
    var swCode = [
-    "var CACHE_NAME = 'cosme-dashboard-v1';",
+    "var CACHE_NAME = 'cosme-dashboard-v2';",
     "var URLS_TO_CACHE = [",
     " './',",
     " 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',",
@@ -24908,6 +24909,14 @@
  document.querySelectorAll(STAGGER_SELECTORS).forEach(function(parent) {
  parent.classList.add('anim-stagger');
  });
+ // Fallback: force-reveal elements still invisible after 600ms
+ setTimeout(function() {
+ document.querySelectorAll('.anim-observe').forEach(function(el) {
+ if (!el.classList.contains('anim-visible') && el.offsetParent !== null) {
+ el.classList.add('anim-visible');
+ }
+ });
+ }, 600);
  });
  }
 
