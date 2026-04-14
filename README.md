@@ -1,107 +1,270 @@
-# COSME Data Analysis & Results Dashboard
+# COSME Procurement Tracking System
 
-A comprehensive data analysis and visualization platform for the **COSME (Community Oriented Social Monitoring & Evaluation)** project. This repository contains interactive dashboards, data analysis scripts, and reporting tools for community development program monitoring.
+A comprehensive full-stack procurement lifecycle management system built for the COSME Project. Supports **line-item-level approvals**, dual currency (KES / EUR), role-based access control, audit trails, and donor-ready reporting.
 
 ---
 
-## 📊 Dashboards
+## Architecture
 
-| Dashboard | Description |
-|-----------|-------------|
-| **COSME Results Dashboard** | Main interactive dashboard with multi-tab views covering overview, gap analysis, production data, rankings, challenges, and projections |
-| **Forestry Conservation Dashboard** | Streamlit + Plotly dashboard comparing baseline vs midline assessments for Community Forest Conservation Groups |
-| **Women Survey Dashboard** | Professional dashboard for women's baseline/midline survey results |
-| **Men Survey Dashboard** | Professional dashboard for men's baseline/midline survey results |
-| **MERL Workplan Tracker** | Monitoring, Evaluation, Research & Learning workplan tracking tool |
-| **Donor Report** | Donor-facing impact and progress report |
-| **Solvatten Impact Dashboard** | Complete impact analysis for the Solvatten water treatment program |
-| **VSLA Monitoring** | Village Savings & Loan Association data monitoring and analysis |
+| Layer      | Technology                                 |
+|------------|-------------------------------------------|
+| **Frontend** | React 18 + TypeScript + Ant Design + Recharts |
+| **Backend**  | Node.js + Express + TypeScript + Prisma ORM   |
+| **Database** | PostgreSQL 15+                              |
+| **Auth**     | JWT + bcrypt with RBAC                      |
 
-## 🛠️ Tech Stack
+## Project Structure
 
-- **Frontend:** HTML, CSS, JavaScript, Chart.js
-- **Backend/Analysis:** Python, Pandas, NumPy
-- **Visualization:** Plotly, Chart.js, Streamlit
-- **Data Sources:** CSV, Excel (`.xlsx`)
+```
+Procurement/
+├── SYSTEM_DESIGN.md          # Complete design document (Sections A-H)
+├── README.md                 # This file
+│
+├── database/
+│   ├── 001_schema.sql        # Full PostgreSQL DDL (24 tables, triggers, views)
+│   └── 002_seed_data.sql     # COSME-specific seed data
+│
+├── backend/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── .env.example
+│   ├── prisma/
+│   │   └── schema.prisma     # Prisma data model
+│   └── src/
+│       ├── server.ts          # Express app entry point
+│       ├── lib/
+│       │   ├── prisma.ts      # DB client singleton
+│       │   ├── constants.ts   # Statuses, transitions, Zod schemas
+│       │   └── audit.ts       # Audit log helpers
+│       ├── middleware/
+│       │   ├── auth.ts        # JWT + RBAC middleware
+│       │   └── errorHandler.ts
+│       └── routes/
+│           ├── auth.ts
+│           ├── procurementPlans.ts
+│           ├── lineItems.ts
+│           ├── approvals.ts
+│           ├── purchaseRequisitions.ts
+│           ├── deliveries.ts
+│           ├── stockAssets.ts
+│           ├── exchangeRates.ts
+│           ├── reports.ts
+│           ├── admin.ts
+│           ├── attachments.ts
+│           ├── comments.ts
+│           └── importExport.ts
+│
+└── frontend/
+    ├── package.json
+    ├── vite.config.ts
+    ├── index.html
+    └── src/
+        ├── main.tsx
+        ├── App.tsx
+        ├── api.ts             # Axios instance with JWT interceptor
+        ├── store.ts           # Zustand auth store (persisted)
+        ├── index.css
+        ├── components/
+        │   ├── AppLayout.tsx  # Sidebar navigation
+        │   └── StatusTag.tsx  # Status badge + formatters
+        └── pages/
+            ├── LoginPage.tsx
+            ├── DashboardPage.tsx
+            ├── ProcurementPlansPage.tsx
+            ├── PlanDetailPage.tsx
+            ├── CreatePlanPage.tsx
+            ├── ApprovalInboxPage.tsx
+            ├── PurchaseRequisitionsPage.tsx
+            ├── DeliveriesPage.tsx
+            ├── StockAssetsPage.tsx
+            ├── ExchangeRatesPage.tsx
+            ├── ReportsPage.tsx
+            ├── AdminUsersPage.tsx
+            └── AuditLogPage.tsx
+```
 
-## 🚀 Getting Started
+---
+
+## System Modules
+
+| # | Module | Description |
+|---|--------|-------------|
+| 1 | **Procurement Plan Header** | Create/view plans with tracking no, fiscal year, quarter, project, location, donor |
+| 2 | **Line Items** | Full CRUD with auto-calculated costs, field-level RBAC, stock-on-hand warnings |
+| 3 | **Approval Workflow** | Line-item-level multi-step approvals, bulk approve, delegate, return, cancel |
+| 4 | **Purchase Requisitions** | Link approved items to PRs, update sourcing details |
+| 5 | **Delivery & Receipt** | Partial delivery tracking with auto-status transitions |
+| 6 | **Stock/Asset Register** | Track stock on hand and asset tags by location |
+| 7 | **Exchange Rates** | KES/EUR rates with currency converter endpoint |
+| 8 | **Reporting** | Dashboard KPIs, pipeline, approval ageing, overdue deliveries, stock avoidance |
+| 9 | **Admin** | User/role management, approval rules, lookup tables, audit log viewer |
+| 10 | **Import/Export** | CSV/XLSX import with row-level validation, Excel export with approval trail |
+
+---
+
+## Line Item Statuses (10)
+
+```
+Draft → Submitted for Approval → Approved → PR Raised → Ordered/Contracted
+          ↕                                                    ↓
+  Returned for Correction                          Delivery In Progress
+                                                         ↓
+                                                  Delivered/Closed
+
+  Any (except Delivered/Closed) → Cancelled
+  Any → On Hold → (previous status)
+```
+
+## Roles
+
+| Role | Capabilities |
+|------|-------------|
+| **Requester** | Create plans + line items, submit for approval |
+| **Supply Chain Officer** | Update sourcing fields, raise PRs, record deliveries |
+| **Project/Department Manager** | Approve/return/cancel/delegate items |
+| **Finance/Grants** | View-only, exchange rates, reports |
+| **Stores/Inventory Officer** | Stock & asset management, receive deliveries |
+| **System Admin** | Full access including user/role/rules management |
+
+---
+
+## Getting Started
 
 ### Prerequisites
+- Node.js 18+
+- PostgreSQL 15+
+- npm or yarn
 
-- Python 3.8+
-- pip
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/muiruri126-bot/COSME-Data-Analysis-Results-Dashboard.git
-cd COSME-Data-Analysis-Results-Dashboard
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Running the Forestry Dashboard (Streamlit)
+### 1. Database Setup
 
 ```bash
-streamlit run forestry_dashboard.py
+# Create database
+psql -U postgres -c "CREATE DATABASE cosme_procurement;"
+
+# Run schema
+psql -U postgres -d cosme_procurement -f database/001_schema.sql
+
+# Load seed data
+psql -U postgres -d cosme_procurement -f database/002_seed_data.sql
 ```
 
-### Viewing HTML Dashboards
+### 2. Backend Setup
 
-Open any `.html` dashboard file directly in your browser:
+```bash
+cd backend
+cp .env.example .env
+# Edit .env with your PostgreSQL connection string and JWT secret
 
-- `COSME_Offline_Dashboard.html` — Main COSME Results Dashboard
-- `Women_Survey_Professional_Dashboard.html` — Women's Survey Dashboard
-- `Men_Survey_Professional_Dashboard.html` — Men's Survey Dashboard
-- `donor_report.html` — Donor Report
-- `merl_workplan_tracker.html` — MERL Workplan Tracker
-
-## 📁 Project Structure
-
-```
-├── COSME_Offline_Dashboard.html      # Main COSME Results Dashboard
-├── forestry_dashboard.py            # Streamlit Forestry Dashboard
-├── Women_Survey_Professional_Dashboard.html
-├── Men_Survey_Professional_Dashboard.html
-├── donor_report.html
-├── merl_workplan_tracker.html
-├── solvatten_impact_complete.html
-├── midline.html
-├── ranking_335_members.html
-├── analyze_csv.py                   # CSV data analysis scripts
-├── analyze_latest.py
-├── analyze_member_rankings.py
-├── member_category_analysis.py
-├── member_summary.py
-├── requirements.txt                 # Python dependencies
-├── Training Manuals/                # Training documentation
-└── VSLA Data_Monitoring_06.10.2025.csv
+npm install
+npx prisma generate
+npx prisma db pull   # (or use prisma migrate if preferred)
+npm run dev
 ```
 
-## 📈 Features
+Backend runs on http://localhost:3001
 
-- **Interactive Charts** — Dynamic visualizations with Chart.js and Plotly
-- **Multi-Tab Navigation** — Organized data views across different analysis areas
-- **Filter & Drill-Down** — Filter data by region, group, time period, and more
-- **Baseline vs Midline Comparison** — Track progress between assessment periods
-- **Theme Selector** — Multiple color palettes for the Forestry Dashboard
-- **Responsive Design** — Works across desktop and mobile devices
-- **Export Capabilities** — Generate reports for donors and stakeholders
+### 3. Frontend Setup
 
-## 🤝 Contributing
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-analysis`)
-3. Commit your changes (`git commit -m 'Add new analysis module'`)
-4. Push to the branch (`git push origin feature/new-analysis`)
-5. Open a Pull Request
+Frontend runs on http://localhost:3000 (proxies API to :3001)
 
-## 📄 License
+### 4. Login
 
-This project is for internal use by the COSME program team.
+Use seed data credentials (default password for all: `CosmePass2025!`):
+
+| Email | Role |
+|-------|------|
+| admin@cosme.org | System Admin |
+| manager@cosme.org | Project/Department Manager |
+| sc.officer@cosme.org | Supply Chain Officer |
+| requester@cosme.org | Requester |
+| finance@cosme.org | Finance/Grants |
+| stores@cosme.org | Stores/Inventory Officer |
 
 ---
 
-*Built for community impact monitoring and evidence-based decision making.*
+## API Reference
+
+Base URL: `/api/v1`
+
+### Auth
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/login` | Login with email/password |
+| GET | `/auth/me` | Get current user |
+
+### Procurement Plans
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/procurement-plans` | List plans (paginated, filterable) |
+| GET | `/procurement-plans/:id` | Plan detail with line items |
+| POST | `/procurement-plans` | Create plan with line items |
+| PUT | `/procurement-plans/:id` | Update plan header |
+| DELETE | `/procurement-plans/:id` | Soft delete |
+
+### Line Items
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/line-items/plan/:planId` | Add line item to plan |
+| GET | `/line-items/:id` | Get line item detail |
+| PUT | `/line-items/:id` | Update (field-level RBAC) |
+| POST | `/line-items/:id/submit` | Submit for approval |
+| POST | `/line-items/bulk-submit` | Bulk submit |
+| DELETE | `/line-items/:id` | Soft delete |
+
+### Approvals
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/approvals/:id/approve` | Approve line item |
+| POST | `/approvals/:id/return` | Return for correction |
+| POST | `/approvals/:id/cancel` | Cancel line item |
+| POST | `/approvals/:id/delegate` | Delegate to another approver |
+| POST | `/approvals/bulk-approve` | Bulk approve |
+
+### Purchase Requisitions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/purchase-requisitions` | List PRs |
+| GET | `/purchase-requisitions/:id` | PR detail |
+| POST | `/purchase-requisitions` | Create PR (links approved items) |
+| PUT | `/purchase-requisitions/:id/sourcing` | Update sourcing details |
+
+### Deliveries
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/deliveries/line-item/:id` | Record delivery |
+| GET | `/deliveries/line-item/:id` | List deliveries for item |
+
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/reports/dashboard` | Full dashboard data |
+| GET | `/reports/pipeline` | Pipeline by status |
+| GET | `/reports/approval-ageing` | Ageing detail |
+| GET | `/reports/overdue-deliveries` | Overdue items |
+| GET | `/reports/stock-avoided` | Stock avoidance report |
+
+### Import/Export
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/import-export/export/:planId` | Export plan as XLSX |
+| POST | `/import-export/import/:planId` | Import CSV/XLSX line items |
+
+---
+
+## Design Document
+
+See [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) for the complete 8-section design covering:
+- **A**: Solution Overview
+- **B**: Data Model (24 tables, full ERD)
+- **C**: Workflow & Permissions
+- **D**: API Design with request/response examples
+- **E**: UI/UX Module Screens
+- **F**: Reporting & Dashboards
+- **G**: Implementation Plan (3 phases, 3 tech stacks)
+- **H**: Risks & Mitigations

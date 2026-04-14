@@ -1,0 +1,14 @@
+{
+  "name": "cosme-procurement-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "COSME Procurement Tracking System — Plan International Kenya",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:backend": "cd backend && npm install && npx prisma generate",
+    "build": "npm run build:backend && npm run build:frontend",
+    "install:all": "cd frontend && npm install && cd ../backend && npm install"
+  }
+}

@@ -1,0 +1,525 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                     String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectName            String                  @map("project_name") @db.VarChar(200)
+  projectCode            String                  @unique @map("project_code") @db.VarChar(50)
+  description            String?
+  globalRegionalHub      String?                 @map("global_regional_hub") @db.VarChar(200)
+  countryOffice          String?                 @map("country_office") @db.VarChar(200)
+  fadSpadNumber          String?                 @map("fad_spad_number") @db.VarChar(100)
+  fundingSourceId        String?                 @map("funding_source_id") @db.Uuid
+  donorName              String?                 @map("donor_name") @db.VarChar(200)
+  startDate              DateTime?               @map("start_date") @db.Date
+  endDate                DateTime?               @map("end_date") @db.Date
+  isActive               Boolean                 @default(true) @map("is_active")
+  createdAt              DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  fundingSource          FundingSource?          @relation(fields: [fundingSourceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  procurementPlanHeaders ProcurementPlanHeader[]
+  userRoles              UserRole[]
+
+  @@map("projects")
+}
+
+model Location {
+  id            String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  locationName  String                    @unique @map("location_name") @db.VarChar(200)
+  isActive      Boolean                   @default(true) @map("is_active")
+  createdAt     DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  approvalRules LineItemApprovalRule[]
+  lineItems     ProcurementPlanLineItem[]
+  stockAssets   StockAsset[]
+
+  @@map("locations")
+}
+
+model FundingSource {
+  id                     String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceName             String                  @map("source_name") @db.VarChar(200)
+  donorName              String?                 @map("donor_name") @db.VarChar(200)
+  isActive               Boolean                 @default(true) @map("is_active")
+  createdAt              DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  projects               Project[]
+  procurementPlanHeaders ProcurementPlanHeader[]
+
+  @@map("funding_sources")
+}
+
+model MaterialGroup {
+  id                     String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  groupNumber            String                    @unique @map("group_number") @db.VarChar(50)
+  groupName              String                    @map("group_name") @db.VarChar(200)
+  defaultSourcingMethodId String?                   @map("default_sourcing_method_id") @db.Uuid
+  isActive               Boolean                   @default(true) @map("is_active")
+  createdAt              DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  defaultSourcingMethod  SourcingMethod?            @relation("MaterialGroupDefaultSourcing", fields: [defaultSourcingMethodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  approvalRules          LineItemApprovalRule[]
+  lineItems              ProcurementPlanLineItem[]
+
+  @@map("material_groups")
+}
+
+model UnitOfMeasure {
+  id        String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uomCode   String                    @unique @map("uom_code") @db.VarChar(20)
+  uomName   String                    @map("uom_name") @db.VarChar(100)
+  createdAt DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  lineItems ProcurementPlanLineItem[]
+
+  @@map("units_of_measure")
+}
+
+model SourcingMethod {
+  id                    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  methodName            String                    @unique @map("method_name") @db.VarChar(200)
+  isActive              Boolean                   @default(true) @map("is_active")
+  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  approvalRules         LineItemApprovalRule[]
+  defaultForMaterials   MaterialGroup[]            @relation("MaterialGroupDefaultSourcing")
+  lineItems             ProcurementPlanLineItem[]
+
+  @@map("sourcing_methods")
+}
+
+model FiscalPeriod {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  month      Int
+  quarter    String   @db.VarChar(5)
+  fiscalYear String   @map("fiscal_year") @db.VarChar(10)
+  startDate  DateTime @map("start_date") @db.Date
+  endDate    DateTime @map("end_date") @db.Date
+
+  @@unique([month, fiscalYear])
+  @@map("fiscal_periods")
+}
+
+model User {
+  id                     String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                  String                    @unique @db.VarChar(255)
+  fullName               String                    @map("full_name") @db.VarChar(200)
+  passwordHash           String                    @map("password_hash") @db.VarChar(255)
+  isActive               Boolean                   @default(true) @map("is_active")
+  lastLogin              DateTime?                 @map("last_login") @db.Timestamptz(6)
+  resetToken             String?                   @map("reset_token") @db.VarChar(255)
+  resetTokenExpiry       DateTime?                 @map("reset_token_expiry") @db.Timestamptz(6)
+  createdAt              DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  attachmentsUploaded    Attachment[]
+  auditActions           AuditLog[]
+  commentsAuthored       Comment[]
+  deliveriesReceived     Delivery[]
+  exchangeRatesCreated   ExchangeRate[]
+  issuesAssigned         IssueLog[]                @relation("IssueAssignee")
+  issuesRaised           IssueLog[]                @relation("IssueRaiser")
+  approvalSteps          LineItemApprovalStep[]    @relation("SpecificApprover")
+  approvalsMade          LineItemApproval[]        @relation("Approver")
+  approvalsDelegatedFrom LineItemApproval[]        @relation("DelegatedFrom")
+  createdHeaders         ProcurementPlanHeader[]   @relation("HeaderCreator")
+  managedHeaders         ProcurementPlanHeader[]   @relation("DepartmentManager")
+  createdLineItems       ProcurementPlanLineItem[] @relation("LineItemCreator")
+  submittedPRs           PurchaseRequisition[]
+  stockUpdates           StockAsset[]
+  userRoles              UserRole[]
+  notifications          Notification[]
+
+  @@map("users")
+}
+
+model Notification {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  type       String   @db.VarChar(50) // SUBMITTED, APPROVED, RETURNED, CANCELLED, PR_RAISED, DELIVERED
+  title      String   @db.VarChar(300)
+  message    String
+  lineItemId String?  @map("line_item_id") @db.Uuid
+  headerId   String?  @map("header_id") @db.Uuid
+  isRead     Boolean  @default(false) @map("is_read")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model Role {
+  id            String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleName      String                 @unique @map("role_name") @db.VarChar(100)
+  description   String?
+  createdAt     DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  approvalSteps LineItemApprovalStep[]
+  permissions   Permission[]
+  userRoles     UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  roleId    String   @map("role_id") @db.Uuid
+  projectId String?  @map("project_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([userId, roleId, projectId])
+  @@map("user_roles")
+}
+
+model Permission {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId            String   @map("role_id") @db.Uuid
+  resource          String   @db.VarChar(100)
+  action            String   @db.VarChar(50)
+  fieldRestrictions Json?    @default("[]") @map("field_restrictions")
+  conditions        Json?    @default("{}") @map("conditions")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  role              Role     @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([roleId, resource, action])
+  @@map("permissions")
+}
+
+model ProcurementPlanHeader {
+  id                    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trackingNo            String                    @unique @map("tracking_no") @db.VarChar(50)
+  projectId             String                    @map("project_id") @db.Uuid
+  typeOfProcurementPlan String                    @map("type_of_procurement_plan") @db.VarChar(100)
+  departmentManagerId   String                    @map("department_manager_id") @db.Uuid
+  fadSpadNumber         String?                   @map("fad_spad_number") @db.VarChar(100)
+  projectCodeCostCentre String                    @map("project_code_cost_centre") @db.VarChar(100)
+  fundingSourceId       String                    @map("funding_source_id") @db.Uuid
+  donorName             String?                   @map("donor_name") @db.VarChar(200)
+  startDate             DateTime                  @map("start_date") @db.Date
+  endDate               DateTime                  @map("end_date") @db.Date
+  headerStatus          String                    @default("Draft") @map("header_status") @db.VarChar(20)
+  createdBy             String?                   @map("created_by") @db.Uuid
+  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt             DateTime?                 @map("deleted_at") @db.Timestamptz(6)
+  globalRegionalHub     String?                   @map("global_regional_hub") @db.VarChar(200)
+  countryOffice         String?                   @map("country_office") @db.VarChar(200)
+  financialYear         String?                   @map("financial_year") @db.VarChar(10)
+  currency              String?                   @default("KES") @db.VarChar(3)
+  issueLogs             IssueLog[]
+  creator               User?                     @relation("HeaderCreator", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  departmentManager     User                      @relation("DepartmentManager", fields: [departmentManagerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fundingSource         FundingSource             @relation(fields: [fundingSourceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  project               Project                   @relation(fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lineItems             ProcurementPlanLineItem[]
+
+  @@index([startDate, endDate], map: "idx_pph_dates")
+  @@index([donorName], map: "idx_pph_donor")
+  @@index([fundingSourceId], map: "idx_pph_funding")
+  @@index([departmentManagerId], map: "idx_pph_manager")
+  @@index([projectId], map: "idx_pph_project")
+  @@index([headerStatus], map: "idx_pph_status")
+  @@map("procurement_plan_headers")
+}
+
+model ProcurementPlanLineItem {
+  id                            String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  headerId                      String                @map("header_id") @db.Uuid
+  lineItemRef                   String                @map("line_item_ref") @db.VarChar(50)
+  locationId                    String                @map("location_id") @db.Uuid
+  activityNumber                String?               @map("activity_number") @db.VarChar(100)
+  materialGroupId               String                @map("material_group_id") @db.Uuid
+  itemDescription               String                @map("item_description")
+  uomId                         String                @map("uom_id") @db.Uuid
+  quantity                      Decimal               @db.Decimal(15, 4)
+  currencyCode                  String                @default("KES") @map("currency_code") @db.VarChar(3)
+  estimatedUnitPrice            Decimal               @map("estimated_unit_price") @db.Decimal(18, 4)
+  estimatedTotalItemServiceCost Decimal?              @map("estimated_total_item_service_cost") @db.Decimal(18, 4)
+  estimatedWarehousingCost      Decimal               @default(0) @map("estimated_warehousing_cost") @db.Decimal(18, 4)
+  estimatedTransportCost        Decimal               @default(0) @map("estimated_transport_cost") @db.Decimal(18, 4)
+  estimatedTotalCost            Decimal?              @map("estimated_total_cost") @db.Decimal(18, 4)
+  month                         Int
+  quarter                       String                @db.VarChar(5)
+  fiscalYear                    String                @map("fiscal_year") @db.VarChar(10)
+  status                        String                @default("Draft") @db.VarChar(30)
+  statusChangedAt               DateTime?             @default(now()) @map("status_changed_at") @db.Timestamptz(6)
+  prNumber                      String?               @map("pr_number") @db.VarChar(50)
+  prSubmittedDate               DateTime?             @map("pr_submitted_date") @db.Date
+  estimatedDeliveryDate         DateTime?             @map("estimated_delivery_date") @db.Date
+  isStockOnHandAvailable        Boolean               @default(false) @map("is_stock_on_hand_available")
+  quantityAvailable             Decimal               @default(0) @map("quantity_available") @db.Decimal(15, 4)
+  itemType                      String?               @map("item_type") @db.VarChar(50)
+  sourcingLocation              String?               @map("sourcing_location") @db.VarChar(200)
+  sourcingMethodId              String?               @map("sourcing_method_id") @db.Uuid
+  ltaReferenceNumber            String?               @map("lta_reference_number") @db.VarChar(100)
+  estimatedDeliveryNeeded       String?               @map("estimated_delivery_needed")
+  actualDeliveryDate            DateTime?             @map("actual_delivery_date") @db.Date
+  stockOnHandAssetPost          String?               @map("stock_on_hand_asset_post")
+  sourcingPlan                  String?               @map("sourcing_plan")
+  deliveredQuantity             Decimal               @default(0) @map("delivered_quantity") @db.Decimal(15, 4)
+  cancellationReason            String?               @map("cancellation_reason")
+  createdBy                     String?               @map("created_by") @db.Uuid
+  createdAt                     DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt                     DateTime?             @map("deleted_at") @db.Timestamptz(6)
+  deliveries                    Delivery[]
+  approvals                     LineItemApproval[]
+  prLineItems                   PrLineItem[]
+  creator                       User?                 @relation("LineItemCreator", fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  header                        ProcurementPlanHeader @relation(fields: [headerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  location                      Location              @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  materialGroup                 MaterialGroup         @relation(fields: [materialGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sourcingMethod                SourcingMethod?       @relation(fields: [sourcingMethodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  uom                           UnitOfMeasure         @relation(fields: [uomId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  stockAssets                   StockAsset[]
+
+  @@unique([headerId, lineItemRef])
+  @@index([currencyCode], map: "idx_li_currency")
+  @@index([estimatedDeliveryDate], map: "idx_li_delivery_date")
+  @@index([headerId], map: "idx_li_header")
+  @@index([locationId], map: "idx_li_location")
+  @@index([materialGroupId], map: "idx_li_material")
+  @@index([month, quarter, fiscalYear], map: "idx_li_month_qtr_fy")
+  @@index([prNumber], map: "idx_li_pr")
+  @@index([lineItemRef], map: "idx_li_ref")
+  @@index([sourcingMethodId], map: "idx_li_sourcing")
+  @@index([status], map: "idx_li_status")
+  @@index([statusChangedAt], map: "idx_li_status_changed")
+  @@map("procurement_plan_line_items")
+}
+
+model LineItemApprovalRule {
+  id                    String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ruleName              String                 @map("rule_name") @db.VarChar(200)
+  costThresholdMin      Decimal?               @map("cost_threshold_min") @db.Decimal(18, 4)
+  costThresholdMax      Decimal?               @map("cost_threshold_max") @db.Decimal(18, 4)
+  costThresholdCurrency String?                @map("cost_threshold_currency") @db.VarChar(3)
+  itemType              String?                @map("item_type") @db.VarChar(50)
+  sourcingMethodId      String?                @map("sourcing_method_id") @db.Uuid
+  materialGroupId       String?                @map("material_group_id") @db.Uuid
+  locationId            String?                @map("location_id") @db.Uuid
+  priority              Int                    @default(0)
+  isActive              Boolean                @default(true) @map("is_active")
+  createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  location              Location?              @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  materialGroup         MaterialGroup?         @relation(fields: [materialGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sourcingMethod        SourcingMethod?        @relation(fields: [sourcingMethodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  steps                 LineItemApprovalStep[]
+
+  @@index([isActive, priority(sort: Desc)], map: "idx_ar_active")
+  @@map("line_item_approval_rules")
+}
+
+model LineItemApprovalStep {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ruleId             String               @map("rule_id") @db.Uuid
+  stepOrder          Int                  @map("step_order")
+  approverRoleId     String?              @map("approver_role_id") @db.Uuid
+  specificApproverId String?              @map("specific_approver_id") @db.Uuid
+  isParallel         Boolean              @default(false) @map("is_parallel")
+  canDelegate        Boolean              @default(true) @map("can_delegate")
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  approverRole       Role?                @relation(fields: [approverRoleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rule               LineItemApprovalRule @relation(fields: [ruleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  specificApprover   User?                @relation("SpecificApprover", fields: [specificApproverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  approvals          LineItemApproval[]
+
+  @@unique([ruleId, stepOrder])
+  @@map("line_item_approval_steps")
+}
+
+model LineItemApproval {
+  id              String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lineItemId      String                  @map("line_item_id") @db.Uuid
+  stepId          String                  @map("step_id") @db.Uuid
+  approverId      String                  @map("approver_id") @db.Uuid
+  delegatedFromId String?                 @map("delegated_from_id") @db.Uuid
+  decision        String                  @db.VarChar(20)
+  comments        String?
+  decidedAt       DateTime                @default(now()) @map("decided_at") @db.Timestamptz(6)
+  createdAt       DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  approver        User                    @relation("Approver", fields: [approverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  delegatedFrom   User?                   @relation("DelegatedFrom", fields: [delegatedFromId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lineItem        ProcurementPlanLineItem @relation(fields: [lineItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  step            LineItemApprovalStep    @relation(fields: [stepId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([approverId], map: "idx_lia_approver")
+  @@index([decidedAt], map: "idx_lia_decided")
+  @@index([decision], map: "idx_lia_decision")
+  @@index([lineItemId], map: "idx_lia_line_item")
+  @@map("line_item_approvals")
+}
+
+model PurchaseRequisition {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  prNumber      String       @unique @map("pr_number") @db.VarChar(50)
+  submittedDate DateTime     @map("submitted_date") @db.Date
+  submittedBy   String       @map("submitted_by") @db.Uuid
+  status        String       @default("Open") @db.VarChar(30)
+  notes         String?
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deliveries    Delivery[]
+  prLineItems   PrLineItem[]
+  submitter     User         @relation(fields: [submittedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([prNumber], map: "idx_pr_number")
+  @@index([status], map: "idx_pr_status")
+  @@index([submittedBy], map: "idx_pr_submitted_by")
+  @@map("purchase_requisitions")
+}
+
+model PrLineItem {
+  id         String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  prId       String                  @map("pr_id") @db.Uuid
+  lineItemId String                  @map("line_item_id") @db.Uuid
+  createdAt  DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  lineItem   ProcurementPlanLineItem @relation(fields: [lineItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pr         PurchaseRequisition     @relation(fields: [prId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([prId, lineItemId])
+  @@index([lineItemId], map: "idx_prli_li")
+  @@index([prId], map: "idx_prli_pr")
+  @@map("pr_line_items")
+}
+
+model Delivery {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lineItemId            String                  @map("line_item_id") @db.Uuid
+  prId                  String?                 @map("pr_id") @db.Uuid
+  deliveryDate          DateTime                @map("delivery_date") @db.Date
+  quantityDelivered     Decimal                 @map("quantity_delivered") @db.Decimal(15, 4)
+  receivedBy            String?                 @map("received_by") @db.Uuid
+  deliveryNoteRef       String?                 @map("delivery_note_ref") @db.VarChar(200)
+  conditionNotes        String?                 @map("condition_notes")
+  createdAt             DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  lineItem              ProcurementPlanLineItem @relation(fields: [lineItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  purchase_requisitions PurchaseRequisition?    @relation(fields: [prId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  receiver              User?                   @relation(fields: [receivedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([deliveryDate], map: "idx_del_date")
+  @@index([lineItemId], map: "idx_del_line_item")
+  @@index([prId], map: "idx_del_pr")
+  @@map("deliveries")
+}
+
+model StockAsset {
+  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lineItemId      String?                  @map("line_item_id") @db.Uuid
+  itemDescription String                   @map("item_description")
+  itemType        String                   @map("item_type") @db.VarChar(50)
+  quantityOnHand  Decimal                  @default(0) @map("quantity_on_hand") @db.Decimal(15, 4)
+  locationId      String?                  @map("location_id") @db.Uuid
+  lastCheckedDate DateTime?                @map("last_checked_date") @db.Date
+  lastUpdatedBy   String?                  @map("last_updated_by") @db.Uuid
+  assetTag        String?                  @map("asset_tag") @db.VarChar(100)
+  createdAt       DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  updatedByUser   User?                    @relation(fields: [lastUpdatedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lineItem        ProcurementPlanLineItem? @relation(fields: [lineItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  location        Location?                @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([lineItemId], map: "idx_sa_line_item")
+  @@index([locationId], map: "idx_sa_location")
+  @@index([itemType], map: "idx_sa_type")
+  @@map("stock_assets")
+}
+
+model ExchangeRate {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fromCurrency  String   @map("from_currency") @db.VarChar(3)
+  toCurrency    String   @map("to_currency") @db.VarChar(3)
+  rate          Decimal  @db.Decimal(18, 6)
+  effectiveDate DateTime @map("effective_date") @db.Date
+  createdBy     String?  @map("created_by") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  creator       User?    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([fromCurrency, toCurrency, effectiveDate])
+  @@index([fromCurrency, toCurrency, effectiveDate(sort: Desc)], map: "idx_er_lookup")
+  @@map("exchange_rates")
+}
+
+model Attachment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType String   @map("entity_type") @db.VarChar(50)
+  entityId   String   @map("entity_id") @db.Uuid
+  fileName   String   @map("file_name") @db.VarChar(500)
+  filePath   String   @map("file_path") @db.VarChar(1000)
+  fileSize   BigInt?  @map("file_size")
+  mimeType   String?  @map("mime_type") @db.VarChar(100)
+  uploadedBy String   @map("uploaded_by") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  uploader   User     @relation(fields: [uploadedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([entityType, entityId], map: "idx_att_entity")
+  @@map("attachments")
+}
+
+model Comment {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType  String   @map("entity_type") @db.VarChar(50)
+  entityId    String   @map("entity_id") @db.Uuid
+  authorId    String   @map("author_id") @db.Uuid
+  commentText String   @map("comment_text")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  author      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([authorId], map: "idx_cmt_author")
+  @@index([entityType, entityId], map: "idx_cmt_entity")
+  @@map("comments")
+}
+
+model AuditLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType  String   @map("entity_type") @db.VarChar(50)
+  entityId    String   @map("entity_id") @db.Uuid
+  action      String   @db.VarChar(20)
+  fieldName   String?  @map("field_name") @db.VarChar(100)
+  oldValue    String?  @map("old_value")
+  newValue    String?  @map("new_value")
+  performedBy String   @map("performed_by") @db.Uuid
+  performedAt DateTime @default(now()) @map("performed_at") @db.Timestamptz(6)
+  ipAddress   String?  @map("ip_address") @db.VarChar(45)
+  userAgent   String?  @map("user_agent")
+  performer   User     @relation(fields: [performedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([action], map: "idx_audit_action")
+  @@index([entityType, entityId, performedAt], map: "idx_audit_entity")
+  @@index([performedAt], map: "idx_audit_time")
+  @@index([performedBy], map: "idx_audit_user")
+  @@map("audit_log")
+}
+
+model IssueLog {
+  id               String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  headerId         String                @map("header_id") @db.Uuid
+  lineItemRef      String?               @map("line_item_ref") @db.VarChar(50)
+  issueDescription String                @map("issue_description")
+  raisedBy         String                @map("raised_by") @db.Uuid
+  raisedDate       DateTime              @default(now()) @map("raised_date") @db.Date
+  priority         String?               @default("Medium") @db.VarChar(20)
+  status           String?               @default("Open") @db.VarChar(30)
+  assignedTo       String?               @map("assigned_to") @db.Uuid
+  resolution       String?
+  resolvedDate     DateTime?             @map("resolved_date") @db.Date
+  createdAt        DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  assignee         User?                 @relation("IssueAssignee", fields: [assignedTo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  header           ProcurementPlanHeader @relation(fields: [headerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  raiser           User                  @relation("IssueRaiser", fields: [raisedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([headerId], map: "idx_issue_header")
+  @@index([status], map: "idx_issue_status")
+  @@map("issue_logs")
+}
