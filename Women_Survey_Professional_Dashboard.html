@@ -12809,6 +12809,140 @@
  // ensure correct sizing after the pane is visible
  setTimeout(()=>{ Object.values(window._raCharts).forEach(c=>{ try{c.resize();}catch(e){} }); }, 30);
  };
+
+ // Render every pane's charts (used by the report generator so all canvases exist)
+ function raRenderAll(){
+ [renderOverview,renderKnowledge,renderPractices,renderAdoption,renderAttitudes,renderBarriers,renderObs]
+ .forEach(fn=>{ try{ fn(); }catch(e){ console.error('RA report render', e); } });
+ }
+
+ // ===== PDF REPORT GENERATOR =====
+ // Renders all panes off-screen, captures each chart as a PNG, then opens a
+ // clean, branded, print-ready report (browser "Save as PDF").
+ window.generateRAReport = function(btn){
+ const sec = document.getElementById('ra-assessment-section');
+ if(!sec) return;
+ const oldLabel = btn ? btn.textContent : null;
+ if(btn){ btn.textContent = 'Preparing report…'; btn.style.pointerEvents='none'; btn.style.opacity='0.7'; }
+
+ const prevStyle = sec.getAttribute('style') || '';
+ const panes = Array.from(sec.querySelectorAll('.ra-pane'));
+ const prevPaneDisp = panes.map(p=>p.style.display);
+ const animWas = Chart.defaults.animation;
+ Chart.defaults.animation = false;
+
+ // make the section laid-out (so canvases have width) but off-screen
+ sec.style.cssText = 'display:block;position:fixed;left:-12000px;top:0;width:1100px;background:#fff;z-index:-1;';
+ panes.forEach(p=>p.style.display='block');
+ raRenderAll();
+
+ setTimeout(function(){
+ const png = id => { const c=document.getElementById(id); try{ return c ? c.toDataURL('image/png') : ''; }catch(e){ return ''; } };
+ const ins = id => { const e=document.getElementById(id); return e ? e.innerHTML : ''; };
+
+ const N = A.meta.totalRows;
+ const attended = dv('a4_training','Yes');
+ const female = dv('a1_sex','Female');
+ let ageSum=0,ageN=0; const adst=Q('a2_age').dist;
+ Object.keys(adst).forEach(k=>{ const v=parseInt(k,10); if(!isNaN(v)){ ageSum+=v*adst[k]; ageN+=adst[k]; } });
+ const avgAge = ageN?Math.round(ageSum/ageN):'–';
+ const bMean = [1,2,3,4,5,6,7,8,9].map(i=>Q('b'+i+'_before').mean), nMean=[1,2,3,4,5,6,7,8,9].map(i=>Q('b'+i+'_now').mean);
+ const avgB=Math.round(bMean.reduce((a,b)=>a+b,0)/9*100)/100, avgN=Math.round(nMean.reduce((a,b)=>a+b,0)/9*100)/100;
+ const d1reg = ['d1a','d1b','d1c','d1d','d1e','d1f','d1g','d1h','d1i','d1j'].map(k=>pct(Q(k).dist['Yes, regularly']||0,Q(k).n));
+ const avgReg = Math.round(d1reg.reduce((a,b)=>a+b,0)/d1reg.length*10)/10;
+ const harvestImp = pct(dv('d3a','Increased / Improved'),Q('d3a').n);
+ const incomeImp = pct(dv('d3c','Increased / Improved'),Q('d3c').n);
+ const willContinue = pct(dv('h1_continue','Yes'),Q('h1_continue').n);
+ const wouldRec = pct(sumL('h2_recommend',['Yes']),Q('h2_recommend').n);
+
+ const SECTIONS = [
+ {t:'A. Respondent Profile & Training Exposure', ins:'ra-overview-insight', c:[['ra-county','Respondents by County'],['ra-sex','Respondents by Sex'],['ra-age','Age Distribution'],['ra-sessions','Training Sessions Attended'],['ra-crops','Main Crops Grown'],['ra-engagement','Training Engagement']]},
+ {t:'B. Self-Rated Knowledge — Before vs Now', ins:'ra-knowledge-insight', c:[['ra-knowledge-gain','Knowledge: Before vs Now (mean score)',1],['ra-knowledge-now','Knowledge Level Now — Distribution',1]]},
+ {t:'C. Farming Practices — Before vs After Training', ins:'ra-practices-insight', c:[['ra-practice-shift','Key Practice Adoption: Before vs After',1],['ra-c2','Soil Fertility Inputs'],['ra-c11','Productivity Level'],['ra-c8','Seed Type'],['ra-c6','Soil Conservation Measures']]},
+ {t:'D. Current Adoption & Self-Reported Outcomes', ins:'ra-adoption-insight', c:[['ra-d1','Current Adoption (No / Tried / Regularly)',1],['ra-d3','Outcomes vs Before (% Improved)'],['ra-d2','Change in Intensity (% More / Much more)']]},
+ {t:'E. Attitudes Towards Regenerative Agriculture', ins:'ra-attitudes-insight', c:[['ra-attitudes','Mean Agreement (1–5)',1],['ra-attitudes-dist','Agreement Distribution',1]]},
+ {t:'F. Barriers to Sustained Adoption', ins:'ra-barriers-insight', c:[['ra-barriers-weighted','Barriers (weighted rank score)'],['ra-barriers-rank1','Top-Ranked Barrier (1st choice)']]},
+ {t:'G. Field Observation & Sustainability', ins:'ra-obs-insight', c:[['ra-observation','Enumerator Field Observation',1],['ra-sustainability','Sustainability & Continuation',1]]}
+ ];
+
+ let body = '';
+ SECTIONS.forEach(s=>{
+ body += '<section class="rep-sec"><h2>'+s.t+'</h2>';
+ const insTxt = ins(s.ins);
+ if(insTxt) body += '<div class="rep-insight">'+insTxt+'</div>';
+ body += '<div class="rep-charts">';
+ s.c.forEach(ch=>{
+ const data = png(ch[0]);
+ if(!data) return;
+ const full = ch[2] ? ' full' : '';
+ body += '<figure class="rep-fig'+full+'"><img src="'+data+'" alt="'+ch[1]+'"><figcaption>'+ch[1]+'</figcaption></figure>';
+ });
+ body += '</div></section>';
+ });
+
+ const kpi = (v,l) => '<div class="kpi"><div class="kpi-v">'+v+'</div><div class="kpi-l">'+l+'</div></div>';
+ const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+ const html =
+'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>COSME — Regenerative Agriculture Assessment Report</title>'
++'<style>'
++'*{box-sizing:border-box;}body{font-family:"Segoe UI",Arial,sans-serif;color:#222;margin:0;padding:0;line-height:1.6;}'
++'.cover{background:linear-gradient(135deg,#1B5E20 0%,#2E7D32 55%,#43A047 100%);color:#fff;padding:70px 56px;}'
++'.cover h1{font-size:30px;margin:0 0 10px;}.cover p{margin:4px 0;opacity:.95;font-size:15px;}'
++'.cover .meta{margin-top:26px;font-size:13px;opacity:.9;}'
++'.wrap{padding:32px 46px;max-width:1000px;margin:0 auto;}'
++'h2{color:#1B5E20;border-bottom:3px solid #2E7D32;padding-bottom:6px;margin:34px 0 14px;font-size:19px;page-break-after:avoid;}'
++'.exec{background:#f1f8e9;border-left:5px solid #2E7D32;border-radius:8px;padding:18px 22px;margin:18px 0;}'
++'.exec h3{margin:0 0 10px;color:#1B5E20;}'
++'.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0;}'
++'.kpi{flex:1 1 150px;background:#fff;border:1px solid #cfe3c4;border-radius:10px;padding:14px;text-align:center;}'
++'.kpi-v{font-size:22px;font-weight:800;color:#1B5E20;}.kpi-l{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.3px;margin-top:4px;}'
++'.rep-insight{background:#f0f4ff;border-left:4px solid #0072CE;border-radius:8px;padding:12px 16px;font-size:13.5px;margin:10px 0 16px;}'
++'.rep-charts{display:flex;flex-wrap:wrap;gap:18px;}'
++'.rep-fig{flex:1 1 calc(50% - 9px);margin:0;border:1px solid #e3e7ea;border-radius:8px;padding:10px;background:#fff;page-break-inside:avoid;}'
++'.rep-fig.full{flex:1 1 100%;}'
++'.rep-fig img{width:100%;height:auto;display:block;}'
++'.rep-fig figcaption{font-size:12px;color:#555;text-align:center;margin-top:6px;font-weight:600;}'
++'.rep-sec{page-break-inside:auto;}'
++'ul.find{margin:8px 0 0;padding-left:20px;}ul.find li{margin:4px 0;font-size:13.5px;}'
++'.foot{margin-top:36px;border-top:1px solid #ddd;padding-top:14px;font-size:11px;color:#888;text-align:center;}'
++'@media print{.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.kpi,.exec,.rep-insight,.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;}h2{page-break-after:avoid;}}'
++'@page{margin:14mm;}'
++'</style></head><body>'
++'<div class="cover"><h1>Regenerative Agriculture Assessment</h1>'
++'<p>Farmer Knowledge, Attitudes &amp; Practices (KAP) — Training Impact</p>'
++'<p>Kilifi &amp; Kwale Counties, Kenya</p>'
++'<div class="meta">COSME Project &nbsp;|&nbsp; '+N+' farmers assessed &nbsp;|&nbsp; Generated '+today+'</div></div>'
++'<div class="wrap">'
++'<div class="exec"><h3>Executive Summary</h3>'
++'<div class="kpis">'
++kpi(N,'Farmers')+kpi(pct(attended,N)+'%','Attended Training')+kpi(pct(female,N)+'%','Women')+kpi(avgAge+' yrs','Avg Age')
++kpi(avgB+'→'+avgN,'Knowledge (of 5)')+kpi(avgReg+'%','Adopt Regularly')+kpi(willContinue+'%','Will Continue')+kpi(wouldRec+'%','Would Recommend')
++'</div>'
++'<ul class="find">'
++'<li>Self-rated knowledge rose across all nine RA topics, from an average of <strong>'+avgB+'/5</strong> before training to <strong>'+avgN+'/5</strong> now (+'+(Math.round((avgN-avgB)*100)/100)+' points).</li>'
++'<li>Practice adoption shifted sharply: e.g. regular mulching, organic soil fertility, crop rotation and improved seed are now widespread.</li>'
++'<li><strong>'+harvestImp+'%</strong> of farmers report improved crop harvests and <strong>'+incomeImp+'%</strong> improved farming income versus before training.</li>'
++'<li>Attitudes are overwhelmingly positive — <strong>'+willContinue+'%</strong> intend to continue and <strong>'+wouldRec+'%</strong> would recommend the practices.</li>'
++'<li>The most-cited barrier to sustaining RA is water scarcity / rainfall variability.</li>'
++'</ul></div>'
++body
++'<div class="foot">COSME Project — Plan International &nbsp;|&nbsp; Regenerative Agriculture KAP Assessment &nbsp;|&nbsp; '+N+' respondents, Kilifi &amp; Kwale &nbsp;|&nbsp; Generated '+today+'</div>'
++'</div></body></html>';
+
+ // restore the live dashboard section
+ Chart.defaults.animation = animWas;
+ sec.setAttribute('style', prevStyle);
+ panes.forEach((p,i)=>p.style.display = prevPaneDisp[i]||'none');
+ try{ Object.values(window._raCharts).forEach(c=>{ try{c.resize();}catch(e){} }); }catch(e){}
+
+ const w = window.open('', '_blank');
+ if(!w){ alert('Please allow pop-ups to generate the report.'); if(btn){btn.textContent=oldLabel;btn.style.pointerEvents='';btn.style.opacity='';} return; }
+ w.document.open(); w.document.write(html); w.document.close();
+ setTimeout(function(){ try{ w.focus(); w.print(); }catch(e){} }, 600);
+ if(btn){ btn.textContent=oldLabel; btn.style.pointerEvents=''; btn.style.opacity=''; }
+ }, 450);
+ };
  })();
  </script>
  <!-- ================= END RA ASSESSMENT SECTION ================= -->
@@ -28202,6 +28336,35 @@
  ]
  },
  {
+ id: 'ra-assessment',
+ title: 'Regenerative Agriculture Assessment',
+ icon: '',
+ iconBg: 'linear-gradient(135deg,#1B5E20,#2E7D32)',
+ category: 'surveys',
+ badge: 'Survey',
+ badgeColor: '#2e7d32',
+ desc: 'Farmer Knowledge, Attitudes & Practices (KAP) assessment of regenerative agriculture training in Kilifi & Kwale — 264 farmers. Generate a full PDF report (charts, KPIs & analysis) on demand.',
+ generate: 'generateRAReport',
+ dataFiles: [
+ { name: 'RA Aggregates (decoded JSON)', file: 'ra_aggregates.json' }
+ ],
+ stats: [
+ { icon: '', text: '<strong>264</strong> farmers (Kilifi & Kwale)' },
+ { icon: '', text: '<strong>99.6%</strong> attended RA training' },
+ { icon: '', text: 'Knowledge <strong>1.55 &rarr; 4.08 / 5</strong>' },
+ { icon: '', text: '<strong>7</strong> sections, 22 charts' }
+ ],
+ sections: [
+ { n: 1, title: 'Respondent Profile', detail: 'County, sex, age, crops & training exposure' },
+ { n: 2, title: 'Knowledge (Then–Now)', detail: '9 RA topics, before vs now self-rating' },
+ { n: 3, title: 'Practices Before/After', detail: 'Tillage, fertility, mulching, rotation, seed, trees' },
+ { n: 4, title: 'Adoption & Outcomes', detail: 'Current adoption + harvest/income changes' },
+ { n: 5, title: 'Attitudes', detail: '9 agreement statements' },
+ { n: 6, title: 'Barriers', detail: 'Ranked constraints to adoption' },
+ { n: 7, title: 'Observation & Sustainability', detail: 'Field evidence + continuation intentions' }
+ ]
+ },
+ {
  id: 'mangrove',
  title: 'Mangrove & Conservation Training',
  icon: '',
@@ -28635,6 +28798,11 @@
       actions.innerHTML = `
        <a href="${r.pdf}" download="${r.pdf}" class="rpt-dl-btn primary">Download PDF</a>
        <a href="${r.pdf}" target="_blank" class="rpt-dl-btn outline"> View in Browser</a>
+      `;
+     } else if (r.generate) {
+      actions.innerHTML = `
+       <button onclick="window['${r.generate}'](this)" class="rpt-dl-btn primary" style="border:none;cursor:pointer;font:inherit;">Generate PDF Report</button>
+       <span style="color:#888;font-size:0.86em;">Opens a print-ready report — choose &ldquo;Save as PDF&rdquo; in the print dialog.</span>
       `;
      } else {
       actions.innerHTML = `<p style="color:#888;font-size:0.92em;margin:0;">No combined PDF — download individual reports from the files list below.</p>`;
