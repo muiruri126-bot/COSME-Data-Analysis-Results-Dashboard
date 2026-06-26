@@ -25195,9 +25195,8 @@
   window.addEventListener('load', function() {
    // Create an inline service worker via Blob
    var swCode = [
-    "var CACHE_NAME = 'cosme-dashboard-v3';",
+    "var CACHE_NAME = 'cosme-dashboard-v4';",
     "var URLS_TO_CACHE = [",
-    " './',",
     " 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',",
     " 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js',",
     " 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',",
@@ -25206,6 +25205,7 @@
     "];",
     "",
     "self.addEventListener('install', function(e) {",
+    " self.skipWaiting();",
     " e.waitUntil(",
     "  caches.open(CACHE_NAME).then(function(cache) {",
     "   return cache.addAll(URLS_TO_CACHE);",
@@ -25214,12 +25214,20 @@
     "});",
     "",
     "self.addEventListener('fetch', function(e) {",
+    " var req = e.request;",
+    " if (req.method !== 'GET') { return; }",
+    " // Network-first for page navigations / HTML so updates always appear (no stale page)",
+    " if (req.mode === 'navigate' || req.destination === 'document') {",
+    "  e.respondWith(fetch(req).catch(function() { return caches.match(req); }));",
+    "  return;",
+    " }",
+    " // Cache-first for static CDN assets (versioned URLs)",
     " e.respondWith(",
-    "  caches.match(e.request).then(function(resp) {",
-    "   return resp || fetch(e.request).then(function(response) {",
+    "  caches.match(req).then(function(resp) {",
+    "   return resp || fetch(req).then(function(response) {",
     "    if (response && response.status === 200 && response.type === 'basic') {",
     "     var clone = response.clone();",
-    "     caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });",
+    "     caches.open(CACHE_NAME).then(function(cache) { cache.put(req, clone); });",
     "    }",
     "    return response;",
     "   });",
@@ -25232,16 +25240,24 @@
     "  caches.keys().then(function(names) {",
     "   return Promise.all(",
     "    names.filter(function(n) { return n !== CACHE_NAME; }).map(function(n) { return caches.delete(n); })",
-    "   );",
+    "   ).then(function() { return self.clients.claim(); });",
     "  })",
     " );",
     "});"
    ].join("\\n");
 
+   // When a new service worker takes control of a page that an older one
+   // already controlled, reload once so the user immediately gets the fresh build.
+   var hadController = !!navigator.serviceWorker.controller;
+   navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (hadController && !window.__cosmeSWReloaded) { window.__cosmeSWReloaded = true; window.location.reload(); }
+   });
+
    var blob = new Blob([swCode], { type: 'application/javascript' });
    var swUrl = URL.createObjectURL(blob);
    navigator.serviceWorker.register(swUrl, { scope: './' }).then(function(reg) {
     console.log('[PWA] Service Worker registered, scope:', reg.scope);
+    reg.update();
    }).catch(function(err) {
     console.warn('[PWA] SW registration failed (Blob SW may not be supported on all hosts):', err);
    });
