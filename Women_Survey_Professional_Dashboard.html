@@ -24171,6 +24171,7 @@
 
  // VSLA Theme Colors
  const VSLA_NAVY = '#0A2139';
+ const vslaFmtKES = v => { const a = Math.abs(v); if (a >= 1e6) { const m = v/1e6; return (Number.isInteger(m) ? m : m.toFixed(1)) + 'M'; } return (v/1e3).toFixed(0) + 'k'; };
  const VSLA_TEAL = '#008080';
  const VSLA_GOLD = '#C8A951';
  const VSLA_GREY = '#ECECEC';
@@ -24451,14 +24452,14 @@
  vslaChart('vsla-chart-loans-disbursed', {
  type: 'bar',
  data: { labels: counties, datasets: [{ label: 'Loans Disbursed (KES)', data: counties.map(c => cAgg[c].loansDisbursed), backgroundColor: [VSLA_NAVY, VSLA_TEAL] }] },
- options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => (v/1000).toFixed(0)+'k' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Amount (KES)' }, ticks: { callback: v => (v/1000)+'k' } } } }
+ options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: vslaFmtKES } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Amount (KES)' }, ticks: { callback: vslaFmtKES } } } }
  });
 
  // Repayment by county
  vslaChart('vsla-chart-loans-repaid', {
  type: 'bar',
  data: { labels: counties, datasets: [{ label: 'Loans Repaid (KES)', data: counties.map(c => cAgg[c].loansRepaid), backgroundColor: ['#2E7D32', VSLA_GOLD] }] },
- options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: v => (v/1000).toFixed(0)+'k' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Amount (KES)' }, ticks: { callback: v => (v/1000)+'k' } } } }
+ options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' }, formatter: vslaFmtKES } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Amount (KES)' }, ticks: { callback: vslaFmtKES } } } }
  });
 
  // Repayment value ranges
@@ -30701,7 +30702,7 @@
  let incRows=rows.map(r=>({s:r.s,inc:r.inc}));
  if(n>1) incRows=incRows.filter(r=>r.inc>0);
  incRows.sort((a,b)=>b.inc-a.inc);
- mk('pdmsw-income', { type:'bar', data:{ labels:incRows.map(r=>r.s), datasets:[{ label:'Income (KES)', data:incRows.map(r=>r.inc), backgroundColor:'#2E7D32', borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ title:{display:true,text:'Group Income from Seaweed — last 12 months (KES)',font:{size:14,weight:'bold'}}, legend:{display:false}, datalabels:{anchor:'end',align:'end',rotation:-90,formatter:v=>(v/1000).toFixed(0)+'k',font:{weight:'bold',size:9},color:'#333'} }, scales:{ x:{ ticks:{font:{size:9},maxRotation:60,minRotation:45} }, y:{ beginAtZero:true, ticks:{callback:v=> v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'k'} } } } });
+ mk('pdmsw-income', { type:'bar', data:{ labels:incRows.map(r=>r.s), datasets:[{ label:'Income (KES)', data:incRows.map(r=>r.inc), backgroundColor:'#2E7D32', borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ title:{display:true,text:'Group Income from Seaweed — last 12 months (KES)',font:{size:14,weight:'bold'}}, legend:{display:false}, datalabels:{anchor:'end',align:'end',rotation:-90,formatter:v=> v>=1e6?(v/1e6).toFixed(2)+'M':(v/1e3).toFixed(0)+'k',font:{weight:'bold',size:9},color:'#333'} }, scales:{ x:{ ticks:{font:{size:9},maxRotation:60,minRotation:45} }, y:{ beginAtZero:true, ticks:{callback:v=> v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'k'} } } } });
 
  const buyC={}; rows.forEach(r=>{ if(r.sold==='yes' && r.buy){ buyC[r.buy]=(buyC[r.buy]||0)+1; } });
  const buyE=Object.keys(buyC).map(k=>[k,buyC[k]]).sort((a,b)=>b[1]-a[1]);
