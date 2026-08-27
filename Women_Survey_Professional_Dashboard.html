@@ -24264,22 +24264,31 @@
  return a;
  }, {count:0,femaleReg:0,maleReg:0,totalReg:0,femaleLeft:0,maleLeft:0,totalLeft:0,activeSavingF:0,activeSavingM:0,activeSavingT:0,savings:0,savingsArr:[],loansDisbursed:0,loansRepaid:0,interest:0,sfCount:0,sfVal:0,always:0,often:0,sometimes:0});
 
- const attrF = tot.femaleReg > 0 ? (tot.femaleLeft / tot.femaleReg * 100).toFixed(1) : '0';
- const attrM = tot.maleReg > 0 ? (tot.maleLeft / tot.maleReg * 100).toFixed(1) : '0';
- const attrAll = tot.totalReg > 0 ? (tot.totalLeft / tot.totalReg * 100).toFixed(1) : '0';
- const pctSavingF = tot.femaleReg > 0 ? (tot.activeSavingF / tot.femaleReg * 100).toFixed(1) : '0';
+ // Membership & group counts are STOCKS: a group repeats each quarter, so count it
+ // once using its latest reporting period (avoids double-counting across quarters).
+ const vslaLatest = (arr => { const rank = v => ({Cycle_1:1,Cycle_2:2,Cycle_3:3}[v.cycle]||0)*10 + ({Q1:1,Q2:2,Q3:3,Q4:4}[v.quarter]||0); const b={}; arr.forEach(v=>{ if(!b[v.name] || rank(v) >= rank(b[v.name])) b[v.name]=v; }); return Object.values(b); })(data);
+ const nGroups = vslaLatest.length;
+ const mtot = vslaLatest.reduce((a,v)=>{ a.femaleReg+=v.femaleReg; a.maleReg+=v.maleReg; a.totalReg+=v.totalReg; a.femaleLeft+=v.femaleLeft; a.maleLeft+=v.maleLeft; a.totalLeft+=v.totalLeft; a.activeSavingF+=v.activeSavingF; a.activeSavingM+=v.activeSavingM; a.activeSavingT+=v.activeSavingT; return a; }, {femaleReg:0,maleReg:0,totalReg:0,femaleLeft:0,maleLeft:0,totalLeft:0,activeSavingF:0,activeSavingM:0,activeSavingT:0});
+ const cMemb = {};
+ vslaLatest.forEach(v=>{ const m = cMemb[v.county] || (cMemb[v.county]={groups:0,femaleReg:0,maleReg:0,totalReg:0,femaleLeft:0,maleLeft:0,totalLeft:0,activeSavingT:0}); m.groups++; m.femaleReg+=v.femaleReg; m.maleReg+=v.maleReg; m.totalReg+=v.totalReg; m.femaleLeft+=v.femaleLeft; m.maleLeft+=v.maleLeft; m.totalLeft+=v.totalLeft; m.activeSavingT+=v.activeSavingT; });
+
+ const attrF = mtot.femaleReg > 0 ? (mtot.femaleLeft / mtot.femaleReg * 100).toFixed(1) : '0';
+ const attrM = mtot.maleReg > 0 ? (mtot.maleLeft / mtot.maleReg * 100).toFixed(1) : '0';
+ const attrAll = mtot.totalReg > 0 ? (mtot.totalLeft / mtot.totalReg * 100).toFixed(1) : '0';
+ const pctSavingF = mtot.femaleReg > 0 ? (mtot.activeSavingF / mtot.femaleReg * 100).toFixed(1) : '0';
  const roi = tot.loansDisbursed > 0 ? (tot.interest / tot.loansDisbursed * 100).toFixed(1) : '0';
  const repayPct = tot.loansDisbursed > 0 ? (tot.loansRepaid / tot.loansDisbursed * 100).toFixed(1) : '0';
  const sfPct = tot.count > 0 ? (tot.sfCount / tot.count * 100).toFixed(1) : '0';
  const cAgg = vslaCountyAgg(data);
  const counties = Object.keys(cAgg).sort();
+ counties.forEach(c=>{ if(!cMemb[c]) cMemb[c]={groups:0,femaleReg:0,maleReg:0,totalReg:0,femaleLeft:0,maleLeft:0,totalLeft:0,activeSavingT:0}; });
  const el = id => document.getElementById(id);
 
  // ===== PAGE 1: OVERVIEW =====
- if (el('vsla-kpi-total')) el('vsla-kpi-total').textContent = tot.count;
- if (el('vsla-kpi-female')) el('vsla-kpi-female').textContent = tot.femaleReg.toLocaleString();
- if (el('vsla-kpi-male')) el('vsla-kpi-male').textContent = tot.maleReg.toLocaleString();
- if (el('vsla-kpi-members')) el('vsla-kpi-members').textContent = tot.totalReg.toLocaleString();
+ if (el('vsla-kpi-total')) el('vsla-kpi-total').textContent = nGroups;
+ if (el('vsla-kpi-female')) el('vsla-kpi-female').textContent = mtot.femaleReg.toLocaleString();
+ if (el('vsla-kpi-male')) el('vsla-kpi-male').textContent = mtot.maleReg.toLocaleString();
+ if (el('vsla-kpi-members')) el('vsla-kpi-members').textContent = mtot.totalReg.toLocaleString();
  if (el('vsla-kpi-attr-f')) el('vsla-kpi-attr-f').textContent = attrF + '%';
  if (el('vsla-kpi-attr-m')) el('vsla-kpi-attr-m').textContent = attrM + '%';
  if (el('vsla-kpi-attr-all')) el('vsla-kpi-attr-all').textContent = attrAll + '%';
@@ -24288,14 +24297,14 @@
  // VSLAs by county
  vslaChart('vsla-chart-by-county', {
  type: 'bar',
- data: { labels: counties, datasets: [{ label: 'VSLAs Assessed', data: counties.map(c => cAgg[c].count), backgroundColor: [VSLA_NAVY, VSLA_TEAL] }] },
+ data: { labels: counties, datasets: [{ label: 'VSLAs Assessed', data: counties.map(c => cMemb[c].groups), backgroundColor: [VSLA_NAVY, VSLA_TEAL] }] },
  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 14, weight: 'bold' }, color: VSLA_NAVY } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of VSLAs' } } } }
  });
 
  // Membership by sex
  vslaChart('vsla-chart-membership-sex', {
  type: 'doughnut',
- data: { labels: ['Female', 'Male'], datasets: [{ data: [tot.femaleReg, tot.maleReg], backgroundColor: [VSLA_TEAL, VSLA_GOLD], borderWidth: 2 }] },
+ data: { labels: ['Female', 'Male'], datasets: [{ data: [mtot.femaleReg, mtot.maleReg], backgroundColor: [VSLA_TEAL, VSLA_GOLD], borderWidth: 2 }] },
  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, datalabels: { display: true, font: { size: 14, weight: 'bold' }, color: '#fff', formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a,b)=>a+b,0); return t>0 ? Math.round(v/t*100)+'%' : ''; } } } }
  });
 
@@ -24305,8 +24314,8 @@
  data: {
  labels: counties,
  datasets: [
- { label: 'Female Left', data: counties.map(c => cAgg[c].femaleLeft), backgroundColor: '#C62828' },
- { label: 'Male Left', data: counties.map(c => cAgg[c].maleLeft), backgroundColor: '#EF6C00' }
+ { label: 'Female Left', data: counties.map(c => cMemb[c].femaleLeft), backgroundColor: '#C62828' },
+ { label: 'Male Left', data: counties.map(c => cMemb[c].maleLeft), backgroundColor: '#EF6C00' }
  ]
  },
  options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 12, weight: 'bold' } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Members Who Left' } } } }
@@ -24316,13 +24325,13 @@
  const tbody1 = document.querySelector('#vsla-summary-table tbody');
  if (tbody1) {
  const metrics = [
- ['VSLAs Assessed', c => cAgg[c].count, tot.count],
- ['Female Members', c => cAgg[c].femaleReg, tot.femaleReg],
- ['Male Members', c => cAgg[c].maleReg, tot.maleReg],
- ['Total Members', c => cAgg[c].totalReg, tot.totalReg],
- ['Members Left', c => cAgg[c].totalLeft, tot.totalLeft],
- ['Attrition Rate', c => cAgg[c].totalReg > 0 ? (cAgg[c].totalLeft/cAgg[c].totalReg*100).toFixed(1)+'%' : '0%', attrAll+'%'],
- ['Actively Saving', c => cAgg[c].activeSavingT, tot.activeSavingT],
+ ['VSLAs Assessed', c => cMemb[c].groups, nGroups],
+ ['Female Members', c => cMemb[c].femaleReg, mtot.femaleReg],
+ ['Male Members', c => cMemb[c].maleReg, mtot.maleReg],
+ ['Total Members', c => cMemb[c].totalReg, mtot.totalReg],
+ ['Members Left', c => cMemb[c].totalLeft, mtot.totalLeft],
+ ['Attrition Rate', c => cMemb[c].totalReg > 0 ? (cMemb[c].totalLeft/cMemb[c].totalReg*100).toFixed(1)+'%' : '0%', attrAll+'%'],
+ ['Actively Saving', c => cMemb[c].activeSavingT, mtot.activeSavingT],
  ['Total Savings (KES)', c => cAgg[c].savings.toLocaleString(), tot.savings.toLocaleString()],
  ['Loans Disbursed (KES)', c => cAgg[c].loansDisbursed.toLocaleString(), tot.loansDisbursed.toLocaleString()],
  ['Loans Repaid (KES)', c => cAgg[c].loansRepaid.toLocaleString(), tot.loansRepaid.toLocaleString()],
@@ -24379,20 +24388,20 @@
  const matTbody = document.querySelector('#vsla-attrition-matrix tbody');
  if (matTbody) {
  matTbody.innerHTML = counties.map(c => {
- const a = cAgg[c];
+ const a = cMemb[c];
  return '<tr><td><strong>'+c+'</strong></td><td>'+a.femaleLeft+'</td><td>'+a.maleLeft+'</td><td>'+a.totalLeft+'</td><td>'+(a.femaleReg>0?(a.femaleLeft/a.femaleReg*100).toFixed(1):'0')+'%</td><td>'+(a.maleReg>0?(a.maleLeft/a.maleReg*100).toFixed(1):'0')+'%</td><td>'+(a.totalReg>0?(a.totalLeft/a.totalReg*100).toFixed(1):'0')+'%</td></tr>';
- }).join('') + '<tr style="background:#f0f0f0; font-weight:bold;"><td>Total</td><td>'+tot.femaleLeft+'</td><td>'+tot.maleLeft+'</td><td>'+tot.totalLeft+'</td><td>'+attrF+'%</td><td>'+attrM+'%</td><td>'+attrAll+'%</td></tr>';
+ }).join('') + '<tr style="background:#f0f0f0; font-weight:bold;"><td>Total</td><td>'+mtot.femaleLeft+'</td><td>'+mtot.maleLeft+'</td><td>'+mtot.totalLeft+'</td><td>'+attrF+'%</td><td>'+attrM+'%</td><td>'+attrAll+'%</td></tr>';
  }
 
  // ===== PAGE 3: SAVINGS =====
  if (el('vsla-kpi-savings-total')) el('vsla-kpi-savings-total').textContent = 'KES ' + tot.savings.toLocaleString();
  if (el('vsla-kpi-savings-avg')) el('vsla-kpi-savings-avg').textContent = 'KES ' + (tot.count > 0 ? Math.round(tot.savings / tot.count).toLocaleString() : '0');
- if (el('vsla-kpi-saving-members')) el('vsla-kpi-saving-members').textContent = tot.activeSavingT;
+ if (el('vsla-kpi-saving-members')) el('vsla-kpi-saving-members').textContent = mtot.activeSavingT;
 
  // Saving members by county
  vslaChart('vsla-chart-saving-members', {
  type: 'bar',
- data: { labels: counties, datasets: [{ label: 'Actively Saving', data: counties.map(c => cAgg[c].activeSavingT), backgroundColor: [VSLA_NAVY, VSLA_TEAL] }] },
+ data: { labels: counties, datasets: [{ label: 'Actively Saving', data: counties.map(c => cMemb[c].activeSavingT), backgroundColor: [VSLA_NAVY, VSLA_TEAL] }] },
  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 14, weight: 'bold' } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Members' } } } }
  });
 
@@ -24408,7 +24417,7 @@
 
  // Saving proportion bands
  const savBands = {'0–20%':0, '21–40%':0, '41–60%':0, '61–80%':0, '81–100%':0};
- data.forEach(v => {
+ vslaLatest.forEach(v => {
  const p = v.totalReg > 0 ? v.activeSavingT / v.totalReg * 100 : 0;
  if (p <= 20) savBands['0–20%']++;
  else if (p <= 40) savBands['21–40%']++;
