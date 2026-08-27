@@ -3907,8 +3907,8 @@
  </div>
  </div>
 
- <!-- SIDEBAR SEARCH -->
- <div class="sidebar-search" style="padding: 10px 14px 6px;">
+ <!-- SIDEBAR SEARCH (disabled) -->
+ <div class="sidebar-search" style="display:none;padding: 10px 14px 6px;">
  <div style="position:relative;">
  <input type="text" id="sidebarSearchInput" placeholder="Search indicators, sections..." autocomplete="off"
  style="width:100%;padding:9px 12px 9px 34px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.85em;
@@ -24907,9 +24907,18 @@
 
  // Show dropdown results for content matches
  var contentMatches = matches.filter(function(m) { return m.type === 'content' && m.key; });
+ var visibleItems = document.querySelectorAll('.sidebar-item[data-key]:not([style*="display: none"])').length;
  if (contentMatches.length === 0) {
+ if (visibleItems === 0) {
+ // Nothing matched in the sidebar list or content index. Show an explicit
+ // empty state so the sidebar doesn't just go blank (which reads as "broken").
+ var safeQ = query.trim().replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+ resultsEl.innerHTML = '<div style="padding:12px;font-size:0.82em;color:#999;text-align:center;">No results for &ldquo;' + safeQ + '&rdquo;</div>';
+ resultsEl.style.display = 'block';
+ } else {
  resultsEl.style.display = 'none';
  resultsEl.innerHTML = '';
+ }
  return;
  }
  // Deduplicate
