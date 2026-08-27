@@ -3987,6 +3987,9 @@
  <button class="sidebar-item" onclick="sidebarNav('pdm-dashboard', this)" data-key="pdm-dashboard">
  <span class="item-label">PDM Cookstoves & Solar</span>
  </button>
+ <button class="sidebar-item" onclick="sidebarNav('seaweed-pdm', this)" data-key="seaweed-pdm">
+ <span class="item-label">Seaweed PDM</span>
+ </button>
  <button class="sidebar-item" onclick="sidebarNav('grapp-dashboard', this)" data-key="grapp-dashboard">
  <span class="item-label">GRAPP</span>
  </button>
@@ -4141,6 +4144,9 @@
  <button class="drawer-nav-item" onclick="mobileNavSelect('pdm-dashboard', this)">
  PDM Cookstoves & Solar
  </button>
+ <button class="drawer-nav-item" onclick="mobileNavSelect('seaweed-pdm', this)">
+ Seaweed PDM
+ </button>
  <button class="drawer-nav-item" onclick="mobileNavSelect('mangrove-resources', this)">
  Mangrove Resources
  </button>
@@ -4211,6 +4217,7 @@
  <button class="survey-btn" onclick="switchSurvey('prepost-forest')">Trainings Pre & Post</button>
  <button class="survey-btn" onclick="switchSurvey('schools-dashboard')">Schools Dashboard</button>
  <button class="survey-btn" onclick="switchSurvey('pdm-dashboard')">PDM Cookstoves & Solar</button>
+ <button class="survey-btn" onclick="switchSurvey('seaweed-pdm')">Seaweed PDM</button>
  <button class="survey-btn" onclick="switchSurvey('seaweed-assessment')">Seaweed Assessment</button>
  <button class="survey-btn" onclick="switchSurvey('mangrove-resources')">Mangrove Resources</button>
  <button class="survey-btn" onclick="switchSurvey('vsla-monitoring')">VSLA Monitoring</button>
@@ -4253,6 +4260,7 @@
  <button class="tab-button" onclick="showPrePostType(event, 'seaweed')">Seaweed Farming</button>
  <button class="tab-button" onclick="showPrePostType(event, 'mangrove')">Mangrove Restoration</button>
  <button class="tab-button" onclick="showPrePostType(event, 'eba')">EBA Advocacy</button>
+ <button class="tab-button" onclick="showPrePostType(event, 'fourk')">4K Club Climate</button>
  </div>
 
  <!-- SCHOOLS DASHBOARD SUB-SELECTOR (Clean Water / Water in Schools / 4K Clubs) -->
@@ -7243,6 +7251,159 @@
  </div>
  <!-- END EBA ADVOCACY PRE/POST -->
 
+ <!-- 4K CLUB CLIMATE CHANGE PRE/POST TEST CONTENT -->
+ <div id="pp-fourk-content" style="display: none;">
+
+ <!-- INDICATOR KPI CARD -->
+ <div style="background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 5px solid #00838F;">
+ <h3 style="margin: 0 0 16px 0; color: #00695C; font-size: 1.15em;">4K Club Members with Adequate Climate Change Knowledge (≥80 threshold, disaggregated by sex)</h3>
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
+ <div style="text-align: center; padding: 16px; background: #E3F2FD; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Pre-Test</div>
+ <div style="font-size: 2em; font-weight: 800; color: #1565C0;">44.1%</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Post-Test</div>
+ <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">50.2%</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #E8F5E9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Change</div>
+ <div style="font-size: 2em; font-weight: 800; color: #2E7D32;">+6.1pp</div>
+ </div>
+ <div style="text-align: center; padding: 16px; background: #C8E6C9; border-radius: 10px;">
+ <div style="font-size: 0.8em; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Status</div>
+ <div style="font-size: 1.6em; font-weight: 800; color: #2E7D32;">IMPROVED</div>
+ </div>
+ </div>
+ </div>
+
+ <div class="section">
+ <div class="section-title">4K CLUB — CLIMATE CHANGE KNOWLEDGE TEST RESULTS (PRE vs POST)</div>
+ <div class="highlight-box">
+ <h4>Knowledge Assessment Summary — 4K Club Climate Change Training</h4>
+ <p>Average standardized knowledge score rose from <strong>75.8</strong> to <strong>77.1</strong> points (<strong>+1.3</strong>). The share of students meeting the primary <strong>≥80</strong> adequate-knowledge threshold increased from <strong>44.1%</strong> to <strong>50.2%</strong> (+6.1pp), while the ≥70 threshold held steady (70.1%→71.0%) and the ≥60 threshold dipped slightly (86.3%→84.4%). By sex, females rose 77.0→77.4 and males 74.4→76.6. By county, Kilifi averaged 78.1→80.8 and Kwale 72.9→74.7. The largest item gain was <strong>greenhouse gases (+15.4pp)</strong>; the largest decline was <strong>deforestation (−22.3pp)</strong>. These are aggregate sample differences (519 pre-test vs 617 post-test students), not matched-student learning gains, and the post-test sample shifted toward Kwale (44.7%→62.1%).</p>
+ </div>
+
+ <!-- KPI Cards -->
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;">
+ <div class="kpi-card" style="border-left: 4px solid #2E7D32;">
+ <div class="kpi-label">Average Score</div>
+ <div class="kpi-value" style="color: #2E7D32;">77.1</div>
+ <div class="kpi-change" style="color: #2E7D32;">↑ from 75.8 (+1.3)</div>
+ </div>
+ <div class="kpi-card" style="border-left: 4px solid #2E7D32;">
+ <div class="kpi-label">Adequate Knowledge (≥80)</div>
+ <div class="kpi-value" style="color: #2E7D32;">50.2%</div>
+ <div class="kpi-change" style="color: #2E7D32;">↑ from 44.1% (+6.1pp)</div>
+ </div>
+ <div class="kpi-card" style="border-left: 4px solid #1565C0;">
+ <div class="kpi-label">At or above ≥70</div>
+ <div class="kpi-value" style="color: #1565C0;">71.0%</div>
+ <div class="kpi-change" style="color: #2E7D32;">↑ from 70.1% (+0.9pp)</div>
+ </div>
+ <div class="kpi-card" style="border-left: 4px solid #EF6C00;">
+ <div class="kpi-label">At or above ≥60</div>
+ <div class="kpi-value" style="color: #EF6C00;">84.4%</div>
+ <div class="kpi-change" style="color: #C62828;">↓ from 86.3% (−1.9pp)</div>
+ </div>
+ <div class="kpi-card" style="border-left: 4px solid #E91E63;">
+ <div class="kpi-label">Female Avg Score</div>
+ <div class="kpi-value" style="color: #E91E63;">77.4</div>
+ <div class="kpi-change" style="color: #2E7D32;">↑ from 77.0 (+0.4)</div>
+ </div>
+ <div class="kpi-card" style="border-left: 4px solid #1565C0;">
+ <div class="kpi-label">Male Avg Score</div>
+ <div class="kpi-value" style="color: #1565C0;">76.6</div>
+ <div class="kpi-change" style="color: #2E7D32;">↑ from 74.4 (+2.2)</div>
+ </div>
+ </div>
+
+ <!-- Charts Row 1: Thresholds & Gender Scores -->
+ <div class="charts-grid">
+ <div class="chart-wrapper">
+ <div class="chart-title">Adequate Knowledge by Threshold — Pre vs Post (%)</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-threshold"></canvas></div>
+ <div class="chart-insight">≥80: 44.1%→50.2% (+6.1pp). ≥70: 70.1%→71.0% (+0.9pp). ≥60: 86.3%→84.4% (−1.9pp). Gains concentrated at the higher threshold.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Average Score by Sex — Pre vs Post</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-genderscore"></canvas></div>
+ <div class="chart-insight">Female: 77.0→77.4 (+0.4). Male: 74.4→76.6 (+2.2). Overall: 75.8→77.1 (+1.3). Boys improved most, narrowing the gap.</div>
+ </div>
+ </div>
+
+ <!-- Charts Row 2: County & Grade -->
+ <div class="charts-grid">
+ <div class="chart-wrapper">
+ <div class="chart-title">Average Score by County — Pre vs Post</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-county"></canvas></div>
+ <div class="chart-insight">Kilifi: 78.1→80.8 (+2.7). Kwale: 72.9→74.7 (+1.8). Both counties improved; Kilifi remained ahead.</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Average Score by Grade — Pre vs Post</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-grade"></canvas></div>
+ <div class="chart-insight">Upper grades scored highest at both rounds. Grades 4, 7 &amp; 9 improved; grades 6 dipped slightly. (Grades 2–3 excluded: very small n.)</div>
+ </div>
+ </div>
+
+ <!-- Question-by-Question Table -->
+ <div style="margin-top: 30px; overflow-x: auto;">
+ <h4 style="color: #00695C; margin-bottom: 10px;">Question-by-Question Analysis — Pre vs Post (% Correct)</h4>
+ <table class="comparison-table" style="font-size: 0.85em;">
+ <thead>
+ <tr>
+ <th style="text-align:left; width: 52%;">#</th>
+ <th>Pre-Test</th>
+ <th>Post-Test</th>
+ <th>Diff (Post−Pre)</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr><td style="text-align:left;">Q1. Waste management (recycling &amp; reuse)</td><td>93.4%</td><td>94.7%</td><td style="color:#2E7D32;">+1.3%</td></tr>
+ <tr style="background:#FFEBEE;"><td style="text-align:left;">Q2. Deforestation reduces greenhouse gases</td><td>85.2%</td><td>62.9%</td><td style="color:#C62828; font-weight:bold;">−22.3%</td></tr>
+ <tr style="background:#E8F5E9;"><td style="text-align:left;">Q3. Climate change &amp; extreme weather</td><td>83.6%</td><td>90.0%</td><td style="color:#2E7D32; font-weight:bold;">+6.4%</td></tr>
+ <tr style="background:#E8F5E9;"><td style="text-align:left;">Q4. Trees reduce flood risk</td><td>79.4%</td><td>84.4%</td><td style="color:#2E7D32; font-weight:bold;">+5.0%</td></tr>
+ <tr style="background:#E8F5E9;"><td style="text-align:left;">Q5. Greenhouse gases keep the Earth warm</td><td>50.3%</td><td>65.6%</td><td style="color:#2E7D32; font-weight:bold;">+15.4%</td></tr>
+ <tr><td style="text-align:left;">Q6. Example of adaptation</td><td>89.2%</td><td>89.0%</td><td style="color:#EF6C00;">−0.2%</td></tr>
+ <tr style="background:#E8F5E9;"><td style="text-align:left;">Q7. Meaning of "adaptation"</td><td>78.0%</td><td>84.8%</td><td style="color:#2E7D32; font-weight:bold;">+6.7%</td></tr>
+ <tr><td style="text-align:left;">Q8. Role of greenhouse gases</td><td>61.3%</td><td>64.0%</td><td style="color:#2E7D32;">+2.7%</td></tr>
+ <tr><td style="text-align:left;">Q9. Climate change &amp; agriculture</td><td>91.1%</td><td>89.0%</td><td style="color:#EF6C00;">−2.1%</td></tr>
+ <tr><td style="text-align:left;">Q10. What is climate</td><td>90.6%</td><td>93.7%</td><td style="color:#2E7D32;">+3.1%</td></tr>
+ <tr style="background:#E8F5E9;"><td style="text-align:left;">Q11. Children's climate action</td><td>55.7%</td><td>65.2%</td><td style="color:#2E7D32; font-weight:bold;">+9.5%</td></tr>
+ <tr><td style="text-align:left;">Q12. Climate change &amp; water availability</td><td>76.9%</td><td>70.3%</td><td style="color:#C62828; font-weight:bold;">−6.5%</td></tr>
+ <tr><td style="text-align:left;">Q13. Effects of climate change</td><td>70.8%</td><td>70.8%</td><td style="color:#666;">0.0%</td></tr>
+ <tr><td style="text-align:left;">Q14. Ways to conserve the environment</td><td>73.8%</td><td>72.8%</td><td style="color:#EF6C00;">−1.0%</td></tr>
+ <tr><td style="text-align:left;">Q15. Signs of climate change</td><td>57.3%</td><td>58.7%</td><td style="color:#2E7D32;">+1.4%</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <!-- Charts Row 3: Gains & Declines -->
+ <div class="charts-grid" style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">Top Gains — Topics with Largest Improvement</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-gains"></canvas></div>
+ <div class="chart-insight">Greenhouse gases (+15.4pp) led the gains, followed by children's climate action (+9.5pp) and adaptation (+6.7pp).</div>
+ </div>
+ <div class="chart-wrapper">
+ <div class="chart-title">Largest Declines — Topics with Biggest Drop</div>
+ <div class="chart-container"><canvas id="pp-fk-chart-declines"></canvas></div>
+ <div class="chart-insight">Deforestation (−22.3pp) fell sharply — a true/false item where more students answered incorrectly. Water availability (−6.5pp) also dropped.</div>
+ </div>
+ </div>
+
+ <!-- Chart: All 15 questions comparison -->
+ <div style="margin-top: 25px;">
+ <div class="chart-wrapper">
+ <div class="chart-title">All 15 Questions — Pre vs Post (% Correct)</div>
+ <div class="chart-container" style="height: 450px;"><canvas id="pp-fk-chart-allq"></canvas></div>
+ <div class="chart-insight">Green post-test bars above the pre-test indicate improvement; lower bars indicate decline. Most items held or rose, with deforestation the notable exception.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <!-- END 4K CLUB CLIMATE PRE/POST -->
+
  </div>
  <!-- END PRE & POST TEST SECTION -->
 
@@ -8176,6 +8337,132 @@
 
  </div>
  <!-- END PDM SECTION -->
+
+ <!-- ========================================================== -->
+ <!-- ========= SEAWEED PDM SECTION (Aug 2026) ================= -->
+ <!-- ========================================================== -->
+ <div id="seaweed-pdm-section" style="display: none; margin-top: 60px; padding-top: 40px; border-top: 3px solid #00695C;">
+
+ <!-- HEADER -->
+ <div class="header" style="margin-bottom: 30px; background: linear-gradient(135deg, #004D40 0%, #00695C 50%, #26A69A 100%);">
+ <h1>Post-Distribution Monitoring — Seaweed Producer Groups</h1>
+ <div class="header-subtitle">Group-level assessment of distributed seaweed inputs — Membership, Inputs, Production, Market &amp; Income</div>
+ <div class="header-meta">
+ <div class="meta-item">
+ <div class="meta-label">Groups Assessed</div>
+ <div class="meta-value">14</div>
+ </div>
+ <div class="meta-item">
+ <div class="meta-label">County</div>
+ <div class="meta-value">Kwale — Lungalunga (8) &amp; Msambweni (6)</div>
+ </div>
+ <div class="meta-item">
+ <div class="meta-label">Assessment Period</div>
+ <div class="meta-value">August 2026</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- KPI SUMMARY CARDS -->
+ <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px;">
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Registered Members</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #004D40;">648</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">547 active seaweed farmers</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Active Female Farmers</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00695C;">410</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">75% of active members</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Youth (18–35)</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #26A69A;">152</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">28% of active members</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Wet Seaweed Harvested</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00838F;">143,771</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">kg (reported cycle)</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Dried Seaweed Harvested</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #00838F;">27,704</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">kg (reported cycle)</div></div>
+ <div class="kpi-card up"><div class="kpi-label" style="font-size: 0.85em; color: #666;">Total Group Income</div><div class="kpi-value" style="font-size: 1.8em; font-weight: 700; color: #2E7D32;">KES 3.36M</div><div class="kpi-change up" style="color: #2e7d32; font-size: 0.85em;">11 of 14 groups sold</div></div>
+ </div>
+
+ <!-- SECTION A: MEMBERSHIP & PARTICIPATION -->
+ <div class="output-header" style="background: linear-gradient(135deg, #004D40 0%, #00695C 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">A. Membership &amp; Participation</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">648 registered members | 547 active (75% female, 28% youth) | 525 currently cultivating | 59 stopped</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-gender" width="400" height="350"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-participation" width="400" height="350"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION B: INPUTS RECEIVED & VERIFICATION -->
+ <div class="output-header" style="background: linear-gradient(135deg, #00695C 0%, #00838F 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">B. Inputs Received &amp; Verification</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">14/14 groups received inputs | 184 input records | 81.5% in good condition | 67% physically observed by enumerator</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-inputs-type" width="400" height="380"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-inputs-condition" width="400" height="380"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION C: PRODUCTION & HARVEST -->
+ <div class="output-header" style="background: linear-gradient(135deg, #00838F 0%, #0097A7 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">C. Production &amp; Harvest</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">861 active farm blocks | 21,712 ropes installed | 20,212 planted (93%) | 454 members planted &rarr; 362 harvested</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-harvest" width="500" height="360"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-ropes" width="400" height="360"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION D: MARKET & INCOME -->
+ <div class="output-header" style="background: linear-gradient(135deg, #2E7D32 0%, #388E3C 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">D. Market &amp; Income</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">11/14 groups sold in the last 12 months | KES 3.36M total income | avg dried price ~KES 47/kg | income increased for 11 groups</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-income" width="500" height="360"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-buyers" width="400" height="360"></canvas>
+ </div>
+ </div>
+
+ <!-- SECTION E: CHALLENGES & SUPPORT NEEDS -->
+ <div class="output-header" style="background: linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%); color: #fff; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;">
+ <h2 style="margin: 0; font-size: 1.5em;">E. Challenges &amp; Support Needs</h2>
+ <p style="margin: 8px 0 0; opacity: 0.9; font-size: 0.95em;">Top constraints: weak records (13), bad weather (13), lack of storage (11) | Most urgent support: drying/storage, seedstock &amp; recordkeeping</p>
+ </div>
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-market-challenges" width="400" height="360"></canvas>
+ </div>
+ <div style="background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
+ <canvas id="pdmsw-support" width="400" height="360"></canvas>
+ </div>
+ </div>
+
+ <!-- OVERALL INSIGHT -->
+ <div class="insight-panel" style="background: linear-gradient(135deg,#E0F2F1,#B2DFDB); border-left: 5px solid #00695C; padding: 24px 28px; border-radius: 0 12px 12px 0; margin-bottom: 30px;">
+ <h3 style="color: #004D40; margin: 0 0 12px 0;">Key Insights — Seaweed Post-Distribution Monitoring</h3>
+ <ul style="color: #1B3A36; line-height: 1.8; margin: 0; padding-left: 20px;">
+ <li><strong>Female-led, active membership:</strong> Across 14 groups, 547 of 648 registered members (84%) are active seaweed farmers, and 75% of active farmers are women — with 152 youth (28%) engaged. 96% are currently cultivating.</li>
+ <li><strong>Inputs delivered and largely verified:</strong> All 14 groups received seaweed-related inputs (184 records — mainly ropes, seedstock, planting hammers and weighing scales). 81.5% of inputs were in good condition and 67% were physically observed by enumerators; distribution was seen as fair/partly-fair in 13 of 14 groups.</li>
+ <li><strong>Production concentrated in a few strong groups:</strong> 143,771 kg wet and 27,704 kg dried seaweed were harvested, with 20,212 of 21,712 ropes (93%) planted. Kibuyuni Cooperative and Bati account for the bulk of output.</li>
+ <li><strong>Income is real but uneven:</strong> 11 of 14 groups sold seaweed in the last 12 months, generating KES 3.36M; income increased for all 11 selling groups. Seaweed is the main income source for 6 groups and an important secondary source for 6 more.</li>
+ <li><strong>Market &amp; storage are the binding constraints:</strong> The most cited market challenges are lack of storage (11), no reliable buyer (9), low price (9) and transport cost (8). Only 6 groups are linked to an aggregation hub (Kibuyuni &amp; Bati), and just 5 hubs are fully operational.</li>
+ <li><strong>Priority support:</strong> Groups most urgently need drying/storage, seedstock and recordkeeping support, followed by buyer linkage and transport — weak records were flagged in 13 of 14 groups, tempering data confidence (medium for 8, high for 5).</li>
+ </ul>
+ </div>
+
+ </div>
+ <!-- END SEAWEED PDM SECTION -->
 
  <!-- ========================================================== -->
  <!-- ========== SEAWEED GROUP ASSESSMENT SECTION ============== -->
@@ -17667,6 +17954,31 @@
  { id: '1330a', name: 'Percentage of WRO and YLO members with adequate practical knowledge on leadership, gender and climate change, and evidenced-based advocacy', baseline: '38.2%', target: '≥70%', result: '66.2%', achievement: '+28.0pp', status: 'EXCEEDED' }
  ]}
  ]
+ },
+ 'prepost-fourk': {
+ title: 'Pre & Post Test — 4K Club Climate Change Knowledge',
+ logframeHighlight: '<h4>4K Club Climate Change Knowledge — Pre vs Post Performance</h4><p>Climate-change knowledge assessment of 4K Club primary-school members in Kilifi &amp; Kwale. Average standardized score rose from 75.8 to 77.1 points (+1.3). The share meeting the ≥80 adequate-knowledge threshold increased from 44.1% to 50.2% (+6.1pp). The largest item-level gain was on greenhouse gases (+15.4pp) and the largest decline was on deforestation (−22.3pp). Note: these are aggregate sample differences (519 pre-test vs 617 post-test students), not matched-student learning gains, and post-test sampling shifted toward Kwale (44.7%→62.1%).</p>',
+ findings: [
+ { title: 'Average Knowledge Gain', metric: '+1.3 pts', description: 'Average standardized score improved from 75.8 to 77.1 points. Female students rose 77.0→77.4 and males 74.4→76.6, narrowing the gender gap at post-test.', badge: 'exceeded', badgeText: '' },
+ { title: 'Adequate Knowledge (≥80)', metric: '+6.1pp', description: 'Students meeting the primary ≥80-point adequate-knowledge threshold increased from 44.1% to 50.2% — the headline improvement for this indicator.', badge: 'exceeded', badgeText: '' },
+ { title: 'Biggest Topic Gain', metric: '+15.4pp', description: 'Greenhouse gases (keeping the Earth warm) improved from 50.3% to 65.6% correct. Children\'s climate action (+9.5pp) and climate adaptation (+6.7pp) also rose strongly.', badge: 'exceeded', badgeText: '' },
+ { title: 'Biggest Topic Decline', metric: '−22.3pp', description: 'The deforestation item fell from 85.2% to 62.9% correct — the steepest drop. Water availability (−6.5pp) and agriculture impact (−2.1pp) also declined.', badge: 'drop', badgeText: '' },
+ { title: 'Gender Outcome', metric: '77.4 vs 76.6', description: 'At post-test females averaged 77.4 and males 76.6. Both sexes improved on baseline; males gained most (+2.2), closing the gap from a 2.6-point female lead to 0.8.', badge: 'exceeded', badgeText: '' },
+ { title: 'Threshold & Sample Caveat', metric: '−1.9pp (≥60)', description: 'At the ≥60 threshold the share dipped slightly (86.3%→84.4%). Post-test sample composition shifted toward Kwale (44.7%→62.1%), so subgroup comparisons should be read alongside the overall change.', badge: 'drop', badgeText: '' }
+ ],
+ kpis: [
+ { label: 'Average Score', value: '77.1', change: '↑ 1.3pts from 75.8 pre-test', trend: 'positive' },
+ { label: 'Adequate Knowledge (≥80)', value: '50.2%', change: '↑ 6.1pp from 44.1% pre-test', trend: 'positive' },
+ { label: 'At or above ≥70', value: '71.0%', change: '↑ 0.9pp from 70.1% pre-test', trend: 'positive' },
+ { label: 'At or above ≥60', value: '84.4%', change: '↓ 1.9pp from 86.3% pre-test', trend: 'negative' },
+ { label: 'Female Avg Score', value: '77.4', change: '↑ 0.4pts from 77.0 pre-test', trend: 'positive' },
+ { label: 'Male Avg Score', value: '76.6', change: '↑ 2.2pts from 74.4 pre-test', trend: 'positive' }
+ ],
+ logframe: [
+ { level: 'OUTPUT', name: '4K Club Climate Change Knowledge', color: '#00838F', indicators: [
+ { id: '—', name: 'Percentage of 4K Club members with adequate knowledge of climate change (≥80 threshold), disaggregated by sex', baseline: '44.1%', target: '—', result: '50.2%', achievement: '+6.1pp', status: 'IMPROVED' }
+ ]}
+ ]
  }
  };
 
@@ -17708,6 +18020,14 @@
  footerTitle: '<strong>PDM — Cookstoves & Solar Lanterns</strong>',
  footerSample: '78 Households | Kilifi & Kwale Counties | Dec 2025 – March 2026',
  renderFn: () => window.renderPDMDashboard()
+ },
+ 'seaweed-pdm': {
+ showSection: 'seaweed-pdm-section',
+ subSelector: null,
+ title: 'Post-Distribution Monitoring — Seaweed Producer Groups',
+ footerTitle: '<strong>Seaweed PDM — Inputs, Production, Market &amp; Income</strong>',
+ footerSample: '14 Seaweed Groups | 648 Members (547 active) | Kwale County | Aug 2026 PDM',
+ renderFn: () => window.renderSeaweedPDMDashboard()
  },
  'seaweed-assessment': {
  showSection: 'seaweed-section',
@@ -17854,6 +18174,7 @@
  'cosme-pmf-section',
  'grapp-section',
  'pdm-section',
+ 'seaweed-pdm-section',
  'ra-assessment-section'
  ];
  const allSubSelectorIds = ['prepost-type-selector', 'output-type-selector', 'schools-dash-type-selector', 'awp-type-selector', 'rba-type-selector', 'forestry-pres-type-selector', 'seaweed-pres-type-selector', 'mangrove-pres-type-selector', 'schools-pres-type-selector'];
@@ -20081,6 +20402,8 @@
  if (swEl) swEl.style.display = 'none';
  var ebaEl = document.getElementById('pp-eba-content');
  if (ebaEl) ebaEl.style.display = 'none';
+ var fourkEl = document.getElementById('pp-fourk-content');
+ if (fourkEl) fourkEl.style.display = 'none';
 
  if (typeName === 'forest') {
  document.getElementById('pp-forest-content').style.display = 'block';
@@ -20125,6 +20448,14 @@
  updateEBAPrePostCharts();
  ebaTabs.forEach(tab => tab.style.display = '');
  if (ebaTabs.length > 0) ebaTabs[0].style.display = 'block';
+ } else if (typeName === 'fourk') {
+ var fourkContent = document.getElementById('pp-fourk-content');
+ if (fourkContent) fourkContent.style.display = 'block';
+ const fourkData = window.surveyData['prepost-fourk'];
+ updateSharedSections(fourkData, 'prepost-fourk');
+ document.getElementById('pp-meta-pre').textContent = '519';
+ document.getElementById('pp-meta-post').textContent = '617';
+ updateFourKPrePostCharts();
  }
  }
 
@@ -24128,13 +24459,15 @@
  'prepost-forest': 'Pre-Test: 546 Participants | Post-Test: 909 Participants | Threshold: ≥70%',
  'prepost-seaweed': 'Baseline: 175 Participants | Endline: 293 Participants | Threshold: ≥70%',
  'prepost-mangrove': 'Mangrove Restoration Training | Kilifi & Kwale Counties | Data Quality: High',
- 'prepost-eba': 'EBA Training: 151 Participants | 3 Domains (Climate Change, GESI, Advocacy) | Threshold: ≥60%'
+ 'prepost-eba': 'EBA Training: 151 Participants | 3 Domains (Climate Change, GESI, Advocacy) | Threshold: ≥60%',
+ 'prepost-fourk': 'Pre-Test: 519 Students (Jul 2025) | Post-Test: 617 Students (Jun–Jul 2026) | Kilifi & Kwale | Threshold: ≥80'
  };
  const titleText = {
  'prepost-forest': 'Pre & Post Test — Forest Conservation Knowledge Assessment',
  'prepost-seaweed': 'Pre & Post Test — Seaweed Farming Knowledge Assessment',
  'prepost-mangrove': 'Pre & Post Test — Mangrove Restoration Knowledge Assessment',
- 'prepost-eba': 'Pre & Post Test — EBA Advocacy Knowledge Assessment'
+ 'prepost-eba': 'Pre & Post Test — EBA Advocacy Knowledge Assessment',
+ 'prepost-fourk': 'Pre & Post Test — 4K Club Climate Change Knowledge Assessment'
  };
  document.getElementById('footer-title').innerHTML = '<strong>' + (titleText[surveyKey] || '') + '</strong>';
  document.getElementById('footer-sample').textContent = sampleText[surveyKey] || '';
@@ -24438,6 +24771,137 @@
  datasets: [
  { label: 'Baseline', data: baseData, backgroundColor: swColors.baseline, borderRadius: 3 },
  { label: 'Endline', data: endData, backgroundColor: swColors.endline, borderRadius: 3 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'top' },
+ datalabels: { display: false }
+ },
+ scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Correct' } } }
+ }
+ });
+ }
+
+ // 4K Club Climate Change Pre & Post Charts
+ function updateFourKPrePostCharts() {
+ const fkColors = { pre: '#1565C0', post: '#2E7D32' };
+
+ function fkChart(id, config) {
+ const canvas = document.getElementById(id);
+ if (!canvas) { console.warn('4K Canvas not found:', id); return; }
+ const existing = Chart.getChart(canvas);
+ if (existing) existing.destroy();
+ return new Chart(canvas, config);
+ }
+
+ const fkPct = {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+ datalabels: { font: { size: 12, weight: 'bold' }, color: '#fff', backgroundColor: '#333', borderRadius: 6, padding: 5, formatter: v => v.toFixed(1) + '%', display: true }
+ }
+ };
+ const fkScore = {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'top', labels: { font: { size: 12, weight: 'bold' } } },
+ datalabels: { font: { size: 12, weight: 'bold' }, color: '#fff', backgroundColor: '#333', borderRadius: 6, padding: 5, formatter: v => v.toFixed(1), display: true }
+ }
+ };
+
+ // Chart 1: Adequate Knowledge by Threshold
+ fkChart('pp-fk-chart-threshold', {
+ type: 'bar',
+ data: {
+ labels: ['≥60 Threshold', '≥70 Threshold', '≥80 Threshold'],
+ datasets: [
+ { label: 'Pre-Test', data: [86.3, 70.1, 44.1], backgroundColor: fkColors.pre },
+ { label: 'Post-Test', data: [84.4, 71.0, 50.2], backgroundColor: fkColors.post }
+ ]
+ },
+ options: { ...fkPct, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Students' } } } }
+ });
+
+ // Chart 2: Average Score by Sex
+ fkChart('pp-fk-chart-genderscore', {
+ type: 'bar',
+ data: {
+ labels: ['Female', 'Male', 'All'],
+ datasets: [
+ { label: 'Pre-Test', data: [77.0, 74.4, 75.8], backgroundColor: fkColors.pre },
+ { label: 'Post-Test', data: [77.4, 76.6, 77.1], backgroundColor: fkColors.post }
+ ]
+ },
+ options: { ...fkScore, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score' } } } }
+ });
+
+ // Chart 3: Average Score by County
+ fkChart('pp-fk-chart-county', {
+ type: 'bar',
+ data: {
+ labels: ['Kilifi', 'Kwale'],
+ datasets: [
+ { label: 'Pre-Test', data: [78.1, 72.9], backgroundColor: fkColors.pre },
+ { label: 'Post-Test', data: [80.8, 74.7], backgroundColor: fkColors.post }
+ ]
+ },
+ options: { ...fkScore, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score' } } } }
+ });
+
+ // Chart 4: Average Score by Grade
+ fkChart('pp-fk-chart-grade', {
+ type: 'bar',
+ data: {
+ labels: ['Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9'],
+ datasets: [
+ { label: 'Pre-Test', data: [73.0, 70.3, 76.3, 76.4, 78.4, 84.9], backgroundColor: fkColors.pre },
+ { label: 'Post-Test', data: [75.6, 72.9, 74.8, 78.9, 78.8, 81.4], backgroundColor: fkColors.post }
+ ]
+ },
+ options: { ...fkScore, plugins: { ...fkScore.plugins, datalabels: { ...fkScore.plugins.datalabels, display: false } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score' } } } }
+ });
+
+ // Chart 5: Top Gains
+ fkChart('pp-fk-chart-gains', {
+ type: 'bar',
+ data: {
+ labels: ['Greenhouse gases\n(Q5)', "Children's climate\naction (Q11)", 'Adaptation\nmeaning (Q7)', 'Extreme\nweather (Q3)', 'Trees &\nfloods (Q4)', 'What is\nclimate (Q10)'],
+ datasets: [{ label: 'Change (pp)', data: [15.4, 9.5, 6.7, 6.4, 5.0, 3.1], backgroundColor: '#2E7D32', borderRadius: 6 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 12, weight: 'bold' }, color: '#2E7D32', formatter: v => '+' + v.toFixed(1) + 'pp' } },
+ scales: { x: { beginAtZero: true, title: { display: true, text: 'Change (pp)' } } }
+ }
+ });
+
+ // Chart 6: Largest Declines
+ fkChart('pp-fk-chart-declines', {
+ type: 'bar',
+ data: {
+ labels: ['Deforestation\n(Q2)', 'Water\navailability (Q12)', 'Agriculture\nimpact (Q9)', 'Conservation\nways (Q14)', 'Adaptation\nexample (Q6)'],
+ datasets: [{ label: 'Change (pp)', data: [-22.3, -6.5, -2.1, -1.0, -0.2], backgroundColor: '#C62828', borderRadius: 6 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: { legend: { display: false }, datalabels: { display: true, anchor: 'start', align: 'left', font: { size: 12, weight: 'bold' }, color: '#C62828', formatter: v => v.toFixed(1) + 'pp' } },
+ scales: { x: { max: 0, min: -28, title: { display: true, text: 'Change (pp)' } } }
+ }
+ });
+
+ // Chart 7: All 15 Questions Pre vs Post
+ const fkQLabels = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13','Q14','Q15'];
+ const fkPre = [93.4, 85.2, 83.6, 79.4, 50.3, 89.2, 78.0, 61.3, 91.1, 90.6, 55.7, 76.9, 70.8, 73.8, 57.3];
+ const fkPost = [94.7, 62.9, 90.0, 84.4, 65.6, 89.0, 84.8, 64.0, 89.0, 93.7, 65.2, 70.3, 70.8, 72.8, 58.7];
+ fkChart('pp-fk-chart-allq', {
+ type: 'bar',
+ data: {
+ labels: fkQLabels,
+ datasets: [
+ { label: 'Pre-Test', data: fkPre, backgroundColor: fkColors.pre, borderRadius: 3 },
+ { label: 'Post-Test', data: fkPost, backgroundColor: fkColors.post, borderRadius: 3 }
  ]
  },
  options: {
@@ -27655,6 +28119,7 @@
  'prepost-forest': 'Trainings Pre & Post',
  'schools-dashboard': 'Schools Dashboard',
  'pdm-dashboard': 'PDM Cookstoves & Solar',
+ 'seaweed-pdm': 'Seaweed PDM',
  'seaweed-assessment': 'Seaweed Assessment',
  'mangrove-resources': 'Mangrove Resources',
  'vsla-monitoring': 'VSLA Monitoring',
@@ -28195,7 +28660,7 @@
  if (typeof _origShowPrePost === 'function') {
  window.showPrePostType = function(evt, typeName) {
  _origShowPrePost(evt, typeName);
- var contentId = typeName === 'forest' ? 'pp-forest-content' : (typeName === 'seaweed' ? 'pp-seaweed-content' : (typeName === 'eba' ? 'pp-eba-content' : 'pp-mangrove-content'));
+ var contentId = typeName === 'forest' ? 'pp-forest-content' : (typeName === 'seaweed' ? 'pp-seaweed-content' : (typeName === 'eba' ? 'pp-eba-content' : (typeName === 'fourk' ? 'pp-fourk-content' : 'pp-mangrove-content')));
  var el = document.getElementById(contentId);
  if (el) animateSectionEnter(el);
  refreshScrollReveal();
@@ -30036,6 +30501,230 @@
  }
 
  }; // end renderPDMDashboard
+ })();
+
+ // ============================================================
+ // SEAWEED PDM (Aug 2026) — CHART RENDER FUNCTION
+ // Data aggregated from Book3.xlsx (14 groups, 184 input records)
+ // ============================================================
+ (function() {
+ const swCharts = {};
+ function destroyAll() { Object.values(swCharts).forEach(c => { try { c.destroy(); } catch(e) {} }); }
+ const TEAL = ['#004D40','#00695C','#00796B','#00897B','#009688','#26A69A','#4DB6AC','#80CBC4','#B2DFDB','#B2EBF2'];
+
+ window.renderSeaweedPDMDashboard = function() {
+ destroyAll();
+
+ // A. Active farmers by sex — Doughnut
+ const ctxGender = document.getElementById('pdmsw-gender');
+ if (ctxGender) {
+ swCharts['gender'] = new Chart(ctxGender.getContext('2d'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Female', 'Male'],
+ datasets: [{ data: [410, 118], backgroundColor: ['#00695C', '#4DB6AC'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Active Seaweed Farmers by Sex (n=528 disaggregated)', font: { size: 14, weight: 'bold' } },
+ legend: { position: 'bottom', labels: { font: { size: 11 } } },
+ datalabels: { formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a,b)=>a+b,0); return v + '\n(' + Math.round(v/t*100) + '%)'; }, font: { weight: 'bold', size: 12 }, color: '#fff', textAlign: 'center' }
+ }
+ }
+ });
+ }
+
+ // A. Participation funnel — Bar
+ const ctxPart = document.getElementById('pdmsw-participation');
+ if (ctxPart) {
+ swCharts['part'] = new Chart(ctxPart.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Registered\nMembers', 'Active\nFarmers', 'Currently\nCultivating', 'Youth\n(18–35)', 'Stopped\nCultivating'],
+ datasets: [{ label: 'Members', data: [648, 547, 525, 152, 59], backgroundColor: ['#004D40', '#00695C', '#00897B', '#26A69A', '#C62828'], borderRadius: 6 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Membership & Participation (14 groups)', font: { size: 14, weight: 'bold' } },
+ legend: { display: false },
+ datalabels: { anchor: 'end', align: 'end', formatter: v => v.toLocaleString(), font: { weight: 'bold', size: 11 }, color: '#333' }
+ },
+ scales: { y: { beginAtZero: true, ticks: { callback: v => v } } }
+ }
+ });
+ }
+
+ // B. Inputs distributed by type — Horizontal Bar
+ const ctxIType = document.getElementById('pdmsw-inputs-type');
+ if (ctxIType) {
+ swCharts['itype'] = new Chart(ctxIType.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Ropes', 'Seedstock', 'Planting Hammer', 'Weighing Scale', 'Rain Coats', 'Protective Gear', 'Handcarts', 'Solar Dryer', 'Drying Racks', 'Solar Dryer Tables'],
+ datasets: [{ label: 'Input records', data: [33, 28, 19, 18, 14, 14, 14, 7, 7, 6], backgroundColor: TEAL.concat(['#26A69A','#4DB6AC']).slice(0,10), borderRadius: 5 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Inputs Distributed by Type (184 records)', font: { size: 14, weight: 'bold' } },
+ legend: { display: false },
+ datalabels: { anchor: 'end', align: 'end', formatter: v => v, font: { weight: 'bold', size: 11 }, color: '#333' }
+ },
+ scales: { x: { beginAtZero: true } }
+ }
+ });
+ }
+
+ // B. Condition of inputs — Doughnut
+ const ctxICond = document.getElementById('pdmsw-inputs-condition');
+ if (ctxICond) {
+ swCharts['icond'] = new Chart(ctxICond.getContext('2d'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Good', 'Partly Damaged', 'Damaged / Unusable', 'Not Available'],
+ datasets: [{ data: [150, 19, 8, 7], backgroundColor: ['#2E7D32', '#F9A825', '#C62828', '#9E9E9E'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Condition of Inputs Received (n=184)', font: { size: 14, weight: 'bold' } },
+ legend: { position: 'bottom', labels: { font: { size: 10 } } },
+ datalabels: { formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a,b)=>a+b,0); return v > 6 ? Math.round(v/t*100) + '%' : ''; }, font: { weight: 'bold', size: 11 }, color: '#fff' }
+ }
+ }
+ });
+ }
+
+ // C. Harvest by group (wet vs dried) — Grouped Bar
+ const ctxHarv = document.getElementById('pdmsw-harvest');
+ if (ctxHarv) {
+ swCharts['harv'] = new Chart(ctxHarv.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Kibuyuni', 'Bati', 'Mkwiro', 'Mtimbwani', 'Kijiweni', 'Daima', 'Nuru Isamic', 'Siwema', 'Amka', 'Chiromo', 'Tushirikiane'],
+ datasets: [
+ { label: 'Wet (kg)', data: [95500, 31360, 4000, 4800, 2500, 4170, 96, 800, 400, 100, 45], backgroundColor: '#00838F', borderRadius: 4 },
+ { label: 'Dried (kg)', data: [9500, 0, 10000, 1626, 3369, 834, 2203, 0, 0, 90, 82], backgroundColor: '#66BB6A', borderRadius: 4 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Seaweed Harvested by Group — Wet vs Dried (kg)', font: { size: 14, weight: 'bold' } },
+ legend: { position: 'top', labels: { font: { size: 11 } } },
+ datalabels: { display: false }
+ },
+ scales: { x: { ticks: { font: { size: 9 }, maxRotation: 60, minRotation: 45 } }, y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } } }
+ }
+ });
+ }
+
+ // C. Ropes planted vs idle — Doughnut
+ const ctxRopes = document.getElementById('pdmsw-ropes');
+ if (ctxRopes) {
+ swCharts['ropes'] = new Chart(ctxRopes.getContext('2d'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Ropes Planted', 'Ropes Idle / Not Planted'],
+ datasets: [{ data: [20212, 1500], backgroundColor: ['#00796B', '#FFCC80'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Ropes Planted vs Idle (of 21,712 installed)', font: { size: 14, weight: 'bold' } },
+ legend: { position: 'bottom', labels: { font: { size: 11 } } },
+ datalabels: { formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a,b)=>a+b,0); return Math.round(v/t*100) + '%'; }, font: { weight: 'bold', size: 13 }, color: '#fff' }
+ }
+ }
+ });
+ }
+
+ // D. Income by group — Bar
+ const ctxIncome = document.getElementById('pdmsw-income');
+ if (ctxIncome) {
+ swCharts['income'] = new Chart(ctxIncome.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Kibuyuni', 'Bati', 'Tumbe', 'Kijiweni', 'Mtimbwani', 'Nuru Isamic', 'Shangani', 'Mkwiro', 'Daima', 'Amka', 'Chiromo'],
+ datasets: [{ label: 'Income (KES)', data: [1369766, 1026030, 300000, 219500, 138900, 110150, 78000, 48000, 41700, 19700, 5000], backgroundColor: '#2E7D32', borderRadius: 4 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Group Income from Seaweed — last 12 months (KES)', font: { size: 14, weight: 'bold' } },
+ legend: { display: false },
+ datalabels: { anchor: 'end', align: 'end', rotation: -90, formatter: v => (v/1000).toFixed(0) + 'k', font: { weight: 'bold', size: 9 }, color: '#333' }
+ },
+ scales: { x: { ticks: { font: { size: 9 }, maxRotation: 60, minRotation: 45 } }, y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(1) + 'M' } } }
+ }
+ });
+ }
+
+ // D. Buyer types — Doughnut
+ const ctxBuyers = document.getElementById('pdmsw-buyers');
+ if (ctxBuyers) {
+ swCharts['buyers'] = new Chart(ctxBuyers.getContext('2d'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Cooperative', 'Local Buyer', 'Exporter', 'Project-linked Buyer'],
+ datasets: [{ data: [4, 3, 3, 1], backgroundColor: ['#00695C', '#26A69A', '#0288D1', '#7E57C2'], borderWidth: 2 }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Main Buyer Type (11 selling groups)', font: { size: 14, weight: 'bold' } },
+ legend: { position: 'bottom', labels: { font: { size: 10 } } },
+ datalabels: { formatter: v => v, font: { weight: 'bold', size: 13 }, color: '#fff' }
+ }
+ }
+ });
+ }
+
+ // E. Market challenges — Horizontal Bar
+ const ctxMkt = document.getElementById('pdmsw-market-challenges');
+ if (ctxMkt) {
+ swCharts['mkt'] = new Chart(ctxMkt.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Lack of Storage', 'No Buyer', 'Low Price', 'Transport Cost', 'Small Volumes', 'Quality Rejection'],
+ datasets: [{ label: 'Groups citing', data: [11, 9, 9, 8, 4, 2], backgroundColor: ['#BF360C', '#D84315', '#E64A19', '#F4511E', '#FF7043', '#FFAB91'], borderRadius: 5 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Main Market Challenges (of 14 groups)', font: { size: 14, weight: 'bold' } },
+ legend: { display: false },
+ datalabels: { anchor: 'end', align: 'end', formatter: v => v, font: { weight: 'bold', size: 11 }, color: '#333' }
+ },
+ scales: { x: { beginAtZero: true, max: 14 } }
+ }
+ });
+ }
+
+ // E. Most urgent support needs — Horizontal Bar
+ const ctxSup = document.getElementById('pdmsw-support');
+ if (ctxSup) {
+ swCharts['sup'] = new Chart(ctxSup.getContext('2d'), {
+ type: 'bar',
+ data: {
+ labels: ['Drying / Storage', 'Recordkeeping', 'Transport', 'Seedstock', 'Buyer Linkage', 'Technical Training', 'Aggregation Hub', 'Price Negotiation'],
+ datasets: [{ label: 'Groups citing', data: [9, 7, 6, 5, 4, 4, 2, 2], backgroundColor: TEAL.slice(0, 8), borderRadius: 5 }]
+ },
+ options: {
+ indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+ plugins: {
+ title: { display: true, text: 'Support Needed Most Urgently (of 14 groups)', font: { size: 14, weight: 'bold' } },
+ legend: { display: false },
+ datalabels: { anchor: 'end', align: 'end', formatter: v => v, font: { weight: 'bold', size: 11 }, color: '#333' }
+ },
+ scales: { x: { beginAtZero: true, max: 14 } }
+ }
+ });
+ }
+
+ }; // end renderSeaweedPDMDashboard
  })();
 
  (function() {
@@ -34597,6 +35286,7 @@
  'prepost-forest': 'Pre/Post Training',
  'schools-dashboard': 'Schools',
  'pdm-dashboard': 'PDM',
+ 'seaweed-pdm': 'Seaweed PDM',
  'seaweed-assessment': 'Seaweed',
  'mangrove-resources': 'Mangrove Resources',
  'vsla-monitoring': 'VSLA',
