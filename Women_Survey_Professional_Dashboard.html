@@ -20406,6 +20406,9 @@
  if (ebaEl) ebaEl.style.display = 'none';
  var fourkEl = document.getElementById('pp-fourk-content');
  if (fourkEl) fourkEl.style.display = 'none';
+ // Program Targets vs Results (logframe) section: shown for all types except 4K Club (no target set)
+ var lfSec = document.getElementById('logframe-section');
+ if (lfSec) lfSec.style.display = '';
 
  if (typeName === 'forest') {
  document.getElementById('pp-forest-content').style.display = 'block';
@@ -20458,6 +20461,7 @@
  document.getElementById('pp-meta-pre').textContent = '519';
  document.getElementById('pp-meta-post').textContent = '617';
  updateFourKPrePostCharts();
+ if (lfSec) lfSec.style.display = 'none';
  }
  }
 
