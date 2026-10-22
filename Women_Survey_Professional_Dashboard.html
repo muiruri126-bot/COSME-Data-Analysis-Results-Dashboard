@@ -17,6 +17,7 @@
  <!-- Firebase Compat SDKs -->
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
  <style>
  * {
  margin: 0;
@@ -4325,6 +4326,7 @@
  <button class="tab-button" onclick="showOutputType(event, 'vsla')">VSLA</button>
  <button class="tab-button" onclick="showOutputType(event, 'schools')">Schools</button>
  <button class="tab-button" onclick="showOutputType(event, 'results-framework')">Outputs Progress</button>
+ <button class="tab-button" onclick="showOutputType(event, 'nbs-outputs')">NbS Interventions</button>
  </div>
 
  <!-- PROJECT OUTPUT SECTION -->
@@ -5201,6 +5203,208 @@
  <div style="height: 320px;"><canvas id="output-schools-gendersplit"></canvas></div>
  </div>
  </div>
+ </div>
+
+ <!-- -->
+ <!-- NbS INTERVENTIONS — Mangrove & Terrestrial Forest outputs (Oct 2026) -->
+ <!-- -->
+ <div id="output-nbs-outputs" style="display:none;">
+
+ <!-- HEADER -->
+ <div class="output-header" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #00897B 100%);">
+ <h2>NbS Interventions — Mangrove &amp; Terrestrial Forest</h2>
+ <p id="nbs-note">Interventions and numbers at output level</p>
+ </div>
+
+ <!-- ADMIN BAR — sign-in gates editing and the source locations -->
+ <div class="output-card" id="nbs-admin-bar" style="border-left: 4px solid #757575;">
+ <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between;">
+ <div>
+ <strong id="nbs-admin-status" style="color: #555;">Read-only view</strong>
+ <span id="nbs-admin-hint" style="color: #777; font-size: 13px; margin-left: 8px;">Figures and source locations are locked. Sign in as an administrator to edit.</span>
+ </div>
+ <div style="display: flex; gap: 8px; align-items: center;">
+ <button class="tab-button" id="nbs-admin-open" onclick="nbsToggleSignIn()">Admin sign in</button>
+ <button class="tab-button" id="nbs-admin-signout" style="display: none;" onclick="nbsAdminSignOut()">Sign out</button>
+ </div>
+ </div>
+ <form id="nbs-admin-form" style="display: none; margin-top: 14px; gap: 8px; flex-wrap: wrap; align-items: center;" onsubmit="return nbsAdminSignIn(event);">
+ <input type="email" id="nbs-admin-email" placeholder="Administrator email" autocomplete="username" required
+ style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-width: 220px;">
+ <input type="password" id="nbs-admin-password" placeholder="Password" autocomplete="current-password" required
+ style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-width: 180px;">
+ <button type="submit" class="tab-button" style="background: #2e7d32; color: #fff;">Sign in</button>
+ <span id="nbs-admin-error" style="color: #C62828; font-size: 13px;"></span>
+ </form>
+ </div>
+
+ <!-- HEADLINE KPIs -->
+ <div class="output-card">
+ <h3>Headline Numbers at Output Level</h3>
+ <div class="output-kpi-grid">
+ <div class="output-kpi green">
+ <div class="kpi-label">Total Area Rehabilitated</div>
+ <div class="kpi-value" id="nbs-kpi-area-total">—</div>
+ <div class="kpi-sub" id="nbs-kpi-area-total-sub"></div>
+ </div>
+ <div class="output-kpi">
+ <div class="kpi-label">Mangrove Area</div>
+ <div class="kpi-value" id="nbs-kpi-area-mangrove">—</div>
+ <div class="kpi-sub" id="nbs-kpi-area-mangrove-sub"></div>
+ </div>
+ <div class="output-kpi green">
+ <div class="kpi-label">Terrestrial Forest Area</div>
+ <div class="kpi-value" id="nbs-kpi-area-forest">—</div>
+ <div class="kpi-sub" id="nbs-kpi-area-forest-sub"></div>
+ </div>
+ <div class="output-kpi green">
+ <div class="kpi-label">Seedlings Planted (Kenya)</div>
+ <div class="kpi-value" id="nbs-kpi-seedlings">—</div>
+ <div class="kpi-sub" id="nbs-kpi-seedlings-sub"></div>
+ </div>
+ <div class="output-kpi orange">
+ <div class="kpi-label">Restoration Investment</div>
+ <div class="kpi-value" id="nbs-kpi-investment">—</div>
+ <div class="kpi-sub" id="nbs-kpi-investment-sub"></div>
+ </div>
+ <div class="output-kpi">
+ <div class="kpi-label">Trained in Forest Management</div>
+ <div class="kpi-value" id="nbs-kpi-forest-trained">—</div>
+ <div class="kpi-sub" id="nbs-kpi-forest-trained-sub"></div>
+ </div>
+ <div class="output-kpi">
+ <div class="kpi-label">Mangrove Members Trained</div>
+ <div class="kpi-value" id="nbs-kpi-mangrove-trained">—</div>
+ <div class="kpi-sub" id="nbs-kpi-mangrove-trained-sub"></div>
+ </div>
+ <div class="output-kpi orange">
+ <div class="kpi-label">Cookstoves Installed</div>
+ <div class="kpi-value" id="nbs-kpi-cookstoves">—</div>
+ <div class="kpi-sub" id="nbs-kpi-cookstoves-sub"></div>
+ </div>
+ </div>
+ </div>
+
+ <!-- TARGET STATUS SUMMARY -->
+ <div class="output-card">
+ <h3>Progress Against Life-of-Project Targets</h3>
+ <div class="output-kpi-grid" style="margin-bottom: 18px;">
+ <div class="output-kpi green">
+ <div class="kpi-label">Met or Exceeded</div>
+ <div class="kpi-value" id="nbs-status-met">—</div>
+ <div class="kpi-sub" id="nbs-status-met-sub"></div>
+ </div>
+ <div class="output-kpi orange">
+ <div class="kpi-label">Near Target (70–99%)</div>
+ <div class="kpi-value" id="nbs-status-near">—</div>
+ <div class="kpi-sub" id="nbs-status-near-sub"></div>
+ </div>
+ <div class="output-kpi" style="border-left: 4px solid #C62828;">
+ <div class="kpi-label">Below Target (&lt;70%)</div>
+ <div class="kpi-value" id="nbs-status-below" style="color: #C62828;">—</div>
+ <div class="kpi-sub" id="nbs-status-below-sub"></div>
+ </div>
+ <div class="output-kpi" style="border-left: 4px solid #757575;">
+ <div class="kpi-label">No LOP Target Set</div>
+ <div class="kpi-value" id="nbs-status-notarget" style="color: #757575;">—</div>
+ <div class="kpi-sub" id="nbs-status-notarget-sub"></div>
+ </div>
+ </div>
+ <div style="height: 620px;"><canvas id="nbs-pct-target"></canvas></div>
+ </div>
+
+ <!-- CHARTS -->
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Area Under Rehabilitation by Site (hectares)</h4>
+ <div style="height: 340px;"><canvas id="nbs-area-site"></canvas></div>
+ </div>
+ <div class="output-chart-box">
+ <h4>Restoration Investment by Site (KES)</h4>
+ <div style="height: 340px;"><canvas id="nbs-investment"></canvas></div>
+ </div>
+ </div>
+ <div class="output-charts-row">
+ <div class="output-chart-box">
+ <h4>Seedlings Planted by Stream</h4>
+ <div style="height: 340px;"><canvas id="nbs-seedlings"></canvas></div>
+ </div>
+ <div class="output-chart-box">
+ <h4>Interventions Recorded by Ecosystem</h4>
+ <div style="height: 340px;"><canvas id="nbs-eco-split"></canvas></div>
+ </div>
+ </div>
+
+ <!-- CONFLICTS NEEDING A DECISION -->
+ <div class="output-card" style="border-left: 4px solid #C62828;">
+ <h3 style="color: #C62828;">Figures Needing a Decision Before the Final Report</h3>
+ <p style="font-size: 13px; color: #666; margin-bottom: 15px;">These rows are reported differently in different source documents. The figure shown in the table below is the one carried in the Y3 Annual Report Annex B or the close-out workbook; the alternative is noted alongside.</p>
+ <div style="overflow-x: auto;">
+ <table class="output-table" id="nbs-conflicts-table">
+ <thead>
+ <tr>
+ <th style="text-align:left;">#</th>
+ <th style="text-align:left;">Intervention / indicator</th>
+ <th>Figure used</th>
+ <th style="text-align:left;">Conflict to resolve</th>
+ </tr>
+ </thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- FULL INTERVENTIONS TABLE -->
+ <div class="output-card">
+ <h3>All Interventions &amp; Numbers</h3>
+ <div class="tabs-container" id="nbs-eco-filter" style="display: flex; flex-wrap: wrap; margin-bottom: 15px;">
+ <button class="tab-button active" onclick="filterNbsRows(event, 'all')" style="background: #2e7d32; color: #fff;">All Ecosystems</button>
+ <button class="tab-button" onclick="filterNbsRows(event, 'MANGROVE')">Mangrove</button>
+ <button class="tab-button" onclick="filterNbsRows(event, 'TERRESTRIAL FOREST')">Terrestrial Forest</button>
+ <button class="tab-button" onclick="filterNbsRows(event, 'CROSS-CUTTING (both)')">Cross-Cutting</button>
+ <button class="tab-button" onclick="filterNbsRows(event, 'conflict')">Conflicts Only</button>
+ </div>
+ <p style="font-size: 13px; color: #666; margin-bottom: 12px;" id="nbs-table-count"></p>
+ <div style="overflow-x: auto;">
+ <table class="output-table" id="nbs-main-table">
+ <thead>
+ <tr>
+ <th style="text-align:left;">#</th>
+ <th style="text-align:left;">Ecosystem</th>
+ <th style="text-align:left;">Output</th>
+ <th style="text-align:left;">Intervention / indicator</th>
+ <th style="text-align:left;">Unit</th>
+ <th>LOP target</th>
+ <th>Achieved</th>
+ <th>% of target</th>
+ <th style="text-align:left;">Disaggregation</th>
+ <th style="text-align:left;">Data as at</th>
+ <th style="text-align:left;">Source</th>
+ <th style="text-align:left;">Notes / to confirm</th>
+ </tr>
+ </thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- SOURCES -->
+ <div class="output-card" style="border-left: 4px solid #1565C0;">
+ <h3 style="color: #1565C0;">Sources Used</h3>
+ <div style="overflow-x: auto;">
+ <table class="output-table" id="nbs-sources-table">
+ <thead>
+ <tr>
+ <th style="text-align:left;">Source</th>
+ <th style="text-align:left;">Location</th>
+ <th style="text-align:left;">Used for</th>
+ </tr>
+ </thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ </div>
+
  </div>
 
  <!-- -->
@@ -20478,7 +20682,7 @@
  event.currentTarget.style.color = '#fff';
 
  // Hide all output sub-types
- const outputTypes = ['mangrove', 'forestry', 'seaweed', 'gjj', 'vsla', 'schools', 'results-framework'];
+ const outputTypes = ['mangrove', 'forestry', 'seaweed', 'gjj', 'vsla', 'schools', 'results-framework', 'nbs-outputs'];
  outputTypes.forEach(t => {
  const el = document.getElementById('output-' + t);
  if (el) el.style.display = 'none';
@@ -20499,6 +20703,7 @@
  if (typeName === 'vsla') renderVSLAOutputCharts();
  if (typeName === 'schools') renderSchoolsOutputCharts();
  if (typeName === 'results-framework') renderResultsFrameworkCharts();
+ if (typeName === 'nbs-outputs') renderNbsOutputCharts();
  }
 
  // OUTPUT CHARTS — stored references so we can destroy/recreate
@@ -21028,6 +21233,544 @@
 
 
  // ====== OUTPUTS PROGRESS CHARTS ======
+ // NbS INTERVENTIONS — Mangrove & Terrestrial Forest outputs
+    // NbS OUTPUTS — compiled from COSME_Outputs_Data.xlsx (22 Oct 2026)
+    const NBS_TITLE = "COSME Project – Mangrove & Terrestrial Forest: interventions and numbers at output level";
+    const NBS_NOTE = "Compiled 22 Oct 2026 from SharePoint project documents. Rows marked CONFLICT need a decision before the final report. Y4 figures (Apr–Dec 2026) come from Sep–Oct 2026 close-out materials; no formal Y4 report exists yet.";
+    const NBS_ROWS = [
+      { n: 1, eco: "MANGROVE", output: "1111 Biodiversity assessment for mangrove restoration", intervention: "Biodiversity (eDNA) assessments conducted (1111a)", unit: "Assessments", target: 2, achieved: 1, pct: 0.5, disagg: null, asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "KMFRI eDNA study + Biodiversity Indicator Index report. Second assessment planned at endline. CONFLICT: close-out deck V2 shows 0 of 1.", conflict: true },
+      { n: 2, eco: "MANGROVE", output: "1112 Mangrove group members trained & coached", intervention: "Mangrove groups established (1112a)", unit: "Groups", target: 40, achieved: 42, pct: 1.05, disagg: null, asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "4 groups dropped out, 3 new registered (1 Kwale, 2 Kilifi).", conflict: false },
+      { n: 3, eco: "MANGROVE", output: "1112 Mangrove group members trained & coached", intervention: "Group members trained in CBEMR (1112b)", unit: "People", target: 1200, achieved: 1344, pct: 1.12, disagg: "F 973 / M 371 (target F 840 / M 360)", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "CONFLICT: Y3 reach table and close-out deck V2 report 864 trained (F 665 / M 199). 1,344 = registered members per narrative. Please confirm which to use.", conflict: true },
+      { n: 4, eco: "MANGROVE", output: "1112 Mangrove group members trained & coached", intervention: "Trainers of Trainers (ToT) trained on CBEMR", unit: "People", target: null, achieved: 20, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: null, conflict: false },
+      { n: 5, eco: "MANGROVE", output: "1112 Mangrove group members trained & coached", intervention: "CBEMR training manual developed (5 modules)", unit: "Manual", target: null, achieved: 1, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026); Y3 Annual Results Report to GAC (29 May 2026)", notes: "Training Manual for Ecological Mangrove Restoration in Kenya, 2025.", conflict: false },
+      { n: 6, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Mangrove groups equipped with restoration input kits (1113a)", unit: "Groups", target: 10, achieved: 8, pct: 0.8, disagg: null, asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "CONFLICT: close-out deck V2 shows 7 of 10. Includes 5 groups with tree nursery inputs and 3 with beekeeping inputs.", conflict: true },
+      { n: 7, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Community-managed mangrove nurseries established", unit: "Nurseries", target: 10, achieved: 10, pct: 1, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "KFS deliverable (a). PIK bought seedlings from these nurseries for 3 years.", conflict: false },
+      { n: 8, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Mangrove seedlings planted, Y1–Y3", unit: "Seedlings", target: null, achieved: 205000, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Y3 alone: 120,000 (Y3 report).", conflict: false },
+      { n: 9, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Mangrove seedlings planted, World Mangrove Day 2026 drive", unit: "Seedlings", target: null, achieved: 120000, pct: null, disagg: "Takaungu 60,000 / Majoreni–Mwazaro 60,000", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "KFS report shows the 2026 drive as 140,000 overall; ecosystem split of the extra 20,000 not stated.", conflict: false },
+      { n: 10, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Site-specific mangrove restoration plans (2026–2030)", unit: "Plans", target: null, achieved: 2, pct: null, disagg: "Takaungu Creek; Majoreni–Mwazaro", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026); Y3 Annual Results Report to GAC (29 May 2026)", notes: "KFS deliverable (i).", conflict: false },
+      { n: 11, eco: "MANGROVE", output: "1113 Mangrove groups equipped with inputs", intervention: "Community members registered into CFA after sensitization (24 mangrove groups)", unit: "People", target: null, achieved: 600, pct: null, disagg: null, asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "Reported as 'over 600' – Mtakimau CFA, Takaungu.", conflict: false },
+      { n: 12, eco: "MANGROVE", output: "1100a Area rehabilitated (mangrove)", intervention: "Mangrove area under rehabilitation", unit: "Hectares", target: 80.8, achieved: 34.4, pct: 0.42574257425742573, disagg: "Takaungu 17.9 / Majoreni 16.5 / Mwazaro not yet reported", asat: "Sep 2026", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook)", notes: "CONFLICT: community close-out deck shows 39 ha mangrove at midline (higher than latest 34.4). Please reconcile.", conflict: true },
+      { n: 13, eco: "MANGROVE", output: "1100a Area rehabilitated (mangrove)", intervention: "Restoration investment at mangrove sites", unit: "KES", target: null, achieved: 24334117, pct: null, disagg: "Takaungu 12,976,717 / Majoreni 11,357,400", asat: "Sep 2026", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook)", notes: "Sum of two sites.", conflict: false },
+      { n: 14, eco: "MANGROVE", output: "Monitoring", intervention: "Mangrove seedling survival rate (monitoring)", unit: "%", target: null, achieved: 0.6, pct: null, disagg: null, asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "Despite drought; livestock intrusion main threat.", conflict: false },
+      { n: 15, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "Regional & local authorities sensitized on gender-focused conservation (1131a)", unit: "People", target: 880, achieved: 1075, pct: 1.2215909090909092, disagg: "F 682 / M 393 (Kenya 950: F 637/M 313; Tanzania 125: F 45/M 80)", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: null, conflict: false },
+      { n: 16, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "People trained in gender-responsive forest management – total (1131b)", unit: "People", target: 1800, achieved: 1705, pct: 0.9472222222222222, disagg: "F 1,113 / M 592", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "Kenya + Tanzania.", conflict: false },
+      { n: 17, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "of which Kenya", unit: "People", target: 1350, achieved: 1030, pct: 0.762962962962963, disagg: "F 832 / M 198", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "Average module completion. Only 550 completed 5+ of 7 modules (deck V2). KFS report cites 1,440 = registered members.", conflict: false },
+      { n: 18, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "of which Tanzania (JGI)", unit: "People", target: 450, achieved: 675, pct: 1.5, disagg: "F 281 / M 394", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: null, conflict: false },
+      { n: 19, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "ToTs trained on community-led forest management", unit: "People", target: null, achieved: 25, pct: null, disagg: "F 13 / M 12", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: null, conflict: false },
+      { n: 20, eco: "TERRESTRIAL FOREST", output: "1131 Communities trained in gender-responsive forest management", intervention: "Village Forest Reserves and Private Woodlots identified (Tanzania)", unit: "Sites", target: null, achieved: 44, pct: null, disagg: "31 Village Forest Reserves + 13 Private Woodlots", asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "Some Bagamoyo sites later reclassified as private woodlots.", conflict: false },
+      { n: 21, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Women's/forest groups supported – Kenya (1132a)", unit: "Groups", target: 45, achieved: 52, pct: 1.1555555555555554, disagg: "1,440 members (F 1,141 / M 299)", asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "Combined close-out deck shows 62 forest groups / 1,769 members from 2024 registration.", conflict: false },
+      { n: 22, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "COCOBA groups supported – Tanzania (1132a)", unit: "Groups", target: 90, achieved: 158, pct: 1.7555555555555555, disagg: null, asat: "Mar 2026", source: "Y3 Annual Report Annex B (Output worksheet), cumulative to 31 Mar 2026", notes: "Annex B EOP column shows 90; AWP annual target was Kenya 45 + Tanzania 90 = 135.", conflict: false },
+      { n: 23, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Community Forest Associations formed/launched", unit: "CFAs", target: 2, achieved: 2, pct: 1, disagg: "Kaya Chonyi; Gonja", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Women and young women elected to lead Chonyi CFA.", conflict: false },
+      { n: 24, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Participatory Forest Management Plans developed (2026–2031)", unit: "Plans", target: 2, achieved: 2, pct: 1, disagg: "Gonja; Kaya Chonyi", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: null, conflict: false },
+      { n: 25, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Forest Management Agreements signed (KFS–CFA)", unit: "Agreements", target: null, achieved: 2, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Exceeded framework deliverable (c).", conflict: false },
+      { n: 26, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Community scouts trained at KFS Law Enforcement Institute, Londiani", unit: "People", target: 36, achieved: 20, pct: 0.5555555555555556, disagg: "F 9 / M 11", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Budget constraint.", conflict: false },
+      { n: 27, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Smartphones procured for scouts' mobile GIS (Kenya)", unit: "Phones", target: 40, achieved: 40, pct: 1, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Awaiting handover pending donor approval of asset disposal plan.", conflict: false },
+      { n: 28, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Smartphones with Survey123 given to Forest Monitors (Tanzania)", unit: "Phones", target: null, achieved: 87, pct: null, disagg: null, asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: null, conflict: false },
+      { n: 29, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Gender & Conservation Governance Champions (Tanzania)", unit: "People", target: null, achieved: 131, pct: null, disagg: "F 86 / M 45", asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "CONFLICT: Y3 reach table shows 646 (F 271 / M 375) vs target 270.", conflict: true },
+      { n: 30, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "CFA leaders on cross-country exchange visit to JGI Tanzania", unit: "People", target: null, achieved: 15, pct: null, disagg: "10 executive committee + 5 group leaders", asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "KFS also participated.", conflict: false },
+      { n: 31, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Indigenous tree seedlings planted – Kenya, Y1–Y3", unit: "Seedlings", target: null, achieved: 46380, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Y3 report: 27,790 in Y3; Y2 deck: 19,500 in Y2 (sum 47,290 – small gap).", conflict: false },
+      { n: 32, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Seedlings transplanted – Tanzania (3 phases, Y3)", unit: "Seedlings", target: null, achieved: 188291, pct: null, disagg: "42,939 + 51,210 + 94,142", asat: "Mar 2026", source: "Y3 Annual Results Report to GAC (29 May 2026)", notes: "From 44 Village Tree Nurseries across 45 villages.", conflict: false },
+      { n: 33, eco: "TERRESTRIAL FOREST", output: "1132 Women's groups supported to pilot forestry NbS", intervention: "Fruit tree seedlings distributed & planted on farmland", unit: "Seedlings", target: 50000, achieved: 24544, pct: 0.49088, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "84% survival. Y3 report shows 23,544 in one paragraph and 24,544 in another.", conflict: false },
+      { n: 34, eco: "TERRESTRIAL FOREST", output: "1100a Area rehabilitated (terrestrial)", intervention: "Terrestrial forest area under rehabilitation", unit: "Hectares", target: 43, achieved: 42.3, pct: 0.983720930232558, disagg: "Kaya Chonyi 23.4 / Gonja 18.9", asat: "Sep 2026", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook)", notes: "Midline was 24 ha.", conflict: false },
+      { n: 35, eco: "TERRESTRIAL FOREST", output: "1100a Area rehabilitated (terrestrial)", intervention: "Restoration investment at terrestrial sites", unit: "KES", target: null, achieved: 8206667, pct: null, disagg: "Kaya Chonyi 4,043,000 / Gonja 4,163,667", asat: "Sep 2026", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook)", notes: "Sum of two sites.", conflict: false },
+      { n: 36, eco: "CROSS-CUTTING (both)", output: "1100a Area rehabilitated – total", intervention: "Total area under rehabilitation (mangrove + terrestrial)", unit: "Hectares", target: 123.8, achieved: 76.7, pct: 0.6195476575121164, disagg: null, asat: "Sep–Oct 2026", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook); COSME–KFS Framework Progress Report (Oct 2026)", notes: "Midline 63 ha (Y3 report). KFS report shows 76.66 ha.", conflict: false },
+      { n: 37, eco: "CROSS-CUTTING (both)", output: "1111.1 Mapping", intervention: "Degraded polygons mapped (baseline)", unit: "Polygons", target: null, achieved: 26, pct: null, disagg: "21 mangrove / 5 terrestrial (~123 ha)", asat: "Y1", source: "NbS Mangrove & Forest close-out workshop deck V2 (Sep 2026; Rehabilitation Data workbook)", notes: null, conflict: false },
+      { n: 38, eco: "CROSS-CUTTING (both)", output: "Seedlings", intervention: "Total mangrove + terrestrial seedlings planted – Kenya", unit: "Seedlings", target: null, achieved: 391380, pct: null, disagg: "Mangrove 205,000 + Terrestrial 46,380 + 2026 drive 140,000", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: null, conflict: false },
+      { n: 39, eco: "CROSS-CUTTING (both)", output: "Livelihoods linked to restoration", intervention: "Beehives installed in reforestation sites", unit: "Beehives", target: null, achieved: 550, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Y3 report (Mar 2026): 70 beehives to 2 groups – growth since then.", conflict: false },
+      { n: 40, eco: "CROSS-CUTTING (both)", output: "Monitoring", intervention: "Active ArcGIS monitoring survey forms", unit: "Forms", target: null, achieved: 59, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: null, conflict: false },
+      { n: 41, eco: "CROSS-CUTTING (both)", output: "Alternative energy (Output 1223, KFS deliverable l)", intervention: "Fuel-efficient cookstoves installed (forest-adjacent households)", unit: "Households", target: null, achieved: 2282, pct: null, disagg: null, asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Reported under Output 1223, not 1110/1130.", conflict: false },
+      { n: 42, eco: "CROSS-CUTTING (both)", output: "Alternative energy (Output 1223)", intervention: "Youth trained and hired as cookstove technicians", unit: "People", target: null, achieved: 247, pct: null, disagg: "F 107 / M 140", asat: "Oct 2026", source: "COSME–KFS Framework Progress Report (Oct 2026)", notes: "Reported under Output 1223.", conflict: false },
+    ];
+    // Source document locations are NOT published here: they live in Firebase
+    // under nbsOutputs/sourceLocations, readable only to a signed-in admin.
+    const NBS_SOURCES = [
+      { key: "s0", source: "Y3 Annual Report Annex B (Output worksheet)", used: "Cumulative output data to 31 Mar 2026 (labelled DRAFT – check against final submitted annex)" },
+      { key: "s1", source: "Y3 Annual Results Report to GAC", used: "Narrative, reach table, seedlings, Tanzania forest data" },
+      { key: "s2", source: "COSME–KFS Framework Progress Report", used: "Latest (Oct 2026) seedlings, hectares, CFAs, scouts, beehives" },
+      { key: "s3", source: "NbS Mangrove & Forest close-out deck V2", used: "Hectares by site/ecosystem, investment, output progress" },
+      { key: "s4", source: "Community close-out deck (Kilifi & Kwale combined)", used: "Used only to flag conflicts (midline hectares, 2024 group registration)" },
+    ];
+
+  //
+ // NbS ADMIN GATE
+ // Everyone gets a read-only view. A signed-in administrator can edit the
+ // Achieved and Notes cells and can see where each source document lives.
+ //
+ // The source locations are deliberately NOT in this file. They are held in
+ // Firebase under nbsOutputs/sourceLocations, which the database rules expose
+ // only to an authenticated user — a client-side check could not protect text
+ // that shipped inside a public page.
+ //
+
+ let nbsIsAdmin = false;
+ let nbsCurrentFilter = 'all';
+ let NBS_OVERRIDES = {};          // rowNumber -> { achieved, notes }
+ let NBS_SOURCE_LOCATIONS = {};   // source key -> full path, admin only
+
+ function nbsDb() {
+ try { return (typeof firebase !== 'undefined' && firebase.apps.length) ? firebase.database() : null; }
+ catch (e) { return null; }
+ }
+
+ function nbsToggleSignIn() {
+ const form = document.getElementById('nbs-admin-form');
+ if (!form) return;
+ form.style.display = (form.style.display === 'flex') ? 'none' : 'flex';
+ }
+
+ function nbsAdminSignIn(event) {
+ event.preventDefault();
+ const err = document.getElementById('nbs-admin-error');
+ const email = document.getElementById('nbs-admin-email').value.trim();
+ const pass = document.getElementById('nbs-admin-password').value;
+ err.textContent = '';
+ if (typeof firebase === 'undefined' || !firebase.auth) {
+ err.textContent = 'Sign-in is unavailable: Firebase Auth is not enabled for this project yet.';
+ return false;
+ }
+ firebase.auth().signInWithEmailAndPassword(email, pass)
+ .then(function () {
+ document.getElementById('nbs-admin-password').value = '';
+ document.getElementById('nbs-admin-form').style.display = 'none';
+ })
+ .catch(function (e) { err.textContent = e.message || 'Sign-in failed.'; });
+ return false;
+ }
+
+ function nbsAdminSignOut() {
+ if (typeof firebase !== 'undefined' && firebase.auth) firebase.auth().signOut();
+ }
+
+ // Reflects the signed-in state across the bar, the sources table and the grid
+ function nbsApplyAdminState(user) {
+ nbsIsAdmin = !!user;
+ const status = document.getElementById('nbs-admin-status');
+ const hint = document.getElementById('nbs-admin-hint');
+ const openBtn = document.getElementById('nbs-admin-open');
+ const outBtn = document.getElementById('nbs-admin-signout');
+ const bar = document.getElementById('nbs-admin-bar');
+ if (status) {
+ status.textContent = nbsIsAdmin ? 'Administrator' : 'Read-only view';
+ status.style.color = nbsIsAdmin ? '#2E7D32' : '#555';
+ }
+ if (hint) {
+ hint.textContent = nbsIsAdmin
+ ? 'Signed in as ' + (user.email || 'administrator') + '. Achieved and Notes cells are editable; edits are saved for everyone.'
+ : 'Figures and source locations are locked. Sign in as an administrator to edit.';
+ }
+ if (bar) bar.style.borderLeftColor = nbsIsAdmin ? '#2E7D32' : '#757575';
+ if (openBtn) openBtn.style.display = nbsIsAdmin ? 'none' : '';
+ if (outBtn) outBtn.style.display = nbsIsAdmin ? '' : 'none';
+
+ if (nbsIsAdmin) {
+ nbsLoadSourceLocations();
+ } else {
+ NBS_SOURCE_LOCATIONS = {};
+ }
+ if (document.querySelector('#nbs-main-table tbody')) {
+ nbsRenderSources();
+ renderNbsTable(nbsCurrentFilter);
+ }
+ }
+
+ function nbsLoadSourceLocations() {
+ const db = nbsDb();
+ if (!db) return;
+ db.ref('nbsOutputs/sourceLocations').once('value')
+ .then(function (snap) {
+ NBS_SOURCE_LOCATIONS = snap.val() || {};
+ nbsRenderSources();
+ })
+ .catch(function () { /* rules refused the read — stays locked */ });
+ }
+
+ // Overrides are world-readable so every viewer sees the corrected figure
+ function nbsWatchOverrides() {
+ const db = nbsDb();
+ if (!db) return;
+ db.ref('nbsOutputs/overrides').on('value', function (snap) {
+ NBS_OVERRIDES = snap.val() || {};
+ if (document.querySelector('#nbs-main-table tbody')) renderNbsTable(nbsCurrentFilter);
+ }, function () { /* unreadable — fall back to the published figures */ });
+ }
+
+ function nbsSaveOverride(rowNumber, field, rawText) {
+ const db = nbsDb();
+ if (!db || !nbsIsAdmin) return;
+ const rec = nbsRow(rowNumber);
+ let value;
+ if (field === 'achieved') {
+ const cleaned = String(rawText).replace(/[,\s]/g, '').replace(/%$/, '');
+ if (cleaned === '' || isNaN(Number(cleaned))) return;      // leave the figure alone
+ value = rec.unit === '%' ? Number(cleaned) / 100 : Number(cleaned);
+ } else {
+ value = String(rawText).trim();
+ }
+ const update = {};
+ update[field] = value;
+ update.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+ update.updatedBy = (firebase.auth().currentUser || {}).email || 'admin';
+ db.ref('nbsOutputs/overrides/' + rowNumber).update(update)
+ .catch(function (e) { alert('Could not save: ' + (e.message || e)); });
+ }
+
+ function nbsBindCellEditors(tbody) {
+ tbody.querySelectorAll('[data-nbs-field]').forEach(function (cell) {
+ cell.style.outline = 'none';
+ cell.addEventListener('focus', function () { cell.style.background = '#E8F5E9'; });
+ cell.addEventListener('blur', function () {
+ cell.style.background = '';
+ nbsSaveOverride(Number(cell.getAttribute('data-nbs-row')),
+ cell.getAttribute('data-nbs-field'),
+ cell.textContent);
+ });
+ cell.addEventListener('keydown', function (e) {
+ if (e.key === 'Enter') { e.preventDefault(); cell.blur(); }
+ if (e.key === 'Escape') { cell.blur(); renderNbsTable(nbsCurrentFilter); }
+ });
+ });
+ }
+
+ function nbsRenderSources() {
+ const stbody = document.querySelector('#nbs-sources-table tbody');
+ if (!stbody) return;
+ stbody.innerHTML = NBS_SOURCES.map(function (s) {
+ const loc = NBS_SOURCE_LOCATIONS[s.key];
+ const locCell = loc
+ ? nbsEsc(loc)
+ : '<span style="color:#9E9E9E;">&#128274; Location restricted &mdash; sign in as an administrator</span>';
+ return '<tr>'
+ + '<td style="text-align:left;"><strong>' + nbsEsc(s.source) + '</strong></td>'
+ + '<td style="text-align:left; font-size: 12px;">' + locCell + '</td>'
+ + '<td style="text-align:left; font-size: 12px;">' + nbsEsc(s.used) + '</td>'
+ + '</tr>';
+ }).join('');
+ }
+
+ (function nbsInitAdmin() {
+ function start() {
+ nbsWatchOverrides();
+ if (typeof firebase !== 'undefined' && firebase.auth) {
+ firebase.auth().onAuthStateChanged(nbsApplyAdminState);
+ }
+ }
+ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+ else start();
+ })();
+
+
+ // Short axis labels for the LOP-target chart, keyed by row number in NBS_ROWS
+ const NBS_SHORT_LABELS = {
+ 1: 'Biodiversity assessments', 2: 'Mangrove groups established',
+ 3: 'Mangrove members trained (CBEMR)', 6: 'Mangrove groups equipped (kits)',
+ 7: 'Mangrove nurseries established', 12: 'Mangrove area rehabilitated',
+ 15: 'Authorities sensitized (gender)', 16: 'Trained in forest mgmt — total',
+ 17: 'Trained in forest mgmt — Kenya', 18: 'Trained in forest mgmt — Tanzania',
+ 21: "Women's/forest groups — Kenya", 22: 'COCOBA groups — Tanzania',
+ 23: 'CFAs formed / launched', 24: 'PFM plans developed',
+ 26: 'Community scouts trained', 27: 'Smartphones for scouts',
+ 33: 'Fruit tree seedlings planted', 34: 'Terrestrial area rehabilitated',
+ 36: 'Total area rehabilitated'
+ };
+
+ const nbsChartInstances = {};
+
+ function nbsRow(n) { return NBS_ROWS.find(r => r.n === n) || {}; }
+
+ function nbsFmt(v, unit) {
+ if (v === null || v === undefined) return '—';
+ if (unit === '%') return Math.round(v * 100) + '%';
+ if (typeof v !== 'number') return String(v);
+ return v.toLocaleString('en-US', { maximumFractionDigits: 2 });
+ }
+
+ function nbsPct(v) {
+ return (v === null || v === undefined) ? '—' : Math.round(v * 100) + '%';
+ }
+
+ function nbsStatus(rec) {
+ if (rec.target === null || rec.target === undefined) return { label: 'No LOP target', color: '#757575' };
+ const p = rec.pct;
+ if (p >= 1) return { label: 'Met / exceeded', color: '#2E7D32' };
+ if (p >= 0.7) return { label: 'Near target', color: '#EF6C00' };
+ return { label: 'Below target', color: '#C62828' };
+ }
+
+ function nbsEsc(s) {
+ if (s === null || s === undefined) return '';
+ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+ }
+
+ // Pulls the "CONFLICT: ..." sentence out of a notes cell
+ function nbsConflictText(notes) {
+ if (!notes) return '';
+ const i = notes.indexOf('CONFLICT');
+ return i === -1 ? notes : notes.slice(i).replace(/^CONFLICT:\s*/, '');
+ }
+
+ function renderNbsTable(filter) {
+ const tbody = document.querySelector('#nbs-main-table tbody');
+ if (!tbody) return;
+ nbsCurrentFilter = filter;
+ let rows = NBS_ROWS;
+ if (filter === 'conflict') rows = NBS_ROWS.filter(r => r.conflict);
+ else if (filter && filter !== 'all') rows = NBS_ROWS.filter(r => r.eco === filter);
+
+ const editable = nbsIsAdmin ? ' contenteditable="true" class="nbs-editable"' : '';
+
+ tbody.innerHTML = rows.map(r => {
+ const ov = NBS_OVERRIDES[r.n] || {};
+ const achieved = (ov.achieved !== undefined && ov.achieved !== null) ? ov.achieved : r.achieved;
+ const notes = (ov.notes !== undefined && ov.notes !== null) ? ov.notes : r.notes;
+ const edited = (ov.achieved !== undefined && ov.achieved !== null) || (ov.notes !== undefined && ov.notes !== null);
+ const pct = (r.target !== null && r.target !== undefined && typeof achieved === 'number' && r.target !== 0)
+ ? achieved / r.target : r.pct;
+ const st = nbsStatus({ target: r.target, pct: pct });
+ return '<tr' + (r.conflict ? ' style="background: #FFF8E1;"' : '') + '>'
+ + '<td style="text-align:left;">' + r.n
+ + (edited ? ' <span title="Edited in the dashboard" style="color:#1565C0;">&#9679;</span>' : '') + '</td>'
+ + '<td style="text-align:left;">' + nbsEsc(r.eco) + '</td>'
+ + '<td style="text-align:left; min-width: 160px;">' + nbsEsc(r.output) + '</td>'
+ + '<td style="text-align:left; min-width: 240px;">' + nbsEsc(r.intervention)
+ + (r.conflict ? ' <span style="color:#C62828; font-weight:bold;" title="Figure in dispute">&#9888;</span>' : '') + '</td>'
+ + '<td style="text-align:left;">' + nbsEsc(r.unit) + '</td>'
+ + '<td>' + nbsFmt(r.target, r.unit) + '</td>'
+ + '<td data-nbs-row="' + r.n + '" data-nbs-field="achieved"' + editable + '><strong>' + nbsFmt(achieved, r.unit) + '</strong></td>'
+ + '<td><span style="color:' + st.color + '; font-weight:bold;">' + nbsPct(pct) + '</span></td>'
+ + '<td style="text-align:left; min-width: 150px;">' + nbsEsc(r.disagg) + '</td>'
+ + '<td style="text-align:left;">' + nbsEsc(r.asat) + '</td>'
+ + '<td style="text-align:left; min-width: 180px; font-size: 12px;">' + nbsEsc(r.source) + '</td>'
+ + '<td data-nbs-row="' + r.n + '" data-nbs-field="notes"' + editable
+ + ' style="text-align:left; min-width: 240px; font-size: 12px;">' + nbsEsc(notes) + '</td>'
+ + '</tr>';
+ }).join('');
+
+ if (nbsIsAdmin) nbsBindCellEditors(tbody);
+
+ const count = document.getElementById('nbs-table-count');
+ if (count) count.textContent = 'Showing ' + rows.length + ' of ' + NBS_ROWS.length + ' recorded interventions.'
+ + (nbsIsAdmin ? ' Click an Achieved or Notes cell to edit.' : '');
+ }
+
+ function filterNbsRows(event, filter) {
+ const buttons = document.getElementById('nbs-eco-filter').querySelectorAll('.tab-button');
+ buttons.forEach(btn => { btn.classList.remove('active'); btn.style.background = ''; btn.style.color = ''; });
+ event.currentTarget.classList.add('active');
+ event.currentTarget.style.background = '#2e7d32';
+ event.currentTarget.style.color = '#fff';
+ renderNbsTable(filter);
+ }
+
+ function renderNbsOutputCharts() {
+ const note = document.getElementById('nbs-note');
+ if (note) note.textContent = NBS_NOTE;
+
+ // Headline KPIs
+ const area = nbsRow(36), areaM = nbsRow(12), areaF = nbsRow(34);
+ const seed = nbsRow(38), invM = nbsRow(13), invF = nbsRow(35);
+ const trainedF = nbsRow(16), trainedM = nbsRow(3), stoves = nbsRow(41);
+ const investment = (invM.achieved || 0) + (invF.achieved || 0);
+ const setKpi = (id, value, sub) => {
+ const v = document.getElementById(id); if (v) v.textContent = value;
+ const s = document.getElementById(id + '-sub'); if (s) s.textContent = sub;
+ };
+ setKpi('nbs-kpi-area-total', nbsFmt(area.achieved) + ' ha',
+ 'Target: ' + nbsFmt(area.target) + ' ha | ' + nbsPct(area.pct));
+ setKpi('nbs-kpi-area-mangrove', nbsFmt(areaM.achieved) + ' ha',
+ 'Target: ' + nbsFmt(areaM.target) + ' ha | ' + nbsPct(areaM.pct));
+ setKpi('nbs-kpi-area-forest', nbsFmt(areaF.achieved) + ' ha',
+ 'Target: ' + nbsFmt(areaF.target) + ' ha | ' + nbsPct(areaF.pct));
+ setKpi('nbs-kpi-seedlings', nbsFmt(seed.achieved), seed.disagg || '');
+ setKpi('nbs-kpi-investment', 'KES ' + (investment / 1e6).toFixed(1) + 'M',
+ 'Mangrove ' + (invM.achieved / 1e6).toFixed(1) + 'M + terrestrial ' + (invF.achieved / 1e6).toFixed(1) + 'M');
+ setKpi('nbs-kpi-forest-trained', nbsFmt(trainedF.achieved),
+ 'Target: ' + nbsFmt(trainedF.target) + ' | ' + nbsPct(trainedF.pct) + ' | ' + (trainedF.disagg || ''));
+ setKpi('nbs-kpi-mangrove-trained', nbsFmt(trainedM.achieved),
+ 'Target: ' + nbsFmt(trainedM.target) + ' | ' + nbsPct(trainedM.pct) + ' — figure in dispute');
+ setKpi('nbs-kpi-cookstoves', nbsFmt(stoves.achieved), 'Forest-adjacent households (Output 1223)');
+
+ // Progress against LOP targets
+ const withTarget = NBS_ROWS.filter(r => r.target !== null && r.target !== undefined);
+ const met = withTarget.filter(r => r.pct >= 1).length;
+ const near = withTarget.filter(r => r.pct >= 0.7 && r.pct < 1).length;
+ const below = withTarget.filter(r => r.pct < 0.7).length;
+ const noTarget = NBS_ROWS.length - withTarget.length;
+ const pctOf = n => Math.round(n / withTarget.length * 100) + '% of targeted outputs';
+ setKpi('nbs-status-met', String(met), pctOf(met));
+ setKpi('nbs-status-near', String(near), pctOf(near));
+ setKpi('nbs-status-below', String(below), pctOf(below));
+ setKpi('nbs-status-notarget', String(noTarget), 'Deliverables reported without a LOP target');
+
+ // Conflicts table
+ const ctbody = document.querySelector('#nbs-conflicts-table tbody');
+ if (ctbody) {
+ ctbody.innerHTML = NBS_ROWS.filter(r => r.conflict).map(r =>
+ '<tr>'
+ + '<td style="text-align:left;">' + r.n + '</td>'
+ + '<td style="text-align:left; min-width: 240px;">' + nbsEsc(r.intervention) + '</td>'
+ + '<td><strong>' + nbsFmt(r.achieved, r.unit) + '</strong>'
+ + (r.unit ? ' <span style="color:#777; font-size:12px;">' + nbsEsc(r.unit) + '</span>' : '') + '</td>'
+ + '<td style="text-align:left; min-width: 320px;">' + nbsEsc(nbsConflictText(r.notes)) + '</td>'
+ + '</tr>').join('');
+ }
+
+ // Sources table — locations only resolve for a signed-in admin
+ nbsRenderSources();
+
+ renderNbsTable('all');
+
+ // Charts
+ Object.values(nbsChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
+
+ const C = {
+ green: '#2E7D32', teal: '#00897B', forest: '#33691E', blue: '#1565C0',
+ orange: '#EF6C00', amber: '#F57F17', red: '#C62828', grey: '#757575'
+ };
+
+ function nbsChart(id, config) {
+ const el = document.getElementById(id);
+ if (!el) return null;
+ const existing = Chart.getChart(el);
+ if (existing) existing.destroy();
+ const chart = new Chart(el, config);
+ nbsChartInstances[id] = chart;
+ return chart;
+ }
+
+ // CHART 1 — % of LOP target achieved, every intervention that carries a target
+ const targeted = withTarget.slice().sort((a, b) => b.pct - a.pct);
+ nbsChart('nbs-pct-target', {
+ type: 'bar',
+ data: {
+ labels: targeted.map(r => NBS_SHORT_LABELS[r.n] || r.intervention),
+ datasets: [{
+ label: '% of LOP target',
+ data: targeted.map(r => Math.round(r.pct * 100)),
+ backgroundColor: targeted.map(r => nbsStatus(r).color),
+ borderRadius: 4
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { display: false },
+ tooltip: {
+ callbacks: {
+ afterLabel: ctx => {
+ const r = targeted[ctx.dataIndex];
+ return nbsFmt(r.achieved, r.unit) + ' of ' + nbsFmt(r.target, r.unit)
+ + ' ' + (r.unit || '') + ' — as at ' + (r.asat || 'n/a');
+ }
+ }
+ },
+ datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' }, formatter: v => v + '%' }
+ },
+ scales: {
+ x: { beginAtZero: true, suggestedMax: 190, title: { display: true, text: '% of life-of-project target' }, ticks: { callback: v => v + '%' } },
+ y: { ticks: { font: { size: 11 } } }
+ }
+ }
+ });
+
+ // CHART 2 — Hectares by site (site splits from the disaggregation on rows 12 and 34)
+ nbsChart('nbs-area-site', {
+ type: 'bar',
+ data: {
+ labels: ['Takaungu', 'Majoreni', 'Mwazaro', 'Kaya Chonyi', 'Gonja'],
+ datasets: [
+ { label: 'Mangrove', data: [17.9, 16.5, null, null, null], backgroundColor: C.green, borderRadius: 4 },
+ { label: 'Terrestrial forest', data: [null, null, null, 23.4, 18.9], backgroundColor: C.forest, borderRadius: 4 }
+ ]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'top' },
+ tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + (ctx.raw === null ? 'not yet reported' : ctx.raw + ' ha') } },
+ datalabels: { display: true, anchor: 'end', align: 'top', font: { size: 11, weight: 'bold' }, formatter: v => v === null ? '' : v + ' ha' }
+ },
+ scales: { y: { beginAtZero: true, title: { display: true, text: 'Hectares' } } }
+ }
+ });
+
+ // CHART 3 — Restoration investment by site (site splits from rows 13 and 35)
+ nbsChart('nbs-investment', {
+ type: 'doughnut',
+ data: {
+ labels: ['Takaungu (mangrove)', 'Majoreni (mangrove)', 'Gonja (forest)', 'Kaya Chonyi (forest)'],
+ datasets: [{
+ data: [12976717, 11357400, 4163667, 4043000],
+ backgroundColor: [C.green, C.teal, C.forest, C.amber],
+ borderWidth: 2
+ }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'bottom', labels: { font: { size: 12 } } },
+ tooltip: { callbacks: { label: ctx => ctx.label + ': KES ' + ctx.raw.toLocaleString('en-US') } },
+ datalabels: {
+ display: true, font: { size: 13, weight: 'bold' }, color: '#fff',
+ formatter: v => (v / 1e6).toFixed(1) + 'M'
+ }
+ }
+ }
+ });
+
+ // CHART 4 — Seedlings planted by stream (rows 8, 9, 31, 32, 33)
+ nbsChart('nbs-seedlings', {
+ type: 'bar',
+ data: {
+ labels: ['Mangrove, Y1–Y3', 'Mangrove, 2026 drive', 'Terrestrial Kenya, Y1–Y3', 'Tanzania, transplanted Y3', 'Fruit trees on farmland'],
+ datasets: [{
+ label: 'Seedlings',
+ data: [nbsRow(8).achieved, nbsRow(9).achieved, nbsRow(31).achieved, nbsRow(32).achieved, nbsRow(33).achieved],
+ backgroundColor: [C.green, C.teal, C.forest, C.blue, C.amber],
+ borderRadius: 4
+ }]
+ },
+ options: {
+ indexAxis: 'y',
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { display: false },
+ tooltip: { callbacks: { label: ctx => ctx.raw.toLocaleString('en-US') + ' seedlings' } },
+ datalabels: { display: true, anchor: 'end', align: 'right', font: { size: 11, weight: 'bold' }, formatter: v => (v / 1000).toFixed(0) + 'k' }
+ },
+ scales: {
+ x: { beginAtZero: true, title: { display: true, text: 'Seedlings' }, ticks: { callback: v => (v / 1000) + 'k' } },
+ y: { ticks: { font: { size: 11 } } }
+ }
+ }
+ });
+
+ // CHART 5 — Interventions recorded by ecosystem
+ const ecoOrder = ['MANGROVE', 'TERRESTRIAL FOREST', 'CROSS-CUTTING (both)'];
+ const ecoCounts = ecoOrder.map(e => NBS_ROWS.filter(r => r.eco === e).length);
+ nbsChart('nbs-eco-split', {
+ type: 'doughnut',
+ data: {
+ labels: ecoOrder.map((e, i) => e.replace('CROSS-CUTTING (both)', 'Cross-cutting') + ' (' + ecoCounts[i] + ')'),
+ datasets: [{
+ data: ecoCounts,
+ backgroundColor: [C.green, C.forest, C.blue],
+ borderWidth: 2
+ }]
+ },
+ options: {
+ responsive: true, maintainAspectRatio: false,
+ plugins: {
+ legend: { position: 'bottom', labels: { font: { size: 12 } } },
+ datalabels: {
+ display: true, font: { size: 15, weight: 'bold' }, color: '#fff',
+ formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a, b) => a + b, 0); return Math.round(v / t * 100) + '%'; }
+ }
+ }
+ }
+ });
+ }
+
  const rfChartInstances = {};
  function renderResultsFrameworkCharts() {
  Object.values(rfChartInstances).forEach(c => { try { c.destroy(); } catch(e) {} });
