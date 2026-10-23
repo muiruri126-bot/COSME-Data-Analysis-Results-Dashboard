@@ -17,7 +17,6 @@
  <!-- Firebase Compat SDKs -->
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
  <style>
  * {
  margin: 0;
@@ -5221,7 +5220,7 @@
  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between;">
  <div>
  <strong id="nbs-admin-status" style="color: #555;">Read-only view</strong>
- <span id="nbs-admin-hint" style="color: #777; font-size: 13px; margin-left: 8px;">Figures and source locations are locked. Sign in as an administrator to edit.</span>
+ <span id="nbs-admin-hint" style="color: #777; font-size: 13px; margin-left: 8px;">Figures are locked. Sign in with your Analytics credentials to edit.</span>
  </div>
  <div style="display: flex; gap: 8px; align-items: center;">
  <button class="tab-button" id="nbs-admin-open" onclick="nbsToggleSignIn()">Admin sign in</button>
@@ -5229,7 +5228,7 @@
  </div>
  </div>
  <form id="nbs-admin-form" style="display: none; margin-top: 14px; gap: 8px; flex-wrap: wrap; align-items: center;" onsubmit="return nbsAdminSignIn(event);">
- <input type="email" id="nbs-admin-email" placeholder="Administrator email" autocomplete="username" required
+ <input type="text" id="nbs-admin-username" placeholder="Username" autocomplete="username" required
  style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-width: 220px;">
  <input type="password" id="nbs-admin-password" placeholder="Password" autocomplete="current-password" required
  style="padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-width: 180px;">
@@ -21293,57 +21292,73 @@
 
   //
  // NbS ADMIN GATE
- // Everyone gets a read-only view. A signed-in administrator can edit the
- // Achieved and Notes cells and can see where each source document lives.
+ // Reuses the Analytics tab's credentials and its sessionStorage flag, so one
+ // sign-in unlocks both. Signing out of either signs out of both.
  //
- // The source locations are deliberately NOT in this file. They are held in
- // Firebase under nbsOutputs/sourceLocations, which the database rules expose
- // only to an authenticated user — a client-side check could not protect text
- // that shipped inside a public page.
+ // Scope of this gate: it unlocks the editing UI. It is a client-side check on
+ // a public page, so it is a convenience, not a security boundary — see
+ // FIREBASE_ADMIN_SETUP.md. Nothing confidential is placed behind it: the
+ // SharePoint and OneDrive source locations are not in this file at all.
  //
 
  let nbsIsAdmin = false;
  let nbsCurrentFilter = 'all';
- let NBS_OVERRIDES = {};          // rowNumber -> { achieved, notes }
- let NBS_SOURCE_LOCATIONS = {};   // source key -> full path, admin only
+ let NBS_OVERRIDES = {};   // rowNumber -> { achieved, notes }
 
  function nbsDb() {
  try { return (typeof firebase !== 'undefined' && firebase.apps.length) ? firebase.database() : null; }
  catch (e) { return null; }
  }
 
+ // The Analytics tab owns this flag; we just read it.
+ function nbsAdminUnlocked() {
+ try { return sessionStorage.getItem('analytics_auth') === 'true'; }
+ catch (e) { return false; }
+ }
+
  function nbsToggleSignIn() {
  const form = document.getElementById('nbs-admin-form');
  if (!form) return;
  form.style.display = (form.style.display === 'flex') ? 'none' : 'flex';
+ if (form.style.display === 'flex') {
+ const u = document.getElementById('nbs-admin-username');
+ if (u) u.focus();
+ }
  }
 
- function nbsAdminSignIn(event) {
+ async function nbsAdminSignIn(event) {
  event.preventDefault();
  const err = document.getElementById('nbs-admin-error');
- const email = document.getElementById('nbs-admin-email').value.trim();
- const pass = document.getElementById('nbs-admin-password').value;
+ const username = document.getElementById('nbs-admin-username').value.trim();
+ const password = document.getElementById('nbs-admin-password').value;
  err.textContent = '';
- if (typeof firebase === 'undefined' || !firebase.auth) {
- err.textContent = 'Sign-in is unavailable: Firebase Auth is not enabled for this project yet.';
+
+ if (typeof ANALYTICS_CREDENTIALS === 'undefined' || typeof hashPassword !== 'function') {
+ err.textContent = 'Sign-in is unavailable on this page.';
  return false;
  }
- firebase.auth().signInWithEmailAndPassword(email, pass)
- .then(function () {
+ const pwHash = await hashPassword(password);
+ if (username === ANALYTICS_CREDENTIALS.username && pwHash === ANALYTICS_CREDENTIALS.passwordHash) {
+ try { sessionStorage.setItem('analytics_auth', 'true'); } catch (e) {}
  document.getElementById('nbs-admin-password').value = '';
  document.getElementById('nbs-admin-form').style.display = 'none';
- })
- .catch(function (e) { err.textContent = e.message || 'Sign-in failed.'; });
+ nbsApplyAdminState(true);
+ } else {
+ err.textContent = 'Invalid username or password';
+ document.getElementById('nbs-admin-password').value = '';
+ document.getElementById('nbs-admin-password').focus();
+ }
  return false;
  }
 
  function nbsAdminSignOut() {
- if (typeof firebase !== 'undefined' && firebase.auth) firebase.auth().signOut();
+ try { sessionStorage.removeItem('analytics_auth'); } catch (e) {}
+ nbsApplyAdminState(false);
  }
 
- // Reflects the signed-in state across the bar, the sources table and the grid
- function nbsApplyAdminState(user) {
- nbsIsAdmin = !!user;
+ // Reflects the unlocked state across the bar and the grid
+ function nbsApplyAdminState(unlocked) {
+ nbsIsAdmin = !!unlocked;
  const status = document.getElementById('nbs-admin-status');
  const hint = document.getElementById('nbs-admin-hint');
  const openBtn = document.getElementById('nbs-admin-open');
@@ -21355,33 +21370,14 @@
  }
  if (hint) {
  hint.textContent = nbsIsAdmin
- ? 'Signed in as ' + (user.email || 'administrator') + '. Achieved and Notes cells are editable; edits are saved for everyone.'
- : 'Figures and source locations are locked. Sign in as an administrator to edit.';
+ ? 'Achieved and Notes cells are editable. Edits are saved for every viewer.'
+ : 'Figures are locked. Sign in with your Analytics credentials to edit.';
  }
  if (bar) bar.style.borderLeftColor = nbsIsAdmin ? '#2E7D32' : '#757575';
  if (openBtn) openBtn.style.display = nbsIsAdmin ? 'none' : '';
  if (outBtn) outBtn.style.display = nbsIsAdmin ? '' : 'none';
 
- if (nbsIsAdmin) {
- nbsLoadSourceLocations();
- } else {
- NBS_SOURCE_LOCATIONS = {};
- }
- if (document.querySelector('#nbs-main-table tbody')) {
- nbsRenderSources();
- renderNbsTable(nbsCurrentFilter);
- }
- }
-
- function nbsLoadSourceLocations() {
- const db = nbsDb();
- if (!db) return;
- db.ref('nbsOutputs/sourceLocations').once('value')
- .then(function (snap) {
- NBS_SOURCE_LOCATIONS = snap.val() || {};
- nbsRenderSources();
- })
- .catch(function () { /* rules refused the read — stays locked */ });
+ if (document.querySelector('#nbs-main-table tbody')) renderNbsTable(nbsCurrentFilter);
  }
 
  // Overrides are world-readable so every viewer sees the corrected figure
@@ -21409,7 +21405,7 @@
  const update = {};
  update[field] = value;
  update.updatedAt = firebase.database.ServerValue.TIMESTAMP;
- update.updatedBy = (firebase.auth().currentUser || {}).email || 'admin';
+ update.updatedBy = (typeof ANALYTICS_CREDENTIALS !== 'undefined') ? ANALYTICS_CREDENTIALS.username : 'admin';
  db.ref('nbsOutputs/overrides/' + rowNumber).update(update)
  .catch(function (e) { alert('Could not save: ' + (e.message || e)); });
  }
@@ -21431,17 +21427,15 @@
  });
  }
 
+ // Locations are held in COSME_Outputs_Data.xlsx and deliberately not published
  function nbsRenderSources() {
  const stbody = document.querySelector('#nbs-sources-table tbody');
  if (!stbody) return;
  stbody.innerHTML = NBS_SOURCES.map(function (s) {
- const loc = NBS_SOURCE_LOCATIONS[s.key];
- const locCell = loc
- ? nbsEsc(loc)
- : '<span style="color:#9E9E9E;">&#128274; Location restricted &mdash; sign in as an administrator</span>';
  return '<tr>'
  + '<td style="text-align:left;"><strong>' + nbsEsc(s.source) + '</strong></td>'
- + '<td style="text-align:left; font-size: 12px;">' + locCell + '</td>'
+ + '<td style="text-align:left; font-size: 12px; color:#9E9E9E;">'
+ + '&#128274; Not published &mdash; see the Sources sheet of COSME_Outputs_Data.xlsx</td>'
  + '<td style="text-align:left; font-size: 12px;">' + nbsEsc(s.used) + '</td>'
  + '</tr>';
  }).join('');
@@ -21450,14 +21444,11 @@
  (function nbsInitAdmin() {
  function start() {
  nbsWatchOverrides();
- if (typeof firebase !== 'undefined' && firebase.auth) {
- firebase.auth().onAuthStateChanged(nbsApplyAdminState);
- }
+ nbsApplyAdminState(nbsAdminUnlocked());
  }
  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
  else start();
  })();
-
 
  // Short axis labels for the LOP-target chart, keyed by row number in NBS_ROWS
  const NBS_SHORT_LABELS = {
